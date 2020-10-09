@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-class Topbar extends React.Component{
+class Topbar extends Component{
 
     render(){
         return(
-            <div>
+            <React.Fragment>
                 {/* Topbar */}
                 <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -43,7 +43,7 @@ class Topbar extends React.Component{
                 </nav>
                 {/* End of Topbar */}
                 {/* Logout Modal*/}
-                <div className="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal fade" id="logoutModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -63,7 +63,7 @@ class Topbar extends React.Component{
                 {/* End Logout Modal*/}
                 {/* Begin Page Content */}
                 <div className="container-fluid"></div>
-            </div>   
+            </React.Fragment>   
         );
     }
 

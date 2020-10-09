@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-class Sidebar extends React.Component { 
+class Sidebar extends Component { 
     render() {
         return(
-            <div>
+            <React.Fragment>
                 {/* Sidebar */}
                 <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
-                    <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/Index">
+                    <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                         <div className="sidebar-brand-icon">
                             <i className="fas fa-building"></i>
                         </div>
@@ -25,7 +25,7 @@ class Sidebar extends React.Component {
 
                     {/* Nav Item - Sector */}
                     <li className="nav-item">
-                        <a className="nav-link" href="/Sector/Index">
+                        <a className="nav-link" href="/Sector">
                             <i className="fas fa-fw fa-place-of-worship"></i>
                             <span>Datos generales</span>
                         </a>
@@ -33,7 +33,7 @@ class Sidebar extends React.Component {
 
                     {/* Nav Item - Personal General */}
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="/Personal/Index">
+                        <a className="nav-link collapsed" href="/ListaDePersonal">
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Personal general</span>
                         </a>
@@ -168,7 +168,7 @@ class Sidebar extends React.Component {
 
                 </ul>
                 {/* End of Sidebar */}
-            </div>
+            </React.Fragment>
         );
     }
 }
