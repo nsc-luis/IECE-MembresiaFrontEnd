@@ -13,6 +13,7 @@ class _Estado_Civil extends Component {
                             </div>
                             <div className="col-sm-4">
                                 <select for="Personal.per_Estado_Civil" className="form-control">
+                                    <option vale="0">Selecciona un estado civil</option>
                                     <option vale="casado">Casado/a</option>
                                     <option vale="divorciado">Divorciado/a</option>
                                     <option vale="viudo">Viudo/a</option>
@@ -25,7 +26,7 @@ class _Estado_Civil extends Component {
                     </div>
 
                     <_Matrimonio />
-                    
+
                 </div>
             </React.Fragment>
         );
