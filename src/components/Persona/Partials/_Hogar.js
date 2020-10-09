@@ -9,6 +9,19 @@ class _Hogar extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
+                                <label for="hog_Id_Hogar">Asignar a hogar</label>
+                            </div>
+                            <div className="col-sm-4">
+                                <select for="hog_Id_Hogar" className="form-control">
+                                    <option value="0">Selecciona un hogar</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <div className="row">
+                            <div className="col-sm-2">
                                 <label for="nvoHogar">Nuevo hogar</label>
                             </div>
                             <div className="col-sm-4">
@@ -16,6 +29,8 @@ class _Hogar extends Component {
                             </div>
                         </div>
                     </div>
+
+
 
                     <_Domicilio />
 

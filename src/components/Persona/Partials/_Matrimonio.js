@@ -1,116 +1,110 @@
 import React, { Component } from 'react';
 
-class _Domicilio extends Component {
+class _Matrimonio extends Component {
     render() {
         return (
             <React.Fragment>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.dom_Calle">Calle</label>
+                            <label for="eci_Fecha_Boda_Civil">Fecha boda civil</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input for="eci_Fecha_Boda_Civil" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Fecha_Bautismo">Numero exterior</label>
+                            <label for="eci_Num_Acta_Boda_Civil">Num acta boda civil</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input for="eci_Num_Acta_Boda_Civil" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Numero interior</label>
+                            <label for="eci_Libro_Acta_Boda_Civil">Libro acta boda civil</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input for="eci_Libro_Acta_Boda_Civil" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Tipo subdivision</label>
+                            <label for="eci_Oficialia_Boda_Civil">Oficialia boda civil</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input for="eci_Oficialia_Boda_Civil" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Subdivision</label>
+                            <label for="eci_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input for="eci_Fecha_Boda_Eclesiastica" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Localidad</label>
+                            <label for="eci_Lugar_Boda_Eclesiastica">Lugar boda eclesiastica</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input for="eci_Lugar_Boda_Eclesiastica" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Municipio/Cuidad</label>
+                            <label for="eci_Nombre_Conyuge">Nombre conyuge</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input for="eci_Nombre_Conyuge" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="pais_Id_Pais">Pais</label>
+                            <label for="eci_Cantidad_Hijos">Cantidad hijos</label>
                         </div>
                         <div className="col-sm-4">
-                            <select for="pais_Id_Pais" className="form-control">
-                                <option value="0">Selecciona un pais</option>
-                            </select>
+                            <input type="number" for="eci_Cantidad_Hijos" className="form-control" />
                         </div>
                     </div>
                 </div>
+
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="est_Id_Estado">Estado</label>
+                            <label for="eci_Nombre_Hijos">Nombre de los hijos</label>
                         </div>
                         <div className="col-sm-4">
-                            <select for="est_Id_Estado" className="form-control">
-                                <option value="0">Selecciona un estado</option>
-                            </select>
+                            <textarea for="eci_Lugar_Boda_Eclesiastica" className="form-control" ></textarea>
                         </div>
                     </div>
                 </div>
-                <div className="form-group">
-                    <div className="row">
-                        <div className="col-sm-2">
-                            <label for="dom_Telefono">Telefono</label>
-                        </div>
-                        <div className="col-sm-4">
-                            <input for="dom_Telefono" className="form-control" />
-                        </div>
-                    </div>
-                </div>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }
 
-export default _Domicilio;
+export default _Matrimonio;

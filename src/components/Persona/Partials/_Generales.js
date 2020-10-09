@@ -4,7 +4,7 @@ class _Generales extends Component {
     render() {
         return (
             <React.Fragment>
-                <div className="tab-pane fade show active" id="generales" role="tabpanel" aria-labelledby="generales-tab">
+                <div className="tab-pane fade" id="generales" role="tabpanel" aria-labelledby="generales-tab">
                     {/* <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
@@ -19,65 +19,7 @@ class _Generales extends Component {
                         </div>
                     </div> */}
 
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-sm-2">
-                                <label for="Personal.per_Categoria">Categoria</label>
-                            </div>
-                            <div className="col-sm-4">
-                                <select for="Personal.per_Categoria" className="form-control">
-                                    <option value="hombre_bautizado">Hombre bautizado</option>
-                                    <option value="mujer_bautizada">Mujer bautizado</option>
-                                    <option value="joven_hombre_bautizado">Joven hombre bautizado</option>
-                                    <option value="joven_mujer_bautizado">Joven mujer bautizado</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-sm-2">
-                                <label for="Personal.per_Nombre">Nombre</label>
-                            </div>
-                            <div className="col-sm-4">
-                                <input for="Personal.per_Nombre" className="form-control" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-sm-2">
-                                <label for="Personal.per_Apellido_Paterno">Apellido paterno</label>
-                            </div>
-                            <div className="col-sm-4">
-                                <input for="Personal.per_Apellido_Paterno" className="form-control" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-sm-2">
-                                <label for="Personal.per_Apellido_Materno">Apellido materno</label>
-                            </div>
-                            <div className="col-sm-4">
-                                <input for="Personal.per_Apellido_Materno" className="form-control" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-sm-2">
-                                <label for="Personal.per_Fecha_Nacimiento">Fecha nacimiento</label>
-                            </div>
-                            <div className="col-sm-4">
-                                <input for="Personal.per_Fecha_Nacimiento" className="form-control" />
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     {/* <div className="form-group">
                         <div className="row">
@@ -175,6 +117,17 @@ class _Generales extends Component {
                             </div>
                             <div className="col-sm-4">
                                 <input type="file" for="Personal.per_foto" className="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <div className="row">
+                            <div className="col-sm-2">
+                                <label for="Personal.per_Observaciones">Observaciones</label>
+                            </div>
+                            <div className="col-sm-4">
+                                <textarea className="form-control"></textarea>
                             </div>
                         </div>
                     </div>

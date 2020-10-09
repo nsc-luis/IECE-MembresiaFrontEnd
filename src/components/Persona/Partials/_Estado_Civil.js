@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _Matrimonio from './_Matrimonio';
 
 class _Estado_Civil extends Component {
     render() {
@@ -22,6 +23,9 @@ class _Estado_Civil extends Component {
                             </div>
                         </div>
                     </div>
+
+                    <_Matrimonio />
+                    
                 </div>
             </React.Fragment>
         );
