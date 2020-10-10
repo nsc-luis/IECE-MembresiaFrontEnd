@@ -12,13 +12,14 @@ class Home extends Component {
                                 <h5><strong>Personal</strong></h5>
                             </div>
                             <div className="card-body p-3 luis">
-                                <img src="../assets/images/personas.png" alt="Personal bautizado" className="mx-auto card-img-top imgHome" />
-                Acceso rapido a operaciones con el personal bautizado. <br />
+                                <img src="./images/personas.png" className="mx-auto card-img-top imgHome" />
+                                <br />
+                                Acceso rapido a operaciones con el personal bautizado. <br />
                                 <a href="/ListaDePersonal" className="btn btn-sm btn-primary">Ingresar</a>
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm-3">
+                    {/*<div className="col-sm-3">
                         <div className="card border-info text-center acceso-directo">
                             <div className="card-header">
                                 <h5><strong>Alta de personal</strong></h5>
@@ -41,7 +42,7 @@ class Home extends Component {
                                 <a href="#" className="btn btn-sm btn-primary">Ingresar</a>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </React.Fragment>
         );

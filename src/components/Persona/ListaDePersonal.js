@@ -68,11 +68,11 @@ class ListaDePersonal extends Component {
                     </tbody>
                 </table>
 
-                <p>
+                {/*<p>
                     Contador: {this.state.contador}
                 </p>
                 <input type="button" value="sumar" onClick={this.sumar} />
-                <input type="button" value="restar" onClick={this.restar} />
+                <input type="button" value="restar" onClick={this.restar} />*/}
             </React.Fragment>
 
         );

@@ -23,19 +23,19 @@ class Sidebar extends Component {
                         Sector
                     </div>
 
-                    {/* Nav Item - Sector */}
+                    {/* Nav Item - Sector
                     <li className="nav-item">
                         <a className="nav-link" href="/Sector">
                             <i className="fas fa-fw fa-place-of-worship"></i>
                             <span>Datos generales</span>
                         </a>
-                    </li>
+                    </li> */}
 
                     {/* Nav Item - Personal General */}
                     <li className="nav-item">
                         <a className="nav-link collapsed" href="/ListaDePersonal">
                             <i className="fas fa-fw fa-address-book"></i>
-                            <span>Personal general</span>
+                            <span>Lista de personal</span>
                         </a>
                     </li>
 
@@ -53,15 +53,16 @@ class Sidebar extends Component {
                             <span>Personal no bautizado</span>
                         </a>
                     </li> */}
-                    {/* Divider */}
-                    <hr className="sidebar-divider" />
 
-                    {/* Heading */}
+                    {/* Divider
+                    <hr className="sidebar-divider" /> */}
+
+                    {/* Heading
                     <div className="sidebar-heading">
                         Movimientos de personal
-                    </div>
+                    </div> */}
 
-                    {/* Nav Item - Altas Collapse Menu */}
+                    {/* Nav Item - Altas Collapse Menu
                     <li className="nav-item">
                         <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMPAltas" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-fw fa-user-check"></i>
@@ -79,9 +80,9 @@ class Sidebar extends Component {
                                 <a className="collapse-item" href="#">Reactivacion</a>
                             </div>
                         </div>
-                    </li>
+                    </li> */}
 
-                    {/* Nav Item - Bajas Collapse Menu */}
+                    {/* Nav Item - Bajas Collapse Menu
                     <li className="nav-item">
                         <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsempbajas" aria-expanded="true" aria-controls="collapsepages">
                             <i className="fas fa-fw fa-user-times"></i>
@@ -99,49 +100,49 @@ class Sidebar extends Component {
                                 <a className="collapse-item" href="#">Defuncion</a>
                             </div>
                         </div>
-                    </li>
+                    </li> */}
 
-                    {/* Nav Item - Hogares */}
+                    {/* Nav Item - Hogares
                     <li className="nav-item">
                         <a className="nav-link" href="#">
                             <i className="fas fa-fw fa-home"></i>
                             <span>Hogares</span>
                         </a>
-                    </li>
+                    </li> */}
 
-                    {/* Divider */}
-                    <hr className="sidebar-divider" />
+                    {/* Divider
+                    <hr className="sidebar-divider" /> */}
 
-                    {/* Heading */}
+                    {/* Heading 
                     <div className="sidebar-heading">
                         Movimientos estadisticos
-                    </div>
+                    </div>*/}
 
-                    {/* Nav Item - Matrimonios */}
+                    {/* Nav Item - Matrimonios
                     <li className="nav-item">
                         <a className="nav-link" href="#">
                             <i className="fas fa-fw fa-user-friends"></i>
                             <span>Matrimonios</span>
                         </a>
-                    </li>
+                    </li> */}
 
-                    {/* Nav Item - Presentaciones */}
+                    {/* Nav Item - Presentaciones 
                     <li className="nav-item">
                         <a className="nav-link" href="#">
                             <i className="fas fa-fw fa-baby"></i>
                             <span>Presentaciones</span>
                         </a>
-                    </li>
+                    </li> */}
 
-                    {/* Divider */}
-                    <hr className="sidebar-divider" />
+                    {/* Divider
+                    <hr className="sidebar-divider" /> */}
 
-                    {/* Heading */}
+                    {/* Heading
                     <div className="sidebar-heading">
                         Seccion de reportes
-                    </div>
+                    </div> */}
 
-                    {/* Nav Item - Reportes Collapse Menu */}
+                    {/* Nav Item - Reportes Collapse Menu
                     <li className="nav-item">
                         <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReportes" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-fw fa-clipboard-list"></i>
@@ -156,10 +157,10 @@ class Sidebar extends Component {
                                 <a className="collapse-item" href="#">Informe pastoral</a>
                             </div>
                         </div>
-                    </li>
+                    </li> */}
 
-                    {/* Divider */}
-                    <hr className="sidebar-divider d-none d-md-block" />
+                    {/* Divider */
+                    <hr className="sidebar-divider d-none d-md-block" />}
 
                     {/* Sidebar Toggler (Sidebar) */}
                     <div className="text-center d-none d-md-inline">

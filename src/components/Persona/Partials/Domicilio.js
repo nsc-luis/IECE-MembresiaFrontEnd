@@ -1,76 +1,76 @@
 import React, { Component } from 'react';
 
-class _Domicilio extends Component {
+class Domicilio extends Component {
     render() {
         return (
             <React.Fragment>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.dom_Calle">Calle</label>
+                            <label>Calle</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input type="text" name="dom_Calle" className="form-control" />
                         </div>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Fecha_Bautismo">Numero exterior</label>
+                            <label>Numero exterior</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input type="text" name="dom_Numero_Exterior" className="form-control" />
                         </div>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Numero interior</label>
+                            <label>Numero interior</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input type="text" name="dom_Numero_Interior" className="form-control" />
                         </div>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Tipo subdivision</label>
+                            <label>Tipo subdivision</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input name="dom_Tipo_Subdivision" className="form-control" />
                         </div>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Subdivision</label>
+                            <label>Subdivision</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input type="text" name="dom_Subdivision" className="form-control" />
                         </div>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Localidad</label>
+                            <label>Localidad</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input type="text" name="dom_Localidad" className="form-control" />
                         </div>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="Domicilio.bau_Ministro_Que_Bautizo">Municipio/Cuidad</label>
+                            <label>Municipio/Cuidad</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="Domicilio.per_Nombre" className="form-control" />
+                            <input type="text" name="dom_Municipio_Cuidad" className="form-control" />
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@ class _Domicilio extends Component {
                             <label for="pais_Id_Pais">Pais</label>
                         </div>
                         <div className="col-sm-4">
-                            <select for="pais_Id_Pais" className="form-control">
+                            <select name="pais_Id_Pais" className="form-control">
                                 <option value="0">Selecciona un pais</option>
                             </select>
                         </div>
@@ -92,7 +92,7 @@ class _Domicilio extends Component {
                             <label for="est_Id_Estado">Estado</label>
                         </div>
                         <div className="col-sm-4">
-                            <select for="est_Id_Estado" className="form-control">
+                            <select name="est_Id_Estado" className="form-control">
                                 <option value="0">Selecciona un estado</option>
                             </select>
                         </div>
@@ -101,10 +101,10 @@ class _Domicilio extends Component {
                 <div className="form-group">
                     <div className="row">
                         <div className="col-sm-2">
-                            <label for="dom_Telefono">Telefono</label>
+                            <label>Telefono</label>
                         </div>
                         <div className="col-sm-4">
-                            <input for="dom_Telefono" className="form-control" />
+                            <input type="text" name="dom_Telefono" className="form-control" />
                         </div>
                     </div>
                 </div>
@@ -113,4 +113,4 @@ class _Domicilio extends Component {
     }
 }
 
-export default _Domicilio;
+export default Domicilio;

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import _Generales from './Partials/_Generales';
-import _FamiliaAsendente from './Partials/_FamiliaAsendente';
-import _Estado_Civil from './Partials/_Estado_Civil';
-import _Eclesiasticos from './Partials/_Eclesiasticos';
-import _Hogar from './Partials/_Hogar';
-import _VerificarNuevoRegistro from './Partials/_VerificaNuevoRegistro';
+import Generales from './Partials/Generales';
+import FamiliaAsendente from './Partials/FamiliaAsendente';
+import EstadoCivil from './Partials/EstadoCivil';
+import Eclesiasticos from './Partials/Eclesiasticos';
+import Hogar from './Partials/Hogar';
+import VerificarNuevoRegistro from './Partials/VerificaNuevoRegistro';
 
 class RegistroDePersonal extends Component {
     render() {
@@ -39,17 +39,17 @@ class RegistroDePersonal extends Component {
 
                             <div className="tab-content" id="myTabContent">
                                 
-                                <_VerificarNuevoRegistro />
+                                <VerificarNuevoRegistro />
 
-                                <_Generales />
+                                <Generales />
 
-                                <_FamiliaAsendente />
+                                <FamiliaAsendente />
 
-                                <_Estado_Civil />
+                                <EstadoCivil />
 
-                                <_Eclesiasticos />
+                                <Eclesiasticos />
 
-                                <_Hogar />
+                                <Hogar />
 
                             </div>
                         </div>

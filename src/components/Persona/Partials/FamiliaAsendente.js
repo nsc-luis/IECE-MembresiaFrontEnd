@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class _FamiliaAsendente extends Component {
+class FamiliaAsendente extends Component {
     render() {
         return (
             <React.Fragment>
@@ -8,10 +8,10 @@ class _FamiliaAsendente extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Nombre_Padre">Padre</label>
+                                <label>Padre</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Nombre_Padre" className="form-control" />
+                                <input type="text" name="per_Nombre_Padre" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -19,10 +19,10 @@ class _FamiliaAsendente extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Nombre_Madre">Madre</label>
+                                <label>Madre</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Nombre_Madre" className="form-control" />
+                                <input type="text" name="per_Nombre_Madre" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -30,10 +30,10 @@ class _FamiliaAsendente extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Nombre_Abuelo_Paterno">Abuelo paterno</label>
+                                <label>Abuelo paterno</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Nombre_Abuelo_Paterno" className="form-control" />
+                                <input type="text" name="per_Nombre_Abuelo_Paterno" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -41,10 +41,10 @@ class _FamiliaAsendente extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Nombre_Abuela_Paterna">Abuela paterna</label>
+                                <label>Abuela paterna</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Nombre_Abuela_Paterna" className="form-control" />
+                                <input type="text" name="per_Nombre_Abuela_Paterna" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -52,10 +52,10 @@ class _FamiliaAsendente extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Nombre_Abuelo_Materno">Abuelo materno</label>
+                                <label>Abuelo materno</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Nombre_Abuelo_Materno" className="form-control" />
+                                <input type="text" name="per_Nombre_Abuelo_Materno" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -63,10 +63,10 @@ class _FamiliaAsendente extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Nombre_Abuela_Materna">Abuela materna</label>
+                                <label>Abuela materna</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Nombre_Abuela_Materna" className="form-control" />
+                                <input type="text" name="per_Nombre_Abuela_Materna" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -76,4 +76,4 @@ class _FamiliaAsendente extends Component {
     }
 }
 
-export default _FamiliaAsendente;
+export default FamiliaAsendente;

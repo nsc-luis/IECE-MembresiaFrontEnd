@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import _Domicilio from './_Domicilio';
+import Domicilio from './Domicilio';
 
-class _Hogar extends Component {
+class Hogar extends Component {
     render() {
         return (
             <React.Fragment>
@@ -9,10 +9,10 @@ class _Hogar extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="hog_Id_Hogar">Asignar a hogar</label>
+                                <label>Asignar a hogar</label>
                             </div>
                             <div className="col-sm-4">
-                                <select for="hog_Id_Hogar" className="form-control">
+                                <select name="hog_Id_Hogar" className="form-control">
                                     <option value="0">Selecciona un hogar</option>
                                 </select>
                             </div>
@@ -22,17 +22,17 @@ class _Hogar extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="nvoHogar">Nuevo hogar</label>
+                                <label>Nuevo hogar</label>
                             </div>
                             <div className="col-sm-4">
-                                <input type="checkbox" className="form-control" />
+                                <input type="checkbox" name="nvoHogar" className="form-control" />
                             </div>
                         </div>
                     </div>
 
 
 
-                    <_Domicilio />
+                    <Domicilio />
 
                     <div className="form-group">
                         <div className="row">
@@ -51,4 +51,4 @@ class _Hogar extends Component {
     }
 }
 
-export default _Hogar;
+export default Hogar;

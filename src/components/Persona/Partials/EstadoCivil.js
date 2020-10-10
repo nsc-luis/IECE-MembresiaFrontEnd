@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import _Matrimonio from './_Matrimonio';
+import Matrimonio from './Matrimonio';
 
-class _Estado_Civil extends Component {
+class EstadoCivil extends Component {
     render() {
         return (
             <React.Fragment>
@@ -9,10 +9,10 @@ class _Estado_Civil extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Estado_Civil">Estado civil</label>
+                                <label>Estado civil</label>
                             </div>
                             <div className="col-sm-4">
-                                <select for="Personal.per_Estado_Civil" className="form-control">
+                                <select name="per_Estado_Civil" className="form-control">
                                     <option vale="0">Selecciona un estado civil</option>
                                     <option vale="casado">Casado/a</option>
                                     <option vale="divorciado">Divorciado/a</option>
@@ -25,7 +25,7 @@ class _Estado_Civil extends Component {
                         </div>
                     </div>
 
-                    <_Matrimonio />
+                    <Matrimonio />
 
                 </div>
             </React.Fragment>
@@ -33,4 +33,4 @@ class _Estado_Civil extends Component {
     }
 }
 
-export default _Estado_Civil;
+export default EstadoCivil;

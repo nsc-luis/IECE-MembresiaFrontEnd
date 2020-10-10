@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import _Bautismo from './_Bautismo';
+import Bautismo from './Bautismo';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 
-class _Eclesiasticos extends Component {
+class Eclesiasticos extends Component {
     render() {
         return (
             <React.Fragment>
@@ -9,45 +11,50 @@ class _Eclesiasticos extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-3">
-                                <label for="Personal.per_Bautizado">Bautizado</label>
+                                <label>Bautizado</label>
                             </div>
                             <div className="col-sm-2">
-                                <input type="checkbox" for="Personal.per_Bautizado" className="form-control" />
+                                <input type="checkbox" name="per_Bautizado" className="form-control" />
                             </div>
                         </div>
                     </div>
 
-                    <_Bautismo />
+                    <Bautismo />
 
                     <div className="form-group">
                         <div className="row">
-                            <div className="col-sm-3">
-                                <label for="Personal.per_Fecha_Recibio_Espiritu_Santo">Fecha recibio Espiritu Santo</label>
+                            <div className="col-sm-2">
+                                <label>Fecha recibio Espiritu Santo</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Fecha_Recibio_Espiritu_Santo" className="form-control" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-sm-3">
-                                <label for="Personal.per_Bajo_Imposicion_De_Manos">Bajo imposicion de manos</label>
-                            </div>
-                            <div className="col-sm-4">
-                                <input for="Personal.per_Bajo_Imposicion_De_Manos" className="form-control" />
+                            <DayPickerInput
+                                    dayPickerProps={{
+                                        showWeekNumbers: true,
+                                        todayButton: 'Today',
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
 
                     <div className="form-group">
                         <div className="row">
-                            <div className="col-sm-3">
-                                <label for="Personal.per_Cambios_De_Domicilio">Cambios de domicilio</label>
+                            <div className="col-sm-2">
+                                <label>Bajo imposicion de manos</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Cambios_De_Domicilio" className="form-control" />
+                                <input type="text" name="per_Bajo_Imposicion_De_Manos" className="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <div className="row">
+                            <div className="col-sm-2">
+                                <label>Cambios de domicilio</label>
+                            </div>
+                            <div className="col-sm-4">
+                                <input type="text" name="per_Cambios_De_Domicilio" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -58,4 +65,4 @@ class _Eclesiasticos extends Component {
     }
 }
 
-export default _Eclesiasticos;
+export default Eclesiasticos;

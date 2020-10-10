@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class _Generales extends Component {
+class Generales extends Component {
     render() {
         return (
             <React.Fragment>
@@ -54,10 +54,10 @@ class _Generales extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.pro_Id_Profesion_Oficio1">Profesion oficio1</label>
+                                <label>Profesion oficio1</label>
                             </div>
                             <div className="col-sm-4">
-                                <select for="Personal.pro_Id_Profesion_Oficio1" className="form-control">
+                                <select name="pro_Id_Profesion_Oficio1" className="form-control">
                                     <option value="0">Selecciona un sector</option>
                                 </select>
                             </div>
@@ -70,7 +70,7 @@ class _Generales extends Component {
                                 <label for="Personal.pro_Id_Profesion_Oficio2">Profesion oficio2</label>
                             </div>
                             <div className="col-sm-4">
-                                <select for="Personal.pro_Id_Profesion_Oficio2" className="form-control">
+                                <select name="pro_Id_Profesion_Oficio2" className="form-control">
                                     <option value="0">Selecciona un sector</option>
                                 </select>
                             </div>
@@ -80,10 +80,10 @@ class _Generales extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Telefono_Fijo">Telefono fijo</label>
+                                <label>Telefono fijo</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Telefono_Fijo" className="form-control" />
+                                <input type="text" name="per_Telefono_Fijo" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -91,10 +91,10 @@ class _Generales extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Telefono_Movil">Telefono movil</label>
+                                <label>Telefono movil</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Telefono_Movil" className="form-control" />
+                                <input type="text" name="per_Telefono_Movil" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -102,10 +102,10 @@ class _Generales extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Email_Personal">Email</label>
+                                <label>Email</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="Personal.per_Email_Personal" className="form-control" />
+                                <input type="text" name="per_Email_Personal" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -113,10 +113,10 @@ class _Generales extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_foto">Foto</label>
+                                <label>Foto</label>
                             </div>
                             <div className="col-sm-4">
-                                <input type="file" for="Personal.per_foto" className="form-control" />
+                                <input type="file" name="per_foto" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -124,10 +124,10 @@ class _Generales extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="Personal.per_Observaciones">Observaciones</label>
+                                <label>Observaciones</label>
                             </div>
                             <div className="col-sm-4">
-                                <textarea className="form-control"></textarea>
+                                <textarea name="per_Observaciones" className="form-control"></textarea>
                             </div>
                         </div>
                     </div>
@@ -158,4 +158,4 @@ class _Generales extends Component {
     }
 }
 
-export default _Generales;
+export default Generales;

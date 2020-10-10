@@ -1,7 +1,7 @@
 import React from 'react';
-import Sidebar from './components/Partials/_Sidebar';
-import Topbar from './components/Partials/_Topbar';
-import Footer from './components/Partials/_Footer';
+import Sidebar from './components/Partials/Sidebar';
+import Topbar from './components/Partials/Topbar';
+import Footer from './components/Partials/Footer';
 import './assets/css/App.css';
 import Router from './Router';
 
