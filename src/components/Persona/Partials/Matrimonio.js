@@ -3,6 +3,31 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 
 class Matrimonio extends Component {
+
+    //eci_Fecha_Boda_CivilRef = React.createRef();
+    eci_Num_Acta_Boda_CivilRef = React.createRef();
+    eci_Libro_Acta_Boda_CivilRef = React.createRef();
+    eci_Oficialia_Boda_CivilRef = React.createRef();
+    //eci_Fecha_Boda_EclesiasticaRef = React.createRef();
+    eci_Lugar_Boda_EclesiasticaRef = React.createRef();
+    eci_Nombre_ConyugeRef = React.createRef();
+    eci_Cantidad_HijosRef = React.createRef();
+    eci_Nombre_HijosRef = React.createRef();
+
+    MatrimonioDatos = () => {
+        this.props.MatrimonioDatos({
+            //eci_Fecha_Boda_Civil : this.eci_Fecha_Boda_CivilRef.current.value,
+            eci_Num_Acta_Boda_Civil : this.eci_Fecha_Boda_CivilRef.current.value,
+            eci_Libro_Acta_Boda_Civil : this.eci_Fecha_Boda_CivilRef.current.value,
+            eci_Oficialia_Boda_Civil : this.eci_Fecha_Boda_CivilRef.current.value,
+            //eci_Fecha_Boda_Eclesiastica : this.eci_Fecha_Boda_CivilRef.current.value,
+            eci_Lugar_Boda_Eclesiastica : this.eci_Fecha_Boda_CivilRef.current.value,
+            eci_Nombre_Conyuge : this.eci_Fecha_Boda_CivilRef.current.value,
+            eci_Cantidad_Hijos : this.eci_Fecha_Boda_CivilRef.current.value,
+            eci_Nombre_Hijos : this.eci_Fecha_Boda_CivilRef.current.value
+        });
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -11,7 +36,7 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Fecha_Boda_Civil">Fecha boda civil</label>
+                                <label>Fecha boda civil</label>
                             </div>
                             <div className="col-sm-4">
                                 <DayPickerInput
@@ -27,10 +52,10 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Num_Acta_Boda_Civil">Num acta boda civil</label>
+                                <label>Num acta boda civil</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="eci_Num_Acta_Boda_Civil" className="form-control" />
+                                <input type="text" name="eci_Num_Acta_Boda_Civil" ref={this.eci_Num_Acta_Boda_CivilRef} className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -38,10 +63,10 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Libro_Acta_Boda_Civil">Libro acta boda civil</label>
+                                <label>Libro acta boda civil</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="eci_Libro_Acta_Boda_Civil" className="form-control" />
+                                <input type="text" name="eci_Libro_Acta_Boda_Civil" ref={this.eci_Libro_Acta_Boda_Civil} className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -49,10 +74,10 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Oficialia_Boda_Civil">Oficialia boda civil</label>
+                                <label>Oficialia boda civil</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="eci_Oficialia_Boda_Civil" className="form-control" />
+                                <input type="text" name="eci_Oficialia_Boda_Civil" ref={this.eci_Oficialia_Boda_CivilRef} className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -76,10 +101,10 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Lugar_Boda_Eclesiastica">Lugar boda eclesiastica</label>
+                                <label>Lugar boda eclesiastica</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="eci_Lugar_Boda_Eclesiastica" className="form-control" />
+                                <input type="text" name="eci_Lugar_Boda_Eclesiastica" ref={this.eci_Lugar_Boda_EclesiasticaRef} className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -87,10 +112,10 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Nombre_Conyuge">Nombre conyuge</label>
+                                <label>Nombre conyuge</label>
                             </div>
                             <div className="col-sm-4">
-                                <input for="eci_Nombre_Conyuge" className="form-control" />
+                                <input type="text" name="eci_Nombre_Conyuge" ref={this.eci_Nombre_ConyugeRef} className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -101,10 +126,10 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Cantidad_Hijos">Cantidad hijos</label>
+                                <label>Cantidad hijos</label>
                             </div>
                             <div className="col-sm-4">
-                                <input type="number" for="eci_Cantidad_Hijos" className="form-control" />
+                                <input type="number" for="eci_Cantidad_Hijos" ref={this.eci_Cantidad_HijosRef} className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -112,10 +137,10 @@ class Matrimonio extends Component {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-sm-2">
-                                <label for="eci_Nombre_Hijos">Nombre de los hijos</label>
+                                <label>Nombre de los hijos</label>
                             </div>
                             <div className="col-sm-4">
-                                <textarea for="eci_Lugar_Boda_Eclesiastica" className="form-control" ></textarea>
+                                <textarea name="eci_Lugar_Boda_Eclesiastica" ref={this.eci_Nombre_HijosRef} className="form-control" ></textarea>
                             </div>
                         </div>
                     </div>

@@ -5,15 +5,49 @@ import EstadoCivil from './Partials/EstadoCivil';
 import Eclesiasticos from './Partials/Eclesiasticos';
 import Hogar from './Partials/Hogar';
 import VerificarNuevoRegistro from './Partials/VerificaNuevoRegistro';
+import Matrimonio from './Partials/Matrimonio';
 
 class RegistroDePersonal extends Component {
+    FrmRegistroPersona = (e) => {
+        e.preventDefault();
+        console.log("Formulario enviado");
+    };
+
+    VerificarNuevoRegistroDatos = (VerificarNuevoRegistroDatos) => {
+        console.log(VerificarNuevoRegistroDatos);
+    }
+
+    GeneralesDatos = (GeneralesDatos) => {
+        console.log(GeneralesDatos);
+    }
+
+    FamiliaAsendenteDatos = (FamiliaAsendenteDatos) => {
+        console.log(FamiliaAsendenteDatos);
+    }
+
+    EstadoCivilDatos = (EstadoCivilDatos) => {
+        console.log(EstadoCivilDatos);
+    }
+
+    MatrimonioDatos = (MatrimonioDatos) => {
+        console.log(MatrimonioDatos);
+    }
+
+    EclesiasticosDatos = (EclesiasticosDatos) => {
+        console.log(EclesiasticosDatos);
+    }
+
+    HogarDatos = (HogarDatos) => {
+        console.log(HogarDatos);
+    }
+
     render() {
         return (
             <React.Fragment>
                 <h2 className="text-info">Agregar nuevo miembro</h2>
 
                 <div className="border">
-                    <form method="post">
+                    <form onSubmit={this.FrmRegistroPersona}>
                         <div className="container">
 
                             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -39,17 +73,30 @@ class RegistroDePersonal extends Component {
 
                             <div className="tab-content" id="myTabContent">
                                 
-                                <VerificarNuevoRegistro />
+                                <VerificarNuevoRegistro
+                                    VerificarNuevoRegistroDatos = {this.VerificarNuevoRegistroDatos}
+                                />
 
-                                <Generales />
+                                <Generales 
+                                    GeneralesDatos = {this.GeneralesDatos}
+                                />
 
-                                <FamiliaAsendente />
+                                <FamiliaAsendente 
+                                    FamiliaAsendenteDatos = {this.FamiliaAsendenteDatos}
+                                />
 
-                                <EstadoCivil />
+                                <EstadoCivil 
+                                    EstadoCivilDatos = {this.EstadoCivilDatos}
+                                    MatrimonioDatos = {this.MatrimonioDatos}
+                                />
 
-                                <Eclesiasticos />
+                                <Eclesiasticos 
+                                    EclesiasticosDatos = {this.EclesiasticosDatos}
+                                />
 
-                                <Hogar />
+                                <Hogar 
+                                    HogarDatos = {this.HogarDatos}
+                                />
 
                             </div>
                         </div>

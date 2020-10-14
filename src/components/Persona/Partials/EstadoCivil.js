@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import Matrimonio from './Matrimonio';
 
 class EstadoCivil extends Component {
+
+    per_Estado_CivilRef = React.createRef();
+
+    EstadoCivilDatos = () => {
+        this.props.EstadoCivilDatos({
+            per_Estado_Civil: this.per_Estado_CivilRef.current.value
+        });
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -12,7 +21,7 @@ class EstadoCivil extends Component {
                                 <label>Estado civil</label>
                             </div>
                             <div className="col-sm-4">
-                                <select name="per_Estado_Civil" className="form-control">
+                                <select name="per_Estado_Civil" ref={this.per_Estado_CivilRef} className="form-control">
                                     <option vale="0">Selecciona un estado civil</option>
                                     <option vale="casado">Casado/a</option>
                                     <option vale="divorciado">Divorciado/a</option>
@@ -25,7 +34,17 @@ class EstadoCivil extends Component {
                         </div>
                     </div>
 
-                    <Matrimonio />
+                    <Matrimonio
+                        MatrimonioDatos = {this.MatrimonioDatos}
+                    />
+
+                    <div className="form-group">
+                        <div className="row">
+                            <div className="col-sm-2">
+                                <a href="#eclesiasaticos" className="btn btn-primary" onClick={this.EstadoCivilDatos}>Siguiente</a>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </React.Fragment>
