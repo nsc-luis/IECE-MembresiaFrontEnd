@@ -6,7 +6,7 @@ class Home extends Component {
         return (
             <React.Fragment>
                 <div className="row p-4 mx-auto">
-                    <div className="col-sm-3">
+                    <div className="col-3">
                         <div className="card border-info text-center acceso-directo">
                             <div className="card-header">
                                 <h5><strong>Personal</strong></h5>
@@ -16,6 +16,19 @@ class Home extends Component {
                                 <br />
                                 Acceso rapido a operaciones con el personal bautizado. <br />
                                 <a href="/ListaDePersonal" className="btn btn-sm btn-primary">Ingresar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-3">
+                        <div className="card border-info text-center acceso-directo">
+                            <div className="card-header">
+                                <h5><strong>Registro</strong></h5>
+                            </div>
+                            <div className="card-body p-3 luis">
+                                <img src="./images/addPerson.png" className="mx-auto card-img-top imgHome" />
+                                <br />
+                                Acceso rapido a registro de pesonas en general. <br />
+                                <a href="/RegistroDePersonal" className="btn btn-sm btn-primary">Ingresar</a>
                             </div>
                         </div>
                     </div>

@@ -1,8 +1,58 @@
 import React, { Component } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
+import axios from 'axios';
+import Global from '../../Global';
 
 class RegistroDePersonal extends Component {
+
+    url = Global.url_api;
+
+    state = {
+        generales: {},
+        estados: [],
+        paises: [],
+        profesiones_oficios: [],
+        distrito: [],
+        sector: [],
+        status: null
+    };
+
+    componentWillMount() {
+        this.getEstados();
+        this.getPaises();
+        this.getProfesionesOficios();
+    };
+
+    getEstados = () => {
+        axios.get(this.url + "/estado")
+            .then(res => {
+                this.setState({
+                    estados: res.data,
+                    status: 'success'
+                });
+            });
+    };
+
+    getPaises = () => {
+        axios.get(this.url + "/pais")
+            .then(res => {
+                this.setState({
+                    paises: res.data,
+                    status: 'success'
+                });
+            });
+    };
+
+    getProfesionesOficios = () => {
+        axios.get(this.url + "/profesion_oficio")
+            .then(res => {
+                this.setState({
+                    profesiones_oficios: res.data,
+                    status: 'success'
+                });
+            });
+    };
 
     per_NombreRef = React.createRef();
     per_CategoriaRef = React.createRef();
@@ -57,72 +107,91 @@ class RegistroDePersonal extends Component {
     FrmRegistroPersona = (e) => {
         e.preventDefault();
         let datos = {
-            generales : [{
-                per_Nombre : this.per_NombreRef.current.value,
-                per_Categoria : this.per_CategoriaRef.current.value,
-                per_Apellido_Paterno : this.per_Apellido_PaternoRef.current.value,
-                per_Apellido_Materno : this.per_Apellido_MaternoRef.current.value,
-                per_Fecha_Nacimiento : this.per_Fecha_NacimientoRef.current.value,
+            generales: [{
+                per_Nombre: this.per_NombreRef.current.value,
+                per_Categoria: this.per_CategoriaRef.current.value,
+                per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value,
+                per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value,
+                per_Fecha_Nacimiento: this.per_Fecha_NacimientoRef.current.value,
 
-                pro_Id_Profesion_Oficio1 : this.pro_Id_Profesion_Oficio1Ref.current.value,
-                pro_Id_Profesion_Oficio2 : this.pro_Id_Profesion_Oficio2Ref.current.value,
-                per_Telefono_Fijo : this.per_Telefono_FijoRef.current.value,
-                per_Email_Personal : this.per_Email_PersonalRef.current.value,
-                per_Observaciones : this.per_ObservacionesRef.current.value
+                pro_Id_Profesion_Oficio1: this.pro_Id_Profesion_Oficio1Ref.current.value,
+                pro_Id_Profesion_Oficio2: this.pro_Id_Profesion_Oficio2Ref.current.value,
+                per_Telefono_Fijo: this.per_Telefono_FijoRef.current.value,
+                per_Email_Personal: this.per_Email_PersonalRef.current.value,
+                per_Observaciones: this.per_ObservacionesRef.current.value
             }],
-            familiaAsendente : [{
-                per_Nombre_Padre : this.per_Nombre_PadreRef.current.value,
-                per_Nombre_Madre : this.per_Nombre_MadreRef.current.value,
-                per_Nombre_Abuelo_Paterno : this.per_Nombre_Abuelo_PaternoRef.current.value,
-                per_Nombre_Abuela_Paterna : this.per_Nombre_Abuela_PaternaRef.current.value,
-                per_Nombre_Abuelo_Materno : this.per_Nombre_Abuelo_MaternoRef.current.value,
-                per_Nombre_Abuela_Materna : this.per_Nombre_Abuela_MaternaRef.current.value
+            familiaAsendente: [{
+                per_Nombre_Padre: this.per_Nombre_PadreRef.current.value,
+                per_Nombre_Madre: this.per_Nombre_MadreRef.current.value,
+                per_Nombre_Abuelo_Paterno: this.per_Nombre_Abuelo_PaternoRef.current.value,
+                per_Nombre_Abuela_Paterna: this.per_Nombre_Abuela_PaternaRef.current.value,
+                per_Nombre_Abuelo_Materno: this.per_Nombre_Abuelo_MaternoRef.current.value,
+                per_Nombre_Abuela_Materna: this.per_Nombre_Abuela_MaternaRef.current.value
             }],
-            estado_civil : [{
-                per_Estado_Civil : this.per_Estado_CivilRef.current.value,
+            estado_civil: [{
+                per_Estado_Civil: this.per_Estado_CivilRef.current.value,
 
                 // eci_Fecha_Boda_Civil : this.eci_Fecha_Boda_CivilRef.current.value,
-                eci_Num_Acta_Boda_Civil : this.eci_Num_Acta_Boda_CivilRef.current.value,
-                eci_Libro_Acta_Boda_Civil : this.eci_Libro_Acta_Boda_CivilRef.current.value,
-                eci_Oficialia_Boda_Civil : this.eci_Oficialia_Boda_CivilRef.current.value,
+                eci_Num_Acta_Boda_Civil: this.eci_Num_Acta_Boda_CivilRef.current.value,
+                eci_Libro_Acta_Boda_Civil: this.eci_Libro_Acta_Boda_CivilRef.current.value,
+                eci_Oficialia_Boda_Civil: this.eci_Oficialia_Boda_CivilRef.current.value,
                 // eci_Fecha_Boda_Eclesiastica : this.eci_Fecha_Boda_EclesiasticaRef.current.value,
-                eci_Lugar_Boda_Eclesiastica : this.eci_Lugar_Boda_EclesiasticaRef.current.value,
-                eci_Nombre_Conyuge : this.eci_Nombre_ConyugeRef.current.value,
-                eci_Cantidad_Hijos : this.eci_Cantidad_HijosRef.current.value,
-                eci_Nombre_Hijos : this.eci_Nombre_HijosRef.current.value
+                eci_Lugar_Boda_Eclesiastica: this.eci_Lugar_Boda_EclesiasticaRef.current.value,
+                eci_Nombre_Conyuge: this.eci_Nombre_ConyugeRef.current.value,
+                eci_Cantidad_Hijos: this.eci_Cantidad_HijosRef.current.value,
+                eci_Nombre_Hijos: this.eci_Nombre_HijosRef.current.value
             }],
-            eclesiasticos : [{
-                per_Bautizado : this.per_BautizadoRef.current.value,
-                bau_Lugar_Bautismo : this.bau_Lugar_BautismoRef.current.value,
+            eclesiasticos: [{
+                per_Bautizado: this.per_BautizadoRef.current.value,
+                bau_Lugar_Bautismo: this.bau_Lugar_BautismoRef.current.value,
                 // bau_Fecha_Bautismo : this.bau_Fecha_BautismoRef.current.value,
-                bau_Ministro_Que_Bautizo : this.bau_Ministro_Que_BautizoRef.current.value
+                bau_Ministro_Que_Bautizo: this.bau_Ministro_Que_BautizoRef.current.value
             }],
-            hogar : [{
-                hog_Jerarquia : this.hog_JerarquiaRef.current.value,
+            hogar: [{
+                hog_Jerarquia: this.hog_JerarquiaRef.current.value,
 
-                hog_Id_Hogar : this.hog_Id_HogarRef.current.value,
-                dom_Calle : this.dom_CalleRef.current.value,
-                dom_Numero_Exterior : this.dom_Numero_ExteriorRef.current.value,
-                dom_Numero_Interior : this.dom_Numero_InteriorRef.current.value,
-                dom_Tipo_Subdivision : this.dom_Tipo_SubdivisionRef.current.value,
-                dom_Subdivision : this.dom_SubdivisionRef.current.value,
-                dom_Localidad : this.dom_LocalidadRef.current.value,
-                dom_Municipio_Cuidad : this.dom_Municipio_CuidadRef.current.value,
-                pais_Id_Pais : this.pais_Id_PaisRef.current.value,
-                est_Id_Estado : this.est_Id_EstadoRef.current.value,
-                dom_Telefono : this.dom_TelefonoRef.current.value
+                hog_Id_Hogar: this.hog_Id_HogarRef.current.value,
+                dom_Calle: this.dom_CalleRef.current.value,
+                dom_Numero_Exterior: this.dom_Numero_ExteriorRef.current.value,
+                dom_Numero_Interior: this.dom_Numero_InteriorRef.current.value,
+                dom_Tipo_Subdivision: this.dom_Tipo_SubdivisionRef.current.value,
+                dom_Subdivision: this.dom_SubdivisionRef.current.value,
+                dom_Localidad: this.dom_LocalidadRef.current.value,
+                dom_Municipio_Cuidad: this.dom_Municipio_CuidadRef.current.value,
+                pais_Id_Pais: this.pais_Id_PaisRef.current.value,
+                est_Id_Estado: this.est_Id_EstadoRef.current.value,
+                dom_Telefono: this.dom_TelefonoRef.current.value
             }]
         };
         console.log(datos);
+
+        this.setState({
+            generales: datos.generales[0]
+        });
     };
 
+
+
     render() {
+
+        if (this.state.generales) {
+            var generales = this.state.generales;
+        }
+
+        /* axios.get("http://localhost/iece-web-api/api/estado")
+            .then(res => {
+                // console.log(res.data);
+                this.setState({
+                    estados : res.data
+                });
+            }); */
+
         return (
             <React.Fragment>
                 <h2 className="text-info">Agregar nuevo miembro</h2>
 
                 <div className="border">
-                    <form onSubmit={this.FrmRegistroPersona}>
+                    <form onSubmit={this.FrmRegistroPersona} onChange={this.FrmRegistroPersona} >
                         <div className="container">
 
                             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -145,6 +214,12 @@ class RegistroDePersonal extends Component {
                                     <a className="nav-link" id="hogar-tab" data-toggle="tab" href="#hogar" role="tab" aria-controls="hogar" aria-selected="true">6. Hogar</a>
                                 </li>
                             </ul>
+
+                            {generales.per_Nombre &&
+                                <React.Fragment>
+                                    Nombre: {generales.per_Nombre}
+                                </React.Fragment>
+                            }
 
                             <div className="tab-content" id="myTabContent">
 
@@ -241,6 +316,13 @@ class RegistroDePersonal extends Component {
                                             <div className="col-sm-4">
                                                 <select name="pro_Id_Profesion_Oficio1" ref={this.pro_Id_Profesion_Oficio1Ref} className="form-control">
                                                     <option value="0">Selecciona un sector</option>
+                                                    {
+                                                        this.state.profesiones_oficios.map((profesion_oficio, i) => {
+                                                            return (
+                                                                <option key={i} value={profesion_oficio.pro_Id_Profesion_Oficio}>{profesion_oficio.pro_Definicion_Profesion_Oficio} | {profesion_oficio.pro_Desc_Profesion_Oficio}</option>
+                                                            )
+                                                        })
+                                                    }
                                                 </select>
                                             </div>
                                         </div>
@@ -249,11 +331,18 @@ class RegistroDePersonal extends Component {
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label for="Personal.pro_Id_Profesion_Oficio2">Profesion oficio2</label>
+                                                <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesion oficio2</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <select name="pro_Id_Profesion_Oficio2" ref={this.pro_Id_Profesion_Oficio2Ref} className="form-control">
                                                     <option value="0">Selecciona un sector</option>
+                                                    {
+                                                        this.state.profesiones_oficios.map((profesion_oficio, i) => {
+                                                            return (
+                                                                <option key={i} value={profesion_oficio.pro_Id_Profesion_Oficio}>{profesion_oficio.pro_Definicion_Profesion_Oficio} | {profesion_oficio.pro_Desc_Profesion_Oficio}</option>
+                                                            )
+                                                        })
+                                                    }
                                                 </select>
                                             </div>
                                         </div>
@@ -486,7 +575,7 @@ class RegistroDePersonal extends Component {
                                         <div className="form-group">
                                             <div className="row">
                                                 <div className="col-sm-2">
-                                                    <label for="eci_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
+                                                    <label htmlFor="eci_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
                                                 </div>
                                                 <div className="col-sm-4">
                                                     <DayPickerInput
@@ -530,7 +619,7 @@ class RegistroDePersonal extends Component {
                                                     <label>Cantidad hijos</label>
                                                 </div>
                                                 <div className="col-sm-4">
-                                                    <input type="number" for="eci_Cantidad_Hijos" ref={this.eci_Cantidad_HijosRef} className="form-control" />
+                                                    <input type="number" htmlFor="eci_Cantidad_Hijos" ref={this.eci_Cantidad_HijosRef} className="form-control" />
                                                 </div>
                                             </div>
                                         </div>
@@ -762,11 +851,18 @@ class RegistroDePersonal extends Component {
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label for="pais_Id_Pais">Pais</label>
+                                                <label htmlFor="pais_Id_Pais">Pais</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <select name="pais_Id_Pais" ref={this.pais_Id_PaisRef} className="form-control">
                                                     <option value="0">Selecciona un pais</option>
+                                                    {
+                                                        this.state.paises.map((pais, i) => {
+                                                            return (
+                                                                <option key={i} value={pais.pais_Id_Pais}> {pais.pais_Nombre} </option>
+                                                            )
+                                                        })
+                                                    }
                                                 </select>
                                             </div>
                                         </div>
@@ -774,11 +870,18 @@ class RegistroDePersonal extends Component {
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label for="est_Id_Estado">Estado</label>
+                                                <label htmlFor="est_Id_Estado">Estado</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <select name="est_Id_Estado" ref={this.est_Id_EstadoRef} className="form-control">
                                                     <option value="0">Selecciona un estado</option>
+                                                    {
+                                                        this.state.estados.map((estado, i) => {
+                                                            return (
+                                                                <option key={i} value={estado.est_IdEstado}> {estado.est_Nombre} </option>
+                                                            )
+                                                        })
+                                                    }
                                                 </select>
                                             </div>
                                         </div>

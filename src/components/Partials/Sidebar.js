@@ -12,7 +12,7 @@ class Sidebar extends Component {
                         <div className="sidebar-brand-icon">
                             <i className="fas fa-building"></i>
                         </div>
-                        <div className="sidebar-brand-text mx-3">IECE</div>
+                        <div className="sidebar-brand-text mx-3">HOME</div>
                     </a>
 
                     {/* Divider */}
