@@ -108,7 +108,7 @@ class ListaDePersonal extends Component {
                     {this.RenderBtnRegistro()}
                     <table className="table" id="tblPersonas">
                         <thead>
-                            <tr>
+                            <tr scope="row">
                                 <th scope="col">Nombre</th>
                                 <th className="text-center" scope="col">Status</th>
                                 <th className="text-center" scope="col">Informacion</th>
@@ -119,7 +119,7 @@ class ListaDePersonal extends Component {
                             {
                                 this.state.personas.map((persona, i) => {
                                     return (
-                                        <tr key={i}>
+                                        <tr scope="row" key={i}>
                                             <td scope="row">{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
                                             <td className="text-center">
                                                 {this.InfoStatus(persona)}

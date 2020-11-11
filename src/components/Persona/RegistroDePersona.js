@@ -3,18 +3,44 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
 import Global from '../../Global';
+import MomentLocalUtils from 'react-day-picker/moment';
 
 class RegistroDePersonal extends Component {
 
     url = Global.url_api;
 
+    CheckNvaPersona = (day) => {
+
+        // Obtener primera letra del apellido paterno
+        var ap = this.per_Apellido_PaternoRef.current.value.split("");
+        // Obtener primera vocal del apellido paterno
+        var regex = /[^aeiou]/gi;
+        var vowels = this.per_Apellido_PaternoRef.current.value.replace(regex, "");
+        var pv = vowels[0] == ap[0] ? vowels[1] : vowels[0];
+
+        // Obtener primera letra del apellido materno
+        var am = this.per_Apellido_MaternoRef.current.value.split("");
+        // Obtener primera letra del primer nombre
+        var n = this.per_NombreRef.current.value.split("");
+
+        var RFCSinHomo = ap[0] + pv + am[0] + n[0] + MomentLocalUtils.formatDate(day, 'YYMMDD');
+
+        this.getPersonaByRFCSinHomo(RFCSinHomo);
+    }
+
     state = {
         generales: {},
+        datosPersonaEncontrada: {},
+        PersonaEncontrada: false,
+        RFCSinHomoclave: '',
         estados: [],
         paises: [],
         profesiones_oficios: [],
         distrito: [],
         sector: [],
+        ListaHogares: [],
+        MiembrosDelHogar: [],
+        SelectHogarId: 0,
         status: null
     };
 
@@ -22,6 +48,7 @@ class RegistroDePersonal extends Component {
         this.getEstados();
         this.getPaises();
         this.getProfesionesOficios();
+        this.getListaHogares();
     };
 
     getEstados = () => {
@@ -44,6 +71,27 @@ class RegistroDePersonal extends Component {
             });
     };
 
+    getPersonaByRFCSinHomo = (str) => {
+        axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
+            .then(res => {
+                if (res.data[0].status == true) {
+                    this.setState({
+                        PersonaEncontrada: true,
+                        datosPersonaEncontrada: res.data[0].persona[0],
+                        RFCSinHomoclave: str
+                    });
+                    console.log(this.state.datosPersonaEncontrada);
+                }
+                if (res.data[0].status == false) {
+                    this.setState({
+                        PersonaEncontrada: false,
+                        datosPersonaEncontrada: {},
+                        RFCSinHomoclave: ''
+                    });
+                }
+            });
+    };
+
     getProfesionesOficios = () => {
         axios.get(this.url + "/profesion_oficio")
             .then(res => {
@@ -53,6 +101,28 @@ class RegistroDePersonal extends Component {
                 });
             });
     };
+
+    getListaHogares = () => {
+        axios.get(this.url + "/hogar/GetListaHogares")
+            .then(res => {
+                this.setState({
+                    ListaHogares: res.data,
+                    status: 'success'
+                });
+            });
+    }
+
+    HogarSeleccionado = () => {
+        axios.get(this.url + "/Hogar/GetMiembros/" + this.hog_Id_HogarRef.current.value)
+            .then(res => {
+                this.setState({
+                    MiembrosDelHogar: res.data,
+                    status: 'success',
+                    SelectHogarId: this.hog_Id_HogarRef.current.value
+                });
+            });
+        // console.log(this.hog_Id_HogarRef.current.value);
+    }
 
     per_NombreRef = React.createRef();
     per_CategoriaRef = React.createRef();
@@ -170,8 +240,6 @@ class RegistroDePersonal extends Component {
         });
     };
 
-
-
     render() {
 
         if (this.state.generales) {
@@ -191,7 +259,7 @@ class RegistroDePersonal extends Component {
                 <h2 className="text-info">Agregar nuevo miembro</h2>
 
                 <div className="border">
-                    <form onSubmit={this.FrmRegistroPersona} onChange={this.FrmRegistroPersona} >
+                    <form onSubmit={this.FrmRegistroPersona} /* onChange={this.FrmRegistroPersona} */ >
                         <div className="container">
 
                             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -250,7 +318,7 @@ class RegistroDePersonal extends Component {
                                                 <label>Nombre</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="tet" name="per_Nombre" ref={this.per_NombreRef} className="form-control" />
+                                                <input type="tet" name="per_Nombre" ref={this.per_NombreRef} onBlurCapture={this.CheckNvaPersona} className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -261,7 +329,7 @@ class RegistroDePersonal extends Component {
                                                 <label>Apellido paterno</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Apellido_Paterno" ref={this.per_Apellido_PaternoRef} className="form-control" />
+                                                <input type="text" name="per_Apellido_Paterno" onBlurCapture={this.CheckNvaPersona} ref={this.per_Apellido_PaternoRef} className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -272,7 +340,7 @@ class RegistroDePersonal extends Component {
                                                 <label>Apellido materno</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Apellido_Materno" ref={this.per_Apellido_MaternoRef} className="form-control" />
+                                                <input type="text" name="per_Apellido_Materno" onBlurCapture={this.CheckNvaPersona} ref={this.per_Apellido_MaternoRef} className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -284,23 +352,49 @@ class RegistroDePersonal extends Component {
                                             </div>
                                             <div className="col-sm-4">
                                                 <DayPickerInput
-                                                    ref={this.per_Fecha_NacimientoRef}
                                                     dayPickerProps={{
                                                         showWeekNumbers: true,
-                                                        todayButton: 'Today',
+                                                        todayButton: 'Today'
                                                     }}
+                                                    onDayChange={this.CheckNvaPersona}
                                                 />
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    {this.state.PersonaEncontrada === true &&
+                                        <React.Fragment>
+                                            <div className="alert alert-warning mt-3" role="alert">
+                                                <h5><strong>AVISO: </strong>Se ha encontrado una persona con el mismo RFC: {this.state.RFCSinHomoclave} (SIN homoclave), asegurese de no duplicar a la persona.</h5>
+                                            </div>
+                                            <table className="table">
+                                                <thead>
+                                                    <tr scope="row">
+                                                        <th scope="col">Nombre</th>
+                                                        <th scope="col">Nacimiento</th>
+                                                        <th scope="col">Distrito / Localidad</th>
+                                                        <th scope="col">Sector / Localidad</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr scope="row">
+                                                        <td scope="col">{this.state.datosPersonaEncontrada.per_Nombre} {this.state.datosPersonaEncontrada.per_Apellido_Paterno} {this.state.datosPersonaEncontrada.per_Apellido_Materno} </td>
+                                                        <td scope="col">{this.state.datosPersonaEncontrada.per_Fecha_Nacimiento} </td>
+                                                        <td scope="col">{this.state.datosPersonaEncontrada.dis_Numero} / {this.state.datosPersonaEncontrada.dis_Localidad}</td>
+                                                        <td scope="col">{this.state.datosPersonaEncontrada.sec_Numero} / {this.state.datosPersonaEncontrada.sec_Localidad}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </React.Fragment>
+                                    }
+
+                                    {/* <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
                                                 <a href="#generales" className="btn btn-primary" onClick={this.VerificarNuevoRegistroDatos}>Siguiente</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 {/* <Generales
@@ -403,13 +497,13 @@ class RegistroDePersonal extends Component {
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
                                                 <a href="#familiaAsendente" className="btn btn-primary" onClick={this.GeneralesDatos}>Siguiente</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                 </div>
 
@@ -483,13 +577,13 @@ class RegistroDePersonal extends Component {
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
                                                 <a href="#estado-civil" className="btn btn-primary" onClick={this.FamiliaAsendenteDatos}>Siguiente</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                 </div>
 
@@ -636,13 +730,13 @@ class RegistroDePersonal extends Component {
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
                                                 <a href="#eclesiasaticos" className="btn btn-primary" onClick={this.EstadoCivilDatos}>Siguiente</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                 </div>
 
@@ -743,159 +837,197 @@ class RegistroDePersonal extends Component {
                                 /> */}
                                 <div className="tab-pane fade" id="hogar" role="tabpanel" aria-labelledby="hogar-tab">
                                     <div className="form-group">
+                                        <div className="alert alert-info mt-3" role="alert">
+                                            <h5><strong>AVISO: </strong>Al seleccionar la opcion "Nuevo hogr / domicilio" debera completar los campos necesarios.</h5>
+                                        </div>
                                         <div className="row">
                                             <div className="col-sm-2">
                                                 <label>Asignar a hogar</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <select name="hog_Id_Hogar" ref={this.hog_Id_HogarRef} className="form-control">
-                                                    <option value="0">Selecciona un hogar</option>
+                                                <select name="hog_Id_Hogar" ref={this.hog_Id_HogarRef} onChange={this.HogarSeleccionado} className="form-control">
+                                                    <option value="0">Nuevo hogar / domicilio</option>
+                                                    {
+                                                        this.state.ListaHogares.map((hogar, i) => {
+                                                            return (
+                                                                <option key={i} value={hogar.hog_Id_Hogar}>{hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno} | {hogar.dom_Calle} {hogar.dom_Numero_Exterior}, {hogar.dom_Localidad}, {hogar.est_Nombre}</option>
+                                                            )
+                                                        })
+                                                    }
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Jerarquia</label>
+                                    {this.state.SelectHogarId > 0 &&
+                                        <React.Fragment>
+                                            <div class="alert alert-warning mt-3" role="alert">
+                                                <h5>ATENCION: </h5>
+                                                <ul>
+                                                    <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
+                                                    <li>Solo puede seleccionar una jerarquia entre 1 y la jerarquia mas baja registrada.</li>
+                                                    <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
+                                                </ul>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="number" name="hog_Jerarquia" ref={this.hog_JerarquiaRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Jerarquia</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="number" name="hog_Jerarquia" ref={this.hog_JerarquiaRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Nuevo hogar</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input type="checkbox" name="nvoHogar" className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                            <table className="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Nombre</th>
+                                                        <th scope="col">Jerarquia</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        this.state.MiembrosDelHogar.map((miembro, i) => {
+                                                            return (
+                                                                <React.Fragment>
+                                                                    <tr key={i}>
+                                                                        <td scope="col">{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
+                                                                        <td scope="col">{miembro.hog_Jerarquia}</td>
+                                                                    </tr>
+                                                                </React.Fragment>
+                                                            )
+                                                        })
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </React.Fragment>
+                                    }
 
                                     {/* <Domicilio /> */}
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Calle</label>
+                                    {this.state.SelectHogarId == 0 &&
+                                        <React.Fragment>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Calle</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="dom_Calle" ref={this.dom_CalleRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="dom_Calle" ref={this.dom_CalleRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Numero exterior</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="dom_Numero_Exterior" ref={this.dom_Numero_ExteriorRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Numero exterior</label>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Numero interior</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="dom_Numero_Interior" ref={this.dom_Numero_InteriorRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="dom_Numero_Exterior" ref={this.dom_Numero_ExteriorRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Tipo subdivision</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input name="dom_Tipo_Subdivision" ref={this.dom_Tipo_SubdivisionRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Numero interior</label>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Subdivision</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="dom_Subdivision" ref={this.dom_SubdivisionRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="dom_Numero_Interior" ref={this.dom_Numero_InteriorRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Localidad</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="dom_Localidad" ref={this.dom_LocalidadRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Tipo subdivision</label>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Municipio/Cuidad</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="dom_Municipio_Cuidad" ref={this.dom_Municipio_CuidadRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input name="dom_Tipo_Subdivision" ref={this.dom_Tipo_SubdivisionRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label htmlFor="pais_Id_Pais">Pais</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <select name="pais_Id_Pais" ref={this.pais_Id_PaisRef} className="form-control">
+                                                            <option value="0">Selecciona un pais</option>
+                                                            {
+                                                                this.state.paises.map((pais, i) => {
+                                                                    return (
+                                                                        <option key={i} value={pais.pais_Id_Pais}> {pais.pais_Nombre} </option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Subdivision</label>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label htmlFor="est_Id_Estado">Estado</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <select name="est_Id_Estado" ref={this.est_Id_EstadoRef} className="form-control">
+                                                            <option value="0">Selecciona un estado</option>
+                                                            {
+                                                                this.state.estados.map((estado, i) => {
+                                                                    return (
+                                                                        <option key={i} value={estado.est_IdEstado}> {estado.est_Nombre} </option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="dom_Subdivision" ref={this.dom_SubdivisionRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Telefono</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="dom_Telefono" ref={this.dom_TelefonoRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Localidad</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="dom_Localidad" ref={this.dom_LocalidadRef} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Municipio/Cuidad</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="dom_Municipio_Cuidad" ref={this.dom_Municipio_CuidadRef} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label htmlFor="pais_Id_Pais">Pais</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <select name="pais_Id_Pais" ref={this.pais_Id_PaisRef} className="form-control">
-                                                    <option value="0">Selecciona un pais</option>
-                                                    {
-                                                        this.state.paises.map((pais, i) => {
-                                                            return (
-                                                                <option key={i} value={pais.pais_Id_Pais}> {pais.pais_Nombre} </option>
-                                                            )
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label htmlFor="est_Id_Estado">Estado</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <select name="est_Id_Estado" ref={this.est_Id_EstadoRef} className="form-control">
-                                                    <option value="0">Selecciona un estado</option>
-                                                    {
-                                                        this.state.estados.map((estado, i) => {
-                                                            return (
-                                                                <option key={i} value={estado.est_IdEstado}> {estado.est_Nombre} </option>
-                                                            )
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Telefono</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="dom_Telefono" ref={this.dom_TelefonoRef} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                        </React.Fragment>
+                                    }
 
                                     <div className="form-group">
                                         <div className="row">

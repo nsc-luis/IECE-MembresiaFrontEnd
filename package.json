@@ -8,11 +8,13 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.20.0",
     "build": "^0.1.4",
+    "moment": "^2.29.1",
     "react": "^16.13.1",
     "react-datepicker": "^3.2.2",
     "react-day-picker": "^7.4.8",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
+    "react-moment": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3"
   },
