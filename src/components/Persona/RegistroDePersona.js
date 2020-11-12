@@ -41,6 +41,10 @@ class RegistroDePersonal extends Component {
         ListaHogares: [],
         MiembrosDelHogar: [],
         SelectHogarId: 0,
+        ElMiembroEsBautizado: false,
+        TienePromesaDelEspitiruSanto: false,
+        ConcubinatoSolteroConHijos: false,
+        CasadoDivorciadoViudo: false,
         status: null
     };
 
@@ -60,6 +64,56 @@ class RegistroDePersonal extends Component {
                 });
             });
     };
+
+    EstadoCivilSeleccion = () => {
+        // console.log(this.per_Estado_CivilRef.current.value);
+        switch (this.per_Estado_CivilRef.current.value) {
+            case "casado":
+                this.setState({
+                    ConcubinatoSolteroConHijos: true,
+                    CasadoDivorciadoViudo: true
+                });
+                break;
+            case "divorciado":
+                this.setState({
+                    ConcubinatoSolteroConHijos: true,
+                    CasadoDivorciadoViudo: true
+                });
+                break;
+            case "viudo":
+                this.setState({
+                    ConcubinatoSolteroConHijos: true,
+                    CasadoDivorciadoViudo: true
+                });
+                break;
+            case "concubinato":
+                this.setState({
+                    ConcubinatoSolteroConHijos: true,
+                    CasadoDivorciadoViudo: false
+                });
+                break;
+            case "solteroconhijos":
+                this.setState({
+                    ConcubinatoSolteroConHijos: true,
+                    CasadoDivorciadoViudo: false
+                });
+                break
+            default:
+                this.setState({
+                    ConcubinatoSolteroConHijos: false,
+                    CasadoDivorciadoViudo: false
+                });
+                break;
+        }
+    }
+
+    fnPromesaDelEspirituSanto = () => {
+        if (this.PromesaDelEspirituSantoRef.current.checked) {
+            this.setState({ TienePromesaDelEspitiruSanto: true });
+        } else {
+            this.setState({ TienePromesaDelEspitiruSanto: false });
+        }
+    }
 
     getPaises = () => {
         axios.get(this.url + "/pais")
@@ -124,6 +178,15 @@ class RegistroDePersonal extends Component {
         // console.log(this.hog_Id_HogarRef.current.value);
     }
 
+    EsMiembroBautizado = () => {
+        // console.log(this.per_BautizadoRef.current.checked);
+        if (this.per_BautizadoRef.current.checked) {
+            this.setState({ ElMiembroEsBautizado: true });
+        } else {
+            this.setState({ ElMiembroEsBautizado: false });
+        }
+    }
+
     per_NombreRef = React.createRef();
     per_CategoriaRef = React.createRef();
     per_Apellido_PaternoRef = React.createRef();
@@ -173,6 +236,8 @@ class RegistroDePersonal extends Component {
     pais_Id_PaisRef = React.createRef();
     est_Id_EstadoRef = React.createRef();
     dom_TelefonoRef = React.createRef();
+
+    PromesaDelEspirituSantoRef = React.createRef();
 
     FrmRegistroPersona = (e) => {
         e.preventDefault();
@@ -273,10 +338,10 @@ class RegistroDePersonal extends Component {
                                     <a className="nav-link" id="familiaAsendente-tab" data-toggle="tab" href="#familiaAsendente" role="tab" aria-controls="familiaAsendente" aria-selected="true">3. Familia asendente</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" id="estado-civil-tab" data-toggle="tab" href="#estado-civil" role="tab" aria-controls="estado-civil" aria-selected="true">4. Estado civil</a>
+                                    <a className="nav-link" id="eclesiasticos-tab" data-toggle="tab" href="#eclesiasticos" role="tab" aria-controls="eclesiasticos" aria-selected="true">4. Eclesiasticos</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" id="eclesiasticos-tab" data-toggle="tab" href="#eclesiasticos" role="tab" aria-controls="eclesiasticos" aria-selected="true">5. Eclesiasticos</a>
+                                    <a className="nav-link" id="estado-civil-tab" data-toggle="tab" href="#estado-civil" role="tab" aria-controls="estado-civil" aria-selected="true">5. Estado civil</a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link" id="hogar-tab" data-toggle="tab" href="#hogar" role="tab" aria-controls="hogar" aria-selected="true">6. Hogar</a>
@@ -388,13 +453,6 @@ class RegistroDePersonal extends Component {
                                         </React.Fragment>
                                     }
 
-                                    {/* <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <a href="#generales" className="btn btn-primary" onClick={this.VerificarNuevoRegistroDatos}>Siguiente</a>
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </div>
 
                                 {/* <Generales
@@ -496,15 +554,6 @@ class RegistroDePersonal extends Component {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <a href="#familiaAsendente" className="btn btn-primary" onClick={this.GeneralesDatos}>Siguiente</a>
-                                            </div>
-                                        </div>
-                                    </div> */}
-
                                 </div>
 
                                 {/* <FamiliaAsendente
@@ -577,14 +626,6 @@ class RegistroDePersonal extends Component {
                                         </div>
                                     </div>
 
-                                    {/* <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <a href="#estado-civil" className="btn btn-primary" onClick={this.FamiliaAsendenteDatos}>Siguiente</a>
-                                            </div>
-                                        </div>
-                                    </div> */}
-
                                 </div>
 
                                 {/* <EstadoCivil
@@ -598,14 +639,13 @@ class RegistroDePersonal extends Component {
                                                 <label>Estado civil</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <select name="per_Estado_Civil" ref={this.per_Estado_CivilRef} className="form-control">
-                                                    <option vale="0">Selecciona un estado civil</option>
-                                                    <option vale="casado">Casado/a</option>
-                                                    <option vale="divorciado">Divorciado/a</option>
-                                                    <option vale="viudo">Viudo/a</option>
-                                                    <option vale="concubinato">Union libre/concubinato</option>
-                                                    <option vale="soltero">Soltero SIN hijos</option>
-                                                    <option vale="solteroconhijos">Soltero CON hijos</option>
+                                                <select defaultValue="soltero" name="per_Estado_Civil" ref={this.per_Estado_CivilRef} onChange={this.EstadoCivilSeleccion} className="form-control">
+                                                    <option value="casado">Casado/a</option>
+                                                    <option value="divorciado">Divorciado/a</option>
+                                                    <option value="viudo">Viudo/a</option>
+                                                    <option value="concubinato">Union libre/concubinato</option>
+                                                    <option value="soltero">Soltero SIN hijos</option>
+                                                    <option value="solteroconhijos">Soltero CON hijos</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -614,130 +654,129 @@ class RegistroDePersonal extends Component {
                                     {/* <Matrimonio
                                         MatrimonioDatos = {this.MatrimonioDatos}
                                     /> */}
-                                    <div id="PersonalConMatrimonio">
-
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Fecha boda civil</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <DayPickerInput
-                                                        ref={this.eci_Fecha_Boda_CivilRef}
-                                                        dayPickerProps={{
-                                                            showWeekNumbers: true,
-                                                            todayButton: 'Today',
-                                                        }}
-                                                    />
+                                    {this.state.CasadoDivorciadoViudo &&
+                                        <React.Fragment>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Nombre conyuge</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="eci_Nombre_Conyuge" ref={this.eci_Nombre_ConyugeRef} className="form-control" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Num acta boda civil</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <input type="text" name="eci_Num_Acta_Boda_Civil" ref={this.eci_Num_Acta_Boda_CivilRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Fecha boda civil</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <DayPickerInput
+                                                            ref={this.eci_Fecha_Boda_CivilRef}
+                                                            dayPickerProps={{
+                                                                showWeekNumbers: true,
+                                                                todayButton: 'Today',
+                                                            }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Libro acta boda civil</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <input type="text" name="eci_Libro_Acta_Boda_Civil" ref={this.eci_Libro_Acta_Boda_CivilRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Num acta boda civil</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="eci_Num_Acta_Boda_Civil" ref={this.eci_Num_Acta_Boda_CivilRef} className="form-control" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Oficialia boda civil</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <input type="text" name="eci_Oficialia_Boda_Civil" ref={this.eci_Oficialia_Boda_CivilRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Libro acta boda civil</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="eci_Libro_Acta_Boda_Civil" ref={this.eci_Libro_Acta_Boda_CivilRef} className="form-control" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label htmlFor="eci_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <DayPickerInput
-                                                        dayPickerProps={{
-                                                            showWeekNumbers: true,
-                                                            todayButton: 'Today',
-                                                        }}
-                                                    />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Oficialia boda civil</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="eci_Oficialia_Boda_Civil" ref={this.eci_Oficialia_Boda_CivilRef} className="form-control" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Lugar boda eclesiastica</label>
+                                            {this.state.ElMiembroEsBautizado &&
+                                                <React.Fragment>
+                                                    <div className="form-group">
+                                                        <div className="row">
+                                                            <div className="col-sm-2">
+                                                                <label htmlFor="eci_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
+                                                            </div>
+                                                            <div className="col-sm-4">
+                                                                <DayPickerInput
+                                                                    dayPickerProps={{
+                                                                        showWeekNumbers: true,
+                                                                        todayButton: 'Today',
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="form-group">
+                                                        <div className="row">
+                                                            <div className="col-sm-2">
+                                                                <label>Lugar boda eclesiastica</label>
+                                                            </div>
+                                                            <div className="col-sm-4">
+                                                                <input type="text" name="eci_Lugar_Boda_Eclesiastica" ref={this.eci_Lugar_Boda_EclesiasticaRef} className="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </React.Fragment>
+                                            }
+                                        </React.Fragment>
+                                    }
+
+                                    {this.state.ConcubinatoSolteroConHijos &&
+                                        <React.Fragment>
+                                            <div id="hijos">
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <label>Cantidad hijos</label>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <input type="number" htmlFor="eci_Cantidad_Hijos" ref={this.eci_Cantidad_HijosRef} className="form-control" />
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="col-sm-4">
-                                                    <input type="text" name="eci_Lugar_Boda_Eclesiastica" ref={this.eci_Lugar_Boda_EclesiasticaRef} className="form-control" />
+
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <label>Nombre de los hijos</label>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <textarea name="eci_Nombre_Hijos" ref={this.eci_Nombre_HijosRef} className="form-control" ></textarea>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Nombre conyuge</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <input type="text" name="eci_Nombre_Conyuge" ref={this.eci_Nombre_ConyugeRef} className="form-control" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div id="hijos">
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Cantidad hijos</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <input type="number" htmlFor="eci_Cantidad_Hijos" ref={this.eci_Cantidad_HijosRef} className="form-control" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-2">
-                                                    <label>Nombre de los hijos</label>
-                                                </div>
-                                                <div className="col-sm-4">
-                                                    <textarea name="eci_Nombre_Hijos" ref={this.eci_Nombre_HijosRef} className="form-control" ></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <a href="#eclesiasaticos" className="btn btn-primary" onClick={this.EstadoCivilDatos}>Siguiente</a>
-                                            </div>
-                                        </div>
-                                    </div> */}
-
+                                        </React.Fragment>
+                                    }
                                 </div>
 
                                 {/* <Eclesiasticos
@@ -750,86 +789,104 @@ class RegistroDePersonal extends Component {
                                                 <label>Bautizado</label>
                                             </div>
                                             <div className="col-sm-2">
-                                                <input type="checkbox" name="per_Bautizado" ref={this.per_BautizadoRef} className="form-control" />
+                                                <input type="checkbox" name="per_Bautizado" ref={this.per_BautizadoRef} onChange={this.EsMiembroBautizado} className="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <div className="row">
+                                            <div className="col-sm-3">
+                                                <label>Promesa del Espiritu Santo</label>
+                                            </div>
+                                            <div className="col-sm-2">
+                                                <input type="checkbox" name="PromesaDelEspirituSanto" ref={this.PromesaDelEspirituSantoRef} onChange={this.fnPromesaDelEspirituSanto} className="form-control" />
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* <Bautismo /> */}
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Lugar bautismo</label>
+                                    {this.state.ElMiembroEsBautizado &&
+                                        <React.Fragment>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Lugar bautismo</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="bau_Lugar_Bautismo" ref={this.bau_Lugar_BautismoRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="bau_Lugar_Bautismo" ref={this.bau_Lugar_BautismoRef} className="form-control" />
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Fecha bautismo</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <DayPickerInput
+                                                            dayPickerProps={{
+                                                                showWeekNumbers: true,
+                                                                todayButton: 'Today',
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Fecha bautismo</label>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Ministro que bautizo</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="bau_Ministro_Que_Bautizo" ref={this.bau_Ministro_Que_BautizoRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <DayPickerInput
-                                                    dayPickerProps={{
-                                                        showWeekNumbers: true,
-                                                        todayButton: 'Today',
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Ministro que bautizo</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="bau_Ministro_Que_Bautizo" ref={this.bau_Ministro_Que_BautizoRef} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                        </React.Fragment>
+                                    }
 
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Fecha recibio Espiritu Santo</label>
+                                    {this.state.TienePromesaDelEspitiruSanto &&
+                                        <React.Fragment>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Fecha recibio Espiritu Santo</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <DayPickerInput
+                                                            dayPickerProps={{
+                                                                showWeekNumbers: true,
+                                                                todayButton: 'Today',
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <DayPickerInput
-                                                    dayPickerProps={{
-                                                        showWeekNumbers: true,
-                                                        todayButton: 'Today',
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Bajo imposicion de manos</label>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Bajo imposicion de manos</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="per_Bajo_Imposicion_De_Manos" ref={this.per_Bajo_Imposicion_De_ManosRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="per_Bajo_Imposicion_De_Manos" ref={this.per_Bajo_Imposicion_De_ManosRef} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Cambios de domicilio</label>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Cambios de domicilio</label>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="text" name="per_Cambios_De_Domicilio" ref={this.per_Cambios_De_DomicilioRef} className="form-control" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <input type="text" name="per_Cambios_De_Domicilio" ref={this.per_Cambios_De_DomicilioRef} className="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                        </React.Fragment>
+                                    }
                                 </div>
 
                                 {/* <Hogar
@@ -861,7 +918,7 @@ class RegistroDePersonal extends Component {
 
                                     {this.state.SelectHogarId > 0 &&
                                         <React.Fragment>
-                                            <div class="alert alert-warning mt-3" role="alert">
+                                            <div className="alert alert-warning mt-3" role="alert">
                                                 <h5>ATENCION: </h5>
                                                 <ul>
                                                     <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
