@@ -11,10 +11,10 @@ class Home extends Component {
                             <div className="card-header">
                                 <h5><strong>Personal</strong></h5>
                             </div>
-                            <div className="card-body p-3 luis">
-                                <img src="./images/personas.png" className="mx-auto card-img-top imgHome" />
+                            <div className="card-body p-3">
+                                <img src="./images/personas.png" alt="Acceso a listado de personal" className="mx-auto card-img-top imgHome" />
                                 <br />
-                                Acceso rapido a operaciones con el personal bautizado. <br />
+                                Acceso rapido a operaciones con el personal en general. <br />
                                 <a href="/ListaDePersonal" className="btn btn-sm btn-primary">Ingresar</a>
                             </div>
                         </div>
@@ -25,7 +25,7 @@ class Home extends Component {
                                 <h5><strong>Registro</strong></h5>
                             </div>
                             <div className="card-body p-3 luis">
-                                <img src="./images/addPerson.png" className="mx-auto card-img-top imgHome" />
+                                <img src="./images/addPerson.png" alt="Acceso a registro de personal" className="mx-auto card-img-top imgHome" />
                                 <br />
                                 Acceso rapido a registro de pesonas en general. <br />
                                 <a href="/RegistroDePersonal" className="btn btn-sm btn-primary">Ingresar</a>

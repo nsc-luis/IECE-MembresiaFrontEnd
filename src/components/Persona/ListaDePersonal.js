@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import Global from '../../Global';
 import '../../assets/css/Persona.css';
@@ -108,29 +108,29 @@ class ListaDePersonal extends Component {
                     {this.RenderBtnRegistro()}
                     <table className="table" id="tblPersonas">
                         <thead>
-                            <tr scope="row">
+                            <tr>
                                 <th scope="col">Nombre</th>
-                                <th className="text-center" scope="col">Status</th>
-                                <th className="text-center" scope="col">Informacion</th>
-                                <th className="text-center" scope="col">Acciones</th>
+                                <th scope="col" className="text-center">Status</th>
+                                <th scope="col" className="text-center">Informacion</th>
+                                <th scope="col" className="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
                                 this.state.personas.map((persona, i) => {
                                     return (
-                                        <tr scope="row" key={i}>
-                                            <td scope="row">{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
+                                        <tr key={i}>
+                                            <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
                                             <td className="text-center">
                                                 {this.InfoStatus(persona)}
                                             </td>
                                             <td className="text-center">
                                                 {/* persona.per_Telefono_Fijo} , {persona.per_Telefono_Movil} , {persona.per_Email_Personal */}
-                                                <a onClick={this.modal} className="fas fa-info-circle fa-2x icon-btn-p" title="Info general" ></a>
-                                                <a onClick={this.InfoAdicional} className="fas fa-users fa-2x icon-btn-p" title="Familia asendente"></a>
-                                                <a onClick={this.InfoAdicional} className="fas fa-baby-carriage fa-2x icon-btn-p" title="Estado civil"></a>
-                                                <a onClick={this.InfoAdicional} className="fas fa-user-check fa-2x icon-btn-p" title="Ecelsiasticos"></a>
-                                                <a onClick={this.InfoAdicional} className="fas fa-home fa-2x icon-btn-p" title="Hogar"></a>
+                                                <a href="#" onClick={this.modal} className="fas fa-info-circle fa-2x icon-btn-p" title="Info general" ></a>
+                                                <a href="#" onClick={this.InfoAdicional} className="fas fa-users fa-2x icon-btn-p" title="Familia asendente"></a>
+                                                <a href="#" onClick={this.InfoAdicional} className="fas fa-baby-carriage fa-2x icon-btn-p" title="Estado civil"></a>
+                                                <a href="#" onClick={this.InfoAdicional} className="fas fa-user-check fa-2x icon-btn-p" title="Ecelsiasticos"></a>
+                                                <a href="#" onClick={this.InfoAdicional} className="fas fa-home fa-2x icon-btn-p" title="Hogar"></a>
                                             </td>
                                             <td className="text-center">
                                                 <button onClick={this.InfoAdicional} className="btn btn-success btn-sm" title="Editar informacion"><span className="fas fa-pencil-alt"></span>Editar</button>
