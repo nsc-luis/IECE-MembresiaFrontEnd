@@ -2,43 +2,14 @@ import React, { Component } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
+import SimpleReactValidator from 'simple-react-validator';
 import Global from '../../Global';
 import MomentLocalUtils from 'react-day-picker/moment';
 
 class RegistroDePersonal extends Component {
 
-    url = Global.url_api;
-    fechaActual = MomentLocalUtils.formatDate(new Date(),"YYYY-MM-DD");
-    state = {
-        // generales: {},
-        sector: [],
-        fechanNacimiento: this.fechaActual,
-        RFCSinHomoclave: '',
-        PersonaEncontrada: false,
-        datosPersonaEncontrada: {},
-        profesiones_oficios: [],
-        ElMiembroEsBautizado: false,
-        fechaBautismo: this.fechaActual,
-        TienePromesaDelEspitiruSanto: false,
-        fechaPromesaDelEspitiru: this.fechaActual,
-        per_Fecha_Recibio_Espiritu: "",
-        per_Bajo_Imposicion_De_Manos: "",
-        fechaBodaCivil: this.fechaActual,
-        fechaBodaEclesiastica: this.fechaActual,
-        ConcubinatoSolteroConHijos: false,
-        CasadoDivorciadoViudo: false,
-        // distrito: [],
-        paises: [],
-        estados: [],
-        SelectHogarId: 0,
-        ListaHogares: [],
-        MiembrosDelHogar: [],
-        //eclesiasticos: [],
-        status: null
-    };
-
-    per_NombreRef = React.createRef();
     per_CategoriaRef = React.createRef();
+    per_NombreRef = React.createRef();
     per_Apellido_PaternoRef = React.createRef();
     per_Apellido_MaternoRef = React.createRef();
 
@@ -85,11 +56,58 @@ class RegistroDePersonal extends Component {
     est_Id_EstadoRef = React.createRef();
     dom_TelefonoRef = React.createRef();
 
+    url = Global.url_api;
+    fechaActual = MomentLocalUtils.formatDate(new Date(), "YYYY-MM-DD");
+    state = {
+        // generales: {},
+        datosDelFormulario: {},
+        sector: [],
+        fechanNacimiento: this.fechaActual,
+        RFCSinHomoclave: '',
+        PersonaEncontrada: false,
+        datosPersonaEncontrada: {},
+        profesiones_oficios: [],
+        ElMiembroEsBautizado: false,
+        fechaBautismo: this.fechaActual,
+        TienePromesaDelEspitiruSanto: false,
+        fechaPromesaDelEspitiru: this.fechaActual,
+        per_Fecha_Recibio_Espiritu: "",
+        per_Bajo_Imposicion_De_Manos: "",
+        fechaBodaCivil: this.fechaActual,
+        fechaBodaEclesiastica: this.fechaActual,
+        ConcubinatoSolteroConHijos: false,
+        CasadoDivorciadoViudo: false,
+        // distrito: [],
+        paises: [],
+        estados: [],
+        SelectHogarId: 0,
+        ListaHogares: [],
+        MiembrosDelHogar: [],
+        //eclesiasticos: [],
+        status: null,
+        per_Categoria: 0,
+        per_Nombre: '',
+        per_Apellido_Paterno: '',
+        per_Apellido_Materno: '',
+        per_Telefono_Fijo: '',
+        per_Telefono_Movil: '',
+        per_Email_Personal: ''
+    };
+
     componentWillMount() {
         this.getEstados();
         this.getPaises();
         this.getProfesionesOficios();
         this.getListaHogares();
+        this.validator = new SimpleReactValidator({
+            messages: {
+                alpha_space: 'Campo requerido, solo acepta letras y espacios.',
+                required: "Este campo es requerido.",
+                regex: "Selecciona una opciona valida.",
+                phone: "Ingrese un numero valido de 10 digitos, solo numeros.",
+                email: "Email invalido."
+            }
+        });
     };
 
     CheckNvaPersona = (day) => {
@@ -113,6 +131,62 @@ class RegistroDePersonal extends Component {
         this.setState({
             fechanNacimiento: fNacimPer
         });
+    }
+
+    valida_per_Categoria = () => {
+        this.setState({
+            per_Categoria: this.per_CategoriaRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Nombre = () => {
+        this.setState({
+            per_Nombre: this.per_NombreRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Apellido_Paterno = () => {
+        this.setState({
+            per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Apellido_Materno = () => {
+        this.setState({
+            per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Telefono_Movil = () => {
+        this.setState({
+            per_Telefono_Movil: this.per_Telefono_MovilRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Telefono_Fijo = () => {
+        this.setState({
+            per_Telefono_Fijo: this.per_Telefono_FijoRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Email_Personal = () => {
+        this.setState({
+            per_Email_Personal: this.per_Email_PersonalRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
     }
 
     getEstados = () => {
@@ -251,7 +325,7 @@ class RegistroDePersonal extends Component {
         if (this.per_BautizadoRef.current.checked && this.PromesaDelEspirituSantoRef.current.checked) {
             let eclesiasticos = {
                 bau_Lugar_Bautismo: this.bau_Lugar_BautismoRef.current.value,
-                bau_Fecha_Bautismo : this.state.fechaBautismo,
+                bau_Fecha_Bautismo: this.state.fechaBautismo,
                 bau_Ministro_Que_Bautizo: this.bau_Ministro_Que_BautizoRef.current.value
             };
             this.setState({
@@ -263,7 +337,7 @@ class RegistroDePersonal extends Component {
         else if (this.per_BautizadoRef.current.checked && !this.PromesaDelEspirituSantoRef.current.checked) {
             let eclesiasticos = {
                 bau_Lugar_Bautismo: this.bau_Lugar_BautismoRef.current.value,
-                bau_Fecha_Bautismo : this.state.fechaBautismo,
+                bau_Fecha_Bautismo: this.state.fechaBautismo,
                 bau_Ministro_Que_Bautizo: this.bau_Ministro_Que_BautizoRef.current.value
             };
             return eclesiasticos;
@@ -309,11 +383,11 @@ class RegistroDePersonal extends Component {
         if (this.state.CasadoDivorciadoViudo && this.state.ElMiembroEsBautizado) {
             let estadoCivil = {
                 per_Estado_Civil: this.per_Estado_CivilRef.current.value,
-                eci_Fecha_Boda_Civil : this.state.fechaBodaCivil,
+                eci_Fecha_Boda_Civil: this.state.fechaBodaCivil,
                 eci_Num_Acta_Boda_Civil: this.eci_Num_Acta_Boda_CivilRef.current.value,
                 eci_Libro_Acta_Boda_Civil: this.eci_Libro_Acta_Boda_CivilRef.current.value,
                 eci_Oficialia_Boda_Civil: this.eci_Oficialia_Boda_CivilRef.current.value,
-                eci_Fecha_Boda_Eclesiastica : this.state.fechaBodaEclesiastica,
+                eci_Fecha_Boda_Eclesiastica: this.state.fechaBodaEclesiastica,
                 eci_Lugar_Boda_Eclesiastica: this.eci_Lugar_Boda_EclesiasticaRef.current.value,
                 eci_Nombre_Conyuge: this.eci_Nombre_ConyugeRef.current.value,
                 eci_Cantidad_Hijos: this.eci_Cantidad_HijosRef.current.value,
@@ -323,7 +397,7 @@ class RegistroDePersonal extends Component {
         } else if (this.state.CasadoDivorciadoViudo && !this.state.ElMiembroEsBautizado) {
             let estadoCivil = {
                 per_Estado_Civil: this.per_Estado_CivilRef.current.value,
-                eci_Fecha_Boda_Civil : this.state.fechaBodaCivil,
+                eci_Fecha_Boda_Civil: this.state.fechaBodaCivil,
                 eci_Num_Acta_Boda_Civil: this.eci_Num_Acta_Boda_CivilRef.current.value,
                 eci_Libro_Acta_Boda_Civil: this.eci_Libro_Acta_Boda_CivilRef.current.value,
                 eci_Oficialia_Boda_Civil: this.eci_Oficialia_Boda_CivilRef.current.value,
@@ -380,18 +454,26 @@ class RegistroDePersonal extends Component {
             .catch(error => {
                 return error;
             }
-        );
+            );
+    }
+
+    datosDelFormularioPersona = (persona) => {
+        this.setState({
+            datosDelFormulario: { persona }
+        });
+        console.log(this.state.datosDelFormulario);
     }
 
     FrmRegistroPersona = (e) => {
         e.preventDefault();
+
         let datos = {
-            persona: [{
-                per_Categoria: this.per_CategoriaRef.current.value,
-                per_Nombre: this.per_NombreRef.current.value,
-                per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value,
-                per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value,
-                per_Fecha_Nacimiento: this.state.fechanNacimiento,
+            persona: {
+                //per_Categoria: this.per_CategoriaRef.current.value,
+                //per_Nombre: this.per_NombreRef.current.value,
+                //per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value,
+                //per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value,
+                //per_Fecha_Nacimiento: this.state.fechanNacimiento,
                 pro_Id_Profesion_Oficio1: this.pro_Id_Profesion_Oficio1Ref.current.value,
                 pro_Id_Profesion_Oficio2: this.pro_Id_Profesion_Oficio2Ref.current.value,
                 per_Telefono_Fijo: this.per_Telefono_FijoRef.current.value,
@@ -417,43 +499,29 @@ class RegistroDePersonal extends Component {
                 usu_Id_Usuario: 1,
                 Fecha_Registro: this.fechaActual,
                 per_Visibilidad_Abierta: false
-            }],
-            /* generales: [{
-                
-            }], */
-            /* familiaAsendente: [{
-                
-            }] */
+            }
         };
 
-        let nvaPersona = this.fnGuardaPersona(datos.persona[0]);
+        if (this.validator.allValid()) {
+            /* let nvaPersona = this.fnGuardaPersona(this.state.datosDelFormulario.persona);
 
-        datos.eclesiasticos = [];
-        datos.eclesiasticos.push(this.fnDatosEclesiasticos());
+            datos.eclesiasticos = [];
+            datos.eclesiasticos.push(this.fnDatosEclesiasticos());
 
-        datos.estadoCivil = [];
-        datos.estadoCivil.push(this.fnDatosEstadoCivil());
+            datos.estadoCivil = [];
+            datos.estadoCivil.push(this.fnDatosEstadoCivil());
 
-        datos.hogar = [];
-        datos.hogar.push(this.fnDatoshogar());
+            datos.hogar = [];
+            datos.hogar.push(this.fnDatoshogar()); */
 
-        //console.log(JSON.stringify(datos));
-        console.log(nvaPersona);
+            console.log(datos.persona);
+        } else {
+            this.validator.showMessages();
+            this.forceUpdate();
+        }
     };
 
     render() {
-
-        /* if (this.state.generales) {
-            var generales = this.state.generales;
-        } */
-
-        /* axios.get("http://localhost/iece-web-api/api/estado")
-            .then(res => {
-                // console.log(res.data);
-                this.setState({
-                    estados : res.data
-                });
-            }); */
 
         return (
             <React.Fragment>
@@ -484,12 +552,6 @@ class RegistroDePersonal extends Component {
                                 </li>
                             </ul>
 
-                            {/* {generales.per_Nombre &&
-                                <React.Fragment>
-                                    Nombre: {generales.per_Nombre}
-                                </React.Fragment>
-                            } */}
-
                             <div className="tab-content" id="myTabContent">
 
                                 {/* {<VerificarNuevoRegistro
@@ -502,7 +564,7 @@ class RegistroDePersonal extends Component {
                                                 <label>Categoria</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <select name="per_Categoria" ref={this.per_CategoriaRef} className="form-control">
+                                                <select name="per_Categoria" ref={this.per_CategoriaRef} onChange={this.valida_per_Categoria} className="form-control">
                                                     <option value="0">Selecionar categoria</option>
                                                     <option value="Adulto_Hombre">Adulto Hombre</option>
                                                     <option value="Adulto_Mujer">Adulto Mujer</option>
@@ -510,6 +572,9 @@ class RegistroDePersonal extends Component {
                                                     <option value="Joven_Mujer">Joven mujer</option>
                                                 </select>
                                             </div>
+                                            <span style={{ color: 'red' }}>
+                                                {this.validator.message('per_Categoria', this.state.per_Categoria, 'regex:^[a-zA-Z]*(_)[a-zA-Z]*$')}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -519,8 +584,11 @@ class RegistroDePersonal extends Component {
                                                 <label>Nombre</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Nombre" ref={this.per_NombreRef} onBlurCapture={this.CheckNvaPersona} className="form-control"/>
+                                                <input type="text" name="per_Nombre" onChange={this.valida_per_Nombre} onBlur={this.CheckNvaPersona} ref={this.per_NombreRef} className="form-control" />
                                             </div>
+                                            <span style={{ color: 'red' }}>
+                                                {this.validator.message('per_Nombre', this.state.per_Nombre, 'required|alpha_space')}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -530,8 +598,11 @@ class RegistroDePersonal extends Component {
                                                 <label>Apellido paterno</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Apellido_Paterno" onBlurCapture={this.CheckNvaPersona} ref={this.per_Apellido_PaternoRef} className="form-control"/>
+                                                <input type="text" name="per_Apellido_Paterno" onChange={this.valida_per_Apellido_Paterno} onBlur={this.CheckNvaPersona} ref={this.per_Apellido_PaternoRef} className="form-control" />
                                             </div>
+                                            <span style={{ color: 'red' }}>
+                                                {this.validator.message('per_Apellido_Paterno', this.state.per_Apellido_Paterno, 'required|alpha_space')}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -541,8 +612,11 @@ class RegistroDePersonal extends Component {
                                                 <label>Apellido materno</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Apellido_Materno" onBlurCapture={this.CheckNvaPersona} ref={this.per_Apellido_MaternoRef} className="form-control"/>
+                                                <input type="text" name="per_Apellido_Materno" onChange={this.valida_per_Apellido_Materno} onBlur={this.CheckNvaPersona} ref={this.per_Apellido_MaternoRef} className="form-control" />
                                             </div>
+                                            <span style={{ color: 'red' }}>
+                                                {this.validator.message('per_Apellido_Materno', this.state.per_Apellido_Materno, 'required|alpha_space')}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -642,8 +716,11 @@ class RegistroDePersonal extends Component {
                                                 <label>Telefono fijo</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Telefono_Fijo" ref={this.per_Telefono_FijoRef} className="form-control" />
+                                                <input type="text" name="per_Telefono_Fijo" ref={this.per_Telefono_FijoRef} onChange={this.valida_per_Telefono_Fijo} className="form-control" />
                                             </div>
+                                            <span style={{ color: 'red' }}>
+                                                {this.validator.message('per_Telefono_Fijo', this.state.per_Telefono_Fijo, 'phone')}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -653,8 +730,11 @@ class RegistroDePersonal extends Component {
                                                 <label>Telefono movil</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Telefono_Movil" ref={this.per_Telefono_MovilRef} className="form-control" />
+                                                <input type="text" name="per_Telefono_Movil" ref={this.per_Telefono_MovilRef} onChange={this.valida_per_Telefono_Movil} className="form-control" />
                                             </div>
+                                            <span style={{ color: 'red' }}>
+                                                {this.validator.message('per_Telefono_Movil', this.state.per_Telefono_Movil, 'phone')}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -664,8 +744,11 @@ class RegistroDePersonal extends Component {
                                                 <label>Email</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="email" name="per_Email_Personal" ref={this.per_Email_PersonalRef} className="form-control" />
+                                                <input type="text" name="per_Email_Personal" ref={this.per_Email_PersonalRef} onChange={this.valida_per_Email_Personal} className="form-control" />
                                             </div>
+                                            <span style={{ color: 'red' }}>
+                                                {this.validator.message('per_Email_Personal', this.state.per_Email_Personal, 'email')}
+                                            </span>
                                         </div>
                                     </div>
 
