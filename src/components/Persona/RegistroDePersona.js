@@ -28,39 +28,39 @@ class RegistroDePersonal extends Component {
     per_Nombre_Abuela_MaternaRef = React.createRef();
 
     per_Estado_CivilRef = React.createRef();
-    eci_Num_Acta_Boda_CivilRef = React.createRef();
-    eci_Libro_Acta_Boda_CivilRef = React.createRef();
-    eci_Oficialia_Boda_CivilRef = React.createRef();
-    eci_Lugar_Boda_EclesiasticaRef = React.createRef();
-    eci_Nombre_ConyugeRef = React.createRef();
-    eci_Cantidad_HijosRef = React.createRef();
-    eci_Nombre_HijosRef = React.createRef();
+    per_Num_Acta_Boda_CivilRef = React.createRef();
+    per_Libro_Acta_Boda_CivilRef = React.createRef();
+    per_Oficialia_Boda_CivilRef = React.createRef();
+    per_Lugar_Boda_EclesiasticaRef = React.createRef();
+    per_Nombre_ConyugeRef = React.createRef();
+    per_Cantidad_HijosRef = React.createRef();
+    per_Nombre_HijosRef = React.createRef();
 
     per_BautizadoRef = React.createRef();
-    bau_Lugar_BautismoRef = React.createRef();
+    per_Lugar_BautismoRef = React.createRef();
     PromesaDelEspirituSantoRef = React.createRef();
-    bau_Ministro_Que_BautizoRef = React.createRef();
+    per_Ministro_Que_BautizoRef = React.createRef();
     per_Bajo_Imposicion_De_ManosRef = React.createRef();
     per_Cambios_De_DomicilioRef = React.createRef();
 
-    hd_Id_HogarRef = React.createRef();
+    hp_Id_HogarRef = React.createRef();
     hp_JerarquiaRef = React.createRef();
-    dom_CalleRef = React.createRef();
-    dom_Numero_ExteriorRef = React.createRef();
-    dom_Numero_InteriorRef = React.createRef();
-    dom_Tipo_SubdivisionRef = React.createRef();
-    dom_SubdivisionRef = React.createRef();
-    dom_LocalidadRef = React.createRef();
-    dom_Municipio_CuidadRef = React.createRef();
+    hd_CalleRef = React.createRef();
+    hd_Numero_ExteriorRef = React.createRef();
+    hd_Numero_InteriorRef = React.createRef();
+    hd_Tipo_SubdivisionRef = React.createRef();
+    hd_SubdivisionRef = React.createRef();
+    hd_LocalidadRef = React.createRef();
+    hd_Municipio_CuidadRef = React.createRef();
     pais_Id_PaisRef = React.createRef();
     est_Id_EstadoRef = React.createRef();
-    dom_TelefonoRef = React.createRef();
+    hd_TelefonoRef = React.createRef();
 
     url = Global.url_api;
     fechaActual = MomentLocalUtils.formatDate(new Date(), "YYYY-MM-DD");
     state = {
         // generales: {},
-        datosDelFormulario: {},
+        // datosDelFormulario: {},
         sector: [],
         fechanNacimiento: this.fechaActual,
         RFCSinHomoclave: '',
@@ -92,8 +92,8 @@ class RegistroDePersonal extends Component {
         per_Telefono_Fijo: '',
         per_Telefono_Movil: '',
         per_Email_Personal: '',
-        bau_Lugar_Bautismo: '',
-        bau_Ministro_Que_Bautizo: ''
+        per_Lugar_Bautismo: '',
+        per_Ministro_Que_Bautizo: ''
     };
 
     componentWillMount() {
@@ -144,17 +144,17 @@ class RegistroDePersonal extends Component {
         this.forceUpdate();
     }
 
-    valida_bau_Lugar_Bautismo = () => {
+    valida_per_Lugar_Bautismo = () => {
         this.setState({
-            bau_Lugar_Bautismo: this.bau_Lugar_BautismoRef.current.value
+            per_Lugar_Bautismo: this.per_Lugar_BautismoRef.current.value
         });
         this.validator.showMessages();
         this.forceUpdate();
     }
 
-    valida_bau_Ministro_Que_Bautizo = () => {
+    valida_per_Ministro_Que_Bautizo = () => {
         this.setState({
-            bau_Ministro_Que_Bautizo: this.bau_Ministro_Que_BautizoRef.current.value
+            per_Ministro_Que_Bautizo: this.per_Ministro_Que_BautizoRef.current.value
         });
         this.validator.showMessages();
         this.forceUpdate();
@@ -293,7 +293,7 @@ class RegistroDePersonal extends Component {
                     this.setState({
                         PersonaEncontrada: false,
                         datosPersonaEncontrada: {},
-                        RFCSinHomoclave: ''
+                        RFCSinHomoclave: str
                     });
                 }
             });
@@ -320,15 +320,15 @@ class RegistroDePersonal extends Component {
     }
 
     HogarSeleccionado = () => {
-        axios.get(this.url + "/Hogar_Persona/GetMiembros/" + this.hd_Id_HogarRef.current.value)
+        axios.get(this.url + "/Hogar_Persona/GetMiembros/" + this.hp_Id_HogarRef.current.value)
             .then(res => {
                 this.setState({
                     MiembrosDelHogar: res.data,
                     status: 'success',
-                    SelectHogarId: this.hd_Id_HogarRef.current.value
+                    SelectHogarId: this.hp_Id_HogarRef.current.value
                 });
             });
-        // console.log(this.hog_Id_HogarRef.current.value);
+        // console.log(this.hp_Id_HogarRef.current.value);
     }
 
     EsMiembroBautizado = () => {
@@ -348,39 +348,46 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    /* fnDatosEclesiasticos = () => {
+    fnDatosEclesiasticos = () => {
         if (this.per_BautizadoRef.current.checked && this.PromesaDelEspirituSantoRef.current.checked) {
             let eclesiasticos = {
-                bau_Lugar_Bautismo: this.bau_Lugar_BautismoRef.current.value,
-                bau_Fecha_Bautismo: this.state.fechaBautismo,
-                bau_Ministro_Que_Bautizo: this.bau_Ministro_Que_BautizoRef.current.value
-            };
-            this.setState({
+                per_Bautizado: true,
+                per_Lugar_Bautismo: this.per_Lugar_BautismoRef.current.value,
+                per_Fecha_Bautismo: this.state.fechaBautismo,
+                per_Ministro_Que_Bautizo: this.per_Ministro_Que_BautizoRef.current.value,
                 per_Fecha_Recibio_Espiritu: this.state.fechaPromesaDelEspitiru,
-                per_Bajo_Imposicion_De_Manos: this.per_Bajo_Imposicion_De_ManosRef.current.value
-            });
+                per_Bajo_Imposicion_De_Manos: this.per_Bajo_Imposicion_De_ManosRef.current.value,
+                per_Cambios_De_Domicilio: this.per_Cambios_De_DomicilioRef.current.value
+            }
             return eclesiasticos;
         }
         else if (this.per_BautizadoRef.current.checked && !this.PromesaDelEspirituSantoRef.current.checked) {
             let eclesiasticos = {
-                bau_Lugar_Bautismo: this.bau_Lugar_BautismoRef.current.value,
-                bau_Fecha_Bautismo: this.state.fechaBautismo,
-                bau_Ministro_Que_Bautizo: this.bau_Ministro_Que_BautizoRef.current.value
+                per_Bautizado: true,
+                per_Lugar_Bautismo: this.per_Lugar_BautismoRef.current.value,
+                per_Fecha_Bautismo: this.state.fechaBautismo,
+                per_Ministro_Que_Bautizo: this.per_Ministro_Que_BautizoRef.current.value,
+                per_Cambios_De_Domicilio: this.per_Cambios_De_DomicilioRef.current.value
             };
             return eclesiasticos;
         }
         else if (!this.per_BautizadoRef.current.checked && this.PromesaDelEspirituSantoRef.current.checked) {
-            let eclesiasticos = {}
-            this.setState({
+            let eclesiasticos = {
                 per_Fecha_Recibio_Espiritu: this.state.fechaPromesaDelEspitiru,
-                per_Bajo_Imposicion_De_Manos: this.per_Bajo_Imposicion_De_ManosRef.current.value
-            });
+                per_Bajo_Imposicion_De_Manos: this.per_Bajo_Imposicion_De_ManosRef.current.value,
+                per_Cambios_De_Domicilio: this.per_Cambios_De_DomicilioRef.current.value
+            }
+            /* this.setState({
+                per_Fecha_Recibio_Espiritu: this.state.fechaPromesaDelEspitiru
+            }); */
             return eclesiasticos;
         } else {
-            let eclesiasticos = {}
+            let eclesiasticos = {
+                per_Cambios_De_Domicilio: this.per_Cambios_De_DomicilioRef.current.value
+            }
             return eclesiasticos;
         }
-    } */
+    }
 
     fBodaCivil = (day) => {
         this.setState({
@@ -406,66 +413,70 @@ class RegistroDePersonal extends Component {
         })
     }
 
-    /* fnDatosEstadoCivil = () => {
+    fnDatosEstadoCivil = () => {
         if (this.state.CasadoDivorciadoViudo && this.state.ElMiembroEsBautizado) {
             let estadoCivil = {
                 per_Estado_Civil: this.per_Estado_CivilRef.current.value,
-                eci_Fecha_Boda_Civil: this.state.fechaBodaCivil,
-                eci_Num_Acta_Boda_Civil: this.eci_Num_Acta_Boda_CivilRef.current.value,
-                eci_Libro_Acta_Boda_Civil: this.eci_Libro_Acta_Boda_CivilRef.current.value,
-                eci_Oficialia_Boda_Civil: this.eci_Oficialia_Boda_CivilRef.current.value,
-                eci_Fecha_Boda_Eclesiastica: this.state.fechaBodaEclesiastica,
-                eci_Lugar_Boda_Eclesiastica: this.eci_Lugar_Boda_EclesiasticaRef.current.value,
-                eci_Nombre_Conyuge: this.eci_Nombre_ConyugeRef.current.value,
-                eci_Cantidad_Hijos: this.eci_Cantidad_HijosRef.current.value,
-                eci_Nombre_Hijos: this.eci_Nombre_HijosRef.current.value
+                per_Fecha_Boda_Civil: this.state.fechaBodaCivil,
+                per_Num_Acta_Boda_Civil: this.per_Num_Acta_Boda_CivilRef.current.value,
+                per_Libro_Acta_Boda_Civil: this.per_Libro_Acta_Boda_CivilRef.current.value,
+                per_Oficialia_Boda_Civil: this.per_Oficialia_Boda_CivilRef.current.value,
+                per_Fecha_Boda_Eclesiastica: this.state.fechaBodaEclesiastica,
+                per_Lugar_Boda_Eclesiastica: this.per_Lugar_Boda_EclesiasticaRef.current.value,
+                per_Nombre_Conyuge: this.per_Nombre_ConyugeRef.current.value,
+                per_Cantidad_Hijos: this.per_Cantidad_HijosRef.current.value,
+                per_Nombre_Hijos: this.per_Nombre_HijosRef.current.value
             }
             return estadoCivil;
         } else if (this.state.CasadoDivorciadoViudo && !this.state.ElMiembroEsBautizado) {
             let estadoCivil = {
                 per_Estado_Civil: this.per_Estado_CivilRef.current.value,
-                eci_Fecha_Boda_Civil: this.state.fechaBodaCivil,
-                eci_Num_Acta_Boda_Civil: this.eci_Num_Acta_Boda_CivilRef.current.value,
-                eci_Libro_Acta_Boda_Civil: this.eci_Libro_Acta_Boda_CivilRef.current.value,
-                eci_Oficialia_Boda_Civil: this.eci_Oficialia_Boda_CivilRef.current.value,
-                eci_Cantidad_Hijos: this.eci_Cantidad_HijosRef.current.value,
-                eci_Nombre_Hijos: this.eci_Nombre_HijosRef.current.value
+                per_Fecha_Boda_Civil: this.state.fechaBodaCivil,
+                per_Num_Acta_Boda_Civil: this.per_Num_Acta_Boda_CivilRef.current.value,
+                per_Libro_Acta_Boda_Civil: this.per_Libro_Acta_Boda_CivilRef.current.value,
+                per_Oficialia_Boda_Civil: this.per_Oficialia_Boda_CivilRef.current.value,
+                per_Cantidad_Hijos: this.per_Cantidad_HijosRef.current.value,
+                per_Nombre_Hijos: this.per_Nombre_HijosRef.current.value
             }
             return estadoCivil;
         } else if (this.state.ConcubinatoSolteroConHijos) {
             let estadoCivil = {
-                eci_Cantidad_Hijos: this.eci_Cantidad_HijosRef.current.value,
-                eci_Nombre_Hijos: this.eci_Nombre_HijosRef.current.value
+                per_Estado_Civil: this.per_Estado_CivilRef.current.value,
+                per_Cantidad_Hijos: this.per_Cantidad_HijosRef.current.value,
+                per_Nombre_Hijos: this.per_Nombre_HijosRef.current.value
             }
             return estadoCivil;
         } else {
-            return false;
+            let estadoCivil = {
+                per_Estado_Civil: this.per_Estado_CivilRef.current.value
+            }
+            return estadoCivil;
         }
-    } */
+    }
 
-    /* fnDatoshogar = () => {
+    fnDatoshogar = () => {
         if (this.state.SelectHogarId === 0) {
             let hogar = {
-                dom_Calle: this.dom_CalleRef.current.value,
-                dom_Numero_Exterior: this.dom_Numero_ExteriorRef.current.value,
-                dom_Numero_Interior: this.dom_Numero_InteriorRef.current.value,
-                dom_Tipo_Subdivision: this.dom_Tipo_SubdivisionRef.current.value,
-                dom_Subdivision: this.dom_SubdivisionRef.current.value,
-                dom_Localidad: this.dom_LocalidadRef.current.value,
-                dom_Municipio_Cuidad: this.dom_Municipio_CuidadRef.current.value,
+                hd_Calle: this.hd_CalleRef.current.value,
+                hd_Numero_Exterior: this.hd_Numero_ExteriorRef.current.value,
+                hd_Numero_Interior: this.hd_Numero_InteriorRef.current.value,
+                hd_Tipo_Subdivision: this.hd_Tipo_SubdivisionRef.current.value,
+                hd_Subdivision: this.hd_SubdivisionRef.current.value,
+                hd_Localidad: this.hd_LocalidadRef.current.value,
+                hd_Municipio_Cuidad: this.hd_Municipio_CuidadRef.current.value,
                 pais_Id_Pais: this.pais_Id_PaisRef.current.value,
                 est_Id_Estado: this.est_Id_EstadoRef.current.value,
-                dom_Telefono: this.dom_TelefonoRef.current.value
+                hd_Telefono: this.hd_TelefonoRef.current.value
             }
             return hogar;
         } else {
             let hogar = {
-                hog_Jerarquia: this.hog_JerarquiaRef.current.value,
-                hog_Id_Hogar: this.hog_Id_HogarRef.current.value
+                hp_Jerarquia: this.hp_JerarquiaRef.current.value,
+                hp_Id_Hogar: this.hp_Id_HogarRef.current.value
             }
             return hogar;
         }
-    } */
+    }
 
     fnGuardaPersona = async (datos) => {
         let encabezado = {
@@ -495,52 +506,48 @@ class RegistroDePersonal extends Component {
 
         let datos = {
             persona: {
-                //per_Categoria: this.per_CategoriaRef.current.value,
-                //per_Nombre: this.per_NombreRef.current.value,
-                //per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value,
-                //per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value,
-                //per_Fecha_Nacimiento: this.state.fechanNacimiento,
+                per_Categoria: this.per_CategoriaRef.current.value,
+                per_Nombre: this.per_NombreRef.current.value,
+                per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value,
+                per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value,
+                per_RFC_Sin_Homo: this.state.RFCSinHomoclave,
+
                 pro_Id_Profesion_Oficio1: this.pro_Id_Profesion_Oficio1Ref.current.value,
                 pro_Id_Profesion_Oficio2: this.pro_Id_Profesion_Oficio2Ref.current.value,
                 per_Telefono_Fijo: this.per_Telefono_FijoRef.current.value,
                 per_Telefono_Movil: this.per_Telefono_MovilRef.current.value,
                 per_Email_Personal: this.per_Email_PersonalRef.current.value,
+                per_foto: 'fotoPersona.png',
                 per_Observaciones: this.per_ObservacionesRef.current.value,
+
                 per_Nombre_Padre: this.per_Nombre_PadreRef.current.value,
                 per_Nombre_Madre: this.per_Nombre_MadreRef.current.value,
                 per_Nombre_Abuelo_Paterno: this.per_Nombre_Abuelo_PaternoRef.current.value,
                 per_Nombre_Abuela_Paterna: this.per_Nombre_Abuela_PaternaRef.current.value,
                 per_Nombre_Abuelo_Materno: this.per_Nombre_Abuelo_MaternoRef.current.value,
                 per_Nombre_Abuela_Materna: this.per_Nombre_Abuela_MaternaRef.current.value,
-                per_Bautizado: this.state.ElMiembroEsBautizado,
-                per_Estado_Civil: this.per_Estado_CivilRef.current.value,
-                per_Cambios_De_Domicilio: this.per_Cambios_De_DomicilioRef.current.value,
-                per_Fecha_Recibio_Espiritu: this.state.per_Fecha_Recibio_Espiritu,
-                per_Bajo_Imposicion_De_Manos: this.state.per_Bajo_Imposicion_De_Manos,
-                sec_Id_Sector: 227,
+
                 per_Activo: true,
                 per_En_Comunion: true,
                 per_Vivo: true,
-                sw_Registro: true,
-                usu_Id_Usuario: 1,
-                Fecha_Registro: this.fechaActual,
-                per_Visibilidad_Abierta: false
+                per_Visibilidad_Abierta: true,
+                sec_Id_Sector: 227
             }
         };
 
         if (this.validator.allValid()) {
-            /* let nvaPersona = this.fnGuardaPersona(this.state.datosDelFormulario.persona);
 
-            datos.eclesiasticos = [];
-            datos.eclesiasticos.push(this.fnDatosEclesiasticos());
+            datos.eclesiasticos = this.fnDatosEclesiasticos();
 
-            datos.estadoCivil = [];
-            datos.estadoCivil.push(this.fnDatosEstadoCivil());
+            datos.estadoCivil = this.fnDatosEstadoCivil();
 
-            datos.hogar = [];
-            datos.hogar.push(this.fnDatoshogar()); */
+            datos.hogar = this.fnDatoshogar();
 
-            console.log(datos.persona);
+            let datosCombinados = Object.assign({}, datos.persona, datos.eclesiasticos, datos.estadoCivil);
+
+            let nvaPersona = this.fnGuardaPersona(datosCombinados);
+
+            console.log(nvaPersona);
         } else {
             this.validator.showMessages();
             this.forceUpdate();
@@ -748,7 +755,7 @@ class RegistroDePersonal extends Component {
                                                 <input type="text" name="per_Telefono_Fijo" ref={this.per_Telefono_FijoRef} onChange={this.valida_per_Telefono_Fijo} className="form-control" />
                                             </div>
                                             <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Telefono_Fijo', this.state.per_Telefono_Fijo, 'phone')}
+                                                {this.validator.message('per_Telefono_Fijo', this.state.per_Telefono_Fijo, 'regex:^[0-9]{10}$')}
                                             </span>
                                         </div>
                                     </div>
@@ -762,7 +769,7 @@ class RegistroDePersonal extends Component {
                                                 <input type="text" name="per_Telefono_Movil" ref={this.per_Telefono_MovilRef} onChange={this.valida_per_Telefono_Movil} className="form-control" />
                                             </div>
                                             <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Telefono_Movil', this.state.per_Telefono_Movil, 'phone')}
+                                                {this.validator.message('per_Telefono_Movil', this.state.per_Telefono_Movil, 'regex:^[0-9]{10}$')}
                                             </span>
                                         </div>
                                     </div>
@@ -910,7 +917,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Nombre conyuge</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="eci_Nombre_Conyuge" ref={this.eci_Nombre_ConyugeRef} className="form-control" />
+                                                        <input type="text" name="per_Nombre_Conyuge" ref={this.per_Nombre_ConyugeRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -938,7 +945,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Num acta boda civil</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="eci_Num_Acta_Boda_Civil" ref={this.eci_Num_Acta_Boda_CivilRef} className="form-control" />
+                                                        <input type="text" name="per_Num_Acta_Boda_Civil" ref={this.per_Num_Acta_Boda_CivilRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -949,7 +956,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Libro acta boda civil</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="eci_Libro_Acta_Boda_Civil" ref={this.eci_Libro_Acta_Boda_CivilRef} className="form-control" />
+                                                        <input type="text" name="per_Libro_Acta_Boda_Civil" ref={this.per_Libro_Acta_Boda_CivilRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -960,7 +967,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Oficialia boda civil</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="eci_Oficialia_Boda_Civil" ref={this.eci_Oficialia_Boda_CivilRef} className="form-control" />
+                                                        <input type="text" name="per_Oficialia_Boda_Civil" ref={this.per_Oficialia_Boda_CivilRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -970,7 +977,7 @@ class RegistroDePersonal extends Component {
                                                     <div className="form-group">
                                                         <div className="row">
                                                             <div className="col-sm-2">
-                                                                <label htmlFor="eci_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
+                                                                <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
                                                             </div>
                                                             <div className="col-sm-4">
                                                                 <DayPickerInput
@@ -990,7 +997,7 @@ class RegistroDePersonal extends Component {
                                                                 <label>Lugar boda eclesiastica</label>
                                                             </div>
                                                             <div className="col-sm-4">
-                                                                <input type="text" name="eci_Lugar_Boda_Eclesiastica" ref={this.eci_Lugar_Boda_EclesiasticaRef} className="form-control" />
+                                                                <input type="text" name="per_Lugar_Boda_Eclesiastica" ref={this.per_Lugar_Boda_EclesiasticaRef} className="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1008,7 +1015,7 @@ class RegistroDePersonal extends Component {
                                                             <label>Cantidad hijos</label>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <input type="number" htmlFor="eci_Cantidad_Hijos" ref={this.eci_Cantidad_HijosRef} className="form-control" />
+                                                            <input type="number" htmlFor="per_Cantidad_Hijos" ref={this.per_Cantidad_HijosRef} className="form-control" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1019,7 +1026,7 @@ class RegistroDePersonal extends Component {
                                                             <label>Nombre de los hijos</label>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <textarea name="eci_Nombre_Hijos" ref={this.eci_Nombre_HijosRef} className="form-control" ></textarea>
+                                                            <textarea name="per_Nombre_Hijos" ref={this.per_Nombre_HijosRef} className="form-control" ></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1063,12 +1070,12 @@ class RegistroDePersonal extends Component {
                                                         <label>Lugar bautismo</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="bau_Lugar_Bautismo" ref={this.bau_Lugar_BautismoRef} onChange={this.valida_bau_Lugar_Bautismo} className="form-control" />
+                                                        <input type="text" name="per_Lugar_Bautismo" ref={this.per_Lugar_BautismoRef} onChange={this.valida_per_Lugar_Bautismo} className="form-control" />
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('per_Lugar_Bautismo', this.state.per_Lugar_Bautismo, 'required')}
+                                                    </span>
                                                 </div>
-                                                <span style={{ color: 'red' }}>
-                                                    {this.validator.message('bau_Lugar_Bautismo', this.state.bau_Lugar_Bautismo, 'required')}
-                                                </span>
                                             </div>
 
                                             <div className="form-group">
@@ -1093,10 +1100,10 @@ class RegistroDePersonal extends Component {
                                                         <label>Ministro que bautizo</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="bau_Ministro_Que_Bautizo" ref={this.bau_Ministro_Que_BautizoRef} onChange={this.valida_bau_Ministro_Que_Bautizo} className="form-control" />
+                                                        <input type="text" name="per_Ministro_Que_Bautizo" ref={this.per_Ministro_Que_BautizoRef} onChange={this.valida_per_Ministro_Que_Bautizo} className="form-control" />
                                                     </div>
                                                     <span style={{ color: 'red' }}>
-                                                        {this.validator.message('bau_Ministro_Que_Bautizo', this.state.bau_Ministro_Que_Bautizo, 'required')}
+                                                        {this.validator.message('per_Ministro_Que_Bautizo', this.state.per_Ministro_Que_Bautizo, 'required')}
                                                     </span>
                                                 </div>
                                             </div>
@@ -1130,7 +1137,7 @@ class RegistroDePersonal extends Component {
                                                     <div className="col-sm-4">
                                                         <input type="text" name="per_Bajo_Imposicion_De_Manos" ref={this.per_Bajo_Imposicion_De_ManosRef} onChange={this.valida_per_Bajo_Imposicion_De_Manos} className="form-control" />
                                                     </div>
-                                                    <span style={{color: 'red'}}>
+                                                    <span style={{ color: 'red' }}>
                                                         {this.validator.message('per_Bajo_Imposicion_De_Manos', this.state.per_Bajo_Imposicion_De_Manos, 'required')}
                                                     </span>
                                                 </div>
@@ -1162,7 +1169,7 @@ class RegistroDePersonal extends Component {
                                                 <label>Asignar a hogar</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <select name="hd_Id_Hogar" ref={this.hd_Id_HogarRef} onChange={this.HogarSeleccionado} className="form-control">
+                                                <select name="hp_Id_Hogar" ref={this.hp_Id_HogarRef} onChange={this.HogarSeleccionado} className="form-control">
                                                     <option value="0">Nuevo hogar / domicilio</option>
                                                     {
                                                         this.state.ListaHogares.map((hogar, i) => {
@@ -1186,45 +1193,58 @@ class RegistroDePersonal extends Component {
                                                     <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
                                                 </ul>
                                             </div>
-
+                                            <strong>HOGAR: </strong>
+                                            {
+                                                this.state.ListaHogares.map((hogar, i) => {
+                                                    return (
+                                                        <p key={i}>
+                                                            {hogar.hd_Calle} {hogar.hd_Numero_Exterior}, {hogar.hd_Numero_Interior} <br />
+                                                            Tipo subdivision: {hogar.hd_Tipo_Subdivision}, Subdivision: {hogar.hd_Subdivision} <br />
+                                                            {hogar.hd_Localidad}, {hogar.hd_Municipio_Cuidad} <br />
+                                                            {hogar.est_Nombre}, {hogar.pais_Nombre_Corto} <br />
+                                                            Telefono: {hogar.hd_Telefono}
+                                                        </p>
+                                                    )
+                                                })
+                                            }
                                             <table className="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Nombre</th>
-                                                        <th scope="col">Jerarquia</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {
-                                                        this.state.MiembrosDelHogar.map((miembro, i) => {
-                                                            return (
-                                                                <React.Fragment>
-                                                                    <tr>
-                                                                        <td key={i}>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
-                                                                        <td>{miembro.hp_Jerarquia}</td>
-                                                                    </tr>
-                                                                </React.Fragment>
-                                                            )
-                                                        })
-                                                    }
-                                                </tbody>
-                                            </table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Miembros del hogar</th>
+                                                                <th scope="col">Jerarquia</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                this.state.MiembrosDelHogar.map((miembro, i) => {
+                                                                    return (
+                                                                        <React.Fragment>
+                                                                            <tr>
+                                                                                <td key={i}>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
+                                                                                <td>{miembro.hp_Jerarquia}</td>
+                                                                            </tr>
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </tbody>
+                                                    </table>
 
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Jerarquia por asignar</label>
+                                                    <div className="form-group">
+                                                        <div className="row">
+                                                            <div className="col-sm-2">
+                                                                <label>Jerarquia por asignar</label>
+                                                            </div>
+                                                            <div className="col-sm-4">
+                                                                <input type="number" name="hp_Jerarquia" ref={this.hp_JerarquiaRef} className="form-control" />
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="col-sm-4">
-                                                        <input type="number" name="hp_Jerarquia" ref={this.hp_JerarquiaRef} className="form-control" />
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </React.Fragment>
                                     }
 
                                     {/* <Domicilio /> */}
-                                    {this.state.SelectHogarId === 0 &&
+                                    {this.state.SelectHogarId == 0 &&
                                         <React.Fragment>
                                             <div className="form-group">
                                                 <div className="row">
@@ -1232,7 +1252,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Calle</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="dom_Calle" ref={this.dom_CalleRef} className="form-control" />
+                                                        <input type="text" name="hd_Calle" ref={this.hd_CalleRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1242,7 +1262,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Numero exterior</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="dom_Numero_Exterior" ref={this.dom_Numero_ExteriorRef} className="form-control" />
+                                                        <input type="text" name="hd_Numero_Exterior" ref={this.hd_Numero_ExteriorRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1252,7 +1272,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Numero interior</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="dom_Numero_Interior" ref={this.dom_Numero_InteriorRef} className="form-control" />
+                                                        <input type="text" name="hd_Numero_Interior" ref={this.hd_Numero_InteriorRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1262,7 +1282,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Tipo subdivision</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input name="dom_Tipo_Subdivision" ref={this.dom_Tipo_SubdivisionRef} className="form-control" />
+                                                        <input name="hd_Tipo_Subdivision" ref={this.hd_Tipo_SubdivisionRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1272,7 +1292,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Subdivision</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="dom_Subdivision" ref={this.dom_SubdivisionRef} className="form-control" />
+                                                        <input type="text" name="hd_Subdivision" ref={this.hd_SubdivisionRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1282,7 +1302,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Localidad</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="dom_Localidad" ref={this.dom_LocalidadRef} className="form-control" />
+                                                        <input type="text" name="hd_Localidad" ref={this.hd_LocalidadRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1292,7 +1312,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Municipio/Cuidad</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="dom_Municipio_Cuidad" ref={this.dom_Municipio_CuidadRef} className="form-control" />
+                                                        <input type="text" name="hd_Municipio_Cuidad" ref={this.hd_Municipio_CuidadRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1340,7 +1360,7 @@ class RegistroDePersonal extends Component {
                                                         <label>Telefono</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="dom_Telefono" ref={this.dom_TelefonoRef} className="form-control" />
+                                                        <input type="text" name="hd_Telefono" ref={this.hd_TelefonoRef} className="form-control" />
                                                     </div>
                                                 </div>
                                             </div>
