@@ -287,7 +287,7 @@ class RegistroDePersonal extends Component {
                         datosPersonaEncontrada: res.data[0].persona[0],
                         RFCSinHomoclave: str
                     });
-                    console.log(this.state.datosPersonaEncontrada);
+                    // console.log(this.state.datosPersonaEncontrada);
                 }
                 if (res.data[0].status === false) {
                     this.setState({
@@ -454,9 +454,9 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    fnDatoshogar = () => {
-        if (this.state.SelectHogarId === 0) {
-            let hogar = {
+    fnDatosHogar = () => {
+        if (this.hp_Id_HogarRef.current.value === "0") {
+            let hd = {
                 hd_Calle: this.hd_CalleRef.current.value,
                 hd_Numero_Exterior: this.hd_Numero_ExteriorRef.current.value,
                 hd_Numero_Interior: this.hd_Numero_InteriorRef.current.value,
@@ -468,7 +468,7 @@ class RegistroDePersonal extends Component {
                 est_Id_Estado: this.est_Id_EstadoRef.current.value,
                 hd_Telefono: this.hd_TelefonoRef.current.value
             }
-            return hogar;
+            return hd;
         } else {
             let hogar = {
                 hp_Jerarquia: this.hp_JerarquiaRef.current.value,
@@ -479,26 +479,58 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
+        return await axios.post(this.url + "/persona", datos)
+            .then(res => res.data)
+            .catch(error => error);
+    }
+
+    fnGuardaHogarDomicilio = async (datos) => {
+        return await axios.post(this.url + "/HogarDomicilio", datos)
+            .then(res => res.data)
+            .catch(error => error);
+    }
+
+    fnGuardaHogar_Persona = async (p, d) => {
+        let foo = await this.fnGuardaPersona(p);
+        let data = {
+            per_Id_Persona: foo.nvaPersona
+        }
+
+        if (this.hp_Id_HogarRef.current.value === "0") {
+            let bar = await this.fnGuardaHogarDomicilio(d);
+            data.hd_Id_Hogar = bar.nvoHogarDomicilio;
+            data.hp_Jerarquia = 1;
+            console.log(data);
+        } else {
+            data.hd_Id_Hogar = d.hp_Id_Hogar;
+            data.hp_Jerarquia = d.hp_Jerarquia;
+            console.log(data);
+        }
+        console.log(data);
+        await axios.post(this.url + "/Hogar_Persona", data);
+    }
+
+    /* datosDelFormularioPersona = (persona) => {
+        this.setState({
+            datosDelFormulario: { persona }
+        });
+        console.log(this.state.datosDelFormulario);
+    } */
+
+    fnGuardaRelacionHogarPersona = async (datos) => {
         let encabezado = {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
         };
-        await axios.post(this.url + "/persona", datos, encabezado)
+        await axios.post(this.url + "/Hogar_Persona", datos, encabezado)
             .then(res => {
                 return res.data;
             })
             .catch(error => {
                 return error;
             });
-    }
-
-    datosDelFormularioPersona = (persona) => {
-        this.setState({
-            datosDelFormulario: { persona }
-        });
-        console.log(this.state.datosDelFormulario);
     }
 
     FrmRegistroPersona = (e) => {
@@ -535,24 +567,31 @@ class RegistroDePersonal extends Component {
             }
         };
 
+        console.log(this.hp_Id_HogarRef.current.value);
         if (this.validator.allValid()) {
+            console.log("Codicion todos los datos son validos.");
 
             datos.eclesiasticos = this.fnDatosEclesiasticos();
-
             datos.estadoCivil = this.fnDatosEstadoCivil();
-
-            datos.hogar = this.fnDatoshogar();
-
             let datosCombinados = Object.assign({}, datos.persona, datos.eclesiasticos, datos.estadoCivil);
 
-            let nvaPersona = this.fnGuardaPersona(datosCombinados);
+            if (this.hp_Id_HogarRef.current.value === "0") {
+                console.log("Condicion NO se selecciono hogar.");
 
-            console.log(nvaPersona);
+                this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
+            } else {
+                console.log("Se selecciono un hogar EXISTENTE.");
+
+                this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
+                // return false;
+            }
         } else {
+            console.log("Faltan datos requeridos o captura incorrecta.");
+
             this.validator.showMessages();
             this.forceUpdate();
         }
-    };
+    }
 
     render() {
 
@@ -1208,43 +1247,43 @@ class RegistroDePersonal extends Component {
                                                 })
                                             }
                                             <table className="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Miembros del hogar</th>
-                                                                <th scope="col">Jerarquia</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {
-                                                                this.state.MiembrosDelHogar.map((miembro, i) => {
-                                                                    return (
-                                                                        <React.Fragment>
-                                                                            <tr>
-                                                                                <td key={i}>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
-                                                                                <td>{miembro.hp_Jerarquia}</td>
-                                                                            </tr>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </tbody>
-                                                    </table>
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Miembros del hogar</th>
+                                                        <th scope="col">Jerarquia</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        this.state.MiembrosDelHogar.map((miembro, i) => {
+                                                            return (
+                                                                <React.Fragment>
+                                                                    <tr>
+                                                                        <td key={i}>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
+                                                                        <td>{miembro.hp_Jerarquia}</td>
+                                                                    </tr>
+                                                                </React.Fragment>
+                                                            )
+                                                        })
+                                                    }
+                                                </tbody>
+                                            </table>
 
-                                                    <div className="form-group">
-                                                        <div className="row">
-                                                            <div className="col-sm-2">
-                                                                <label>Jerarquia por asignar</label>
-                                                            </div>
-                                                            <div className="col-sm-4">
-                                                                <input type="number" name="hp_Jerarquia" ref={this.hp_JerarquiaRef} className="form-control" />
-                                                            </div>
-                                                        </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-sm-2">
+                                                        <label>Jerarquia por asignar</label>
                                                     </div>
+                                                    <div className="col-sm-4">
+                                                        <input type="number" name="hp_Jerarquia" ref={this.hp_JerarquiaRef} className="form-control" />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </React.Fragment>
                                     }
 
                                     {/* <Domicilio /> */}
-                                    {this.state.SelectHogarId == 0 &&
+                                    {this.state.SelectHogarId === 0 &&
                                         <React.Fragment>
                                             <div className="form-group">
                                                 <div className="row">
@@ -1346,7 +1385,7 @@ class RegistroDePersonal extends Component {
                                                             {
                                                                 this.state.estados.map((estado, i) => {
                                                                     return (
-                                                                        <option key={i} value={estado.est_IdEstado}> {estado.est_Nombre} </option>
+                                                                        <option key={i} value={estado.est_Id_Estado}> {estado.est_Nombre} </option>
                                                                     )
                                                                 })
                                                             }
