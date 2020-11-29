@@ -57,30 +57,30 @@ class RegistroDePersonal extends Component {
     hd_TelefonoRef = React.createRef();
 
     url = Global.url_api;
-    fechaActual = MomentLocalUtils.formatDate(new Date(), "YYYY-MM-DD");
+    fechaNoIngresada = "1980-0-01";
     state = {
         // generales: {},
         // datosDelFormulario: {},
         sector: [],
-        fechanNacimiento: this.fechaActual,
+        fechanNacimiento: this.fechaNoIngresada,
         RFCSinHomoclave: '',
         PersonaEncontrada: false,
         datosPersonaEncontrada: {},
         profesiones_oficios: [],
         ElMiembroEsBautizado: false,
-        fechaBautismo: this.fechaActual,
+        fechaBautismo: this.fechaNoIngresada,
         TienePromesaDelEspitiruSanto: false,
-        fechaPromesaDelEspitiru: this.fechaActual,
+        fechaPromesaDelEspitiru: this.fechaNoIngresada,
         per_Fecha_Recibio_Espiritu: "",
         per_Bajo_Imposicion_De_Manos: "",
-        fechaBodaCivil: this.fechaActual,
-        fechaBodaEclesiastica: this.fechaActual,
+        fechaBodaCivil: this.fechaNoIngresada,
+        fechaBodaEclesiastica: this.fechaNoIngresada,
         ConcubinatoSolteroConHijos: false,
         CasadoDivorciadoViudo: false,
         // distrito: [],
         paises: [],
         estados: [],
-        SelectHogarId: 0,
+        SelectHogarId: '0',
         ListaHogares: [],
         MiembrosDelHogar: [],
         //eclesiasticos: [],
@@ -93,7 +93,8 @@ class RegistroDePersonal extends Component {
         per_Telefono_Movil: '',
         per_Email_Personal: '',
         per_Lugar_Bautismo: '',
-        per_Ministro_Que_Bautizo: ''
+        per_Ministro_Que_Bautizo: '',
+        DatosHogarDomicilio: []
     };
 
     componentWillMount() {
@@ -310,7 +311,7 @@ class RegistroDePersonal extends Component {
     };
 
     getListaHogares = () => {
-        axios.get(this.url + "/HogarDomicilio/GetListaHogares")
+        axios.get(this.url + "/Hogar_Persona/GetListaHogares")
             .then(res => {
                 this.setState({
                     ListaHogares: res.data,
@@ -319,8 +320,9 @@ class RegistroDePersonal extends Component {
             });
     }
 
-    HogarSeleccionado = () => {
-        axios.get(this.url + "/Hogar_Persona/GetMiembros/" + this.hp_Id_HogarRef.current.value)
+    HogarSeleccionado = async () => {
+        //console.log(this.hp_Id_HogarRef.current.value);
+        await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + this.hp_Id_HogarRef.current.value)
             .then(res => {
                 this.setState({
                     MiembrosDelHogar: res.data,
@@ -328,7 +330,14 @@ class RegistroDePersonal extends Component {
                     SelectHogarId: this.hp_Id_HogarRef.current.value
                 });
             });
-        // console.log(this.hp_Id_HogarRef.current.value);
+        await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + this.hp_Id_HogarRef.current.value)
+            .then(res => {
+                this.setState({
+                    DatosHogarDomicilio: res.data
+                });
+            });
+        console.log(this.state.DatosHogarDomicilio);
+        console.log(this.state.SelectHogarId);
     }
 
     EsMiembroBautizado = () => {
@@ -506,16 +515,9 @@ class RegistroDePersonal extends Component {
             data.hp_Jerarquia = d.hp_Jerarquia;
             console.log(data);
         }
-        console.log(data);
+        console.log(p);
         await axios.post(this.url + "/Hogar_Persona", data);
     }
-
-    /* datosDelFormularioPersona = (persona) => {
-        this.setState({
-            datosDelFormulario: { persona }
-        });
-        console.log(this.state.datosDelFormulario);
-    } */
 
     fnGuardaRelacionHogarPersona = async (datos) => {
         let encabezado = {
@@ -549,7 +551,6 @@ class RegistroDePersonal extends Component {
                 per_Telefono_Fijo: this.per_Telefono_FijoRef.current.value,
                 per_Telefono_Movil: this.per_Telefono_MovilRef.current.value,
                 per_Email_Personal: this.per_Email_PersonalRef.current.value,
-                per_foto: 'fotoPersona.png',
                 per_Observaciones: this.per_ObservacionesRef.current.value,
 
                 per_Nombre_Padre: this.per_Nombre_PadreRef.current.value,
@@ -558,11 +559,8 @@ class RegistroDePersonal extends Component {
                 per_Nombre_Abuela_Paterna: this.per_Nombre_Abuela_PaternaRef.current.value,
                 per_Nombre_Abuelo_Materno: this.per_Nombre_Abuelo_MaternoRef.current.value,
                 per_Nombre_Abuela_Materna: this.per_Nombre_Abuela_MaternaRef.current.value,
-
-                per_Activo: true,
-                per_En_Comunion: true,
-                per_Vivo: true,
-                per_Visibilidad_Abierta: true,
+                
+                per_foto: 'logo_signin.png',
                 sec_Id_Sector: 227
             }
         };
@@ -752,7 +750,6 @@ class RegistroDePersonal extends Component {
                                             </div>
                                             <div className="col-sm-4">
                                                 <select name="pro_Id_Profesion_Oficio1" ref={this.pro_Id_Profesion_Oficio1Ref} className="form-control">
-                                                    <option value="0">Selecciona un sector</option>
                                                     {
                                                         this.state.profesiones_oficios.map((profesion_oficio, i) => {
                                                             return (
@@ -772,7 +769,6 @@ class RegistroDePersonal extends Component {
                                             </div>
                                             <div className="col-sm-4">
                                                 <select name="pro_Id_Profesion_Oficio2" ref={this.pro_Id_Profesion_Oficio2Ref} className="form-control">
-                                                    <option value="0">Selecciona un sector</option>
                                                     {
                                                         this.state.profesiones_oficios.map((profesion_oficio, i) => {
                                                             return (
@@ -1222,7 +1218,7 @@ class RegistroDePersonal extends Component {
                                         </div>
                                     </div>
 
-                                    {this.state.SelectHogarId > 0 &&
+                                    {this.state.SelectHogarId !== '0' &&
                                         <React.Fragment>
                                             <div className="alert alert-warning mt-3" role="alert">
                                                 <h5>ATENCION: </h5>
@@ -1233,15 +1229,16 @@ class RegistroDePersonal extends Component {
                                                 </ul>
                                             </div>
                                             <strong>HOGAR: </strong>
+
                                             {
-                                                this.state.ListaHogares.map((hogar, i) => {
+                                                this.state.DatosHogarDomicilio.map((HogarDomicilio, i) => {
                                                     return (
                                                         <p key={i}>
-                                                            {hogar.hd_Calle} {hogar.hd_Numero_Exterior}, {hogar.hd_Numero_Interior} <br />
-                                                            Tipo subdivision: {hogar.hd_Tipo_Subdivision}, Subdivision: {hogar.hd_Subdivision} <br />
-                                                            {hogar.hd_Localidad}, {hogar.hd_Municipio_Cuidad} <br />
-                                                            {hogar.est_Nombre}, {hogar.pais_Nombre_Corto} <br />
-                                                            Telefono: {hogar.hd_Telefono}
+                                                            {HogarDomicilio.hd_Calle} {HogarDomicilio.hd_Numero_Exterior}, {HogarDomicilio.hd_Numero_Interior} <br />
+                                                            Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
+                                                            {HogarDomicilio.hd_Localidad}, {HogarDomicilio.hd_Municipio_Cuidad} <br />
+                                                            {HogarDomicilio.est_Nombre}, {HogarDomicilio.pais_Nombre_Corto} <br />
+                                                            Telefono: {HogarDomicilio.hd_Telefono}
                                                         </p>
                                                     )
                                                 })
@@ -1257,12 +1254,10 @@ class RegistroDePersonal extends Component {
                                                     {
                                                         this.state.MiembrosDelHogar.map((miembro, i) => {
                                                             return (
-                                                                <React.Fragment>
-                                                                    <tr>
-                                                                        <td key={i}>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
-                                                                        <td>{miembro.hp_Jerarquia}</td>
-                                                                    </tr>
-                                                                </React.Fragment>
+                                                                <tr key={i}>
+                                                                    <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
+                                                                    <td>{miembro.hp_Jerarquia}</td>
+                                                                </tr>
                                                             )
                                                         })
                                                     }
@@ -1283,7 +1278,7 @@ class RegistroDePersonal extends Component {
                                     }
 
                                     {/* <Domicilio /> */}
-                                    {this.state.SelectHogarId === 0 &&
+                                    {this.state.SelectHogarId === '0' &&
                                         <React.Fragment>
                                             <div className="form-group">
                                                 <div className="row">
