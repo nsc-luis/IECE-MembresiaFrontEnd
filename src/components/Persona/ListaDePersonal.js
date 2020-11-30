@@ -21,42 +21,15 @@ class ListaDePersonal extends Component {
         showModalPersonaHogar: false,
         currentPersona: {},
         currentProfesion1: {},
-        currentProfesion2: {}
+        currentProfesion2: {},
+        MiembrosDelHogar: [],
+        DatosHogarDomicilio: {},
+        CasadoDivorciadoViudo: false,
+        ConcubinadoSolteroConHijos: false,
+        soltero: false
     };
 
-    modalPersonaGenerales = (persona) => {
-        this.setState({
-            modalOpen: !this.state.modalOpen
-        });
-        console.log(persona);
-    }
-
-    openModalPersonaFamiliaAsendente = async (persona) => {
-        await this.setState({
-            showModalPersonaFamiliaAsendente: true,
-            currentPersona: persona
-        });
-    }
-
-    closeModalPersonaFamiliaAsendente = () => {
-        this.setState({ showModalPersonaFamiliaAsendente: false })
-    }
-
-    modalPersonaEstadoCivil = (persona) => {
-        this.setState({
-            modalOpen: !this.state.modalOpen
-        });
-        console.log(persona);
-    }
-
-    modalPersonaEclesiasticos = (persona) => {
-        this.setState({
-            modalOpen: !this.state.modalOpen
-        });
-        console.log(persona);
-    }
-
-    openModalPersonaHogar = async (persona) => {
+    openModalPersonaGenerales = async (persona) => {
         let pro1;
         let pro2;
 
@@ -81,7 +54,7 @@ class ListaDePersonal extends Component {
             ]
         }
         await this.setState({
-            showModalPersonaHogar: true,
+            showModalPersonaGenerales: true,
             currentPersona: persona
         });
         await this.setState({
@@ -89,13 +62,120 @@ class ListaDePersonal extends Component {
             currentProfesion2: pro2[0]
         });
     }
+    closeModalPersonaGenerales = () => {
+        this.setState({ showModalPersonaGenerales: false });
+    }
+
+    openModalPersonaFamiliaAsendente = async (persona) => {
+        await this.setState({
+            showModalPersonaFamiliaAsendente: true,
+            currentPersona: persona
+        });
+    }
+    closeModalPersonaFamiliaAsendente = () => {
+        this.setState({ showModalPersonaFamiliaAsendente: false })
+    }
+
+    openModalPersonaEstadoCivil = (persona) => {
+
+        console.log(persona.per_Estado_Civil);
+
+        switch (persona.per_Estado_Civil) {
+            case 'casado':
+                this.setState({ 
+                    CasadoDivorciadoViudo: true,
+                    ConcubinadoSolteroConHijos: false,
+                    soltero: false
+                });
+                break;
+            case 'divorciado':
+                this.setState({ 
+                    CasadoDivorciadoViudo: true,
+                    ConcubinadoSolteroConHijos: false,
+                    soltero: false
+                });
+                break;
+            case 'viudo':
+                this.setState({ 
+                    CasadoDivorciadoViudo: true,
+                    ConcubinadoSolteroConHijos: false,
+                    soltero: false
+                });
+                break;
+            case 'concubinato':
+                this.setState({ 
+                    CasadoDivorciadoViudo: false,
+                    ConcubinadoSolteroConHijos: true,
+                    soltero: false
+                });
+                break;
+            case 'solteroconhijos':
+                this.setState({ 
+                    CasadoDivorciadoViudo: false,
+                    ConcubinadoSolteroConHijos: true,
+                    soltero: false
+                });
+                break;
+            default:
+                this.setState({ 
+                    CasadoDivorciadoViudo: false,
+                    ConcubinadoSolteroConHijos: false,
+                    soltero: true
+                });
+                break;
+        }
+
+        this.setState({
+            showModalPersonaEstadoCivil: true,
+            currentPersona: persona
+        });
+        console.log(persona);
+    }
+    closeModalPersonaEstadoCivil = () => {
+        this.setState({ showModalPersonaEstadoCivil: false })
+    }
+
+    openModalPersonaEclesiasticos = (persona) => {
+        this.setState({
+            showModalPersonaEclesiasticos: true,
+            currentPersona: persona
+        });
+        console.log(persona);
+    }
+    closeModalPersonaEclesiasticos = () => {
+        this.setState({ showModalPersonaEclesiasticos: false })
+    }
+
+    openModalPersonaHogar = async (persona) => {
+
+        let getHogar = await axios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
+            .then(res => res.data);
+
+        await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + getHogar.hd_Id_Hogar)
+            .then(res => {
+                this.setState({
+                    MiembrosDelHogar: res.data
+                });
+            });
+        await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
+            .then(res => {
+                this.setState({
+                    DatosHogarDomicilio: res.data,
+                    showModalPersonaHogar: true
+                });
+            });
+        console.log(this.state.DatosHogarDomicilio);
+        console.log(this.state.SelectHogarId);
+    }
+    closeModalPersonaHogar = () => {
+        this.setState({ showModalPersonaHogar: false });
+    }
 
     getProfesion1 = async (persona) => {
         return await axios.get(this.url + "/persona/GetProfesion1/" + persona)
             .then(res => res.data)
             .catch(error => error);
     }
-
     getProfesion2 = async (persona) => {
         return await axios.get(this.url + "/persona/GetProfesion2/" + persona)
             .then(res => res.data)
@@ -105,10 +185,6 @@ class ListaDePersonal extends Component {
                 currentProfesion2: res.data
             });
         }); */
-    }
-
-    closeModalPersonaHogar = () => {
-        this.setState({ showModalPersonaHogar: false })
     }
 
     componentWillMount() {
@@ -205,19 +281,19 @@ class ListaDePersonal extends Component {
                                                 </td>
                                             }
                                             <td className="text-center">
-                                                <button onClick={() => this.openModalPersonaHogar(persona)} className="bordeRedondo">
+                                                <button onClick={() => this.openModalPersonaGenerales(persona)} className="bordeRedondo">
                                                     <span className="fas fa-info-circle fa-lg" title="Info general"></span>
                                                 </button>
                                                 <button onClick={() => this.openModalPersonaFamiliaAsendente(persona)} className="bordeRedondo">
                                                     <span className="fas fa-users fa-lg" title="Familia asendente"></span>
                                                 </button>
-                                                <button onClick={this.modalPersonaEstadoCivil} className="bordeRedondo">
+                                                <button onClick={() => this.openModalPersonaEstadoCivil(persona)} className="bordeRedondo">
                                                     <span className="fas fa-baby-carriage fa-lg" title="Estado civil"></span>
                                                 </button>
-                                                <button onClick={this.modalPersonaEclesiasticos} className="bordeRedondo">
+                                                <button onClick={() => this.openModalPersonaEclesiasticos(persona)} className="bordeRedondo">
                                                     <span className="fas fa-user-check fa-lg" title="Ecelsiasticos"></span>
                                                 </button>
-                                                <button onClick={this.modalPersonaHogar} className="bordeRedondo">
+                                                <button onClick={() => this.openModalPersonaHogar(persona)} className="bordeRedondo">
                                                     <span className="fas fa-home fa-lg" title="Hogar"></span>
                                                 </button>
                                             </td>
@@ -232,10 +308,10 @@ class ListaDePersonal extends Component {
                         </tbody>
                     </table>
 
-                    <Modal
-                        isOpen={this.state.showModalPersonaHogar}
+                    <Modal // Datos generales
+                        isOpen={this.state.showModalPersonaGenerales}
                         className="modalStyle"
-                        onRequestClose={this.closeModalPersonaHogar}
+                        onRequestClose={this.closeModalPersonaGenerales}
                     >
                         <div className="card border-info">
                             <div className="card-header text-center">
@@ -260,11 +336,11 @@ class ListaDePersonal extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <button className="btn btn-sm btn-secondary" onClick={this.closeModalPersonaHogar}>Cerrar</button>
+                            <button className="btn btn-sm btn-secondary" onClick={this.closeModalPersonaGenerales}>Cerrar</button>
                         </div>
                     </Modal>
 
-                    <Modal
+                    <Modal // Familia asendente
                         isOpen={this.state.showModalPersonaFamiliaAsendente}
                         className="modalStyle"
                         onRequestClose={this.closeModalPersonaFamiliaAsendente}
@@ -285,6 +361,130 @@ class ListaDePersonal extends Component {
                         </div>
                     </Modal>
 
+                    <Modal // Estado civil
+                        isOpen={this.state.showModalPersonaEstadoCivil}
+                        className="modalStyle"
+                        onRequestClose={this.closeModalPersonaEstadoCivil}
+                    >
+                        <div className="card border-info">
+                            <div className="card-header text-center">
+                                <h5><strong>Datos de estado civil</strong></h5>
+                            </div>
+                            <div className="card-body p-3">
+                                {this.state.CasadoDivorciadoViudo &&
+                                    <React.Fragment>
+                                        <strong>Estado civil:</strong> {this.state.currentPersona.per_Estado_Civil} <br />
+                                        <strong>Conyuge:</strong> {this.state.currentPersona.per_Nombre_Conyuge} <br />
+                                        <strong>Fecha boda civil:</strong> {this.state.currentPersona.per_Fecha_Boda_Civil} <br />
+                                        <strong>Registro boda civil:</strong> {this.state.currentPersona.per_Registro_Civil} <br />
+                                        <strong>Oficialia boda civil:</strong> {this.state.currentPersona.per_Oficialia_Boda_Civil} <br />
+                                        <strong>Libro boda civil:</strong> {this.state.currentPersona.per_Libro_Acta_Boda_Civil} <br />
+                                        <strong>Acta boda civil:</strong> {this.state.currentPersona.per_Num_Acta_Boda_Civil} <br />
+                                        <strong>Cantidad de hijos:</strong> {this.state.currentPersona.per_Cantidad_Hijos} <br />
+                                        <strong>Nombre de hijos:</strong> {this.state.currentPersona.per_Nombre_Hijos}
+
+                                        {this.state.currentPersona.per_Bautizado &&
+                                            <React.Fragment>
+                                                <hr />
+                                                <strong>Fecha boda eclesiastica:</strong> {this.state.currentPersona.per_Fecha_Boda_Eclesiastica} <br />
+                                                <strong>Lugar boda eclesiastica:</strong> {this.state.currentPersona.per_Lugar_Boda_Eclesiastica}
+                                            </React.Fragment>
+                                        }
+                                    </React.Fragment>
+                                }
+                                {this.state.ConcubinadoSolteroConHijos &&
+                                    <React.Fragment>
+                                        <strong>Estado civil:</strong> {this.state.currentPersona.per_Estado_Civil} <br />
+                                        <strong>Numero de hijos:</strong> {this.state.currentPersona.per_Nombre_Hijos} <br />
+                                        <strong>Cantidad de hijos:</strong> {this.state.currentPersona.per_Cantidad_Hijos}
+                                    </React.Fragment>
+                                }
+                                {this.state.soltero &&
+                                    <React.Fragment>
+                                        <strong>Estado civil:</strong> {this.state.currentPersona.per_Estado_Civil}
+                                    </React.Fragment>
+                                }
+
+                            </div>
+                            <button className="btn btn-sm btn-secondary" onClick={this.closeModalPersonaEstadoCivil}>Cerrar</button>
+                        </div>
+                    </Modal>
+
+                    <Modal // Datos eclesiasticos
+                        isOpen={this.state.showModalPersonaEclesiasticos}
+                        className="modalStyle"
+                        onRequestClose={this.closeModalPersonaEclesiasticos}
+                    >
+                        <div className="card border-info">
+                            <div className="card-header text-center">
+                                <h5><strong>Datos eclesiasticos</strong></h5>
+                            </div>
+                            <div className="card-body p-3">
+                                <strong>Bautizado: </strong>{this.state.currentPersona.per_Bautizado ? 'SI' : 'NO'} <br />
+                                {this.state.currentPersona.per_Bautizado &&
+                                    <React.Fragment>
+                                        <strong>Lugar bautismo:</strong> {this.state.currentPersona.per_Lugar_Bautismo} <br />
+                                        <strong>Ministro que bautizo:</strong> {this.state.currentPersona.per_Ministro_Que_Bautizo}
+                                    </React.Fragment>
+                                }
+                                <br />
+                                <hr />
+                                <strong>Bajo imposicion de manos:</strong> {this.state.currentPersona.per_Bajo_Imposicion_De_Manos} <br />
+                                <strong>Fecha recibe promesa:</strong> {this.state.currentPersona.per_Fecha_Recibio_Espiritu_Santo}
+                                <hr />
+                                <strong>Cambios de domicilio:</strong> {this.state.currentPersona.per_Cambios_De_Domicilio} <br />
+                            </div>
+                            <button className="btn btn-sm btn-secondary" onClick={this.closeModalPersonaEclesiasticos}>Cerrar</button>
+                        </div>
+                    </Modal>
+
+                    <Modal // Datos del hogar
+                        isOpen={this.state.showModalPersonaHogar}
+                        className="modalStyle"
+                        onRequestClose={this.closeModalPersonaHogar}
+                    >
+                        <div className="card border-info">
+                            <div className="card-header text-center">
+                                <h5><strong>Datos del hogar</strong></h5>
+                            </div>
+                            <div className="card-body p-3">
+                                {this.state.showModalPersonaHogar &&
+                                    this.state.DatosHogarDomicilio.map((HogarDomicilio, i) => {
+                                        return (
+                                            <p key={i}>
+                                                {HogarDomicilio.hd_Calle} {HogarDomicilio.hd_Numero_Exterior}, {HogarDomicilio.hd_Numero_Interior} <br />
+                                                            Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
+                                                {HogarDomicilio.hd_Localidad}, {HogarDomicilio.hd_Municipio_Cuidad} <br />
+                                                {HogarDomicilio.est_Nombre}, {HogarDomicilio.pais_Nombre_Corto} <br />
+                                                            Telefono: {HogarDomicilio.hd_Telefono}
+                                            </p>
+                                        )
+                                    })
+                                }
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Miembros del hogar</th>
+                                            <th scope="col">Jerarquia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.showModalPersonaHogar &&
+                                            this.state.MiembrosDelHogar.map((miembro, i) => {
+                                                return (
+                                                    <tr key={i}>
+                                                        <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
+                                                        <td>{miembro.hp_Jerarquia}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button className="btn btn-sm btn-secondary" onClick={this.closeModalPersonaHogar}>Cerrar</button>
+                        </div>
+                    </Modal>
                 </React.Fragment>
             );
         } else if (this.state.personas.length === 0 && this.state.status === 'success') {
