@@ -328,6 +328,7 @@ class ListaDePersonal extends Component {
                                         <strong>Telefono:</strong> {this.state.currentPersona.per_Telefono_Fijo} <br />
                                         <strong>Celular:</strong> {this.state.currentPersona.per_Telefono_Movil} <br />
                                         <strong>Email:</strong> {this.state.currentPersona.per_Email_Personal}
+                                        <strong>Fecha nacimiento:</strong> {this.state.currentPersona.per_Fecha_Nacimiento}
                                         <hr />
                                         <strong>Descripcion oficio 1:</strong> {this.state.currentProfesion1.pro_Desc_Profesion_Oficio}
                                         ( {this.state.currentProfesion1.pro_Definicion_Profesion_Oficio} ) <br />

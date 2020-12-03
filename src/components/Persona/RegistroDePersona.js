@@ -94,7 +94,16 @@ class RegistroDePersonal extends Component {
         per_Email_Personal: '',
         per_Lugar_Bautismo: '',
         per_Ministro_Que_Bautizo: '',
-        DatosHogarDomicilio: []
+        DatosHogarDomicilio: [],
+        per_Nombre_Conyuge: '',
+        per_Lugar_Boda_Eclesiastica: '',
+        hd_Calle: '',
+        hd_Localidad: '',
+        hd_Municipio_Cuidad: '',
+        pais_Id_Pais: '',
+        est_Id_Estado: '',
+        hd_Telefono: '',
+        JerarquiasDisponibles: 0
     };
 
     componentWillMount() {
@@ -109,7 +118,8 @@ class RegistroDePersonal extends Component {
                 regex: "Selecciona una opciona valida.",
                 phone: "Ingrese un numero valido de 10 digitos, solo numeros.",
                 email: "Email invalido.",
-                date: "Debe ingresar una fecha valida."
+                date: "Debe ingresar una fecha valida.",
+                between: "La jerarquia debe estar dentro del rango de la jerarquia de los miembros +1."
             }
         });
     };
@@ -212,6 +222,70 @@ class RegistroDePersonal extends Component {
     valida_per_Email_Personal = () => {
         this.setState({
             per_Email_Personal: this.per_Email_PersonalRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Nombre_Conyuge = () => {
+        this.setState({
+            per_Nombre_Conyuge: this.per_Nombre_ConyugeRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_per_Lugar_Boda_Eclesiastica = () => {
+        this.setState({
+            per_Lugar_Boda_Eclesiastica: this.per_Lugar_Boda_EclesiasticaRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_hd_Calle = () => {
+        this.setState({
+            hd_Calle: this.hd_CalleRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_hd_Localidad = () => {
+        this.setState({
+            hd_Localidad: this.hd_LocalidadRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_hd_Municipio_Cuidad = () => {
+        this.setState({
+            hd_Municipio_Cuidad: this.hd_Municipio_CuidadRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_pais_Id_Pais = () => {
+        this.setState({
+            pais_Id_Pais: this.pais_Id_PaisRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_est_Id_Estado = () => {
+        this.setState({
+            est_Id_Estado: this.est_Id_EstadoRef.current.value
+        });
+        this.validator.showMessages();
+        this.forceUpdate();
+    }
+
+    valida_hd_Telefono = () => {
+        this.setState({
+            hd_Telefono: this.hd_TelefonoRef.current.value
         });
         this.validator.showMessages();
         this.forceUpdate();
@@ -336,8 +410,17 @@ class RegistroDePersonal extends Component {
                     DatosHogarDomicilio: res.data
                 });
             });
-        console.log(this.state.DatosHogarDomicilio);
-        console.log(this.state.SelectHogarId);
+
+        let jerarquias = [];
+        for (let i= 1; i<=this.state.MiembrosDelHogar.length+1; i++){
+            jerarquias.push(<option value={i}>{i}</option>)
+        }
+        
+        await this.setState({
+            JerarquiasDisponibles: jerarquias
+        });
+        // console.log(this.state.JerarquiasDisponibles);
+        // console.log(this.state.SelectHogarId);
     }
 
     EsMiembroBautizado = () => {
@@ -559,7 +642,7 @@ class RegistroDePersonal extends Component {
                 per_Nombre_Abuela_Paterna: this.per_Nombre_Abuela_PaternaRef.current.value,
                 per_Nombre_Abuelo_Materno: this.per_Nombre_Abuelo_MaternoRef.current.value,
                 per_Nombre_Abuela_Materna: this.per_Nombre_Abuela_MaternaRef.current.value,
-                
+
                 per_foto: 'logo_signin.png',
                 sec_Id_Sector: 227
             }
@@ -790,7 +873,7 @@ class RegistroDePersonal extends Component {
                                                 <input type="text" name="per_Telefono_Fijo" ref={this.per_Telefono_FijoRef} onChange={this.valida_per_Telefono_Fijo} className="form-control" />
                                             </div>
                                             <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Telefono_Fijo', this.state.per_Telefono_Fijo, 'regex:^[0-9]{10}$')}
+                                                {this.validator.message('per_Telefono_Fijo', this.state.per_Telefono_Fijo, 'phone|regex:^[0-9]{10}$')}
                                             </span>
                                         </div>
                                     </div>
@@ -804,7 +887,7 @@ class RegistroDePersonal extends Component {
                                                 <input type="text" name="per_Telefono_Movil" ref={this.per_Telefono_MovilRef} onChange={this.valida_per_Telefono_Movil} className="form-control" />
                                             </div>
                                             <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Telefono_Movil', this.state.per_Telefono_Movil, 'regex:^[0-9]{10}$')}
+                                                {this.validator.message('per_Telefono_Movil', this.state.per_Telefono_Movil, 'phone|regex:^[0-9]{10}$')}
                                             </span>
                                         </div>
                                     </div>
@@ -952,8 +1035,11 @@ class RegistroDePersonal extends Component {
                                                         <label>Nombre conyuge</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="per_Nombre_Conyuge" ref={this.per_Nombre_ConyugeRef} className="form-control" />
+                                                        <input type="text" name="per_Nombre_Conyuge" onChange={this.valida_per_Nombre_Conyuge} ref={this.per_Nombre_ConyugeRef} className="form-control" />
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('per_Nombre_Conyuge', this.state.per_Nombre_Conyuge, 'required')}
+                                                    </span>
                                                 </div>
                                             </div>
 
@@ -971,6 +1057,9 @@ class RegistroDePersonal extends Component {
                                                             onDayChange={this.fBodaCivil}
                                                         />
                                                     </div>
+                                                    {/* <span style={{ color: 'red' }}>
+                                                        {this.validator.message('per_Nombre_Conyuge', this.state.per_Nombre_Conyuge, 'required')}
+                                                    </span> */}
                                                 </div>
                                             </div>
 
@@ -1023,6 +1112,9 @@ class RegistroDePersonal extends Component {
                                                                     onDayChange={this.fBodaEclesiastica}
                                                                 />
                                                             </div>
+                                                            {/* <span style={{ color: 'red' }}>
+                                                                {this.validator.message('per_Nombre_Conyuge', this.state.per_Nombre_Conyuge, 'required')}
+                                                            </span> */}
                                                         </div>
                                                     </div>
 
@@ -1032,8 +1124,11 @@ class RegistroDePersonal extends Component {
                                                                 <label>Lugar boda eclesiastica</label>
                                                             </div>
                                                             <div className="col-sm-4">
-                                                                <input type="text" name="per_Lugar_Boda_Eclesiastica" ref={this.per_Lugar_Boda_EclesiasticaRef} className="form-control" />
+                                                                <input type="text" name="per_Lugar_Boda_Eclesiastica" onChange={this.valida_per_Lugar_Boda_Eclesiastica} ref={this.per_Lugar_Boda_EclesiasticaRef} className="form-control" />
                                                             </div>
+                                                            <span style={{ color: 'red' }}>
+                                                                {this.validator.message('per_Lugar_Boda_Eclesiastica', this.state.per_Lugar_Boda_Eclesiastica, 'required')}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </React.Fragment>
@@ -1270,7 +1365,9 @@ class RegistroDePersonal extends Component {
                                                         <label>Jerarquia por asignar</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="number" name="hp_Jerarquia" ref={this.hp_JerarquiaRef} className="form-control" />
+                                                        <select name="hp_Jerarquia" ref={this.hp_JerarquiaRef} className="form-control">
+                                                            { this.state.JerarquiasDisponibles }
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1286,8 +1383,11 @@ class RegistroDePersonal extends Component {
                                                         <label>Calle</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="hd_Calle" ref={this.hd_CalleRef} className="form-control" />
+                                                        <input type="text" name="hd_Calle" ref={this.hd_CalleRef} onChange={this.valida_hd_Calle} className="form-control" />
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('hd_Calle', this.state.hd_Calle, 'required')}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="form-group">
@@ -1316,7 +1416,21 @@ class RegistroDePersonal extends Component {
                                                         <label>Tipo subdivision</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input name="hd_Tipo_Subdivision" ref={this.hd_Tipo_SubdivisionRef} className="form-control" />
+                                                        <select name="hd_Tipo_Subdivision" ref={this.hd_Tipo_SubdivisionRef} className="form-control">
+                                                            <option value="COL">COLONIA</option>
+                                                            <option value="FRACC">FRACC</option>
+                                                            <option value="EJ">EJIDO</option>
+                                                            <option value="SUBDIV">SUBDIV</option>
+                                                            <option value="BRGY">BRGY</option>
+                                                            <option value="RANCHO">RANCHO</option>
+                                                            <option value="MANZANA">MANZANA</option>
+                                                            <option value="RESIDENCIAL">RESIDENCIAL</option>
+                                                            <option value="SECTOR">SECTOR</option>
+                                                            <option value="SECCIÓN">SECCIÓN</option>
+                                                            <option value="UNIDAD">UNIDAD</option>
+                                                            <option value="BARRIO">BARRIO</option>
+                                                            <option value="ZONA">ZONA</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1336,8 +1450,11 @@ class RegistroDePersonal extends Component {
                                                         <label>Localidad</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="hd_Localidad" ref={this.hd_LocalidadRef} className="form-control" />
+                                                        <input type="text" name="hd_Localidad" ref={this.hd_LocalidadRef} onChange={this.valida_hd_Localidad} className="form-control" />
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('hd_Localidad', this.state.hd_Localidad, 'required')}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="form-group">
@@ -1346,8 +1463,11 @@ class RegistroDePersonal extends Component {
                                                         <label>Municipio/Cuidad</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="hd_Municipio_Cuidad" ref={this.hd_Municipio_CuidadRef} className="form-control" />
+                                                        <input type="text" name="hd_Municipio_Cuidad" ref={this.hd_Municipio_CuidadRef} onChange={this.valida_hd_Municipio_Cuidad} className="form-control" />
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('hd_Municipio_Cuidad', this.state.hd_Municipio_Cuidad, 'required')}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="form-group">
@@ -1356,7 +1476,7 @@ class RegistroDePersonal extends Component {
                                                         <label htmlFor="pais_Id_Pais">Pais</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <select name="pais_Id_Pais" ref={this.pais_Id_PaisRef} className="form-control">
+                                                        <select name="pais_Id_Pais" ref={this.pais_Id_PaisRef} onChange={this.valida_pais_Id_Pais} className="form-control">
                                                             <option value="0">Selecciona un pais</option>
                                                             {
                                                                 this.state.paises.map((pais, i) => {
@@ -1367,6 +1487,9 @@ class RegistroDePersonal extends Component {
                                                             }
                                                         </select>
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('pais_Id_Pais', this.state.pais_Id_Pais, 'required')}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="form-group">
@@ -1375,7 +1498,7 @@ class RegistroDePersonal extends Component {
                                                         <label htmlFor="est_Id_Estado">Estado</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <select name="est_Id_Estado" ref={this.est_Id_EstadoRef} className="form-control">
+                                                        <select name="est_Id_Estado" ref={this.est_Id_EstadoRef} onChange={this.valida_est_Id_Estado} className="form-control">
                                                             <option value="0">Selecciona un estado</option>
                                                             {
                                                                 this.state.estados.map((estado, i) => {
@@ -1386,6 +1509,9 @@ class RegistroDePersonal extends Component {
                                                             }
                                                         </select>
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('est_Id_Estado', this.state.est_Id_Estado, 'required')}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="form-group">
@@ -1394,8 +1520,11 @@ class RegistroDePersonal extends Component {
                                                         <label>Telefono</label>
                                                     </div>
                                                     <div className="col-sm-4">
-                                                        <input type="text" name="hd_Telefono" ref={this.hd_TelefonoRef} className="form-control" />
+                                                        <input type="text" name="hd_Telefono" onChange={this.valida_hd_Telefono} ref={this.hd_TelefonoRef} className="form-control" />
                                                     </div>
+                                                    <span style={{ color: 'red' }}>
+                                                        {this.validator.message('hd_Telefono', this.state.hd_Telefono, 'phone|regex:^[0-9]{10}$')}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </React.Fragment>
