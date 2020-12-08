@@ -57,7 +57,7 @@ class RegistroDePersonal extends Component {
     hd_TelefonoRef = React.createRef();
 
     url = Global.url_api;
-    fechaNoIngresada = "1980-0-01";
+    fechaNoIngresada = "1890-01-01";
     state = {
         // generales: {},
         // datosDelFormulario: {},
@@ -600,9 +600,10 @@ class RegistroDePersonal extends Component {
         }
         console.log(p);
         await axios.post(this.url + "/Hogar_Persona", data);
+        console.log(data);
     }
 
-    fnGuardaRelacionHogarPersona = async (datos) => {
+    /* fnGuardaRelacionHogarPersona = async (datos) => {
         let encabezado = {
             headers: {
                 'Accept': 'application/json',
@@ -616,9 +617,9 @@ class RegistroDePersonal extends Component {
             .catch(error => {
                 return error;
             });
-    }
+    } */
 
-    FrmRegistroPersona = (e) => {
+    FrmRegistroPersona = async (e) => {
         e.preventDefault();
 
         let datos = {
@@ -644,7 +645,10 @@ class RegistroDePersonal extends Component {
                 per_Nombre_Abuela_Materna: this.per_Nombre_Abuela_MaternaRef.current.value,
 
                 per_foto: 'logo_signin.png',
-                sec_Id_Sector: 227
+                sec_Id_Sector: 227,
+                per_Activo: 'true',
+                per_En_Comunion: 'true',
+                per_Vivo: 'true'
             }
         };
 
@@ -659,12 +663,13 @@ class RegistroDePersonal extends Component {
             if (this.hp_Id_HogarRef.current.value === "0") {
                 console.log("Condicion NO se selecciono hogar.");
 
-                this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
+                await this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
+                //window.location.assign("/ListaDePersonal");
             } else {
                 console.log("Se selecciono un hogar EXISTENTE.");
 
-                this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
-                // return false;
+                await this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
+                //window.location.assign("/ListaDePersonal");
             }
         } else {
             console.log("Faltan datos requeridos o captura incorrecta.");
@@ -803,16 +808,16 @@ class RegistroDePersonal extends Component {
                                                     <tr>
                                                         <th scope="col">Nombre</th>
                                                         <th scope="col">Nacimiento</th>
-                                                        <th scope="col">Distrito / Localidad</th>
-                                                        <th scope="col">Sector / Localidad</th>
+                                                        {/* <th scope="col">Distrito / Localidad</th>
+                                                        <th scope="col">Sector / Localidad</th> */}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <td>{this.state.datosPersonaEncontrada.per_Nombre} {this.state.datosPersonaEncontrada.per_Apellido_Paterno} {this.state.datosPersonaEncontrada.per_Apellido_Materno} </td>
                                                         <td>{this.state.datosPersonaEncontrada.per_Fecha_Nacimiento} </td>
-                                                        <td>{this.state.datosPersonaEncontrada.dis_Numero} / {this.state.datosPersonaEncontrada.dis_Localidad}</td>
-                                                        <td>{this.state.datosPersonaEncontrada.sec_Numero} / {this.state.datosPersonaEncontrada.sec_Localidad}</td>
+                                                        {/* <td>{this.state.datosPersonaEncontrada.dis_Numero} / {this.state.datosPersonaEncontrada.dis_Localidad}</td>
+                                                        <td>{this.state.datosPersonaEncontrada.sec_Numero} / {this.state.datosPersonaEncontrada.sec_Localidad}</td> */}
                                                     </tr>
                                                 </tbody>
                                             </table>

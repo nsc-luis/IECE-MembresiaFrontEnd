@@ -82,42 +82,42 @@ class ListaDePersonal extends Component {
 
         switch (persona.per_Estado_Civil) {
             case 'casado':
-                this.setState({ 
+                this.setState({
                     CasadoDivorciadoViudo: true,
                     ConcubinadoSolteroConHijos: false,
                     soltero: false
                 });
                 break;
             case 'divorciado':
-                this.setState({ 
+                this.setState({
                     CasadoDivorciadoViudo: true,
                     ConcubinadoSolteroConHijos: false,
                     soltero: false
                 });
                 break;
             case 'viudo':
-                this.setState({ 
+                this.setState({
                     CasadoDivorciadoViudo: true,
                     ConcubinadoSolteroConHijos: false,
                     soltero: false
                 });
                 break;
             case 'concubinato':
-                this.setState({ 
+                this.setState({
                     CasadoDivorciadoViudo: false,
                     ConcubinadoSolteroConHijos: true,
                     soltero: false
                 });
                 break;
             case 'solteroconhijos':
-                this.setState({ 
+                this.setState({
                     CasadoDivorciadoViudo: false,
                     ConcubinadoSolteroConHijos: true,
                     soltero: false
                 });
                 break;
             default:
-                this.setState({ 
+                this.setState({
                     CasadoDivorciadoViudo: false,
                     ConcubinadoSolteroConHijos: false,
                     soltero: true
@@ -207,6 +207,13 @@ class ListaDePersonal extends Component {
         return (
             alert("Disponible proximamente.")
         );
+    }
+
+    fnEliminaPersona = async (persona) => {
+        await axios.delete(this.url + "/persona/" + persona.per_Id_Persona)
+            .then(res => res.data)
+            .catch(error => error);
+            window.location.reload();
     }
 
     InfoStatus = (persona) => {
@@ -299,7 +306,7 @@ class ListaDePersonal extends Component {
                                             </td>
                                             <td className="text-center">
                                                 <button onClick={this.InfoAdicional} className="btn btn-success btn-sm" title="Editar informacion"><span className="fas fa-pencil-alt"></span>Editar</button>
-                                                <button onClick={this.InfoAdicional} className="btn btn-danger btn-sm" title="Eliminar persona"><span className="fas fa-trash-alt"></span>Eliminar</button>
+                                                <button onClick={() => this.fnEliminaPersona(persona)} className="btn btn-danger btn-sm" title="Eliminar persona"><span className="fas fa-trash-alt"></span>Eliminar</button>
                                             </td>
                                         </tr>
                                     )
