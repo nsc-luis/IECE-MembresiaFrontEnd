@@ -412,13 +412,23 @@ class RegistroDePersonal extends Component {
             });
 
         let jerarquias = [];
-        for (let i= 1; i<=this.state.MiembrosDelHogar.length+1; i++){
+        for (let i = 1; i <= this.state.MiembrosDelHogar.length + 1; i++) {
             jerarquias.push(<option value={i}>{i}</option>)
         }
-        
+
         await this.setState({
             JerarquiasDisponibles: jerarquias
         });
+        if (this.hp_Id_HogarRef.current.value === '0') {
+            this.validator.hideMessages();
+            this.forceUpdate();
+            /* this.validator.hideMessageFor('hd_Localidad');
+            this.validator.hideMessageFor('hd_Municipio_Cuidad');
+            this.validator.hideMessageFor('est_Id_Estado');
+            this.validator.hideMessageFor('pais_Id_Pais'); */
+        }
+
+
         // console.log(this.state.JerarquiasDisponibles);
         // console.log(this.state.SelectHogarId);
     }
@@ -1371,7 +1381,7 @@ class RegistroDePersonal extends Component {
                                                     </div>
                                                     <div className="col-sm-4">
                                                         <select name="hp_Jerarquia" ref={this.hp_JerarquiaRef} className="form-control">
-                                                            { this.state.JerarquiasDisponibles }
+                                                            {this.state.JerarquiasDisponibles}
                                                         </select>
                                                     </div>
                                                 </div>
