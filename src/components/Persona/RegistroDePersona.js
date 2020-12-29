@@ -5,6 +5,7 @@ import axios from 'axios';
 import SimpleReactValidator from 'simple-react-validator';
 import Global from '../../Global';
 import MomentLocalUtils from 'react-day-picker/moment';
+import { Link } from 'react-router-dom';
 
 class RegistroDePersonal extends Component {
 
@@ -58,6 +59,7 @@ class RegistroDePersonal extends Component {
 
     url = Global.url_api;
     fechaNoIngresada = "1890-01-01";
+
     state = {
         // generales: {},
         // datosDelFormulario: {},
@@ -151,144 +153,144 @@ class RegistroDePersonal extends Component {
         this.setState({
             per_Bajo_Imposicion_De_Manos: this.per_Bajo_Imposicion_De_ManosRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Lugar_Bautismo = () => {
         this.setState({
             per_Lugar_Bautismo: this.per_Lugar_BautismoRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Ministro_Que_Bautizo = () => {
         this.setState({
             per_Ministro_Que_Bautizo: this.per_Ministro_Que_BautizoRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Categoria = () => {
         this.setState({
             per_Categoria: this.per_CategoriaRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Nombre = () => {
         this.setState({
             per_Nombre: this.per_NombreRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Apellido_Paterno = () => {
         this.setState({
             per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Apellido_Materno = () => {
         this.setState({
             per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Telefono_Movil = () => {
         this.setState({
             per_Telefono_Movil: this.per_Telefono_MovilRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Telefono_Fijo = () => {
         this.setState({
             per_Telefono_Fijo: this.per_Telefono_FijoRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Email_Personal = () => {
         this.setState({
             per_Email_Personal: this.per_Email_PersonalRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Nombre_Conyuge = () => {
         this.setState({
             per_Nombre_Conyuge: this.per_Nombre_ConyugeRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_per_Lugar_Boda_Eclesiastica = () => {
         this.setState({
             per_Lugar_Boda_Eclesiastica: this.per_Lugar_Boda_EclesiasticaRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_hd_Calle = () => {
         this.setState({
             hd_Calle: this.hd_CalleRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_hd_Localidad = () => {
         this.setState({
             hd_Localidad: this.hd_LocalidadRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_hd_Municipio_Cuidad = () => {
         this.setState({
             hd_Municipio_Cuidad: this.hd_Municipio_CuidadRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_pais_Id_Pais = () => {
         this.setState({
             pais_Id_Pais: this.pais_Id_PaisRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_est_Id_Estado = () => {
         this.setState({
             est_Id_Estado: this.est_Id_EstadoRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     valida_hd_Telefono = () => {
         this.setState({
             hd_Telefono: this.hd_TelefonoRef.current.value
         });
-        this.validator.showMessages();
-        this.forceUpdate();
+        /* this.validator.showMessages();
+        this.forceUpdate(); */
     }
 
     getEstados = () => {
@@ -419,15 +421,14 @@ class RegistroDePersonal extends Component {
         await this.setState({
             JerarquiasDisponibles: jerarquias
         });
-        if (this.hp_Id_HogarRef.current.value === '0') {
+        /* if (this.hp_Id_HogarRef.current.value === '0') {
             this.validator.hideMessages();
             this.forceUpdate();
-            /* this.validator.hideMessageFor('hd_Localidad');
+            this.validator.hideMessageFor(this.state.hd_Localidad);
             this.validator.hideMessageFor('hd_Municipio_Cuidad');
             this.validator.hideMessageFor('est_Id_Estado');
-            this.validator.hideMessageFor('pais_Id_Pais'); */
-        }
-
+            this.validator.hideMessageFor('pais_Id_Pais');
+        } */
 
         // console.log(this.state.JerarquiasDisponibles);
         // console.log(this.state.SelectHogarId);
@@ -639,6 +640,7 @@ class RegistroDePersonal extends Component {
                 per_Apellido_Paterno: this.per_Apellido_PaternoRef.current.value,
                 per_Apellido_Materno: this.per_Apellido_MaternoRef.current.value,
                 per_RFC_Sin_Homo: this.state.RFCSinHomoclave,
+                per_Fecha_Nacimiento: this.state.fechanNacimiento,
 
                 pro_Id_Profesion_Oficio1: this.pro_Id_Profesion_Oficio1Ref.current.value,
                 pro_Id_Profesion_Oficio2: this.pro_Id_Profesion_Oficio2Ref.current.value,
@@ -674,18 +676,18 @@ class RegistroDePersonal extends Component {
                 console.log("Condicion NO se selecciono hogar.");
 
                 await this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
-                //window.location.assign("/ListaDePersonal");
+                window.location.assign("/ListaDePersonal");
             } else {
                 console.log("Se selecciono un hogar EXISTENTE.");
 
                 await this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
-                //window.location.assign("/ListaDePersonal");
+                window.location.assign("/ListaDePersonal");
             }
         } else {
             console.log("Faltan datos requeridos o captura incorrecta.");
 
             this.validator.showMessages();
-            this.forceUpdate();
+            // this.forceUpdate();
         }
     }
 
@@ -696,7 +698,7 @@ class RegistroDePersonal extends Component {
                 <h2 className="text-info">Agregar nuevo miembro</h2>
 
                 <div className="border">
-                    <form onSubmit={this.FrmRegistroPersona} className="p-3" /* onChange={this.FrmRegistroPersona} */ >
+                    <form onSubmit={this.FrmRegistroPersona} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
                         <div className="container">
 
                             <ul className="nav nav-tabs bg-secondary mb-3 rounded" id="nav-registro-persona" role="tablist">
@@ -752,7 +754,7 @@ class RegistroDePersonal extends Component {
                                                 <label>Nombre</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Nombre" onChange={this.valida_per_Nombre} onBlur={this.CheckNvaPersona} ref={this.per_NombreRef} className="form-control" />
+                                                <input type="text" name="per_Nombre" onChange={this.valida_per_Nombre} onBlur={this.CheckNvaPersona} ref={this.per_NombreRef} className="form-control uppercase" />
                                             </div>
                                             <span style={{ color: 'red' }}>
                                                 {this.validator.message('per_Nombre', this.state.per_Nombre, 'required|alpha_space')}
@@ -913,7 +915,7 @@ class RegistroDePersonal extends Component {
                                                 <label>Email</label>
                                             </div>
                                             <div className="col-sm-4">
-                                                <input type="text" name="per_Email_Personal" ref={this.per_Email_PersonalRef} onChange={this.valida_per_Email_Personal} className="form-control" />
+                                                <input type="text" name="per_Email_Personal" ref={this.per_Email_PersonalRef} onChange={this.valida_per_Email_Personal} className="form-control inputEmail" />
                                             </div>
                                             <span style={{ color: 'red' }}>
                                                 {this.validator.message('per_Email_Personal', this.state.per_Email_Personal, 'email')}
@@ -1548,7 +1550,7 @@ class RegistroDePersonal extends Component {
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2 offset-sm-2">
-                                                <a href="/ListaDePersonal" className="btn btn-success form-control">Volver</a>
+                                                <Link to="/ListaDePersonal" className="btn btn-success form-control">Volver</Link>
                                             </div>
                                             <div className="col-sm-2 offset-sm-2">
                                                 <input type="submit" value="Guardar" className="btn btn-primary form-control" />

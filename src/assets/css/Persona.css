@@ -12,3 +12,11 @@
 .bordeRedondo {
     border-radius: 50px 50px;
 }
+
+input[type=text] {
+    text-transform:uppercase;
+}
+
+.inputEmail {
+    text-transform:lowercase !important;
+}

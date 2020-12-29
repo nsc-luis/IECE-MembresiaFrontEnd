@@ -2,7 +2,8 @@
   "use strict"; // Start of use strict
 
   // Toggle the side navigation
-  $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
+  // $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
+  $(document).on('click', "#sidebarToggle, #sidebarToggleTop", function(e) {
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
     if ($(".sidebar").hasClass("toggled")) {
@@ -51,6 +52,6 @@
       scrollTop: ($($anchor.attr('href')).offset().top)
     }, 1000, 'easeInOutExpo');
     e.preventDefault();
-  });
+  });  
 
 })(jQuery); // End of use strict

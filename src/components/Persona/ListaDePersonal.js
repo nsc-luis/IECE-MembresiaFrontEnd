@@ -3,6 +3,7 @@ import axios from 'axios';
 import Global from '../../Global';
 import '../../assets/css/Persona.css';
 import Modal from 'react-modal';
+import { Link } from 'react-router-dom';
 
 class ListaDePersonal extends Component {
 
@@ -189,7 +190,7 @@ class ListaDePersonal extends Component {
 
     componentWillMount() {
         this.getPersonas();
-        this.getDistrito();
+        //  this.getDistrito();
         this.getSector();
     };
 
@@ -230,7 +231,7 @@ class ListaDePersonal extends Component {
         return infoStatus;
     }
 
-    getDistrito = () => {
+    /* getDistrito = () => {
         axios.get(this.url + "/distrito/42")
             .then(res => {
                 this.setState({
@@ -238,13 +239,13 @@ class ListaDePersonal extends Component {
                     status: 'success'
                 });
             });
-    }
+    } */
 
     getSector = () => {
         axios.get(this.url + "/sector/227")
             .then(res => {
                 this.setState({
-                    sector: res.data,
+                    sector: res.data[0],
                     status: 'success'
                 });
             });
@@ -258,12 +259,12 @@ class ListaDePersonal extends Component {
                     <div className="row">
                         <div className="col-9">
                             <p>
-                                Personal del distrito {this.state.distrito.dis_Numero} ({this.state.distrito.dis_Localidad}),
-                                sector {this.state.sector.sec_Numero} ({this.state.sector.sec_Localidad})
+                                Personal del {this.state.sector.dis_Tipo_Distrito} {this.state.sector.dis_Numero} ({this.state.sector.dis_Alias}, {this.state.sector.dis_Area}) <br />
+                                {this.state.sector.sec_Tipo_Sector} {this.state.sector.sec_Numero}: {this.state.sector.sec_Alias}
                             </p>
                         </div>
                         <div className="col-2">
-                            <a href="/RegistroDePersonal" className="btn bnt-sm btn-primary">Registrar persona</a>
+                            <Link to="/RegistroDePersonal" className="btn bnt-sm btn-primary">Registrar persona</Link>
                         </div>
                     </div>
                     <br />
@@ -334,7 +335,7 @@ class ListaDePersonal extends Component {
                                         <strong>Nombre:</strong> {this.state.currentPersona.per_Nombre} {this.state.currentPersona.per_Apellido_Paterno} {this.state.currentPersona.per_ApellidoMaterno} <br />
                                         <strong>Telefono:</strong> {this.state.currentPersona.per_Telefono_Fijo} <br />
                                         <strong>Celular:</strong> {this.state.currentPersona.per_Telefono_Movil} <br />
-                                        <strong>Email:</strong> {this.state.currentPersona.per_Email_Personal}
+                                        <strong>Email:</strong> {this.state.currentPersona.per_Email_Personal} <br />
                                         <strong>Fecha nacimiento:</strong> {this.state.currentPersona.per_Fecha_Nacimiento}
                                         <hr />
                                         <strong>Descripcion oficio 1:</strong> {this.state.currentProfesion1.pro_Desc_Profesion_Oficio}
@@ -432,7 +433,8 @@ class ListaDePersonal extends Component {
                                 {this.state.currentPersona.per_Bautizado &&
                                     <React.Fragment>
                                         <strong>Lugar bautismo:</strong> {this.state.currentPersona.per_Lugar_Bautismo} <br />
-                                        <strong>Ministro que bautizo:</strong> {this.state.currentPersona.per_Ministro_Que_Bautizo}
+                                        <strong>Ministro que bautizo:</strong> {this.state.currentPersona.per_Ministro_Que_Bautizo} <br />
+                                        <strong>Fecha bautismo:</strong> {this.state.currentPersona.per_Fecha_Bautismo}
                                     </React.Fragment>
                                 }
                                 <br />

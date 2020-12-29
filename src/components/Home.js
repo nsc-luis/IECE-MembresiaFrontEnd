@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import '../assets/css/Home.css';
 
 class Home extends Component {
@@ -15,7 +16,7 @@ class Home extends Component {
                                 <img src="./images/personas.png" alt="Acceso a listado de personal" className="mx-auto card-img-top imgHome" />
                                 <br />
                                 Acceso rapido a operaciones con el personal en general. <br />
-                                <a href="/ListaDePersonal" className="btn btn-sm btn-primary">Ingresar</a>
+                                <Link to="/ListaDePersonal" className="btn btn-sm btn-primary">Ingresar</Link>
                             </div>
                         </div>
                     </div>
@@ -25,10 +26,10 @@ class Home extends Component {
                                 <h5><strong>Registro</strong></h5>
                             </div>
                             <div className="card-body p-3 luis">
-                                <img src="./images/addPerson.png" alt="Acceso a registro de personal" className="mx-auto card-img-top imgHome" />
+                                <img src="./images/AddPerson.png" alt="Acceso a registro de personal" className="mx-auto card-img-top imgHome" />
                                 <br />
                                 Acceso rapido a registro de pesonas en general. <br />
-                                <a href="/RegistroDePersonal" className="btn btn-sm btn-primary">Ingresar</a>
+                                <Link to="/RegistroDePersonal" className="btn btn-sm btn-primary">Ingresar</Link>
                             </div>
                         </div>
                     </div>
