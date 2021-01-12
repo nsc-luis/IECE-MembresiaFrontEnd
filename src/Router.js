@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import ListaDePersonal from './components/Persona/ListaDePersonal';
-import Home from './components/Home';
-import RegistroDePersonal from './components/Persona/RegistroDePersona';
-import PaginaNoEncontrada from './components/PaginaNoEncontrada';
-import Sidebar from './components/Partials/Sidebar';
-import Topbar from './components/Partials/Topbar';
-import Footer from './components/Partials/Footer';
+import ListaDePersonal from './pages/ListaDePersonal';
+import Home from './pages/Home';
+import RegistroDePersonal from './pages/RegistroDePersona';
+import PaginaNoEncontrada from './pages/PaginaNoEncontrada';
+import Sidebar from './components/Sidebar';
+import Topbar from './components/Topbar';
+import Footer from './components/Footer';
 
 class Router extends Component {
     render() {

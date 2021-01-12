@@ -1,0 +1,8 @@
+.formularioInputErrorActivo {
+    display: block;
+    color: red;
+}
+
+.formularioInputError {
+    display: none;
+}
