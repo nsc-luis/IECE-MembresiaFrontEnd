@@ -10,15 +10,6 @@ class Sectores extends Component {
         this.state = {}
     }
 
-    /* getSectores = async (distritoSeleccionado) => {
-        await axios.get(this.url + "/Sector/GetSectoresByDistrito/" + distritoSeleccionado)
-            .then(res => {
-                this.setState({
-                    sectores: res.data.sectores
-                })
-            })
-    } */
-
     render() {
         const { sectores, handle_sec_Id_Sector } = this.props
 

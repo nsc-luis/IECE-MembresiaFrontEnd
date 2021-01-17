@@ -1,13 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import Global from '../Global'
+import PaisEstado from './PaisEstado';
 
 class Domicilio extends React.Component {
     url = Global.url_api;
 
     state = {
-        estados: [],
-        paises: [],
         ListaHogares: [],
         DatosHogarDomicilio: [],
         MiembrosDelHogar: [],
@@ -15,30 +14,8 @@ class Domicilio extends React.Component {
     }
 
     componentWillMount() {
-        this.getEstados();
-        this.getPaises();
         this.getListaHogares();
     }
-
-    getEstados = () => {
-        axios.get(this.url + "/estado")
-            .then(res => {
-                this.setState({
-                    estados: res.data,
-                    status: 'success'
-                });
-            });
-    };
-
-    getPaises = () => {
-        axios.get(this.url + "/pais")
-            .then(res => {
-                this.setState({
-                    paises: res.data,
-                    status: 'success'
-                });
-            });
-    };
 
     fnGuardaHogarDomicilio = async (datos) => {
         return await axios.post(this.url + "/HogarDomicilio", datos)
@@ -213,9 +190,6 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                     />
                                 </div>
-                                {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('hd_Calle', form.hd_Calle, 'required')}
-                                            </span> */}
                             </div>
                         </div>
                         <div className="form-group">
@@ -299,9 +273,6 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                     />
                                 </div>
-                                {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('hd_Localidad', form.hd_Localidad, 'required')}
-                                            </span> */}
                             </div>
                         </div>
                         <div className="form-group">
@@ -316,61 +287,11 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                     />
                                 </div>
-                                {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('hd_Municipio_Cuidad', form.hd_Municipio_Cuidad, 'required')}
-                                            </span> */}
                             </div>
                         </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label htmlFor="pais_Id_Pais">Pais</label>
-                                </div>
-                                <div className="col-sm-4">
-                                    <select
-                                        name="pais_Id_Pais"
-                                        className="form-control"
-                                    >
-                                        <option value="0">Selecciona un pais</option>
-                                        {
-                                            this.state.paises.map((pais) => {
-                                                return (
-                                                    <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}> {pais.pais_Nombre} </option>
-                                                )
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                                {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('pais_Id_Pais', form.pais_Id_Pais, 'required')}
-                                            </span> */}
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label htmlFor="est_Id_Estado">Estado</label>
-                                </div>
-                                <div className="col-sm-4">
-                                    <select
-                                        name="est_Id_Estado"
-                                        className="form-control"
-                                    >
-                                        <option value="0">Selecciona un estado</option>
-                                        {
-                                            this.state.estados.map((estado) => {
-                                                return (
-                                                    <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}> {estado.est_Nombre} </option>
-                                                )
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                                {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('est_Id_Estado', form.est_Id_Estado, 'required')}
-                                            </span> */}
-                            </div>
-                        </div>
+
+                        <PaisEstado />
+
                         <div className="form-group">
                             <div className="row">
                                 <div className="col-sm-2">
@@ -383,9 +304,6 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                     />
                                 </div>
-                                {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('hd_Telefono', form.hd_Telefono, 'phone|regex:^[0-9]{10}$')}
-                                            </span> */}
                             </div>
                         </div>
                     </React.Fragment>

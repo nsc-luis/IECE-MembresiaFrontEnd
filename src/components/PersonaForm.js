@@ -98,17 +98,17 @@ class PersonaForm extends Component {
         }
     }
     handle_per_Estado_Civil = (e) => {
-        if (e.target.value === 'casado'
-            || e.target.value === 'divorciado'
-            || e.target.value === 'viudo') {
+        if (e.target.value === 'CASADO(A)'
+            || e.target.value === 'DIVORCIADO(A)'
+            || e.target.value === 'VIUDO(A)') {
             this.setState({
                 CasadoDivorciadoViudo: true,
                 ConcubinatoSolteroConHijos: true,
                 soltero: false
             });
         }
-        else if (e.target.value === 'solteroconhijos'
-            || e.target.value === 'concubinato') {
+        else if (e.target.value === 'SOLTERO(A)CONHIJOS'
+            || e.target.value === 'CONCUBINATO') {
             this.setState({
                 CasadoDivorciadoViudo: false,
                 ConcubinatoSolteroConHijos: true,
@@ -639,11 +639,11 @@ class PersonaForm extends Component {
                                                     onChange={this.handle_per_Estado_Civil}
                                                     className="form-control"
                                                 >
+                                                    <option value="SOLTERO(A)" selected="selected">Soltero/a SIN hijos</option>
                                                     <option value="CASADO(A)">Casado/a</option>
                                                     <option value="DIVORCIADO(A)">Divorciado/a</option>
                                                     <option value="VIUDO(A)">Viudo/a</option>
                                                     <option value="CONCUBINATO">Unión libre/concubinato</option>
-                                                    <option value="SOLTERO(A)">Soltero/a SIN hijos</option>
                                                     <option value="SOLTERO(A)CONHIJOS">Soltero/a CON hijos</option>
                                                 </select>
                                             </div>
@@ -666,9 +666,6 @@ class PersonaForm extends Component {
                                                             className="form-control"
                                                         />
                                                     </div>
-                                                    <span style={{ color: 'red' }}>
-                                                        {this.validator.message('per_Nombre_Conyuge', form.per_Nombre_Conyuge, 'required')}
-                                                    </span>
                                                 </div>
                                             </div>
 
@@ -687,9 +684,6 @@ class PersonaForm extends Component {
                                                             className="form-control"
                                                         />
                                                     </div>
-                                                    {/* <span style={{ color: 'red' }}>
-                                                        {this.validator.message('per_Nombre_Conyuge', form.per_Nombre_Conyuge, 'required')}
-                                                    </span> */}
                                                 </div>
                                             </div>
 
@@ -704,6 +698,7 @@ class PersonaForm extends Component {
                                                             name="per_Num_Acta_Boda_Civil"
                                                             onChange={onChange}
                                                             className="form-control"
+                                                            value={form.per_Num_Acta_Boda_Civil}
                                                         />
                                                     </div>
                                                 </div>
@@ -720,6 +715,7 @@ class PersonaForm extends Component {
                                                             name="per_Libro_Acta_Boda_Civil"
                                                             onChange={onChange}
                                                             className="form-control"
+                                                            value={form.per_Libro_Acta_Boda_Civil}
                                                         />
                                                     </div>
                                                 </div>
@@ -736,6 +732,7 @@ class PersonaForm extends Component {
                                                             name="per_Oficialia_Boda_Civil"
                                                             onChange={onChange}
                                                             className="form-control"
+                                                            value={form.per_Oficialia_Boda_Civil}
                                                         />
                                                     </div>
                                                 </div>
@@ -751,16 +748,13 @@ class PersonaForm extends Component {
                                                             <div className="col-sm-4">
                                                                 <input
                                                                     type="text"
-                                                                    name="per_Fecha_Boda_Civil"
+                                                                    name="per_Fecha_Boda_Eclesiastica"
                                                                     onChange={onChange}
                                                                     value={form.per_Fecha_Boda_Eclesiastica}
                                                                     placeholder="DD/MM/AAAA"
                                                                     className="form-control"
                                                                 />
                                                             </div>
-                                                            {/* <span style={{ color: 'red' }}>
-                                                                {this.validator.message('per_Nombre_Conyuge', form.per_Nombre_Conyuge, 'required')}
-                                                            </span> */}
                                                         </div>
                                                     </div>
 
@@ -775,11 +769,9 @@ class PersonaForm extends Component {
                                                                     name="per_Lugar_Boda_Eclesiastica"
                                                                     onChange={onChange}
                                                                     className="form-control"
+                                                                    value={form.per_Lugar_Boda_Eclesiastica}
                                                                 />
                                                             </div>
-                                                            <span style={{ color: 'red' }}>
-                                                                {this.validator.message('per_Lugar_Boda_Eclesiastica', form.per_Lugar_Boda_Eclesiastica, 'required')}
-                                                            </span>
                                                         </div>
                                                     </div>
                                                 </React.Fragment>
@@ -801,6 +793,7 @@ class PersonaForm extends Component {
                                                                 name="per_Cantidad_Hijos"
                                                                 onChange={onChange}
                                                                 className="form-control"
+                                                                value={form.per_Cantidad_Hijos}
                                                             />
                                                         </div>
                                                     </div>
@@ -815,6 +808,7 @@ class PersonaForm extends Component {
                                                             <textarea
                                                                 name="per_Nombre_Hijos"
                                                                 onChange={onChange}
+                                                                value={form.per_Nombre_Hijos}
                                                                 className="form-control" ></textarea>
                                                         </div>
                                                     </div>
@@ -871,13 +865,10 @@ class PersonaForm extends Component {
                                                             type="text"
                                                             name="per_Lugar_Bautismo"
                                                             onChange={onChange}
-                                                            value={form.per_Nombre}
+                                                            value={form.per_Lugar_Bautismo}
                                                             className="form-control"
                                                         />
                                                     </div>
-                                                    <span style={{ color: 'red' }}>
-                                                        {this.validator.message('per_Lugar_Bautismo', form.per_Lugar_Bautismo, 'required')}
-                                                    </span>
                                                 </div>
                                             </div>
 
@@ -889,7 +880,7 @@ class PersonaForm extends Component {
                                                     <div className="col-sm-4">
                                                         <input
                                                             type="text"
-                                                            name="per_Fecha_Boda_Civil"
+                                                            name="per_Fecha_Bautismo"
                                                             onChange={onChange}
                                                             value={form.per_Fecha_Bautismo}
                                                             placeholder="DD/MM/AAAA"
@@ -908,13 +899,10 @@ class PersonaForm extends Component {
                                                             type="text"
                                                             name="per_Ministro_Que_Bautizo"
                                                             onChange={onChange}
-                                                            value={form.per_Nombre}
+                                                            value={form.per_Ministro_Que_Bautizo}
                                                             className="form-control"
                                                         />
                                                     </div>
-                                                    <span style={{ color: 'red' }}>
-                                                        {this.validator.message('per_Ministro_Que_Bautizo', form.per_Ministro_Que_Bautizo, 'required')}
-                                                    </span>
                                                 </div>
                                             </div>
                                         </React.Fragment>
@@ -930,7 +918,7 @@ class PersonaForm extends Component {
                                                     <div className="col-sm-4">
                                                         <input
                                                             type="text"
-                                                            name="per_Fecha_Boda_Civil"
+                                                            name="per_Fecha_Recibio_Espiritu_Santo"
                                                             onChange={onChange}
                                                             value={form.per_Fecha_Recibio_Espiritu_Santo}
                                                             placeholder="DD/MM/AAAA"
@@ -950,13 +938,10 @@ class PersonaForm extends Component {
                                                             type="text"
                                                             name="per_Bajo_Imposicion_De_Manos"
                                                             onChange={onChange}
-                                                            value={form.per_Nombre}
+                                                            value={form.per_Bajo_Imposicion_De_Manos}
                                                             className="form-control"
                                                         />
                                                     </div>
-                                                    <span style={{ color: 'red' }}>
-                                                        {this.validator.message('per_Bajo_Imposicion_De_Manos', form.per_Bajo_Imposicion_De_Manos, 'required')}
-                                                    </span>
                                                 </div>
                                             </div>
                                         </React.Fragment>
@@ -970,7 +955,7 @@ class PersonaForm extends Component {
                                                 <textarea
                                                     name="per_Cambios_De_DomicilioRef"
                                                     onChange={onChange}
-                                                    value={form.per_Nombre}
+                                                    value={form.per_Cambios_De_DomicilioRef}
                                                     className="form-control"></textarea>
                                             </div>
                                         </div>
@@ -985,8 +970,11 @@ class PersonaForm extends Component {
                                 </div>
                             </div>
 
-                            {/* Botones al final de formulario */}
-                            <div className="form-group">
+                            
+
+                        </div>
+                        {/* Botones al final de formulario */}
+                            {/* <div className="form-group">
                                 <div className="row">
                                     <div className="col-sm-2 offset-sm-2">
                                         <Link
@@ -1007,9 +995,7 @@ class PersonaForm extends Component {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-
-                        </div>
+                            </div> */}
                     </form>
                 </div>
             </React.Fragment>
