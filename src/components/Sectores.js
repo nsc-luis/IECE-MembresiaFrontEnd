@@ -11,19 +11,20 @@ class Sectores extends Component {
     }
 
     render() {
-        const { sectores, handle_sec_Id_Sector } = this.props
+        const { sectores, form, onChange } = this.props
 
         return (
             <React.Fragment>
                 <div className="row">
                     <div className="col-sm-2">
-                        <label>Sector</label>
+                        <label><strong>*</strong> Sector</label>
                     </div>
                     <div className="col-sm-4">
                         <select
                             name="sec_Id_Sector"
                             className="form-control"
-                            onChange={handle_sec_Id_Sector}
+                            onChange={onChange}
+                            value={form.sec_Id_Sector}
                         >
                             <option value="0">Seleccione un sector</option>
                             {

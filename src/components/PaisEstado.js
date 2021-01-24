@@ -42,11 +42,14 @@ class PaisEstado extends React.Component {
             });
     };
 
-    handle_pais_Nombre_Corto = (e) => {
-        this.getEstados(e.target.value);
-    }
-
     render() {
+
+        const { domicilio, onChangeDomicilio } = this.props
+
+        const handle_pais_Nombre_Corto = (e) => {
+            this.getEstados(e.target.value)
+            onChangeDomicilio(e)
+        }
         
         return (
             <React.Fragment>
@@ -59,13 +62,14 @@ class PaisEstado extends React.Component {
                             <select
                                 name="pais_Id_Pais"
                                 className="form-control"
-                                onChange={this.handle_pais_Nombre_Corto}
+                                onChange={handle_pais_Nombre_Corto}
+                                value={domicilio.pais_Id_Pais}
                             >
                                 <option value="0">Selecciona un pais</option>
                                 {
                                     this.state.paises.map((pais) => {
                                         return (
-                                            <option key={pais.pais_Id_Pais} value={pais.pais_Nombre_Corto}> {pais.pais_Nombre} </option>
+                                            <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}> {pais.pais_Nombre} </option>
                                         )
                                     })
                                 }
@@ -81,15 +85,17 @@ class PaisEstado extends React.Component {
                             </div>
                             <div className="col-sm-4">
                                 <select
-                                    name="est_Nombre_Corto"
+                                    name="est_Id_Estado"
                                     className="form-control"
-                                    onChange={this.handle_est_Nombre_Corto}
+                                    value={domicilio.est_Id_Estado}
+                                    onChange={onChangeDomicilio}
+                                    
                                 >
                                     <option value="0">Selecciona un estado</option>
                                     {
                                         this.state.estados.map((estado) => {
                                             return (
-                                                <option key={estado.est_Id_Estado} value={estado.est_Nombre_Corto}> {estado.est_Nombre} </option>
+                                                <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}> {estado.est_Nombre} </option>
                                             )
                                         })
                                     }

@@ -39,8 +39,8 @@ class ListaDePersonal extends Component {
         } else {
             pro1 = [
                 {
-                    pro_Definicion_Profesion_Oficio: "Sin informacion",
-                    pro_Desc_Profesion_Oficio: "Sin Informacion"
+                    pro_Categoria: "Sin informacion",
+                    pro_Sub_Categoria: "Sin Informacion"
                 }
             ]
         }
@@ -49,8 +49,8 @@ class ListaDePersonal extends Component {
         } else {
             pro2 = [
                 {
-                    pro_Definicion_Profesion_Oficio: "Sin informacion",
-                    pro_Desc_Profesion_Oficio: "Sin Informacion"
+                    pro_Categoria: "Sin informacion",
+                    pro_Sub_Categoria: "Sin Informacion"
                 }
             ]
         }
@@ -279,9 +279,9 @@ class ListaDePersonal extends Component {
                         </thead>
                         <tbody>
                             {
-                                this.state.personas.map((persona, i) => {
+                                this.state.personas.map((persona) => {
                                     return (
-                                        <tr key={i}>
+                                        <tr key={persona.per_Id_Persona}>
                                             <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
                                             {
                                                 <td className="text-center">
@@ -338,10 +338,10 @@ class ListaDePersonal extends Component {
                                         <strong>Email:</strong> {this.state.currentPersona.per_Email_Personal} <br />
                                         <strong>Fecha nacimiento:</strong> {this.state.currentPersona.per_Fecha_Nacimiento}
                                         <hr />
-                                        <strong>Descripcion oficio 1:</strong> {this.state.currentProfesion1.pro_Desc_Profesion_Oficio}
-                                        ( {this.state.currentProfesion1.pro_Definicion_Profesion_Oficio} ) <br />
-                                        <strong>Descripcion oficio 2:</strong> {this.state.currentProfesion2.pro_Desc_Profesion_Oficio}
-                                        ( {this.state.currentProfesion2.pro_Definicion_Profesion_Oficio} )
+                                        <strong>Descripcion oficio 1:</strong> {this.state.currentProfesion1.pro_Sub_Categoria}
+                                        ( {this.state.currentProfesion1.pro_Categoria} ) <br />
+                                        <strong>Descripcion oficio 2:</strong> {this.state.currentProfesion2.pro_Sub_Categoria}
+                                        ( {this.state.currentProfesion2.pro_Categoria} )
                                     </div>
                                 </div>
                             </div>

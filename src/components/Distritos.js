@@ -32,7 +32,7 @@ class Distritos extends Component {
             <React.Fragment>
                 <div className="row">
                     <div className="col-sm-2">
-                        <label>Distrito</label>
+                        <label><strong>*</strong> Distrito</label>
                     </div>
                     <div className="col-sm-4">
                         <select

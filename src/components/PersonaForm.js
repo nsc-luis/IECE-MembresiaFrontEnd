@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import '../assets/css/PersonaForm.css'
-// import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
-// import SimpleReactValidator from 'simple-react-validator';
 import Global from '../Global';
-// import MomentLocalUtils from 'react-day-picker/moment';
 import { Link } from 'react-router-dom';
 import PersonaEncontrada from '../components/PersonaEncontrada'
 import HogarPersonaDomicilio from './HogarPersonaDomicilio';
@@ -15,13 +12,13 @@ import Sectores from './Sectores';
 class PersonaForm extends Component {
 
     url = Global.url_api;
-    fechaNoIngresada = "1890-01-01";
+    fechaNoIngresada = "1900-01-01";
 
     constructor(props) {
         super(props)
         this.state = {
             profesiones_oficios: [],
-            PersonaEncontrada: true,
+            PersonaEncontrada: false,
             DatosHogar: {},
             MiembroEsBautizado: false,
             PromesaDelEspitiruSanto: false,
@@ -32,7 +29,7 @@ class PersonaForm extends Component {
             RFCSinHomoclave: "",
             distritoSeleccionado: "0",
             sectores: [],
-            sectorSeleccionado: "0"
+            per_Apellido_Materno_OK: false
         }
     }
 
@@ -51,12 +48,6 @@ class PersonaForm extends Component {
                 sectorSeleccionado: "0"
             })
         }
-    }
-
-    handle_sec_Id_Sector = (e) => {
-        this.setState({
-            sectorSeleccionado: e.target.value
-        })
     }
 
     getSectores = async (distritoSeleccionado) => {
@@ -82,14 +73,6 @@ class PersonaForm extends Component {
             });
     };
 
-    fnMiembroBautizado = (e) => {
-        if (e.target.checked) {
-            this.setState({ MiembroEsBautizado: true });
-        } else {
-            this.setState({ MiembroEsBautizado: false });
-        }
-    }
-
     fnPromesaDelEspirituSanto = (e) => {
         if (e.target.checked) {
             this.setState({ PromesaDelEspitiruSanto: true });
@@ -97,6 +80,7 @@ class PersonaForm extends Component {
             this.setState({ PromesaDelEspitiruSanto: false });
         }
     }
+
     handle_per_Estado_Civil = (e) => {
         if (e.target.value === 'CASADO(A)'
             || e.target.value === 'DIVORCIADO(A)'
@@ -161,62 +145,129 @@ class PersonaForm extends Component {
         // }
     }
 
-    render() {
-        const { onChange, form } = this.props
-
-        const inputs = document.querySelectorAll('#FrmRegistroPersona input')
-
-        const expresiones = {
-            alphaSpaceRequired: /^[a-zA-ZÀ-ÿ]{2}[a-zA-ZÀ-ÿ\s]{1,38}$/, // Letras y espacios, pueden llevar acentos.
-            formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
-        }
-
-        const aVerificar = [
-            { input: 'per_Nombre', expresion: expresiones.alphaSpaceRequired },
-            , { input: 'per_Apellido_Paterno', expresion: expresiones.alphaSpaceRequired }
-            , { input: 'per_Apellido_Materno', expresion: expresiones.alphaSpaceRequired }
-            , { input: 'per_Fecha_Nacimiento', expresion: expresiones.formatoFecha }
-        ]
-
-        const tabs = [
-            'generales-tab'
-            , 'familiaAsendente-tab'
-            , 'eclesiasticos-tab'
-            , 'estado-civil-tab'
-            , 'hogar-tab'
-        ]
-        const verificarDuplicados = () => {
-            let errorCount = 0
-
-            aVerificar.forEach(element => {
-                if (validaCamposVerficacionDuplicados(element.expresion, element.input)) {
-                    errorCount = errorCount + 1
+    getPersonaByRFCSinHomo = async (str) => {
+        await axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
+            .then(res => {
+                if (res.data.status === true) {
+                    this.setState({
+                        PersonaEncontrada: true,
+                        datosPersonaEncontrada: res.data.persona[0]
+                    });
+                } else {
+                    this.setState({
+                        PersonaEncontrada: false,
+                        datosPersonaEncontrada: []
+                    });
                 }
-            })
+            });
+    };
 
-            if (errorCount === 0) {
-                tabs.forEach(element => {
-                    document.getElementById(element).classList.remove('disabled')
-                });
-            } else {
-                tabs.forEach(element => {
-                    document.getElementById(element).classList.add('disabled')
-                });
+    render() {
+        const {
+            onChange,
+            form,
+            domicilio,
+            onChangeDomicilio,
+            categoriaSeleccionada,
+            msjCategoriaSeleccionada,
+            habilitaPerBautizado,
+            per_Nombre_NoValido,
+            per_Apellido_Paterno_NoValido,
+            per_Fecha_Nacimiento_NoValido,
+            per_Fecha_Boda_Civil_NoValido,
+            per_Fecha_Boda_Eclesiastica_NoValido,
+            per_Fecha_Bautismo_NoValido,
+            per_Fecha_Recibio_Espiritu_Santo_NoValido
+        } = this.props
+
+        const per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
+        const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
+
+        const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
+            // Obtener primera letra del apellido paterno
+            var ap = per_Apellido_Paterno.split("")
+            // Obtener primera vocal del apellido paterno
+            var regex = /[^aeiou]/gi
+            var vowels = per_Apellido_Paterno.replace(regex, "")
+            var pv = vowels[0] === ap[0] ? vowels[1] : vowels[0]
+            // Obtener primera letra del apellido materno
+            var am = per_Apellido_Materno.split("");
+            // Obtener primera letra del primer nombre
+            var n = per_Nombre.split("")
+            // Reformateando fecha
+            var f = per_Fecha_Nacimiento.split("/")
+            var y = f[2].substr(2, 2)
+            var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[0]
+
+            this.getPersonaByRFCSinHomo(RFCSinHomo);
+        }
+
+        const HabilitarPestanas = (per_Categoria) => {
+            if (per_Categoria === "ADULTO_HOMBRE" || per_Categoria === "ADULTO_MUJER") {
+                document.getElementById("generales-tab").classList.remove("disabled", "pertanaDeshabilitada")
+                document.getElementById("familiaAsendente-tab").classList.remove("disabled", "pertanaDeshabilitada")
+                document.getElementById("eclesiasticos-tab").classList.remove("disabled", "pertanaDeshabilitada")
+                document.getElementById("estado-civil-tab").classList.remove("disabled", "pertanaDeshabilitada")
+                document.getElementById("hogar-tab").classList.remove("disabled", "pertanaDeshabilitada")
+            }
+            if (per_Categoria === "JOVEN_HOMBRE" || per_Categoria === "JOVEN_MUJER") {
+                document.getElementById("generales-tab").classList.remove("disabled", "pertanaDeshabilitada")
+                document.getElementById("familiaAsendente-tab").classList.add("disabled", "pertanaDeshabilitada")
+                document.getElementById("eclesiasticos-tab").classList.remove("disabled", "pertanaDeshabilitada")
+                document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
+                document.getElementById("hogar-tab").classList.remove("disabled", "pertanaDeshabilitada")
+            }
+            if (per_Categoria === "NIÑO" || per_Categoria === "NIÑA") {
+                document.getElementById("generales-tab").classList.add("disabled", "pertanaDeshabilitada")
+                document.getElementById("familiaAsendente-tab").classList.add("disabled", "pertanaDeshabilitada")
+                document.getElementById("eclesiasticos-tab").classList.add("disabled", "pertanaDeshabilitada")
+                document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
+                document.getElementById("hogar-tab").classList.remove("disabled", "pertanaDeshabilitada")
             }
         }
 
-        const validaCamposVerficacionDuplicados = (expresion, input) => {
-            let errorDeValidacion = false
-            if (expresion.test(form[input])) {
-                document.getElementById(input).classList.add('formularioInputError')
-                document.getElementById(input).classList.remove('formularioInputErrorActivo')
+        const IgnorarDuplicados = () => {
+            HabilitarPestanas(form.per_Categoria)
+        }
+
+        const DeshabilitaPestanas = () => {
+            document.getElementById("generales-tab").classList.add("disabled", "pertanaDeshabilitada")
+            document.getElementById("familiaAsendente-tab").classList.add("disabled", "pertanaDeshabilitada")
+            document.getElementById("eclesiasticos-tab").classList.add("disabled", "pertanaDeshabilitada")
+            document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
+            document.getElementById("hogar-tab").classList.add("disabled", "pertanaDeshabilitada")
+            this.setState({ PersonaEncontrada: false })
+        }
+
+        const handle_verificarDuplicados = () => {
+            if (categoriaSeleccionada
+                && !per_Nombre_NoValido
+                && !per_Apellido_Paterno_NoValido
+                && !per_Fecha_Nacimiento_NoValido) {
+
+                if (alphaSpaceRequired.test(per_Apellido_Materno.value)
+                    || per_Apellido_Materno.value === "") {
+
+                    this.setState({ per_Apellido_Materno_OK: true })
+                    let am = per_Apellido_Materno.value === "" ? "1" : per_Apellido_Materno.value
+
+                    CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
+
+                    console.log(form.per_Categoria)
+                    if (this.state.PersonaEncontrada) {
+                        DeshabilitaPestanas()
+                    } else {
+                        HabilitarPestanas(form.per_Categoria)
+                    }
+
+                } else {
+                    this.setState({ per_Apellido_Materno_OK: false })
+                    alert("Debes capturar correctamente los campos requeridos.")
+                }
+            } else {
+                this.setState({ per_Apellido_Materno_OK: false })
+                alert("Debes capturar correctamente los campos requeridos.")
             }
-            else {
-                errorDeValidacion = true
-                document.getElementById(input).classList.add('formularioInputErrorActivo')
-                document.getElementById(input).classList.remove('formularioInputError')
-            }
-            return errorDeValidacion
         }
 
         return (
@@ -230,22 +281,22 @@ class PersonaForm extends Component {
                             {/* Tabs de navegacion del formulario */}
                             <ul className="nav nav-tabs bg-primary mb-3 rounded" id="nav-registro-persona" role="tablist">
                                 <li className="nav-item">
-                                    <a className="nav-link active" id="verificarNuevoRegistro-tab" data-toggle="tab" href="#verificarNuevoRegistro" role="tab" aria-controls="verificarNuevoRegistro" aria-selected="true">Nuevo registro</a>
+                                    <a onClick={DeshabilitaPestanas} className="nav-link active" id="verificarNuevoRegistro-tab" data-toggle="tab" href="#verificarNuevoRegistro" role="tab" aria-controls="verificarNuevoRegistro" aria-selected="true">Generales</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled" id="generales-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">Generales</a>
+                                    <a onclick="" className="nav-link disabled pertanaDeshabilitada" id="generales-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">Personales</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled" id="familiaAsendente-tab" data-toggle="tab" href="#familiaAsendente" role="tab" aria-controls="familiaAsendente" aria-selected="true">Familia asendente</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="familiaAsendente-tab" data-toggle="tab" href="#familiaAsendente" role="tab" aria-controls="familiaAsendente" aria-selected="true">Familia asendente</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled" id="eclesiasticos-tab" data-toggle="tab" href="#eclesiasticos" role="tab" aria-controls="eclesiasticos" aria-selected="true">Eclesiasticos</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="eclesiasticos-tab" data-toggle="tab" href="#eclesiasticos" role="tab" aria-controls="eclesiasticos" aria-selected="true">Eclesiasticos</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled" id="estado-civil-tab" data-toggle="tab" href="#estado-civil" role="tab" aria-controls="estado-civil" aria-selected="true">Estado civil</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="estado-civil-tab" data-toggle="tab" href="#estado-civil" role="tab" aria-controls="estado-civil" aria-selected="true">Estado civil</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled" id="hogar-tab" data-toggle="tab" href="#hogar" role="tab" aria-controls="hogar" aria-selected="true">Hogar</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="hogar-tab" data-toggle="tab" href="#hogar" role="tab" aria-controls="hogar" aria-selected="true">Hogar</a>
                                 </li>
                             </ul>
 
@@ -253,6 +304,9 @@ class PersonaForm extends Component {
 
                                 {/* Verificar Nuevo Registro */}
                                 <div className="tab-pane fade show active" id="verificarNuevoRegistro" role="tabpanel" aria-labelledby="verificarNuevoRegistro-tab">
+                                    <div className="alert alert-warning mt-3" role="alert">
+                                        <h5><strong>AVISO: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
+                                    </div>
                                     <div className="form-group">
                                         <Distritos
                                             handle_dis_Id_Distrito={this.handle_dis_Id_Distrito}
@@ -260,37 +314,68 @@ class PersonaForm extends Component {
                                         {this.state.distritoSeleccionado !== "0" &&
                                             <Sectores
                                                 sectores={this.state.sectores}
-                                                handle_sec_Id_Sector={this.handle_sec_Id_Sector}
+                                                form={form}
+                                                onChange={onChange}
                                             />
                                         }
-                                        <hr />
+                                    </div>
+                                    <hr />
+
+                                    <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label>Categoria</label>
+                                                <label><strong>*</strong> Categoria</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <select
                                                     name="per_Categoria"
                                                     onChange={onChange}
                                                     className="form-control"
+                                                    value={form.per_Categoria}
                                                 >
                                                     <option value="0">Selecionar categoria</option>
-                                                    <option value="Adulto_Hombre">Adulto Hombre</option>
-                                                    <option value="Adulto_Mujer">Adulto Mujer</option>
-                                                    <option value="Joven_Hombre">Joven hombre</option>
-                                                    <option value="Joven_Mujer">Joven mujer</option>
+                                                    <option value="ADULTO_HOMBRE">Adulto Hombre</option>
+                                                    <option value="ADULTO_MUJER">Adulto Mujer</option>
+                                                    <option value="JOVEN_HOMBRE">Joven hombre</option>
+                                                    <option value="JOVEN_MUJER">Joven mujer</option>
+                                                    <option value="NIÑO">Niño</option>
+                                                    <option value="NIÑA">Niña</option>
                                                 </select>
                                             </div>
-                                            {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Categoria', this.state.per_Categoria, 'regex:^[a-zA-Z]*(_)[a-zA-Z]*$')}
-                                            </span> */}
+                                            {categoriaSeleccionada &&
+                                                <span className="text-primary font-weight-bold font-italic">
+                                                    {msjCategoriaSeleccionada}
+                                                </span>
+                                            }
+                                            {!categoriaSeleccionada &&
+                                                <span className="text-danger">
+                                                    {msjCategoriaSeleccionada}
+                                                </span>
+                                            }
                                         </div>
                                     </div>
+                                    {habilitaPerBautizado &&
+                                        <div className="form-group">
+                                            <div className="row">
+                                                <div className="col-sm-3">
+                                                    <label>Bautizado</label>
+                                                </div>
+                                                <div className="col-sm-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="per_Bautizado"
+                                                        onChange={onChange}
+                                                        className="form-control"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
 
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label>Nombre</label>
+                                                <label><strong>*</strong> Nombre</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <input
@@ -298,19 +383,21 @@ class PersonaForm extends Component {
                                                     name="per_Nombre"
                                                     onChange={onChange}
                                                     value={form.per_Nombre}
-                                                    className="form-control uppercase"
+                                                    className="form-control"
                                                 />
                                             </div>
-                                            <span className="formularioInputError" id="per_Nombre">
-                                                Campo requerido, solo acepta letras y espacios.
-                                            </span>
+                                            {per_Nombre_NoValido &&
+                                                <span className="text-danger">
+                                                    Campo requerido, solo acepta letras, numeros y espacios.
+                                                </span>
+                                            }
                                         </div>
                                     </div>
 
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label>Apellido paterno</label>
+                                                <label><strong>*</strong> Apellido paterno</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <input
@@ -321,9 +408,11 @@ class PersonaForm extends Component {
                                                     className="form-control"
                                                 />
                                             </div>
-                                            <span className="formularioInputError" id="per_Apellido_Paterno">
-                                                Campo requerido, solo acepta letras y espacios.
-                                            </span>
+                                            {per_Apellido_Paterno_NoValido &&
+                                                <span className="text-danger">
+                                                    Campo requerido, solo acepta letras, numeros y espacios.
+                                                </span>
+                                            }
                                         </div>
                                     </div>
 
@@ -338,19 +427,22 @@ class PersonaForm extends Component {
                                                     name="per_Apellido_Materno"
                                                     onChange={onChange}
                                                     value={form.per_Apellido_Materno}
+                                                    id="per_Apellido_Materno"
                                                     className="form-control"
                                                 />
                                             </div>
-                                            <span className="formularioInputError" id="per_Apellido_Materno">
-                                                Campo requerido, solo acepta letras y espacios.
-                                            </span>
+                                            {!this.state.per_Apellido_Materno_OK &&
+                                                <span className="text-primary font-italic">
+                                                    NO requerido pero solo acepta letras, numeros y espacios.
+                                                </span>
+                                            }
                                         </div>
                                     </div>
 
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label>Fecha nacimiento</label>
+                                                <label><strong>*</strong> Fecha nacimiento</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <input
@@ -362,29 +454,39 @@ class PersonaForm extends Component {
                                                     placeholder="DD/MM/AAAA"
                                                 />
                                             </div>
-                                            <span className="formularioInputError" id="per_Fecha_Nacimiento">
-                                                Fecha no valida, el formato requerido es: DD/MM//AAAA.
-                                            </span>
+                                            {per_Fecha_Nacimiento_NoValido &&
+                                                <span className="text-danger">
+                                                    Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                </span>
+                                            }
                                         </div>
                                     </div>
 
                                     {/* Boton para verificar duplicados */}
                                     <div className="form-group">
                                         <div className="row">
-                                            <div className="col-sm-4"></div>
-                                            <div className="col-sm-4">
-                                                <button onClick={verificarDuplicados} className="btn btn-success form-control">
-                                                    <span className="fas fa-check" style={{ paddingRight: "20px" }}></span>
-                                                    <i>Verifica duplicado</i>
+                                            <div className="col-sm-2">
+                                                <button onClick={handle_verificarDuplicados} className="btn btn-primary form-control">
+                                                    <i>Continuar</i>
                                                 </button>
                                             </div>
+                                            {this.state.PersonaEncontrada &&
+                                                <div className="col-sm-">
+                                                    <button onClick={IgnorarDuplicados} className="btn btn-success form-control">
+                                                        <span className="fas fa-check fa-sm" style={{ paddingRight: "20px" }}></span>
+                                                        <i>Ignorar duplicados y continuar</i>
+                                                    </button>
+                                                </div>
+                                            }
                                             <div className="col-sm-4"></div>
                                         </div>
                                     </div>
 
-                                    {/* {this.state.PersonaEncontrada === true &&
-                                        <PersonaEncontrada />
-                                    } */}
+                                    {this.state.PersonaEncontrada &&
+                                        <PersonaEncontrada
+                                            datosPersonaEncontrada={this.state.datosPersonaEncontrada}
+                                        />
+                                    }
 
                                 </div>
 
@@ -405,7 +507,11 @@ class PersonaForm extends Component {
                                                     {
                                                         this.state.profesiones_oficios.map((profesion_oficio) => {
                                                             return (
-                                                                <option key={profesion_oficio.pro_Id_Profesion_Oficio} value={profesion_oficio.pro_Id_Profesion_Oficio}>{profesion_oficio.pro_Definicion_Profesion_Oficio} | {profesion_oficio.pro_Desc_Profesion_Oficio}</option>
+                                                                <option
+                                                                    key={profesion_oficio.pro_Id_Profesion_Oficio}
+                                                                    value={profesion_oficio.pro_Id_Profesion_Oficio}>
+                                                                    {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
+                                                                </option>
                                                             )
                                                         })
                                                     }
@@ -428,7 +534,11 @@ class PersonaForm extends Component {
                                                     {
                                                         this.state.profesiones_oficios.map((profesion_oficio, i) => {
                                                             return (
-                                                                <option key={i} value={profesion_oficio.pro_Id_Profesion_Oficio}>{profesion_oficio.pro_Definicion_Profesion_Oficio} | {profesion_oficio.pro_Desc_Profesion_Oficio}</option>
+                                                                <option
+                                                                    key={profesion_oficio.pro_Id_Profesion_Oficio}
+                                                                    value={profesion_oficio.pro_Id_Profesion_Oficio}>
+                                                                    {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
+                                                                </option>
                                                             )
                                                         })
                                                     }
@@ -437,7 +547,7 @@ class PersonaForm extends Component {
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
                                                 <label>Telefono fijo</label>
@@ -450,11 +560,8 @@ class PersonaForm extends Component {
                                                     className="form-control"
                                                 />
                                             </div>
-                                            {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Telefono_Fijo', form.per_Telefono_Fijo, 'phone|regex:^[0-9]{10}$')}
-                                            </span> */}
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     <div className="form-group">
                                         <div className="row">
@@ -510,7 +617,7 @@ class PersonaForm extends Component {
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
                                                 <label>Observaciones</label>
@@ -522,7 +629,7 @@ class PersonaForm extends Component {
                                                     className="form-control"></textarea>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 {/* Familia Asendente */}
@@ -634,17 +741,17 @@ class PersonaForm extends Component {
                                             </div>
                                             <div className="col-sm-4">
                                                 <select
-                                                    defaultValue="soltero"
+                                                    value={form.per_Estado_Civil}
                                                     name="per_Estado_Civil"
                                                     onChange={this.handle_per_Estado_Civil}
                                                     className="form-control"
                                                 >
-                                                    <option value="SOLTERO(A)" selected="selected">Soltero/a SIN hijos</option>
+                                                    <option value="SOLTERO(A)">Soltero/a SIN hijos</option>
                                                     <option value="CASADO(A)">Casado/a</option>
                                                     <option value="DIVORCIADO(A)">Divorciado/a</option>
                                                     <option value="VIUDO(A)">Viudo/a</option>
                                                     <option value="CONCUBINATO">Unión libre/concubinato</option>
-                                                    <option value="SOLTERO(A)CONHIJOS">Soltero/a CON hijos</option>
+                                                    <option value="SOLTERO(A) CON HIJOS">Soltero/a CON hijos</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -683,6 +790,13 @@ class PersonaForm extends Component {
                                                             placeholder="DD/MM/AAAA"
                                                             className="form-control"
                                                         />
+                                                    </div>
+                                                    <div className="col-sm-6">
+                                                        {per_Fecha_Boda_Civil_NoValido &&
+                                                            <span className="text-danger">
+                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                            </span>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -738,7 +852,7 @@ class PersonaForm extends Component {
                                                 </div>
                                             </div>
 
-                                            {this.state.MiembroEsBautizado &&
+                                            {form.per_Bautizado &&
                                                 <React.Fragment>
                                                     <div className="form-group">
                                                         <div className="row">
@@ -754,6 +868,13 @@ class PersonaForm extends Component {
                                                                     placeholder="DD/MM/AAAA"
                                                                     className="form-control"
                                                                 />
+                                                            </div>
+                                                            <div className="col-sm-6">
+                                                                {per_Fecha_Boda_Eclesiastica_NoValido &&
+                                                                    <span className="text-danger">
+                                                                        Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                                    </span>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
@@ -823,22 +944,6 @@ class PersonaForm extends Component {
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-3">
-                                                <label>Bautizado</label>
-                                            </div>
-                                            <div className="col-sm-2">
-                                                <input
-                                                    type="checkbox"
-                                                    name="per_Bautizado"
-                                                    onChange={this.fnMiembroBautizado}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-3">
                                                 <label>Promesa del Espiritu Santo</label>
                                             </div>
                                             <div className="col-sm-2">
@@ -853,7 +958,7 @@ class PersonaForm extends Component {
                                     </div>
 
                                     {/* Bautismo */}
-                                    {this.state.MiembroEsBautizado &&
+                                    {form.per_Bautizado &&
                                         <React.Fragment>
                                             <div className="form-group">
                                                 <div className="row">
@@ -886,6 +991,13 @@ class PersonaForm extends Component {
                                                             placeholder="DD/MM/AAAA"
                                                             className="form-control"
                                                         />
+                                                    </div>
+                                                    <div className="col-sm-6">
+                                                        {per_Fecha_Bautismo_NoValido &&
+                                                            <span className="text-danger">
+                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                            </span>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -924,6 +1036,13 @@ class PersonaForm extends Component {
                                                             placeholder="DD/MM/AAAA"
                                                             className="form-control"
                                                         />
+                                                    </div>
+                                                    <div className="col-sm-6">
+                                                        {per_Fecha_Recibio_Espiritu_Santo_NoValido &&
+                                                            <span className="text-danger">
+                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                            </span>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -965,37 +1084,37 @@ class PersonaForm extends Component {
                                 {/* Hogar */}
                                 <div className="tab-pane fade" id="hogar" role="tabpanel" aria-labelledby="hogar-tab">
                                     <HogarPersonaDomicilio
-                                        DatosHogar={this.state.DatosHogar}
+                                        domicilio={domicilio}
+                                        onChangeDomicilio={onChangeDomicilio}
                                     />
+
+                                    {/* Botones al final de formulario */}
+                                    <div className="form-group">
+                                        <div className="row">
+                                            <div className="col-sm-2 offset-sm-2">
+                                                <Link
+                                                    to="/ListaDePersonal"
+                                                    className="btn btn-success form-control"
+                                                >
+                                                    <span className="fa fa-backspace" style={{ paddingRight: "10px" }}></span>
+                                                    Volver
+                                                </Link>
+                                            </div>
+                                            <div className="col-sm-2 offset-sm-2">
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-primary form-control"
+                                                >
+                                                    <span className="far fa-save" style={{ paddingRight: "10px" }}></span>
+                                                    Guardar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            
-
                         </div>
-                        {/* Botones al final de formulario */}
-                            {/* <div className="form-group">
-                                <div className="row">
-                                    <div className="col-sm-2 offset-sm-2">
-                                        <Link
-                                            to="/ListaDePersonal"
-                                            className="btn btn-success form-control"
-                                        >
-                                            <span className="fa fa-backspace" style={{ paddingRight: "10px" }}></span>
-                                            Volver
-                                        </Link>
-                                    </div>
-                                    <div className="col-sm-2 offset-sm-2">
-                                        <button
-                                            type="submit"
-                                            className="btn btn-primary form-control"
-                                        >
-                                            <span className="far fa-save" style={{ paddingRight: "10px" }}></span>
-                                            Guardar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div> */}
+
                     </form>
                 </div>
             </React.Fragment>

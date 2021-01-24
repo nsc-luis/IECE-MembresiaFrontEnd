@@ -47,30 +47,30 @@ class Sidebar extends Component {
                         </Link>
                     </li>
 
-                    {/* Nav Item - Personal bautizado
+                    {/* Nav Item - Personal bautizado */}
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="/PersonalBautizado/Index">
                             <i className="fas fa-fw fa-id-card"></i>
                             <span>Personal bautizado</span>
                         </Link>
-                    </li> */}
-                    {/* Nav Item - Personal no bautizado
+                    </li>
+                    {/* Nav Item - Personal no bautizado */}
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="/PersonalNoBautizado/Index">
                             <i className="fas fa-fw fa-users"></i>
                             <span>Personal no bautizado</span>
                         </Link>
-                    </li> */}
+                    </li>
 
-                    {/* Divider
-                    <hr className="sidebar-divider" /> */}
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
 
-                    {/* Heading
+                    {/* Heading */}
                     <div className="sidebar-heading">
                         Movimientos de personal
-                    </div> */}
+                    </div>
 
-                    {/* Nav Item - Altas Collapse Menu
+                    {/* Nav Item - Altas Collapse Menu */}
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPAltas" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-fw fa-user-check"></i>
@@ -88,9 +88,9 @@ class Sidebar extends Component {
                                 <Link className="collapse-item" to="#">Reactivacion</Link>
                             </div>
                         </div>
-                    </li> */}
+                    </li>
 
-                    {/* Nav Item - Bajas Collapse Menu
+                    {/* Nav Item - Bajas Collapse Menu */}
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapsempbajas" aria-expanded="true" aria-controls="collapsepages">
                             <i className="fas fa-fw fa-user-times"></i>
@@ -108,49 +108,49 @@ class Sidebar extends Component {
                                 <Link className="collapse-item" to="#">Defuncion</Link>
                             </div>
                         </div>
-                    </li> */}
+                    </li>
 
-                    {/* Nav Item - Hogares
+                    {/* Nav Item - Hogares */}
                     <li className="nav-item">
                         <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-home"></i>
                             <span>Hogares</span>
                         </Link>
-                    </li> */}
+                    </li>
 
-                    {/* Divider
-                    <hr className="sidebar-divider" /> */}
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
 
-                    {/* Heading 
+                    {/* Heading */}
                     <div className="sidebar-heading">
                         Movimientos estadisticos
-                    </div>*/}
+                    </div>
 
-                    {/* Nav Item - Matrimonios
+                    {/* Nav Item - Matrimonios */}
                     <li className="nav-item">
                         <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-user-friends"></i>
                             <span>Matrimonios</span>
                         </Link>
-                    </li> */}
+                    </li>
 
-                    {/* Nav Item - Presentaciones 
+                    {/* Nav Item - Presentaciones  */}
                     <li className="nav-item">
                         <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-baby"></i>
                             <span>Presentaciones</span>
                         </Link>
-                    </li> */}
+                    </li>
 
-                    {/* Divider
-                    <hr className="sidebar-divider" /> */}
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
 
-                    {/* Heading
+                    {/* Heading */}
                     <div className="sidebar-heading">
                         Seccion de reportes
-                    </div> */}
+                    </div>
 
-                    {/* Nav Item - Reportes Collapse Menu
+                    {/* Nav Item - Reportes Collapse Menu */}
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseReportes" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-fw fa-clipboard-list"></i>
@@ -165,7 +165,7 @@ class Sidebar extends Component {
                                 <Link className="collapse-item" to="#">Informe pastoral</Link>
                             </div>
                         </div>
-                    </li> */}
+                    </li>
 
                     {/* Divider */
                     <hr className="sidebar-divider d-none d-md-block" />}

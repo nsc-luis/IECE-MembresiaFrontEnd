@@ -1,7 +1,16 @@
 import React from 'react';
 
 class PersonaEncontrada extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
     render() {
+
+        const { datosPersonaEncontrada } = this.props
+
         return (
             <React.Fragment>
                 <div className="alert alert-warning mt-3" role="alert">
@@ -12,16 +21,16 @@ class PersonaEncontrada extends React.Component {
                         <tr>
                             <th scope="col">Nombre</th>
                             <th scope="col">Nacimiento</th>
-                            <th scope="col">Distrito / Localidad</th>
-                            <th scope="col">Sector / Localidad</th>
+                            <th scope="col">Distrito</th>
+                            <th scope="col">Sector</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            {/* <td>{form.datosPersonaEncontrada.per_Nombre} {form.datosPersonaEncontrada.per_Apellido_Paterno} {form.datosPersonaEncontrada.per_Apellido_Materno} </td>
-                            <td>{form.datosPersonaEncontrada.per_Fecha_Nacimiento} </td>
-                            <td>{form.datosPersonaEncontrada.dis_Numero} / {form.datosPersonaEncontrada.dis_Localidad}</td>
-                                                        <td>{form.datosPersonaEncontrada.sec_Numero} / {form.datosPersonaEncontrada.sec_Localidad}</td> */}
+                            <td>{datosPersonaEncontrada.per_Nombre} {datosPersonaEncontrada.per_Apellido_Paterno} {datosPersonaEncontrada.per_Apellido_Materno} </td>
+                            <td>{datosPersonaEncontrada.per_Fecha_Nacimiento} </td>
+                            <td>{datosPersonaEncontrada.dis_Tipo_Distrito} {datosPersonaEncontrada.dis_Numero}</td>
+                            <td>{datosPersonaEncontrada.sec_Alias}</td>
                         </tr>
                     </tbody>
                 </table>
