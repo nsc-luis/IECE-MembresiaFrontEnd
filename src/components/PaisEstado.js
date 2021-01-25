@@ -18,16 +18,16 @@ class PaisEstado extends React.Component {
         this.getPaises();
     }
 
-    getEstados = async (pais_Nombre_Corto) => {
-        await axios.get(this.url + "/pais/GetEstadoByPais/" + pais_Nombre_Corto)
+    getEstados = async (pais_Id_Pais) => {
+        await axios.get(this.url + "/Estado/GetEstadoByIdPais/" + pais_Id_Pais)
             .then(res => {
                 this.setState({
                     estados: res.data.estados
                 });
             });
-        if (pais_Nombre_Corto === "MEX"
-            || pais_Nombre_Corto === "USA"
-            || pais_Nombre_Corto === "CAN")
+        if (pais_Id_Pais === "151"
+            || pais_Id_Pais === "66"
+            || pais_Id_Pais === "40")
             this.setState({ mostrarEstados: true });
         else
             this.setState({ mostrarEstados: false });
@@ -46,7 +46,7 @@ class PaisEstado extends React.Component {
 
         const { domicilio, onChangeDomicilio } = this.props
 
-        const handle_pais_Nombre_Corto = (e) => {
+        const handle_pais_Id_Pais = (e) => {
             this.getEstados(e.target.value)
             onChangeDomicilio(e)
         }
@@ -62,7 +62,7 @@ class PaisEstado extends React.Component {
                             <select
                                 name="pais_Id_Pais"
                                 className="form-control"
-                                onChange={handle_pais_Nombre_Corto}
+                                onChange={handle_pais_Id_Pais}
                                 value={domicilio.pais_Id_Pais}
                             >
                                 <option value="0">Selecciona un pais</option>
@@ -89,7 +89,6 @@ class PaisEstado extends React.Component {
                                     className="form-control"
                                     value={domicilio.est_Id_Estado}
                                     onChange={onChangeDomicilio}
-                                    
                                 >
                                     <option value="0">Selecciona un estado</option>
                                     {

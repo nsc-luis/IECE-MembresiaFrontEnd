@@ -81,87 +81,6 @@ class PersonaForm extends Component {
         }
     }
 
-    handle_per_Estado_Civil = (e) => {
-        if (e.target.value === 'CASADO(A)'
-            || e.target.value === 'DIVORCIADO(A)'
-            || e.target.value === 'VIUDO(A)') {
-            this.setState({
-                CasadoDivorciadoViudo: true,
-                ConcubinatoSolteroConHijos: true,
-                soltero: false
-            });
-        }
-        else if (e.target.value === 'SOLTERO(A)CONHIJOS'
-            || e.target.value === 'CONCUBINATO') {
-            this.setState({
-                CasadoDivorciadoViudo: false,
-                ConcubinatoSolteroConHijos: true,
-                soltero: false
-            });
-        } else {
-            this.setState({
-                CasadoDivorciadoViudo: false,
-                ConcubinatoSolteroConHijos: false,
-                soltero: true
-            });
-        }
-    }
-
-    fnGuardaPersona = async (datos) => {
-        return await axios.post(this.url + "/persona", datos)
-            .then(res => res.data)
-            .catch(error => error);
-    }
-
-    FrmRegistroPersona = async (e) => {
-        e.preventDefault();
-
-        console.log(this.state);
-
-        // console.log(this.hp_Id_HogarRef.current.value);
-        // if (this.validator.allValid()) {
-        //     console.log("Codicion todos los datos son validos.");
-
-        //     datos.eclesiasticos = this.fnDatosEclesiasticos();
-        //     datos.estadoCivil = this.fnDatosEstadoCivil();
-        //     let datosCombinados = Object.assign({}, datos.persona, datos.eclesiasticos, datos.estadoCivil);
-
-        //     if (this.hp_Id_HogarRef.current.value === "0") {
-        //         console.log("Condicion NO se selecciono hogar.");
-
-        //         await this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
-        //         window.location.assign("/ListaDePersonal");
-        //     } else {
-        //         console.log("Se selecciono un hogar EXISTENTE.");
-
-        //         await this.fnGuardaHogar_Persona(datosCombinados, this.fnDatosHogar());
-        //         window.location.assign("/ListaDePersonal");
-        //     }
-        // } else {
-        //     console.log("Faltan datos requeridos o captura incorrecta.");
-
-        //     this.validator.showMessages();
-        //     // this.forceUpdate();
-        // }
-    }
-
-    getPersonaByRFCSinHomo = async (str) => {
-        await axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
-            .then(res => {
-                if (res.data.status === true) {
-                    this.setState({
-                        PersonaEncontrada: true,
-                        datosPersonaEncontrada: res.data.persona[0]
-                    });
-                } else {
-                    this.setState({
-                        PersonaEncontrada: false,
-                        datosPersonaEncontrada: []
-                    });
-                }
-            });
-    };
-
     render() {
         const {
             onChange,
@@ -177,7 +96,10 @@ class PersonaForm extends Component {
             per_Fecha_Boda_Civil_NoValido,
             per_Fecha_Boda_Eclesiastica_NoValido,
             per_Fecha_Bautismo_NoValido,
-            per_Fecha_Recibio_Espiritu_Santo_NoValido
+            per_Fecha_Recibio_Espiritu_Santo_NoValido,
+            changeRFCSinHomo,
+            changeEstadoCivil,
+            fnGuardaPersona
         } = this.props
 
         const per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
@@ -199,7 +121,27 @@ class PersonaForm extends Component {
             var y = f[2].substr(2, 2)
             var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[0]
 
-            this.getPersonaByRFCSinHomo(RFCSinHomo);
+            changeRFCSinHomo(RFCSinHomo)
+            getPersonaByRFCSinHomo(RFCSinHomo);
+        }
+
+        const getPersonaByRFCSinHomo = async (str) => {
+            await axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
+                .then(res => {
+                    if (res.data.status) {
+                        this.setState({
+                            PersonaEncontrada: true,
+                            datosPersonaEncontrada: res.data.persona[0]
+                        })
+                        DeshabilitaPestanas()
+                    } else {
+                        this.setState({
+                            PersonaEncontrada: false,
+                            datosPersonaEncontrada: []
+                        })
+                        HabilitarPestanas(form.per_Categoria)
+                    }
+                })
         }
 
         const HabilitarPestanas = (per_Categoria) => {
@@ -236,10 +178,9 @@ class PersonaForm extends Component {
             document.getElementById("eclesiasticos-tab").classList.add("disabled", "pertanaDeshabilitada")
             document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
             document.getElementById("hogar-tab").classList.add("disabled", "pertanaDeshabilitada")
-            this.setState({ PersonaEncontrada: false })
         }
 
-        const handle_verificarDuplicados = () => {
+        const handle_verificarDuplicados = (e) => {
             if (categoriaSeleccionada
                 && !per_Nombre_NoValido
                 && !per_Apellido_Paterno_NoValido
@@ -253,7 +194,6 @@ class PersonaForm extends Component {
 
                     CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
 
-                    console.log(form.per_Categoria)
                     if (this.state.PersonaEncontrada) {
                         DeshabilitaPestanas()
                     } else {
@@ -270,12 +210,44 @@ class PersonaForm extends Component {
             }
         }
 
+        const handle_per_Estado_Civil = (e) => {
+            if (e.target.value === 'CASADO(A)'
+                || e.target.value === 'DIVORCIADO(A)'
+                || e.target.value === 'VIUDO(A)') {
+                this.setState({
+                    CasadoDivorciadoViudo: true,
+                    ConcubinatoSolteroConHijos: true,
+                    soltero: false
+                })
+            }
+            else if (e.target.value === 'SOLTERO(A) CON HIJOS'
+                || e.target.value === 'CONCUBINATO') {
+                this.setState({
+                    CasadoDivorciadoViudo: false,
+                    ConcubinatoSolteroConHijos: true,
+                    soltero: false
+                });
+            } else {
+                this.setState({
+                    CasadoDivorciadoViudo: false,
+                    ConcubinatoSolteroConHijos: false,
+                    soltero: true
+                })
+            }
+            changeEstadoCivil(e.target.value)
+        }
+
+        const enviarInfo = (e) => {
+            e.preventDefault();
+            fnGuardaPersona(form);
+        }
+
         return (
             <React.Fragment>
                 <h2 className="text-info">Agregar nuevo miembro</h2>
 
                 <div className="border">
-                    <form onSubmit={this.FrmRegistroPersona} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
+                    <form onSubmit={enviarInfo} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
                         <div className="container">
 
                             {/* Tabs de navegacion del formulario */}
@@ -287,13 +259,13 @@ class PersonaForm extends Component {
                                     <a onclick="" className="nav-link disabled pertanaDeshabilitada" id="generales-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">Personales</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="familiaAsendente-tab" data-toggle="tab" href="#familiaAsendente" role="tab" aria-controls="familiaAsendente" aria-selected="true">Familia asendente</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="familiaAsendente-tab" data-toggle="tab" href="#familiaAsendente" role="tab" aria-controls="familiaAsendente" aria-selected="true">Familia Ascendente</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="eclesiasticos-tab" data-toggle="tab" href="#eclesiasticos" role="tab" aria-controls="eclesiasticos" aria-selected="true">Eclesiasticos</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="eclesiasticos-tab" data-toggle="tab" href="#eclesiasticos" role="tab" aria-controls="eclesiasticos" aria-selected="true">Eclesíasticos</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="estado-civil-tab" data-toggle="tab" href="#estado-civil" role="tab" aria-controls="estado-civil" aria-selected="true">Estado civil</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="estado-civil-tab" data-toggle="tab" href="#estado-civil" role="tab" aria-controls="estado-civil" aria-selected="true">Estado Civil</a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link disabled pertanaDeshabilitada" id="hogar-tab" data-toggle="tab" href="#hogar" role="tab" aria-controls="hogar" aria-selected="true">Hogar</a>
@@ -466,13 +438,13 @@ class PersonaForm extends Component {
                                     <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <button onClick={handle_verificarDuplicados} className="btn btn-primary form-control">
+                                                <button type="button" onClick={handle_verificarDuplicados} className="btn btn-primary form-control">
                                                     <i>Continuar</i>
                                                 </button>
                                             </div>
                                             {this.state.PersonaEncontrada &&
                                                 <div className="col-sm-">
-                                                    <button onClick={IgnorarDuplicados} className="btn btn-success form-control">
+                                                    <button type="button" onClick={IgnorarDuplicados} className="btn btn-success form-control">
                                                         <span className="fas fa-check fa-sm" style={{ paddingRight: "20px" }}></span>
                                                         <i>Ignorar duplicados y continuar</i>
                                                     </button>
@@ -547,21 +519,39 @@ class PersonaForm extends Component {
                                         </div>
                                     </div>
 
-                                    {/* <div className="form-group">
+                                    <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label>Telefono fijo</label>
+                                                <label>Nacionalidad</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <input
                                                     type="text"
-                                                    name="per_Telefono_Fijo"
+                                                    name="per_Nacionalidad"
                                                     onChange={onChange}
                                                     className="form-control"
+                                                    value={form.per_Nacionalidad}
                                                 />
                                             </div>
                                         </div>
-                                    </div> */}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <div className="row">
+                                            <div className="col-sm-2">
+                                                <label>Lugar de nacimiento</label>
+                                            </div>
+                                            <div className="col-sm-4">
+                                                <input
+                                                    type="text"
+                                                    name="per_Lugar_De_Nacimiento"
+                                                    onChange={onChange}
+                                                    className="form-control"
+                                                    value={form.per_Lugar_De_Nacimiento}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div className="form-group">
                                         <div className="row">
@@ -576,9 +566,6 @@ class PersonaForm extends Component {
                                                     className="form-control"
                                                 />
                                             </div>
-                                            {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Telefono_Movil', form.per_Telefono_Movil, 'phone|regex:^[0-9]{10}$')}
-                                            </span> */}
                                         </div>
                                     </div>
 
@@ -595,9 +582,6 @@ class PersonaForm extends Component {
                                                     className="form-control inputEmail"
                                                 />
                                             </div>
-                                            {/* <span style={{ color: 'red' }}>
-                                                {this.validator.message('per_Email_Personal', form.per_Email_Personal, 'email')}
-                                            </span> */}
                                         </div>
                                     </div>
 
@@ -617,19 +601,19 @@ class PersonaForm extends Component {
                                         </div>
                                     </div>
 
-                                    {/* <div className="form-group">
+                                    <div className="form-group">
                                         <div className="row">
                                             <div className="col-sm-2">
-                                                <label>Observaciones</label>
+                                                <label>Cargos desempeñados</label>
                                             </div>
                                             <div className="col-sm-4">
                                                 <textarea
-                                                    name="per_Observaciones"
+                                                    name="per_Cargos_Desempenados"
                                                     onChange={onChange}
-                                                    className="form-control"></textarea>
+                                                    className="form-control">{form.per_Cargos_Desempenados}</textarea>
                                             </div>
                                         </div>
-                                    </div> */}
+                                    </div>
                                 </div>
 
                                 {/* Familia Asendente */}
@@ -743,7 +727,7 @@ class PersonaForm extends Component {
                                                 <select
                                                     value={form.per_Estado_Civil}
                                                     name="per_Estado_Civil"
-                                                    onChange={this.handle_per_Estado_Civil}
+                                                    onChange={handle_per_Estado_Civil}
                                                     className="form-control"
                                                 >
                                                     <option value="SOLTERO(A)">Soltero/a SIN hijos</option>

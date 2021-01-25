@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import PersonaForm from '../components/PersonaForm';
-// import MomentLocalUtils from 'react-day-picker/moment';
+import axios from 'axios';
+import Global from '../Global';
+import { v4 as uuidv4 } from 'uuid';
 
 class RegistroDePersonal extends Component {
+
+    url = Global.url_api;
+    fechaNoIngresada = "1900-01-01";
 
     constructor(props) {
         super(props);
@@ -26,7 +31,18 @@ class RegistroDePersonal extends Component {
         this.setState({
             form: {
                 ...this.state.form,
-                per_Bautizado: false
+                per_Bautizado: false,
+                per_RFC_Sin_Homo: "",
+                per_Estado_Civil: "",
+                per_foto: uuidv4(),
+                per_Activo: 1,
+                per_En_Comunion: 1,
+                per_Vivo: 1,
+                per_Fecha_Boda_Civil: "1900-01-01",
+                per_Fecha_Ecelsiastica: "1900-01-01",
+                per_Fecha_Bautismo: "1900-01-01",
+                per_Fecha_Recibio_Espiritu_Santo: "1900-01-01",
+                per_Cargos_Desempenados: ""
             }
         })
 
@@ -56,7 +72,7 @@ class RegistroDePersonal extends Component {
         if (e.target.name === "per_Categoria") {
             console.log(e.target.value)
             switch (e.target.value) {
-                case "0":
+                default:
                     this.setState({
                         categoriaSeleccionada: false,
                         msjCategoriaSeleccionada: "Debes seleccionar una categoria valida.",
@@ -220,6 +236,30 @@ class RegistroDePersonal extends Component {
         }
     }
 
+    changeRFCSinHomo = (str) => {
+        this.setState({
+            form: {
+                ...this.state.form,
+                per_RFC_Sin_Homo: str.toUpperCase()
+            }
+        })
+    }
+
+    changeEstadoCivil = (str) => {
+        this.setState({
+            form: {
+                ...this.state.form,
+                per_Estado_Civil: str.toUpperCase()
+            }
+        })
+    }
+
+    fnGuardaPersona = async (datos) => {
+        return await axios.post(this.url + "/persona", datos)
+            .then(res => res.data)
+            .catch(error => error);
+    }
+
     render() {
 
         return (
@@ -238,6 +278,9 @@ class RegistroDePersonal extends Component {
                 per_Fecha_Boda_Eclesiastica_NoValido={this.state.per_Fecha_Boda_Eclesiastica_NoValido}
                 per_Fecha_Bautismo_NoValido={this.state.per_Fecha_Bautismo_NoValido}
                 per_Fecha_Recibio_Espiritu_Santo_NoValido={this.state.per_Fecha_Recibio_Espiritu_Santo_NoValido}
+                changeRFCSinHomo={this.changeRFCSinHomo}
+                changeEstadoCivil={this.changeEstadoCivil}
+                fnGuardaPersona={this.fnGuardaPersona}
             />
         )
     }

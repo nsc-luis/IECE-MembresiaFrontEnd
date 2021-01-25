@@ -81,11 +81,11 @@ class Sidebar extends Component {
                                 <h6 className="collapse-header">Personal bautizado:</h6>
                                 <Link className="collapse-item" to="#">Bautismo</Link>
                                 <Link className="collapse-item" to="#">Cambio de domicilio</Link>
-                                <Link className="collapse-item" to="#">Restitucion</Link>
+                                <Link className="collapse-item" to="#">Restitución</Link>
                                 <h6 className="collapse-header">Personal no bautizado:</h6>
                                 <Link className="collapse-item" to="#">Nuevo ingreso</Link>
                                 <Link className="collapse-item" to="#">Cambio de domicilio</Link>
-                                <Link className="collapse-item" to="#">Reactivacion</Link>
+                                <Link className="collapse-item" to="#">Reactivación</Link>
                             </div>
                         </div>
                     </li>
@@ -159,8 +159,8 @@ class Sidebar extends Component {
                         <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item" to="#">Membresia general</Link>
-                                <Link className="collapse-item" to="#">Membresia bautizada</Link>
+                                <Link className="collapse-item" to="#">Membresía general</Link>
+                                <Link className="collapse-item" to="#">Membresía bautizada</Link>
                                 <Link className="collapse-item" to="#">Lista de hogares</Link>
                                 <Link className="collapse-item" to="#">Informe pastoral</Link>
                             </div>

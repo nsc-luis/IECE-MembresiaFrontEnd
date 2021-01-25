@@ -82,35 +82,35 @@ class ListaDePersonal extends Component {
         console.log(persona.per_Estado_Civil);
 
         switch (persona.per_Estado_Civil) {
-            case 'casado':
+            case 'CASADO(A)':
                 this.setState({
                     CasadoDivorciadoViudo: true,
                     ConcubinadoSolteroConHijos: false,
                     soltero: false
                 });
                 break;
-            case 'divorciado':
+            case 'DIVORCIADO(A)':
                 this.setState({
                     CasadoDivorciadoViudo: true,
                     ConcubinadoSolteroConHijos: false,
                     soltero: false
                 });
                 break;
-            case 'viudo':
+            case 'VIUDO(A)':
                 this.setState({
                     CasadoDivorciadoViudo: true,
                     ConcubinadoSolteroConHijos: false,
                     soltero: false
                 });
                 break;
-            case 'concubinato':
+            case 'CONCUBINATO':
                 this.setState({
                     CasadoDivorciadoViudo: false,
                     ConcubinadoSolteroConHijos: true,
                     soltero: false
                 });
                 break;
-            case 'solteroconhijos':
+            case 'SOLTERO(A) CON HIJOS':
                 this.setState({
                     CasadoDivorciadoViudo: false,
                     ConcubinadoSolteroConHijos: true,
