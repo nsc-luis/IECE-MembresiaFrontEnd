@@ -29,7 +29,9 @@ class PersonaForm extends Component {
             RFCSinHomoclave: "",
             distritoSeleccionado: "0",
             sectores: [],
-            per_Apellido_Materno_OK: false
+            per_Apellido_Materno_OK: false,
+            hd_Id_Hogar: "0",
+            hp_Jerarquia: "1"
         }
     }
 
@@ -81,6 +83,21 @@ class PersonaForm extends Component {
         }
     }
 
+    fnHd_Id_Hogar = (str) => {
+        this.setState({
+            hd_Id_Hogar: str
+        })
+        if (str === "0") {
+            this.setState({ hp_Jerarquia: "1" })
+        }
+    }
+
+    fnHp_Jerarquia = (e) => {
+        this.setState({
+            hp_Jerarquia: e.target.value
+        })
+    }
+
     render() {
         const {
             onChange,
@@ -99,7 +116,9 @@ class PersonaForm extends Component {
             per_Fecha_Recibio_Espiritu_Santo_NoValido,
             changeRFCSinHomo,
             changeEstadoCivil,
-            fnGuardaPersona
+            fnGuardaPersona,
+            fnGuardaDomicilio,
+            fnGuardaHogarPersona
         } = this.props
 
         const per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
@@ -237,9 +256,46 @@ class PersonaForm extends Component {
             changeEstadoCivil(e.target.value)
         }
 
+        const fnFormatoFecha = (fecha) => {
+            let sub = fecha.split("/")
+            let fechaFormateada = sub[1] + "/" + sub[0] + "/" + sub[2]
+            return fechaFormateada
+        }
+
+        const fechas = [
+            "per_Fecha_Bautismo",
+            "per_Fecha_Boda_Civil",
+            "per_Fecha_Ecelsiastica",
+            "per_Fecha_Nacimiento",
+            "per_Fecha_Recibio_Espiritu_Santo"
+        ]
+
         const enviarInfo = (e) => {
             e.preventDefault();
-            fnGuardaPersona(form);
+
+            let hogar_persona = {}
+            let objPersona = this.props.form
+
+            fechas.forEach(fecha => {
+                objPersona[fecha] = fnFormatoFecha(objPersona[fecha])
+            });
+            
+            if (this.state.hd_Id_Hogar === "0") {     
+                hogar_persona.per_Id_Persona = fnGuardaPersona(objPersona) 
+                /* hogar_persona.per_Id_Persona = fnGuardaPersona(objPersona)
+                .then(res => {
+                    return res.nvaPersona })
+                fnGuardaDomicilio(domicilio)
+                .then(res => {
+                    hogar_persona.hd_Id_Hogar = res.nvoHogarDomicilio })
+                hogar_persona.hp_Jerarquia = 1 */
+            } else {
+                /* hogar_persona.per_Id_Persona = setTimeout(fnGuardaPersona(objPersona).nvaPersona,1000)
+                hogar_persona.hd_Id_Hogar = this.state.hd_Id_Hogar
+                hogar_persona.hp_Jerarquia = this.state.hp_Jerarquia */
+            }
+
+            fnGuardaHogarPersona(hogar_persona)
         }
 
         return (
@@ -256,7 +312,7 @@ class PersonaForm extends Component {
                                     <a onClick={DeshabilitaPestanas} className="nav-link active" id="verificarNuevoRegistro-tab" data-toggle="tab" href="#verificarNuevoRegistro" role="tab" aria-controls="verificarNuevoRegistro" aria-selected="true">Generales</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a onclick="" className="nav-link disabled pertanaDeshabilitada" id="generales-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">Personales</a>
+                                    <a className="nav-link disabled pertanaDeshabilitada" id="generales-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">Personales</a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link disabled pertanaDeshabilitada" id="familiaAsendente-tab" data-toggle="tab" href="#familiaAsendente" role="tab" aria-controls="familiaAsendente" aria-selected="true">Familia Ascendente</a>
@@ -610,7 +666,9 @@ class PersonaForm extends Component {
                                                 <textarea
                                                     name="per_Cargos_Desempenados"
                                                     onChange={onChange}
-                                                    className="form-control">{form.per_Cargos_Desempenados}</textarea>
+                                                    className="form-control"
+                                                    value={form.per_Cargos_Desempenados}
+                                                ></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1070,6 +1128,8 @@ class PersonaForm extends Component {
                                     <HogarPersonaDomicilio
                                         domicilio={domicilio}
                                         onChangeDomicilio={onChangeDomicilio}
+                                        fnHd_Id_Hogar={this.fnHp_Id_Hogar}
+                                        fnHp_Jerarquia={this.fnHp_Jerarquia}
                                     />
 
                                     {/* Botones al final de formulario */}

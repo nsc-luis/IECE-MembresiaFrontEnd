@@ -6,18 +6,21 @@ import PaisEstado from './PaisEstado';
 class Domicilio extends React.Component {
     url = Global.url_api;
 
-    state = {
-        ListaHogares: [],
-        DatosHogarDomicilio: [],
-        MiembrosDelHogar: [],
-        SelectHogarId: '0'
+    constructor(props) {
+        super(props)
+        this.state = {
+            ListaHogares: [],
+            DatosHogarDomicilio: [],
+            MiembrosDelHogar: [],
+            SelectHogarId: '0'
+        }
     }
 
     componentWillMount() {
         this.getListaHogares();
     }
 
-    fnGuardaHogarDomicilio = async (datos) => {
+    /* fnGuardaHogarDomicilio = async (datos) => {
         return await axios.post(this.url + "/HogarDomicilio", datos)
             .then(res => res.data)
             .catch(error => error);
@@ -42,7 +45,7 @@ class Domicilio extends React.Component {
         console.log(p);
         await axios.post(this.url + "/Hogar_Persona", data);
         console.log(data);
-    }
+    } */
 
     getListaHogares = () => {
         axios.get(this.url + "/Hogar_Persona/GetListaHogares")
@@ -54,34 +57,49 @@ class Domicilio extends React.Component {
             });
     }
 
-    handleHogarSeleccionado = async (e) => {
-        let idValue = e.target.value;
-        await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + idValue)
-            .then(res => {
-                this.setState({
-                    MiembrosDelHogar: res.data,
-                    SelectHogarId: idValue
-                });
-            });
-        await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + idValue)
-            .then(res => {
-                this.setState({
-                    DatosHogarDomicilio: res.data
-                });
-            });
+    render() {
+        const {
+            domicilio,
+            onChangeDomicilio,
+            fnHd_Id_Hogar,
+            fnHp_Jerarquia
+        } = this.props
 
-        let jerarquias = [];
-        for (let i = 1; i <= this.state.MiembrosDelHogar.length + 1; i++) {
-            jerarquias.push(<option value={i}>{i}</option>)
+        const handleHogarSeleccionado = async () => {
+            let idHogar = document.getElementById('hd_Id_Hogar')
+            fnHd_Id_Hogar(idHogar)
+
+            if (idHogar !== '0') {
+                await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + idHogar)
+                    .then(res => {
+                        this.setState({
+                            MiembrosDelHogar: res.data,
+                            SelectHogarId: idHogar
+                        })
+                    })
+                await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + idHogar)
+                    .then(res => {
+                        this.setState({
+                            DatosHogarDomicilio: res.data
+                        })
+                    })
+
+                let jerarquias = [];
+                for (let i = 1; i <= this.state.MiembrosDelHogar.length + 1; i++) {
+                    jerarquias.push(<option value={i}>{i}</option>)
+                }
+
+                await this.setState({
+                    JerarquiasDisponibles: jerarquias
+                })
+            } else {
+                this.setState({
+                    MiembrosDelHogar: [],
+                    SelectHogarId: idHogar
+                })
+            }
         }
 
-        await this.setState({
-            JerarquiasDisponibles: jerarquias
-        });
-    }
-
-    render() {
-        const { domicilio, onChangeDomicilio } = this.props
         return (
             <React.Fragment>
                 <div className="form-group">
@@ -94,9 +112,10 @@ class Domicilio extends React.Component {
                         </div>
                         <div className="col-sm-4">
                             <select
-                                name="hp_Id_Hogar"
+                                name="hd_Id_Hogar"
                                 className="form-control"
-                                onChange={this.handleHogarSeleccionado}
+                                onChange={handleHogarSeleccionado}
+                                id="hd_Id_Hogar"
                             >
                                 <option value="0">Nuevo hogar / domicilio</option>
                                 {
@@ -166,6 +185,7 @@ class Domicilio extends React.Component {
                                     <select
                                         name="hp_Jerarquia"
                                         className="form-control"
+                                        onChange={fnHp_Jerarquia}
                                     >
                                         {this.state.JerarquiasDisponibles}
                                     </select>
@@ -304,7 +324,7 @@ class Domicilio extends React.Component {
                             </div>
                         </div>
 
-                        <PaisEstado 
+                        <PaisEstado
                             domicilio={domicilio}
                             onChangeDomicilio={onChangeDomicilio}
                         />

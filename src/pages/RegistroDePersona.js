@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 class RegistroDePersonal extends Component {
 
     url = Global.url_api;
-    fechaNoIngresada = "1900-01-01";
 
     constructor(props) {
         super(props);
@@ -38,14 +37,13 @@ class RegistroDePersonal extends Component {
                 per_Activo: 1,
                 per_En_Comunion: 1,
                 per_Vivo: 1,
-                per_Fecha_Boda_Civil: "1900-01-01",
-                per_Fecha_Ecelsiastica: "1900-01-01",
-                per_Fecha_Bautismo: "1900-01-01",
-                per_Fecha_Recibio_Espiritu_Santo: "1900-01-01",
+                per_Fecha_Boda_Civil: "01/01/1900",
+                per_Fecha_Ecelsiastica: "01/01/1900",
+                per_Fecha_Bautismo: "01/01/1900",
+                per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
                 per_Cargos_Desempenados: ""
             }
         })
-
     }
 
     const_regex = {
@@ -203,35 +201,46 @@ class RegistroDePersonal extends Component {
             if (!this.const_regex.formatoFecha.test(e.target.value)) {
                 this.setState({ per_Fecha_Nacimiento_NoValido: true });
             } else {
-                this.setState({ per_Fecha_Nacimiento_NoValido: false });
+                this.setState({
+                    per_Fecha_Nacimiento_NoValido: false
+                });
+
             }
         }
         if (e.target.name === "per_Fecha_Boda_Civil") {
             if (!this.const_regex.formatoFecha.test(e.target.value)) {
                 this.setState({ per_Fecha_Boda_Civil_NoValido: true });
             } else {
-                this.setState({ per_Fecha_Boda_Civil_NoValido: false });
+                this.setState({
+                    per_Fecha_Boda_Civil_NoValido: false
+                });
             }
         }
         if (e.target.name === "per_Fecha_Boda_Eclesiastica") {
             if (!this.const_regex.formatoFecha.test(e.target.value)) {
                 this.setState({ per_Fecha_Boda_Eclesiastica_NoValido: true });
             } else {
-                this.setState({ per_Fecha_Boda_Eclesiastica_NoValido: false });
+                this.setState({
+                    per_Fecha_Boda_Eclesiastica_NoValido: false
+                });
             }
         }
         if (e.target.name === "per_Fecha_Bautismo") {
             if (!this.const_regex.formatoFecha.test(e.target.value)) {
                 this.setState({ per_Fecha_Bautismo_NoValido: true });
             } else {
-                this.setState({ per_Fecha_Bautismo_NoValido: false });
+                this.setState({
+                    per_Fecha_Bautismo_NoValido: false
+                });
             }
         }
         if (e.target.name === "per_Fecha_Recibio_Espiritu_Santo") {
             if (!this.const_regex.formatoFecha.test(e.target.value)) {
                 this.setState({ per_Fecha_Recibio_Espiritu_Santo_NoValido: true });
             } else {
-                this.setState({ per_Fecha_Recibio_Espiritu_Santo_NoValido: false });
+                this.setState({
+                    per_Fecha_Recibio_Espiritu_Santo_NoValido: false
+                });
             }
         }
     }
@@ -255,9 +264,19 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
-        return await axios.post(this.url + "/persona", datos)
-            .then(res => res.data)
-            .catch(error => error);
+        const data = await axios.post(this.url + "/persona", datos)
+        return data.data;
+    }
+
+    fnGuardaDomicilio = async (datos) => {
+        const data = await axios.post(this.url + "/HogarDomicilio", datos)
+        return data.data
+    }
+
+    fnGuardaHogarPersona = async (datos) => {
+        console.log(datos)
+        /* const data = await axios.post(this.url + "/Hogar_Persona", datos)
+        return data.data */
     }
 
     render() {
@@ -281,6 +300,8 @@ class RegistroDePersonal extends Component {
                 changeRFCSinHomo={this.changeRFCSinHomo}
                 changeEstadoCivil={this.changeEstadoCivil}
                 fnGuardaPersona={this.fnGuardaPersona}
+                fnGuardaDomicilio={this.fnGuardaDomicilio}
+                fnGuardaHogarPersona={this.fnGuardaHogarPersona}
             />
         )
     }

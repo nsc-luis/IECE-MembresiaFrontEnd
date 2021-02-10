@@ -1,7 +1,7 @@
 var Global = {
-    // url_api : "http://localhost/iece-web-api/api"
-    url_api : "http://localhost:59239/api"
-    // url_api : "http://localhost/IECEMembresia/webapi/api"
+    // url_api : "http://" + window.location.hostname + "/iece-web-api/api"
+    url_api : "http://" + window.location.hostname + ":59239/api"
+    // url_api : "http://" + window.location.hostname + "/IECEMembresia/webapi/api"
 }
 
 export default Global;
