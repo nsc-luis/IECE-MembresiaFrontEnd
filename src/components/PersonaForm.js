@@ -31,7 +31,8 @@ class PersonaForm extends Component {
             sectores: [],
             per_Apellido_Materno_OK: false,
             hd_Id_Hogar: "0",
-            hp_Jerarquia: "1"
+            hp_Jerarquia: "1",
+            redirect: false
         }
     }
 
@@ -83,7 +84,7 @@ class PersonaForm extends Component {
         }
     }
 
-    fnHd_Id_Hogar = (str) => {
+    handle_hd_Id_Hogar = (str) => {
         this.setState({
             hd_Id_Hogar: str
         })
@@ -92,7 +93,7 @@ class PersonaForm extends Component {
         }
     }
 
-    fnHp_Jerarquia = (e) => {
+    handle_hp_Jerarquia = (e) => {
         this.setState({
             hp_Jerarquia: e.target.value
         })
@@ -117,8 +118,7 @@ class PersonaForm extends Component {
             changeRFCSinHomo,
             changeEstadoCivil,
             fnGuardaPersona,
-            fnGuardaDomicilio,
-            fnGuardaHogarPersona
+            fnGuardaPersonaEnHogar
         } = this.props
 
         const per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
@@ -273,29 +273,25 @@ class PersonaForm extends Component {
         const enviarInfo = (e) => {
             e.preventDefault();
 
-            let hogar_persona = {}
             let objPersona = this.props.form
+            let objDomicilio = this.props.domicilio
 
             fechas.forEach(fecha => {
                 objPersona[fecha] = fnFormatoFecha(objPersona[fecha])
             });
-            
-            if (this.state.hd_Id_Hogar === "0") {     
-                hogar_persona.per_Id_Persona = fnGuardaPersona(objPersona) 
-                /* hogar_persona.per_Id_Persona = fnGuardaPersona(objPersona)
-                .then(res => {
-                    return res.nvaPersona })
-                fnGuardaDomicilio(domicilio)
-                .then(res => {
-                    hogar_persona.hd_Id_Hogar = res.nvoHogarDomicilio })
-                hogar_persona.hp_Jerarquia = 1 */
-            } else {
-                /* hogar_persona.per_Id_Persona = setTimeout(fnGuardaPersona(objPersona).nvaPersona,1000)
-                hogar_persona.hd_Id_Hogar = this.state.hd_Id_Hogar
-                hogar_persona.hp_Jerarquia = this.state.hp_Jerarquia */
-            }
 
-            fnGuardaHogarPersona(hogar_persona)
+            if (this.state.hd_Id_Hogar === "0") {
+                let PersonaDomicilioHogar = {
+                    id: 1,
+                    PersonaEntity: objPersona,
+                    HogarDomicilioEntity: objDomicilio
+                }
+                fnGuardaPersona(PersonaDomicilioHogar)
+                this.setState({ redirect: true })
+            } else {
+                fnGuardaPersonaEnHogar(objPersona, this.state.hp_Jerarquia, this.state.hd_Id_Hogar)
+                this.setState({ redirect: true })
+            }
         }
 
         return (
@@ -1128,8 +1124,8 @@ class PersonaForm extends Component {
                                     <HogarPersonaDomicilio
                                         domicilio={domicilio}
                                         onChangeDomicilio={onChangeDomicilio}
-                                        fnHd_Id_Hogar={this.fnHp_Id_Hogar}
-                                        fnHp_Jerarquia={this.fnHp_Jerarquia}
+                                        handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
+                                        handle_hp_Jerarquia={this.handle_hp_Jerarquia}
                                     />
 
                                     {/* Botones al final de formulario */}

@@ -3,6 +3,7 @@ import PersonaForm from '../components/PersonaForm';
 import axios from 'axios';
 import Global from '../Global';
 import { v4 as uuidv4 } from 'uuid';
+import { Redirect } from 'react-router-dom';
 
 class RegistroDePersonal extends Component {
 
@@ -22,7 +23,7 @@ class RegistroDePersonal extends Component {
             per_Fecha_Boda_Civil_NoValido: true,
             per_Fecha_Boda_Eclesiastica_NoValido: true,
             per_Fecha_Bautismo_NoValido: true,
-            per_Fecha_Recibio_Espiritu_Santo_NoValido: true
+            per_Fecha_Recibio_Espiritu_Santo_NoValido: true,
         }
     }
 
@@ -31,17 +32,23 @@ class RegistroDePersonal extends Component {
             form: {
                 ...this.state.form,
                 per_Bautizado: false,
-                per_RFC_Sin_Homo: "",
-                per_Estado_Civil: "",
+                per_RFC_Sin_Homo: "XAXX010101XXX",
+                per_Estado_Civil: "SOLTERO(A)",
                 per_foto: uuidv4(),
                 per_Activo: 1,
                 per_En_Comunion: 1,
                 per_Vivo: 1,
+                pro_Id_Profesion_Oficio1: "1",
+                pro_Id_Profesion_Oficio2: "1",
                 per_Fecha_Boda_Civil: "01/01/1900",
                 per_Fecha_Ecelsiastica: "01/01/1900",
                 per_Fecha_Bautismo: "01/01/1900",
                 per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
                 per_Cargos_Desempenados: ""
+            },
+            domicilio: {
+                ...this.state.domicilio,
+                hd_Tipo_Subdivision: "COL"
             }
         })
     }
@@ -264,19 +271,22 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
-        const data = await axios.post(this.url + "/persona", datos)
-        return data.data;
+        const res = await axios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
+        if (res.data.status) {
+            return <Redirect to="/ListaDePersonal" />
+        } else {
+            return res.data
+        }
+        
     }
 
-    fnGuardaDomicilio = async (datos) => {
-        const data = await axios.post(this.url + "/HogarDomicilio", datos)
-        return data.data
-    }
-
-    fnGuardaHogarPersona = async (datos) => {
-        console.log(datos)
-        /* const data = await axios.post(this.url + "/Hogar_Persona", datos)
-        return data.data */
+    fnGuardaPersonaEnHogar = async(datos, jerarquia, hdId) => {
+        const res = await axios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
+        if (res.data.status) {
+            return <Redirect to="/ListaDePersonal" />
+        } else {
+            return res.data
+        }
     }
 
     render() {
@@ -300,8 +310,7 @@ class RegistroDePersonal extends Component {
                 changeRFCSinHomo={this.changeRFCSinHomo}
                 changeEstadoCivil={this.changeEstadoCivil}
                 fnGuardaPersona={this.fnGuardaPersona}
-                fnGuardaDomicilio={this.fnGuardaDomicilio}
-                fnGuardaHogarPersona={this.fnGuardaHogarPersona}
+                fnGuardaPersonaEnHogar={this.fnGuardaPersonaEnHogar}
             />
         )
     }

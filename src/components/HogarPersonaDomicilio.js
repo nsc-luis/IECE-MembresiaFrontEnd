@@ -20,33 +20,6 @@ class Domicilio extends React.Component {
         this.getListaHogares();
     }
 
-    /* fnGuardaHogarDomicilio = async (datos) => {
-        return await axios.post(this.url + "/HogarDomicilio", datos)
-            .then(res => res.data)
-            .catch(error => error);
-    }
-
-    fnGuardaHogar_Persona = async (p, d) => {
-        let foo = await this.fnGuardaPersona(p);
-        let data = {
-            per_Id_Persona: foo.nvaPersona
-        }
-
-        if (this.hp_Id_HogarRef.current.value === "0") {
-            let bar = await this.fnGuardaHogarDomicilio(d);
-            data.hd_Id_Hogar = bar.nvoHogarDomicilio;
-            data.hp_Jerarquia = 1;
-            console.log(data);
-        } else {
-            data.hd_Id_Hogar = d.hp_Id_Hogar;
-            data.hp_Jerarquia = d.hp_Jerarquia;
-            console.log(data);
-        }
-        console.log(p);
-        await axios.post(this.url + "/Hogar_Persona", data);
-        console.log(data);
-    } */
-
     getListaHogares = () => {
         axios.get(this.url + "/Hogar_Persona/GetListaHogares")
             .then(res => {
@@ -61,15 +34,15 @@ class Domicilio extends React.Component {
         const {
             domicilio,
             onChangeDomicilio,
-            fnHd_Id_Hogar,
-            fnHp_Jerarquia
+            handle_hd_Id_Hogar,
+            handle_hp_Jerarquia
         } = this.props
 
         const handleHogarSeleccionado = async () => {
-            let idHogar = document.getElementById('hd_Id_Hogar')
-            fnHd_Id_Hogar(idHogar)
+            let idHogar = document.getElementById('hd_Id_Hogar').value
+            handle_hd_Id_Hogar(idHogar)
 
-            if (idHogar !== '0') {
+            if (idHogar !== 0) {
                 await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + idHogar)
                     .then(res => {
                         this.setState({
@@ -185,7 +158,7 @@ class Domicilio extends React.Component {
                                     <select
                                         name="hp_Jerarquia"
                                         className="form-control"
-                                        onChange={fnHp_Jerarquia}
+                                        onChange={handle_hp_Jerarquia}
                                     >
                                         {this.state.JerarquiasDisponibles}
                                     </select>
