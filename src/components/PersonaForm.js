@@ -18,7 +18,9 @@ class PersonaForm extends Component {
         super(props)
         this.state = {
             profesiones_oficios: [],
+            FrmValidaPersona: true,
             PersonaEncontrada: false,
+            infante: false,
             DatosHogar: {},
             MiembroEsBautizado: false,
             PromesaDelEspitiruSanto: false,
@@ -150,20 +152,22 @@ class PersonaForm extends Component {
                     if (res.data.status) {
                         this.setState({
                             PersonaEncontrada: true,
+                            FrmValidaPersona: true,
                             datosPersonaEncontrada: res.data.persona[0]
                         })
-                        DeshabilitaPestanas()
+                        //DeshabilitaPestanas()
                     } else {
                         this.setState({
                             PersonaEncontrada: false,
+                            FrmValidaPersona: false,
                             datosPersonaEncontrada: []
                         })
-                        HabilitarPestanas(form.per_Categoria)
+                        //HabilitarPestanas(form.per_Categoria)
                     }
                 })
         }
 
-        const HabilitarPestanas = (per_Categoria) => {
+        /* const HabilitarPestanas = (per_Categoria) => {
             if (per_Categoria === "ADULTO_HOMBRE" || per_Categoria === "ADULTO_MUJER") {
                 document.getElementById("generales-tab").classList.remove("disabled", "pertanaDeshabilitada")
                 document.getElementById("familiaAsendente-tab").classList.remove("disabled", "pertanaDeshabilitada")
@@ -185,19 +189,24 @@ class PersonaForm extends Component {
                 document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
                 document.getElementById("hogar-tab").classList.remove("disabled", "pertanaDeshabilitada")
             }
+        } */
+
+        const handleIgnorarDuplicados = () => {
+            this.setState({
+                PersonaEncontrada: false,
+                FrmValidaPersona: false,
+                datosPersonaEncontrada: []
+            })
+            // HabilitarPestanas(form.per_Categoria)
         }
 
-        const IgnorarDuplicados = () => {
-            HabilitarPestanas(form.per_Categoria)
-        }
-
-        const DeshabilitaPestanas = () => {
+        /* const DeshabilitaPestanas = () => {
             document.getElementById("generales-tab").classList.add("disabled", "pertanaDeshabilitada")
             document.getElementById("familiaAsendente-tab").classList.add("disabled", "pertanaDeshabilitada")
             document.getElementById("eclesiasticos-tab").classList.add("disabled", "pertanaDeshabilitada")
             document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
             document.getElementById("hogar-tab").classList.add("disabled", "pertanaDeshabilitada")
-        }
+        } */
 
         const handle_verificarDuplicados = (e) => {
             if (categoriaSeleccionada
@@ -205,6 +214,14 @@ class PersonaForm extends Component {
                 && !per_Apellido_Paterno_NoValido
                 && !per_Fecha_Nacimiento_NoValido) {
 
+                if (form.per_Categoria === "NIÑO" || form.per_Categoria === "NIÑA") {
+                    this.setState({ infante: true })
+                } else {
+                    this.setState({ infante: false })
+                }
+                console.log(form.per_Categoria)
+
+                var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
                 if (alphaSpaceRequired.test(per_Apellido_Materno.value)
                     || per_Apellido_Materno.value === "") {
 
@@ -213,11 +230,11 @@ class PersonaForm extends Component {
 
                     CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
 
-                    if (this.state.PersonaEncontrada) {
+                    /* if (this.state.PersonaEncontrada) {
                         DeshabilitaPestanas()
                     } else {
                         HabilitarPestanas(form.per_Categoria)
-                    }
+                    } */
 
                 } else {
                     this.setState({ per_Apellido_Materno_OK: false })
@@ -227,6 +244,13 @@ class PersonaForm extends Component {
                 this.setState({ per_Apellido_Materno_OK: false })
                 alert("Debes capturar correctamente los campos requeridos.")
             }
+        }
+
+        const handleEditaNombre = () => {
+            this.setState({
+                PersonaEncontrada: false,
+                FrmValidaPersona: true
+            });
         }
 
         const handle_per_Estado_Civil = (e) => {
@@ -302,862 +326,853 @@ class PersonaForm extends Component {
                     <form onSubmit={enviarInfo} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
                         <div className="container">
 
-                            {/* Tabs de navegacion del formulario */}
-                            <ul className="nav nav-tabs bg-primary mb-3 rounded" id="nav-registro-persona" role="tablist">
-                                <li className="nav-item">
-                                    <a onClick={DeshabilitaPestanas} className="nav-link active" id="verificarNuevoRegistro-tab" data-toggle="tab" href="#verificarNuevoRegistro" role="tab" aria-controls="verificarNuevoRegistro" aria-selected="true">Generales</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="generales-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">Personales</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="familiaAsendente-tab" data-toggle="tab" href="#familiaAsendente" role="tab" aria-controls="familiaAsendente" aria-selected="true">Familia Ascendente</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="eclesiasticos-tab" data-toggle="tab" href="#eclesiasticos" role="tab" aria-controls="eclesiasticos" aria-selected="true">Eclesíasticos</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="estado-civil-tab" data-toggle="tab" href="#estado-civil" role="tab" aria-controls="estado-civil" aria-selected="true">Estado Civil</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link disabled pertanaDeshabilitada" id="hogar-tab" data-toggle="tab" href="#hogar" role="tab" aria-controls="hogar" aria-selected="true">Hogar</a>
-                                </li>
-                            </ul>
-
-                            <div className="tab-content" id="myTabContent">
-
-                                {/* Verificar Nuevo Registro */}
-                                <div className="tab-pane fade show active" id="verificarNuevoRegistro" role="tabpanel" aria-labelledby="verificarNuevoRegistro-tab">
-                                    <div className="alert alert-warning mt-3" role="alert">
-                                        <h5><strong>AVISO: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
-                                    </div>
-                                    <div className="form-group">
-                                        <Distritos
-                                            handle_dis_Id_Distrito={this.handle_dis_Id_Distrito}
-                                        />
-                                        {this.state.distritoSeleccionado !== "0" &&
-                                            <Sectores
-                                                sectores={this.state.sectores}
-                                                form={form}
-                                                onChange={onChange}
-                                            />
-                                        }
-                                    </div>
-                                    <hr />
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label><strong>*</strong> Categoria</label>
+                            {/* Verificar Nuevo Registro / Datos personales */}
+                            {this.state.FrmValidaPersona &&
+                                <div className="row">
+                                    <div className="col-sm-12">
+                                        <div className="card border-info acceso-directo">
+                                            <div className="card-header">
+                                                <h5><strong>Datos Personales</strong></h5>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <select
-                                                    name="per_Categoria"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                    value={form.per_Categoria}
-                                                >
-                                                    <option value="0">Selecionar categoria</option>
-                                                    <option value="ADULTO_HOMBRE">Adulto Hombre</option>
-                                                    <option value="ADULTO_MUJER">Adulto Mujer</option>
-                                                    <option value="JOVEN_HOMBRE">Joven hombre</option>
-                                                    <option value="JOVEN_MUJER">Joven mujer</option>
-                                                    <option value="NIÑO">Niño</option>
-                                                    <option value="NIÑA">Niña</option>
-                                                </select>
-                                            </div>
-                                            {categoriaSeleccionada &&
-                                                <span className="text-primary font-weight-bold font-italic">
-                                                    {msjCategoriaSeleccionada}
-                                                </span>
-                                            }
-                                            {!categoriaSeleccionada &&
-                                                <span className="text-danger">
-                                                    {msjCategoriaSeleccionada}
-                                                </span>
-                                            }
-                                        </div>
-                                    </div>
-                                    {habilitaPerBautizado &&
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col-sm-3">
-                                                    <label>Bautizado</label>
+                                            <div className="card-body">
+                                                <div className="alert alert-warning mt-3" role="alert">
+                                                    <h5><strong>AVISO: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
                                                 </div>
-                                                <div className="col-sm-2">
-                                                    <input
-                                                        type="checkbox"
-                                                        name="per_Bautizado"
+                                                {/* <div className="form-group">
+                                                <Distritos
+                                                    handle_dis_Id_Distrito={this.handle_dis_Id_Distrito}
+                                                />
+                                                {this.state.distritoSeleccionado !== "0" &&
+                                                    <Sectores
+                                                        sectores={this.state.sectores}
+                                                        form={form}
                                                         onChange={onChange}
-                                                        className="form-control"
                                                     />
-                                                </div>
+                                                }
                                             </div>
-                                        </div>
-                                    }
+                                            <hr /> */}
 
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label><strong>*</strong> Nombre</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nombre"
-                                                    onChange={onChange}
-                                                    value={form.per_Nombre}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                            {per_Nombre_NoValido &&
-                                                <span className="text-danger">
-                                                    Campo requerido, solo acepta letras, numeros y espacios.
-                                                </span>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label><strong>*</strong> Apellido paterno</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Apellido_Paterno"
-                                                    onChange={onChange}
-                                                    value={form.per_Apellido_Paterno}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                            {per_Apellido_Paterno_NoValido &&
-                                                <span className="text-danger">
-                                                    Campo requerido, solo acepta letras, numeros y espacios.
-                                                </span>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Apellido materno</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Apellido_Materno"
-                                                    onChange={onChange}
-                                                    value={form.per_Apellido_Materno}
-                                                    id="per_Apellido_Materno"
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                            {!this.state.per_Apellido_Materno_OK &&
-                                                <span className="text-primary font-italic">
-                                                    NO requerido pero solo acepta letras, numeros y espacios.
-                                                </span>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label><strong>*</strong> Fecha nacimiento</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Fecha_Nacimiento"
-                                                    onChange={onChange}
-                                                    value={form.per_Fecha_Nacimiento}
-                                                    className="form-control"
-                                                    placeholder="DD/MM/AAAA"
-                                                />
-                                            </div>
-                                            {per_Fecha_Nacimiento_NoValido &&
-                                                <span className="text-danger">
-                                                    Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                                </span>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    {/* Boton para verificar duplicados */}
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <button type="button" onClick={handle_verificarDuplicados} className="btn btn-primary form-control">
-                                                    <i>Continuar</i>
-                                                </button>
-                                            </div>
-                                            {this.state.PersonaEncontrada &&
-                                                <div className="col-sm-">
-                                                    <button type="button" onClick={IgnorarDuplicados} className="btn btn-success form-control">
-                                                        <span className="fas fa-check fa-sm" style={{ paddingRight: "20px" }}></span>
-                                                        <i>Ignorar duplicados y continuar</i>
-                                                    </button>
-                                                </div>
-                                            }
-                                            <div className="col-sm-4"></div>
-                                        </div>
-                                    </div>
-
-                                    {this.state.PersonaEncontrada &&
-                                        <PersonaEncontrada
-                                            datosPersonaEncontrada={this.state.datosPersonaEncontrada}
-                                        />
-                                    }
-
-                                </div>
-
-                                {/* Generales */}
-                                <div className="tab-pane fade" id="generales" role="tabpanel" aria-labelledby="generales-tab">
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Profesion oficio1</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <select
-                                                    name="pro_Id_Profesion_Oficio1"
-                                                    className="form-control"
-                                                    onChange={onChange}
-                                                >
-                                                    {
-                                                        this.state.profesiones_oficios.map((profesion_oficio) => {
-                                                            return (
-                                                                <option
-                                                                    key={profesion_oficio.pro_Id_Profesion_Oficio}
-                                                                    value={profesion_oficio.pro_Id_Profesion_Oficio}>
-                                                                    {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
-                                                                </option>
-                                                            )
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesion oficio2</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <select
-                                                    name="pro_Id_Profesion_Oficio2"
-                                                    className="form-control"
-                                                    onChange={onChange}
-                                                >
-                                                    {
-                                                        this.state.profesiones_oficios.map((profesion_oficio, i) => {
-                                                            return (
-                                                                <option
-                                                                    key={profesion_oficio.pro_Id_Profesion_Oficio}
-                                                                    value={profesion_oficio.pro_Id_Profesion_Oficio}>
-                                                                    {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
-                                                                </option>
-                                                            )
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Nacionalidad</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nacionalidad"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                    value={form.per_Nacionalidad}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Lugar de nacimiento</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Lugar_De_Nacimiento"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                    value={form.per_Lugar_De_Nacimiento}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Telefono movil</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Telefono_Movil"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Email</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Email_Personal"
-                                                    onChange={onChange}
-                                                    className="form-control inputEmail"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Foto</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="file"
-                                                    name="per_foto"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Cargos desempeñados</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <textarea
-                                                    name="per_Cargos_Desempenados"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                    value={form.per_Cargos_Desempenados}
-                                                ></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Familia Asendente */}
-                                <div className="tab-pane fade" id="familiaAsendente" role="tabpanel" aria-labelledby="familiaAsendente-tab">
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Padre</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nombre_Padre"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Madre</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nombre_Madre"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Abuelo paterno</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nombre_Abuelo_Paterno"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Abuela paterna</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nombre_Abuela_Paterna"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Abuelo materno</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nombre_Abuelo_Materno"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Abuela materna</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <input
-                                                    type="text"
-                                                    name="per_Nombre_Abuela_Materna"
-                                                    onChange={onChange}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                {/* Estado Civil */}
-                                <div className="tab-pane fade" id="estado-civil" role="tabpanel" aria-labelledby="estado-civil-tab">
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Estado civil</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <select
-                                                    value={form.per_Estado_Civil}
-                                                    name="per_Estado_Civil"
-                                                    onChange={handle_per_Estado_Civil}
-                                                    className="form-control"
-                                                >
-                                                    <option value="SOLTERO(A)">Soltero/a SIN hijos</option>
-                                                    <option value="CASADO(A)">Casado/a</option>
-                                                    <option value="DIVORCIADO(A)">Divorciado/a</option>
-                                                    <option value="VIUDO(A)">Viudo/a</option>
-                                                    <option value="CONCUBINATO">Unión libre/concubinato</option>
-                                                    <option value="SOLTERO(A) CON HIJOS">Soltero/a CON hijos</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Matrimonio */}
-                                    {this.state.CasadoDivorciadoViudo &&
-                                        <React.Fragment>
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Nombre conyuge</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Nombre_Conyuge"
-                                                            onChange={onChange}
-                                                            className="form-control"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Fecha boda civil</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Fecha_Boda_Civil"
-                                                            onChange={onChange}
-                                                            value={form.per_Fecha_Boda_Civil}
-                                                            placeholder="DD/MM/AAAA"
-                                                            className="form-control"
-                                                        />
-                                                    </div>
-                                                    <div className="col-sm-6">
-                                                        {per_Fecha_Boda_Civil_NoValido &&
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <label><strong>*</strong> Categoria</label>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <select
+                                                                name="per_Categoria"
+                                                                onChange={onChange}
+                                                                className="form-control"
+                                                                value={form.per_Categoria}
+                                                            >
+                                                                <option value="0">Selecionar categoria</option>
+                                                                <option value="ADULTO_HOMBRE">Adulto Hombre</option>
+                                                                <option value="ADULTO_MUJER">Adulto Mujer</option>
+                                                                <option value="JOVEN_HOMBRE">Joven hombre</option>
+                                                                <option value="JOVEN_MUJER">Joven mujer</option>
+                                                                <option value="NIÑO">Niño</option>
+                                                                <option value="NIÑA">Niña</option>
+                                                            </select>
+                                                        </div>
+                                                        {categoriaSeleccionada &&
+                                                            <span className="text-primary font-weight-bold font-italic">
+                                                                {msjCategoriaSeleccionada}
+                                                            </span>
+                                                        }
+                                                        {!categoriaSeleccionada &&
                                                             <span className="text-danger">
-                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                                {msjCategoriaSeleccionada}
                                                             </span>
                                                         }
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Num acta boda civil</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Num_Acta_Boda_Civil"
-                                                            onChange={onChange}
-                                                            className="form-control"
-                                                            value={form.per_Num_Acta_Boda_Civil}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Libro acta boda civil</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Libro_Acta_Boda_Civil"
-                                                            onChange={onChange}
-                                                            className="form-control"
-                                                            value={form.per_Libro_Acta_Boda_Civil}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Oficialia boda civil</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Oficialia_Boda_Civil"
-                                                            onChange={onChange}
-                                                            className="form-control"
-                                                            value={form.per_Oficialia_Boda_Civil}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {form.per_Bautizado &&
-                                                <React.Fragment>
+                                                {habilitaPerBautizado &&
                                                     <div className="form-group">
                                                         <div className="row">
-                                                            <div className="col-sm-2">
-                                                                <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
+                                                            <div className="col-sm-3">
+                                                                <label>Bautizado</label>
                                                             </div>
-                                                            <div className="col-sm-4">
+                                                            <div className="col-sm-2">
                                                                 <input
-                                                                    type="text"
-                                                                    name="per_Fecha_Boda_Eclesiastica"
+                                                                    type="checkbox"
+                                                                    name="per_Bautizado"
                                                                     onChange={onChange}
-                                                                    value={form.per_Fecha_Boda_Eclesiastica}
-                                                                    placeholder="DD/MM/AAAA"
                                                                     className="form-control"
                                                                 />
                                                             </div>
-                                                            <div className="col-sm-6">
-                                                                {per_Fecha_Boda_Eclesiastica_NoValido &&
-                                                                    <span className="text-danger">
-                                                                        Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <label><strong>*</strong> Nombre</label>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <input
+                                                                type="text"
+                                                                name="per_Nombre"
+                                                                onChange={onChange}
+                                                                value={form.per_Nombre}
+                                                                className="form-control"
+                                                            />
+                                                        </div>
+                                                        {per_Nombre_NoValido &&
+                                                            <span className="text-danger">
+                                                                Campo requerido, solo acepta letras, numeros y espacios.
+                                                </span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <label><strong>*</strong> Apellido paterno</label>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <input
+                                                                type="text"
+                                                                name="per_Apellido_Paterno"
+                                                                onChange={onChange}
+                                                                value={form.per_Apellido_Paterno}
+                                                                className="form-control"
+                                                            />
+                                                        </div>
+                                                        {per_Apellido_Paterno_NoValido &&
+                                                            <span className="text-danger">
+                                                                Campo requerido, solo acepta letras, numeros y espacios.
+                                                </span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <label>Apellido materno</label>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <input
+                                                                type="text"
+                                                                name="per_Apellido_Materno"
+                                                                onChange={onChange}
+                                                                value={form.per_Apellido_Materno}
+                                                                id="per_Apellido_Materno"
+                                                                className="form-control"
+                                                            />
+                                                        </div>
+                                                        {!this.state.per_Apellido_Materno_OK &&
+                                                            <span className="text-primary font-italic">
+                                                                NO requerido pero solo acepta letras, numeros y espacios.
+                                                </span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <label><strong>*</strong> Fecha nacimiento</label>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <input
+                                                                type="text"
+                                                                name="per_Fecha_Nacimiento"
+                                                                onChange={onChange}
+                                                                value={form.per_Fecha_Nacimiento}
+                                                                className="form-control"
+                                                                placeholder="DD/MM/AAAA"
+                                                            />
+                                                        </div>
+                                                        {per_Fecha_Nacimiento_NoValido &&
+                                                            <span className="text-danger">
+                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                </span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                {/* Boton para verificar duplicados */}
+                                                <div className="form-group">
+                                                    <div className="row">
+                                                        <div className="col-sm-2">
+                                                            <button
+                                                                type="button"
+                                                                onClick={handle_verificarDuplicados}
+                                                                className="btn btn-primary form-control"
+                                                            >
+                                                                <i>Continuar</i>
+                                                            </button>
+                                                        </div>
+                                                        {this.state.PersonaEncontrada === true &&
+                                                            <div className="col-sm-">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={handleIgnorarDuplicados}
+                                                                    className="btn btn-success form-control"
+                                                                >
+                                                                    <span
+                                                                        className="fa fa-check fa-sm"
+                                                                        style={{ paddingRight: "20px" }}>
                                                                     </span>
-                                                                }
+                                                                    <i>Ignorar duplicados y continuar</i>
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        <div className="col-sm-4"></div>
+                                                    </div>
+                                                </div>
+
+                                                {this.state.PersonaEncontrada === true &&
+                                                    <PersonaEncontrada
+                                                        datosPersonaEncontrada={this.state.datosPersonaEncontrada}
+                                                    />
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            {this.state.FrmValidaPersona === false &&
+                                <React.Fragment>
+                                    {this.state.PersonaEncontrada === false &&
+                                        <React.Fragment>
+                                            {/* Datos de validacion */}
+                                            <div className="row mx-auto mt-3">
+                                                <div className="col-sm-12">
+                                                    <div className="card border-info acceso-directo">
+                                                        <div className="card-body">
+                                                            <div className="form-group">
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            value={form.per_Nombre}
+                                                                            disabled
+                                                                        />
+                                                                        <label>Nombre</label>
+                                                                    </div>
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            value={form.per_Apellido_Paterno}
+                                                                            disabled
+                                                                        />
+                                                                        <label>Apellido paterno</label>
+                                                                    </div>
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            value={form.per_Apellido_Materno}
+                                                                            disabled
+                                                                        />
+                                                                        <label>Apellido materno</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            value={form.per_Categoria}
+                                                                            disabled
+                                                                        />
+                                                                        <label>Categoria</label>
+                                                                    </div>
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            value={form.per_Fecha_Nacimiento}
+                                                                            disabled
+                                                                        />
+                                                                        <label>Fecha de nacimiento</label>
+                                                                    </div>
+                                                                    <div className="col-sm-2">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-success form-control"
+                                                                            onClick={handleEditaNombre}
+                                                                        >
+                                                                            <span
+                                                                                className="fa fa-pencil fa-sm"
+                                                                                style={{ paddingRight: "10px" }}>
+                                                                            </span>
+                                                            Editar nombre
+                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Datos generales */}
+                                            <div className="row mx-auto mt-3">
+                                                <div className="col-sm-12">
+                                                    <div className="card border-info acceso-directo">
+                                                        <div className="card-header">
+                                                            <h5><strong>Datos Generales</strong></h5>
+                                                        </div>
+                                                        <div className="card-body">
+                                                            <div className="form-group">
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            name="per_Nacionalidad"
+                                                                            onChange={onChange}
+                                                                            className="form-control"
+                                                                            value={form.per_Nacionalidad}
+                                                                        />
+                                                                        <label>Nacionalidad</label>
+                                                                    </div>
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            name="per_Lugar_De_Nacimiento"
+                                                                            onChange={onChange}
+                                                                            className="form-control"
+                                                                            value={form.per_Lugar_De_Nacimiento}
+                                                                        />
+                                                                        <label>Lugar de nacimiento</label>
+                                                                    </div>
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            name="per_Email_Personal"
+                                                                            onChange={onChange}
+                                                                            className="form-control inputEmail"
+                                                                        />
+                                                                        <label>Email</label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="form-group">
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                        <select
+                                                                            name="pro_Id_Profesion_Oficio1"
+                                                                            className="form-control"
+                                                                            onChange={onChange}
+                                                                        >
+                                                                            {
+                                                                                this.state.profesiones_oficios.map((profesion_oficio) => {
+                                                                                    return (
+                                                                                        <option
+                                                                                            key={profesion_oficio.pro_Id_Profesion_Oficio}
+                                                                                            value={profesion_oficio.pro_Id_Profesion_Oficio}>
+                                                                                            {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
+                                                                                        </option>
+                                                                                    )
+                                                                                })
+                                                                            }
+                                                                        </select>
+                                                                        <label>Profesion oficio1</label>
+
+                                                                    </div>
+                                                                    <div className="col-sm-4">
+                                                                        <select
+                                                                            name="pro_Id_Profesion_Oficio2"
+                                                                            className="form-control"
+                                                                            onChange={onChange}
+                                                                        >
+                                                                            {
+                                                                                this.state.profesiones_oficios.map((profesion_oficio, i) => {
+                                                                                    return (
+                                                                                        <option
+                                                                                            key={profesion_oficio.pro_Id_Profesion_Oficio}
+                                                                                            value={profesion_oficio.pro_Id_Profesion_Oficio}>
+                                                                                            {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
+                                                                                        </option>
+                                                                                    )
+                                                                                })
+                                                                            }
+                                                                        </select>
+                                                                        <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesion oficio2</label>
+
+                                                                    </div>
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="text"
+                                                                            name="per_Telefono_Movil"
+                                                                            onChange={onChange}
+                                                                            className="form-control"
+                                                                        />
+                                                                        <label>Telefono movil</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="form-group">
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                        <input
+                                                                            type="file"
+                                                                            name="per_foto"
+                                                                            onChange={onChange}
+                                                                            className="form-control"
+                                                                        />
+                                                                        <label>Foto</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="form-group">
+                                                                <div className="row">
+                                                                    <div className="col-sm-12">
+                                                                        <textarea
+                                                                            name="per_Cargos_Desempenados"
+                                                                            onChange={onChange}
+                                                                            className="form-control"
+                                                                            value={form.per_Cargos_Desempenados}
+                                                                        ></textarea>
+                                                                        <label>Cargos desempeñados</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {this.state.infante === false &&
+                                                <React.Fragment>
+                                                    {/* Familia Asendente */}
+                                                    <div className="row mx-auto mt-3">
+                                                        <div className="col-sm-12">
+                                                            <div className="card border-info acceso-directo">
+                                                                <div className="card-header">
+                                                                    <h5><strong>Familia Asendente</strong></h5>
+                                                                </div>
+                                                                <div className="card-body">
+                                                                    <div className="form-group">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-6">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Nombre_Padre"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Padre</label>
+                                                                            </div>
+                                                                            <div className="col-sm-6">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Nombre_Madre"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Madre</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="form-group">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-6">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Nombre_Abuelo_Paterno"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Abuelo paterno</label>
+                                                                            </div>
+                                                                            <div className="col-sm-6">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Nombre_Abuela_Paterna"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Abuela paterna</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="form-group">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-6">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Nombre_Abuelo_Materno"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Abuelo materno</label>
+                                                                            </div>
+                                                                            <div className="col-sm-6">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Nombre_Abuela_Materna"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Abuela materna</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="form-group">
-                                                        <div className="row">
-                                                            <div className="col-sm-2">
-                                                                <label>Lugar boda eclesiastica</label>
+                                                    {/* Estado Civil */}
+                                                    <div className="row mx-auto mt-3">
+                                                        <div className="col-sm-12">
+                                                            <div className="card border-info acceso-directo">
+                                                                <div className="card-header">
+                                                                    <h5><strong>Estado Civil</strong></h5>
+                                                                </div>
+                                                                <div className="card-body">
+                                                                    <div className="form-group">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-4">
+                                                                                <select
+                                                                                    value={form.per_Estado_Civil}
+                                                                                    name="per_Estado_Civil"
+                                                                                    onChange={handle_per_Estado_Civil}
+                                                                                    className="form-control"
+                                                                                >
+                                                                                    <option value="SOLTERO(A)">Soltero/a SIN hijos</option>
+                                                                                    <option value="CASADO(A)">Casado/a</option>
+                                                                                    <option value="DIVORCIADO(A)">Divorciado/a</option>
+                                                                                    <option value="VIUDO(A)">Viudo/a</option>
+                                                                                    <option value="CONCUBINATO">Unión libre/concubinato</option>
+                                                                                    <option value="SOLTERO(A) CON HIJOS">Soltero/a CON hijos</option>
+                                                                                </select>
+                                                                                <label>Estado civil</label>
+                                                                            </div>
+
+                                                                            {/* Matrimonio */}
+                                                                            {this.state.CasadoDivorciadoViudo &&
+                                                                                <React.Fragment>
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Nombre_Conyuge"
+                                                                                            onChange={onChange}
+                                                                                            className="form-control"
+                                                                                        />
+                                                                                        <label>Nombre conyuge</label>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Fecha_Boda_Civil"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Fecha_Boda_Civil}
+                                                                                            placeholder="DD/MM/AAAA"
+                                                                                            className="form-control"
+                                                                                        />
+                                                                                        <label>Fecha boda civil</label>
+                                                                                    </div>
+                                                                                </React.Fragment>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                    {/* Matrimonio */}
+                                                                    {this.state.CasadoDivorciadoViudo &&
+                                                                        <React.Fragment>
+                                                                            <div className="form-group">
+                                                                                <div className="row">
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Num_Acta_Boda_Civil"
+                                                                                            onChange={onChange}
+                                                                                            className="form-control"
+                                                                                            value={form.per_Num_Acta_Boda_Civil}
+                                                                                        />
+                                                                                        <label>Num acta boda civil</label>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Libro_Acta_Boda_Civil"
+                                                                                            onChange={onChange}
+                                                                                            className="form-control"
+                                                                                            value={form.per_Libro_Acta_Boda_Civil}
+                                                                                        />
+                                                                                        <label>Libro acta boda civil</label>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Oficialia_Boda_Civil"
+                                                                                            onChange={onChange}
+                                                                                            className="form-control"
+                                                                                            value={form.per_Oficialia_Boda_Civil}
+                                                                                        />
+                                                                                        <label>Oficialia boda civil</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </React.Fragment>
+                                                                    }
+
+                                                                    {form.per_Bautizado &&
+                                                                        <React.Fragment>
+                                                                            <div className="form-group">
+                                                                                <div className="row">
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Fecha_Boda_Eclesiastica"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Fecha_Boda_Eclesiastica}
+                                                                                            placeholder="DD/MM/AAAA"
+                                                                                            className="form-control"
+                                                                                        />
+                                                                                        <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Lugar_Boda_Eclesiastica"
+                                                                                            onChange={onChange}
+                                                                                            className="form-control"
+                                                                                            value={form.per_Lugar_Boda_Eclesiastica}
+                                                                                        />
+                                                                                        <label>Lugar boda eclesiastica</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </React.Fragment>
+                                                                    }
+
+                                                                    {this.state.ConcubinatoSolteroConHijos &&
+                                                                        <React.Fragment>
+                                                                            <div id="hijos">
+                                                                                <div className="form-group">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-2">
+                                                                                            <input
+                                                                                                type="number"
+                                                                                                name="per_Cantidad_Hijos"
+                                                                                                onChange={onChange}
+                                                                                                className="form-control"
+                                                                                                value={form.per_Cantidad_Hijos}
+                                                                                            />
+                                                                                            <label>Cantidad hijos</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div className="form-group">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-12">
+                                                                                            <textarea
+                                                                                                name="per_Nombre_Hijos"
+                                                                                                onChange={onChange}
+                                                                                                value={form.per_Nombre_Hijos}
+                                                                                                className="form-control" ></textarea>
+                                                                                            <label>Nombre de los hijos</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </React.Fragment>
+                                                                    }
+                                                                    {/* {per_Fecha_Boda_Civil_NoValido &&
+                                                                        <span className="text-danger">
+                                                                            Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                            </span>
+                                                                    }
+                                                                    {per_Fecha_Boda_Eclesiastica_NoValido &&
+                                                                        <span className="text-danger">
+                                                                            Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                                    </span>
+                                                                    } */}
+                                                                </div>
                                                             </div>
-                                                            <div className="col-sm-4">
-                                                                <input
-                                                                    type="text"
-                                                                    name="per_Lugar_Boda_Eclesiastica"
-                                                                    onChange={onChange}
-                                                                    className="form-control"
-                                                                    value={form.per_Lugar_Boda_Eclesiastica}
-                                                                />
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Eclesiasticos */}
+                                                    <div className="row mx-auto mt-3">
+                                                        <div className="col-sm-12">
+                                                            <div className="card border-info acceso-directo">
+                                                                <div className="card-header">
+                                                                    <h5><strong>Eclesiasticos</strong></h5>
+                                                                </div>
+                                                                <div className="card-body">
+                                                                    {/* Bautismo */}
+                                                                    {form.per_Bautizado &&
+                                                                        <React.Fragment>
+                                                                            <div className="form-group">
+                                                                                <div className="row">
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Lugar_Bautismo"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Lugar_Bautismo}
+                                                                                            className="form-control"
+                                                                                        />
+                                                                                        <label>Lugar bautismo</label>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Ministro_Que_Bautizo"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Ministro_Que_Bautizo}
+                                                                                            className="form-control"
+                                                                                        />
+                                                                                        <label>Ministro que bautizo</label>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="per_Fecha_Bautismo"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Fecha_Bautismo}
+                                                                                            placeholder="DD/MM/AAAA"
+                                                                                            className="form-control"
+                                                                                        />
+                                                                                        <label>Fecha bautismo</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </React.Fragment>
+                                                                    }
+
+                                                                    <div className="form-group">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-4">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Fecha_Recibio_Espiritu_Santo"
+                                                                                    onChange={onChange}
+                                                                                    value={form.per_Fecha_Recibio_Espiritu_Santo}
+                                                                                    placeholder="DD/MM/AAAA"
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Fecha recibio Espiritu Santo</label>
+                                                                            </div>
+                                                                            <div className="col-sm-4">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="per_Bajo_Imposicion_De_Manos"
+                                                                                    onChange={onChange}
+                                                                                    value={form.per_Bajo_Imposicion_De_Manos}
+                                                                                    className="form-control"
+                                                                                />
+                                                                                <label>Bajo imposicion de manos</label>
+                                                                            </div>
+                                                                            {/* <div className="col-sm-4">
+                                            <input
+                                                type="checkbox"
+                                                name="PromesaDelEspirituSanto"
+                                                onChange={this.fnPromesaDelEspirituSanto}
+                                                className="form-control"
+                                            />
+                                            <label>Promesa del Espiritu Santo</label>
+                                        </div>
+                                        {this.state.PromesaDelEspitiruSanto &&
+                                            <React.Fragment>
+                                                
+                                                
+                                            </React.Fragment>
+                                        } */}
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div className="form-group">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-12">
+                                                                                <textarea
+                                                                                    name="per_Cambios_De_DomicilioRef"
+                                                                                    onChange={onChange}
+                                                                                    value={form.per_Cambios_De_DomicilioRef}
+                                                                                    className="form-control"></textarea>
+                                                                                <label>Cambios de domicilio</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {/* {per_Fecha_Recibio_Espiritu_Santo_NoValido &&
+                                                                    <span className="text-danger">
+                                                                        Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                        </span>
+                                                                }
+                                                                {per_Fecha_Bautismo_NoValido &&
+                                                                    <span className="text-danger">
+                                                                        Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                            </span>
+                                                                } */}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </React.Fragment>
                                             }
-                                        </React.Fragment>
-                                    }
 
-                                    {this.state.ConcubinatoSolteroConHijos &&
-                                        <React.Fragment>
-                                            <div id="hijos">
-                                                <div className="form-group">
-                                                    <div className="row">
-                                                        <div className="col-sm-2">
-                                                            <label>Cantidad hijos</label>
+
+                                            {/* Hogar */}
+                                            <div className="row mx-auto mt-3">
+                                                <div className="col-sm-12">
+                                                    <div className="card border-info acceso-directo">
+                                                        <div className="card-header">
+                                                            <h5><strong>Hogar / Domicilio</strong></h5>
                                                         </div>
-                                                        <div className="col-sm-4">
-                                                            <input
-                                                                type="number"
-                                                                name="per_Cantidad_Hijos"
-                                                                onChange={onChange}
-                                                                className="form-control"
-                                                                value={form.per_Cantidad_Hijos}
+                                                        <div className="card-body">
+                                                            <HogarPersonaDomicilio
+                                                                domicilio={domicilio}
+                                                                onChangeDomicilio={onChangeDomicilio}
+                                                                handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
+                                                                handle_hp_Jerarquia={this.handle_hp_Jerarquia}
                                                             />
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <div className="form-group">
-                                                    <div className="row">
-                                                        <div className="col-sm-2">
-                                                            <label>Nombre de los hijos</label>
-                                                        </div>
-                                                        <div className="col-sm-4">
-                                                            <textarea
-                                                                name="per_Nombre_Hijos"
-                                                                onChange={onChange}
-                                                                value={form.per_Nombre_Hijos}
-                                                                className="form-control" ></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
-                                        </React.Fragment>
-                                    }
-                                </div>
 
-                                {/* Eclesiasticos */}
-                                <div className="tab-pane fade" id="eclesiasticos" role="tabpanel" aria-labelledby="eclesiasticos-tab">
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-3">
-                                                <label>Promesa del Espiritu Santo</label>
-                                            </div>
-                                            <div className="col-sm-2">
-                                                <input
-                                                    type="checkbox"
-                                                    name="PromesaDelEspirituSanto"
-                                                    onChange={this.fnPromesaDelEspirituSanto}
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Bautismo */}
-                                    {form.per_Bautizado &&
-                                        <React.Fragment>
+                                            {/* Botones al final de formulario */}
                                             <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Lugar bautismo</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Lugar_Bautismo"
-                                                            onChange={onChange}
-                                                            value={form.per_Lugar_Bautismo}
-                                                            className="form-control"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Fecha bautismo</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Fecha_Bautismo"
-                                                            onChange={onChange}
-                                                            value={form.per_Fecha_Bautismo}
-                                                            placeholder="DD/MM/AAAA"
-                                                            className="form-control"
-                                                        />
-                                                    </div>
-                                                    <div className="col-sm-6">
-                                                        {per_Fecha_Bautismo_NoValido &&
-                                                            <span className="text-danger">
-                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                                            </span>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Ministro que bautizo</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Ministro_Que_Bautizo"
-                                                            onChange={onChange}
-                                                            value={form.per_Ministro_Que_Bautizo}
-                                                            className="form-control"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </React.Fragment>
-                                    }
-
-                                    {this.state.PromesaDelEspitiruSanto &&
-                                        <React.Fragment>
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Fecha recibio Espiritu Santo</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Fecha_Recibio_Espiritu_Santo"
-                                                            onChange={onChange}
-                                                            value={form.per_Fecha_Recibio_Espiritu_Santo}
-                                                            placeholder="DD/MM/AAAA"
-                                                            className="form-control"
-                                                        />
-                                                    </div>
-                                                    <div className="col-sm-6">
-                                                        {per_Fecha_Recibio_Espiritu_Santo_NoValido &&
-                                                            <span className="text-danger">
-                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                                            </span>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="form-group">
-                                                <div className="row">
-                                                    <div className="col-sm-2">
-                                                        <label>Bajo imposicion de manos</label>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <input
-                                                            type="text"
-                                                            name="per_Bajo_Imposicion_De_Manos"
-                                                            onChange={onChange}
-                                                            value={form.per_Bajo_Imposicion_De_Manos}
-                                                            className="form-control"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </React.Fragment>
-                                    }
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2">
-                                                <label>Cambios de domicilio</label>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <textarea
-                                                    name="per_Cambios_De_DomicilioRef"
-                                                    onChange={onChange}
-                                                    value={form.per_Cambios_De_DomicilioRef}
-                                                    className="form-control"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Hogar */}
-                                <div className="tab-pane fade" id="hogar" role="tabpanel" aria-labelledby="hogar-tab">
-                                    <HogarPersonaDomicilio
-                                        domicilio={domicilio}
-                                        onChangeDomicilio={onChangeDomicilio}
-                                        handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
-                                        handle_hp_Jerarquia={this.handle_hp_Jerarquia}
-                                    />
-
-                                    {/* Botones al final de formulario */}
-                                    <div className="form-group">
-                                        <div className="row">
-                                            <div className="col-sm-2 offset-sm-2">
-                                                <Link
-                                                    to="/ListaDePersonal"
-                                                    className="btn btn-success form-control"
-                                                >
-                                                    <span className="fa fa-backspace" style={{ paddingRight: "10px" }}></span>
+                                                <div className="row mt-3">
+                                                    <div className="col-sm-2 offset-sm-2">
+                                                        <Link
+                                                            to="/ListaDePersonal"
+                                                            className="btn btn-success form-control"
+                                                        >
+                                                            <span className="fa fa-backspace" style={{ paddingRight: "10px" }}></span>
                                                     Volver
                                                 </Link>
-                                            </div>
-                                            <div className="col-sm-2 offset-sm-2">
-                                                <button
-                                                    type="submit"
-                                                    className="btn btn-primary form-control"
-                                                >
-                                                    <span className="far fa-save" style={{ paddingRight: "10px" }}></span>
+                                                    </div>
+                                                    <div className="col-sm-2 offset-sm-2">
+                                                        <button
+                                                            type="submit"
+                                                            className="btn btn-primary form-control"
+                                                        >
+                                                            <span className="fa fa-save" style={{ paddingRight: "10px" }}></span>
                                                     Guardar
                                                 </button>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                        </React.Fragment>
+                                    }
+                                </React.Fragment>
+                            }
 
+                        </div>
+                        {/* </div> */}
                     </form>
                 </div>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }

@@ -5,6 +5,15 @@ import Global from '../Global';
 class PaisEstado extends React.Component {
 
     url = Global.url_api;
+    accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Im5zY19sdWlzQG5zY2NvLmNvbS5teCIsImp0aSI6ImQ4Nzg3NWE2LTUyMTAtNGEwNS1iMTg2LWI4MzFiYTBiNmNiNyIsImV4cCI6MTYxNzE3NjExNCwiaXNzIjoiaWVjZS10cHIuZGRucy5uZXQiLCJhdWQiOiJpZWNlIn0.v6UlX9_UosSQWQxRPIE-KacuhWZgSEnWle-rUsDrDxM';
+
+    authAxios = axios.create({
+        baseURL: this.url,
+        headers: {
+            Authorization: `Bearer ${this.accessToken}`
+        }
+    });
+
     constructor(props) {
         super(props);
         this.state = {
@@ -34,7 +43,7 @@ class PaisEstado extends React.Component {
     };
 
     getPaises = async () => {
-        await axios.get(this.url + "/pais")
+        await this.authAxios.get("/pais")
             .then(res => {
                 this.setState({
                     paises: res.data
@@ -50,57 +59,45 @@ class PaisEstado extends React.Component {
             this.getEstados(e.target.value)
             onChangeDomicilio(e)
         }
-        
+
         return (
             <React.Fragment>
-                <div className="form-group">
-                    <div className="row">
-                        <div className="col-sm-2">
-                            <label htmlFor="pais_Id_Pais">Pais</label>
-                        </div>
-                        <div className="col-sm-4">
-                            <select
-                                name="pais_Id_Pais"
-                                className="form-control"
-                                onChange={handle_pais_Id_Pais}
-                                value={domicilio.pais_Id_Pais}
-                            >
-                                <option value="0">Selecciona un pais</option>
-                                {
-                                    this.state.paises.map((pais) => {
-                                        return (
-                                            <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}> {pais.pais_Nombre} </option>
-                                        )
-                                    })
-                                }
-                            </select>
-                        </div>
-                    </div>
+                <div className="col-sm-4">
+                    <select
+                        name="pais_Id_Pais"
+                        className="form-control"
+                        onChange={handle_pais_Id_Pais}
+                        value={domicilio.pais_Id_Pais}
+                    >
+                        <option value="0">Selecciona un pais</option>
+                        {
+                            this.state.paises.map((pais) => {
+                                return (
+                                    <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}> {pais.pais_Nombre} </option>
+                                )
+                            })
+                        }
+                    </select>
+                    <label htmlFor="pais_Id_Pais">Pais</label>
                 </div>
                 {this.state.mostrarEstados &&
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-sm-2">
-                                <label>Estado</label>
-                            </div>
-                            <div className="col-sm-4">
-                                <select
-                                    name="est_Id_Estado"
-                                    className="form-control"
-                                    value={domicilio.est_Id_Estado}
-                                    onChange={onChangeDomicilio}
-                                >
-                                    <option value="0">Selecciona un estado</option>
-                                    {
-                                        this.state.estados.map((estado) => {
-                                            return (
-                                                <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}> {estado.est_Nombre} </option>
-                                            )
-                                        })
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                    <div className="col-sm-4">
+                        <select
+                            name="est_Id_Estado"
+                            className="form-control"
+                            value={domicilio.est_Id_Estado}
+                            onChange={onChangeDomicilio}
+                        >
+                            <option value="0">Selecciona un estado</option>
+                            {
+                                this.state.estados.map((estado) => {
+                                    return (
+                                        <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}> {estado.est_Nombre} </option>
+                                    )
+                                })
+                            }
+                        </select>
+                        <label>Estado</label>
                     </div>
                 }
             </React.Fragment>

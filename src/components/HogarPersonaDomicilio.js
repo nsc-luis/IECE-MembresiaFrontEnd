@@ -119,11 +119,11 @@ class Domicilio extends React.Component {
                             this.state.DatosHogarDomicilio.map((HogarDomicilio) => {
                                 return (
                                     <p key={HogarDomicilio.hd_Id_Hogar}>
-                                        {HogarDomicilio.hd_Calle} {HogarDomicilio.hd_Numero_Exterior}, {HogarDomicilio.hd_Numero_Interior} <br />
-                                                            Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
-                                        {HogarDomicilio.hd_Localidad}, {HogarDomicilio.hd_Municipio_Ciudad} <br />
-                                        {HogarDomicilio.est_Nombre}, {HogarDomicilio.pais_Nombre_Corto} <br />
-                                                            Telefono: {HogarDomicilio.hd_Telefono}
+                                        Calle: {HogarDomicilio.hd_Calle}, No.: {HogarDomicilio.hd_Numero_Exterior}, Interior: {HogarDomicilio.hd_Numero_Interior},
+                                        Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
+                                        Localidad: {HogarDomicilio.hd_Localidad}, Municipio/cuidad: {HogarDomicilio.hd_Municipio_Ciudad}, 
+                                        {HogarDomicilio.est_Nombre}, Pais: {HogarDomicilio.pais_Nombre_Corto} <br />
+                                        Telefono: {HogarDomicilio.hd_Telefono}
                                     </p>
                                 )
                             })
@@ -173,9 +173,6 @@ class Domicilio extends React.Component {
                     <React.Fragment>
                         <div className="form-group">
                             <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Calle</label>
-                                </div>
                                 <div className="col-sm-4">
                                     <input
                                         type="text"
@@ -184,13 +181,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Calle}
                                         onChange={onChangeDomicilio}
                                     />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Numero exterior</label>
+                                    <label>Calle</label>
                                 </div>
                                 <div className="col-sm-4">
                                     <input
@@ -200,13 +191,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Exterior}
                                         onChange={onChangeDomicilio}
                                     />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Numero interior</label>
+                                    <label>Numero exterior</label>
                                 </div>
                                 <div className="col-sm-4">
                                     <input
@@ -216,97 +201,81 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Interior}
                                         onChange={onChangeDomicilio}
                                     />
+                                    <label>Numero interior</label>
                                 </div>
                             </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Tipo subdivision</label>
-                                </div>
-                                <div className="col-sm-4">
-                                    <select
-                                        name="hd_Tipo_Subdivision"
-                                        className="form-control"
-                                        value={domicilio.hd_Tipo_Subdivision}
-                                        onChange={onChangeDomicilio}
-                                    >
-                                        <option value="COL">COLONIA</option>
-                                        <option value="FRACC">FRACC</option>
-                                        <option value="EJ">EJIDO</option>
-                                        <option value="SUBDIV">SUBDIV</option>
-                                        <option value="BRGY">BRGY</option>
-                                        <option value="RANCHO">RANCHO</option>
-                                        <option value="MANZANA">MANZANA</option>
-                                        <option value="RESIDENCIAL">RESIDENCIAL</option>
-                                        <option value="SECTOR">SECTOR</option>
-                                        <option value="SECCIÓN">SECCIÓN</option>
-                                        <option value="UNIDAD">UNIDAD</option>
-                                        <option value="BARRIO">BARRIO</option>
-                                        <option value="ZONA">ZONA</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Subdivision</label>
-                                </div>
-                                <div className="col-sm-4">
-                                    <input
-                                        type="text"
-                                        name="hd_Subdivision"
-                                        className="form-control"
-                                        value={domicilio.hd_Subdivision}
-                                        onChange={onChangeDomicilio}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Localidad</label>
-                                </div>
-                                <div className="col-sm-4">
-                                    <input
-                                        type="text"
-                                        name="hd_Localidad"
-                                        className="form-control"
-                                        value={domicilio.hd_Localidad}
-                                        onChange={onChangeDomicilio}
-                                    />
+                            <div className="form-group">
+                                <div className="row">
+                                    <div className="col-sm-4">
+                                        <select
+                                            name="hd_Tipo_Subdivision"
+                                            className="form-control"
+                                            value={domicilio.hd_Tipo_Subdivision}
+                                            onChange={onChangeDomicilio}
+                                        >
+                                            <option value="COL">COLONIA</option>
+                                            <option value="FRACC">FRACC</option>
+                                            <option value="EJ">EJIDO</option>
+                                            <option value="SUBDIV">SUBDIV</option>
+                                            <option value="BRGY">BRGY</option>
+                                            <option value="RANCHO">RANCHO</option>
+                                            <option value="MANZANA">MANZANA</option>
+                                            <option value="RESIDENCIAL">RESIDENCIAL</option>
+                                            <option value="SECTOR">SECTOR</option>
+                                            <option value="SECCIÓN">SECCIÓN</option>
+                                            <option value="UNIDAD">UNIDAD</option>
+                                            <option value="BARRIO">BARRIO</option>
+                                            <option value="ZONA">ZONA</option>
+                                        </select>
+                                        <label>Tipo subdivision</label>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
+                                            name="hd_Subdivision"
+                                            className="form-control"
+                                            value={domicilio.hd_Subdivision}
+                                            onChange={onChangeDomicilio}
+                                        />
+                                        <label>Subdivision</label>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
+                                            name="hd_Localidad"
+                                            className="form-control"
+                                            value={domicilio.hd_Localidad}
+                                            onChange={onChangeDomicilio}
+                                        />
+                                        <label>Localidad</label>
+                                    </div>
+
                                 </div>
                             </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Municipio/Cuidad</label>
-                                </div>
-                                <div className="col-sm-4">
-                                    <input
-                                        type="text"
-                                        name="hd_Municipio_Cuidad"
-                                        className="form-control"
-                                        value={domicilio.hd_Municipio_Cuidad}
-                                        onChange={onChangeDomicilio}
+                            <div className="form-group">
+                                <div className="row">
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
+                                            name="hd_Municipio_Cuidad"
+                                            className="form-control"
+                                            value={domicilio.hd_Municipio_Cuidad}
+                                            onChange={onChangeDomicilio}
+                                        />
+                                        <label>Municipio/Cuidad</label>
+                                    </div>
+                                    <PaisEstado
+                                        domicilio={domicilio}
+                                        onChangeDomicilio={onChangeDomicilio}
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <PaisEstado
-                            domicilio={domicilio}
-                            onChangeDomicilio={onChangeDomicilio}
-                        />
+
 
                         <div className="form-group">
                             <div className="row">
-                                <div className="col-sm-2">
-                                    <label>Telefono</label>
-                                </div>
                                 <div className="col-sm-4">
                                     <input
                                         type="text"
@@ -315,6 +284,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Telefono}
                                         onChange={onChangeDomicilio}
                                     />
+                                    <label>Telefono</label>
                                 </div>
                             </div>
                         </div>
