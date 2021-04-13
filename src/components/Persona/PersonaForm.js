@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import '../assets/css/PersonaForm.css'
+import '../../assets/css/PersonaForm.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
-import Global from '../Global';
-import { Link } from 'react-router-dom';
-import PersonaEncontrada from '../components/PersonaEncontrada'
+import Global from '../../Global';
+import { Link, Redirect } from 'react-router-dom';
+import PersonaEncontrada from './PersonaEncontrada'
 import HogarPersonaDomicilio from './HogarPersonaDomicilio';
-import Distritos from './Distritos';
-import Sectores from './Sectores';
+import Modal from 'react-modal';
 
 class PersonaForm extends Component {
 
@@ -34,8 +33,19 @@ class PersonaForm extends Component {
             per_Apellido_Materno_OK: false,
             hd_Id_Hogar: "0",
             hp_Jerarquia: "1",
-            redirect: false
+            redirect: false,
+            showModalAltaPersona: false
         }
+    }
+
+    openModalAltaPersona = () => {
+        this.setState({
+            showModalAltaPersona: true
+        });
+    }
+    closeModalAltaPersona = () => {
+        this.setState({ showModalAltaPersona: false });
+        return <Redirect to='/ListaDePersonal' />;
     }
 
     handle_dis_Id_Distrito = (e) => {
@@ -312,9 +322,11 @@ class PersonaForm extends Component {
                 }
                 fnGuardaPersona(PersonaDomicilioHogar)
                 this.setState({ redirect: true })
+                this.openModalAltaPersona()
             } else {
                 fnGuardaPersonaEnHogar(objPersona, this.state.hp_Jerarquia, this.state.hd_Id_Hogar)
                 this.setState({ redirect: true })
+                this.openModalAltaPersona()
             }
         }
 
@@ -1172,7 +1184,21 @@ class PersonaForm extends Component {
                         {/* </div> */}
                     </form>
                 </div>
-            </React.Fragment >
+                <Modal // Datos generales
+                    isOpen={this.state.showModalAltaPersona}
+                    className="modalStyle"
+                >
+                    <div className="card border-info">
+                        <div className="card-header text-center">
+                            <h5><strong>AVISO!</strong></h5>
+                        </div>
+                        <div className="card-body">
+                            La persona fue dada de alta correctamente.
+                        </div>
+                        <button className="btn btn-sm btn-secondary" onClick={this.closeModalAltaPersona}>Cerrar</button>
+                    </div>
+                </Modal>
+            </React.Fragment>
         );
     }
 }

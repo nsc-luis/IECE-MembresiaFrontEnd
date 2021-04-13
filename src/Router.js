@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import ListaDePersonal from './pages/ListaDePersonal';
+import ListaDePersonal from './components/Persona/ListaDePersonal';
 import Home from './pages/Home';
-import RegistroDePersonal from './pages/RegistroDePersona';
+import RegistroDePersonal from './components/Persona/RegistroDePersona';
 import PaginaNoEncontrada from './pages/PaginaNoEncontrada';
-import Login from './pages/Login';
-import Sidebar from './components/Sidebar';
-import Topbar from './components/Topbar';
-import Footer from './components/Footer';
+import Login from './components/auth/Login';
+import Sidebar from './components/nav/Sidebar';
+import Topbar from './components/nav/Topbar';
+import Footer from './components/nav/Footer';
 
 class Router extends Component {
     constructor(props) {
@@ -42,6 +42,7 @@ class Router extends Component {
                                         <Route exact path="/" component={Home} />
                                         <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
                                         <Route exact path="/RegistroDePersonal" component={RegistroDePersonal} />
+                                        <Route exact path="/Login" component={Login} />
 
                                         <Route component={PaginaNoEncontrada} />
                                     </Switch>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import PersonaForm from '../components/PersonaForm';
+import PersonaForm from './PersonaForm';
 import axios from 'axios';
-import Global from '../Global';
+import Global from '../../Global';
 import { v4 as uuidv4 } from 'uuid';
 import { Redirect } from 'react-router-dom';
 

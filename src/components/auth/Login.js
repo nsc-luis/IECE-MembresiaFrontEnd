@@ -1,7 +1,43 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Globales from '../../Global';
+import axios from 'axios';
 
 class Login extends Component {
+
+    url = Globales.url_api;
+    constructor(props) {
+        super(props);
+        this.state = {
+            token: "",
+            credenciales: {}
+        }
+    }
+
+    handleChange = (e) => {
+        this.setState({
+            credenciales: {
+                ...this.state.credenciales,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+
+    Login = async (e) => {
+        e.preventDefault();
+        await axios.post(
+            this.url + '/usuario/login',
+            this.state.credenciales)
+            .then(res => {
+                this.setState({
+                    token: res.data.token
+                });
+                localStorage.setItem('token', this.state.token);
+                localStorage.setItem('emailUser', this.state.credenciales.Email);
+                console.log(localStorage.getItem('token'));
+            });        
+    }    
+
     render() {
         return (
             <React.Fragment>
@@ -23,12 +59,12 @@ class Login extends Component {
                                                 <div className="text-center">
                                                     <h1 className="h4 text-gray-900 mb-4">Bienvenido!</h1>
                                                 </div>
-                                                <form className="user">
+                                                <form onSubmit={this.Login} className="user">
                                                     <div className="form-group">
-                                                        <input type="email" className="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Direccion Email" />
+                                                        <input type="email" name="Email" onChange={this.handleChange} className="form-control form-control-user" id="exampleInputEmail" value={this.state.email} aria-describedby="emailHelp" placeholder="Direccion Email" />
                                                     </div>
                                                     <div className="form-group">
-                                                        <input type="password" className="form-control form-control-user" id="exampleInputPassword" placeholder="Contraseña" />
+                                                        <input type="password" name="Password" onChange={this.handleChange} className="form-control form-control-user" value={this.state.contrasena} id="exampleInputPassword" placeholder="Contraseña" />
                                                     </div>
                                                     {/* <div className="form-group">
                                                                 <div className="custom-control custom-checkbox small">
@@ -36,9 +72,12 @@ class Login extends Component {
                                                                     <label className="custom-control-label" for="customCheck">Remember Me</label>
                                                                 </div>
                                                             </div> */}
-                                                    <Link to="Home" className="btn btn-primary btn-user btn-block">
+                                                    {/* <Link to="Home" className="btn btn-primary btn-user btn-block">
                                                         Iniciar sesion
-                    </Link>
+                    </Link> */}
+                                                    <button type="submit">
+                                                        Iniciar sesion
+                    </button>
                                                     {/* <hr />
                                                             <Link To="Home" className="btn btn-google btn-user btn-block">
                                                                 <i className="fab fa-google fa-fw"></i> Login with Google

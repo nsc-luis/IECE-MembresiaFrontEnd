@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import Global from '../Global'
-import PaisEstado from './PaisEstado';
+import Global from '../../Global'
+import PaisEstado from '../PaisEstado';
 
 class Domicilio extends React.Component {
     url = Global.url_api;

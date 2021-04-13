@@ -5,7 +5,7 @@ import Global from '../Global';
 class PaisEstado extends React.Component {
 
     url = Global.url_api;
-    accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Im5zY19sdWlzQG5zY2NvLmNvbS5teCIsImp0aSI6ImQ4Nzg3NWE2LTUyMTAtNGEwNS1iMTg2LWI4MzFiYTBiNmNiNyIsImV4cCI6MTYxNzE3NjExNCwiaXNzIjoiaWVjZS10cHIuZGRucy5uZXQiLCJhdWQiOiJpZWNlIn0.v6UlX9_UosSQWQxRPIE-KacuhWZgSEnWle-rUsDrDxM';
+    accessToken = localStorage.getItem('token');
 
     authAxios = axios.create({
         baseURL: this.url,
