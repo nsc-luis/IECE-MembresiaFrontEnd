@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import PersonaForm from './PersonaForm';
+import PersonaForm from '../../components/PersonaForm';
 import axios from 'axios';
 import Global from '../../Global';
 import { v4 as uuidv4 } from 'uuid';
-import { Redirect } from 'react-router-dom';
+import Layout from '../Layout';
 
 class RegistroDePersonal extends Component {
 
@@ -20,10 +20,6 @@ class RegistroDePersonal extends Component {
             per_Nombre_NoValido: true,
             per_Apellido_Paterno_NoValido: true,
             per_Fecha_Nacimiento_NoValido: true,
-            per_Fecha_Boda_Civil_NoValido: true,
-            per_Fecha_Boda_Eclesiastica_NoValido: true,
-            per_Fecha_Bautismo_NoValido: true,
-            per_Fecha_Recibio_Espiritu_Santo_NoValido: true,
         }
     }
 
@@ -41,7 +37,7 @@ class RegistroDePersonal extends Component {
                 pro_Id_Profesion_Oficio1: "1",
                 pro_Id_Profesion_Oficio2: "1",
                 per_Fecha_Boda_Civil: "01/01/1900",
-                per_Fecha_Ecelsiastica: "01/01/1900",
+                per_Fecha_Boda_Eclesiastica: "01/01/1900",
                 per_Fecha_Bautismo: "01/01/1900",
                 per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
                 per_Cargos_Desempenados: ""
@@ -214,42 +210,6 @@ class RegistroDePersonal extends Component {
 
             }
         }
-        if (e.target.name === "per_Fecha_Boda_Civil") {
-            if (!this.const_regex.formatoFecha.test(e.target.value)) {
-                this.setState({ per_Fecha_Boda_Civil_NoValido: true });
-            } else {
-                this.setState({
-                    per_Fecha_Boda_Civil_NoValido: false
-                });
-            }
-        }
-        if (e.target.name === "per_Fecha_Boda_Eclesiastica") {
-            if (!this.const_regex.formatoFecha.test(e.target.value)) {
-                this.setState({ per_Fecha_Boda_Eclesiastica_NoValido: true });
-            } else {
-                this.setState({
-                    per_Fecha_Boda_Eclesiastica_NoValido: false
-                });
-            }
-        }
-        if (e.target.name === "per_Fecha_Bautismo") {
-            if (!this.const_regex.formatoFecha.test(e.target.value)) {
-                this.setState({ per_Fecha_Bautismo_NoValido: true });
-            } else {
-                this.setState({
-                    per_Fecha_Bautismo_NoValido: false
-                });
-            }
-        }
-        if (e.target.name === "per_Fecha_Recibio_Espiritu_Santo") {
-            if (!this.const_regex.formatoFecha.test(e.target.value)) {
-                this.setState({ per_Fecha_Recibio_Espiritu_Santo_NoValido: true });
-            } else {
-                this.setState({
-                    per_Fecha_Recibio_Espiritu_Santo_NoValido: false
-                });
-            }
-        }
     }
 
     changeRFCSinHomo = (str) => {
@@ -271,27 +231,43 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
-        const res = await axios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
-        if (res.data.status) {
-            return <Redirect to="/ListaDePersonal" />
-        } else {
-            return res.data
+        try {
+            await axios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
+            .then(res => {
+                if (res.data.status === "success") {
+                    alert("Datos guardados satisfactoriamente");
+                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                } else {
+                    alert("Error: No se pudo guardar. Revise los datos ingresados");
+                }
+            });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
-        
     }
 
     fnGuardaPersonaEnHogar = async(datos, jerarquia, hdId) => {
-        const res = await axios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
-        if (res.data.status) {
-            return <Redirect to="/ListaDePersonal" />
-        } else {
-            return res.data
+        try {
+            await axios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
+            .then(res => {
+                if (res.data.status === "success") {
+                    alert("Datos guardados satisfactoriamente");
+                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                } else {
+                    alert("Error: No se pudo guardar. Revise los datos ingresados");
+                }
+            })
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
     }
 
     render() {
 
         return (
+            <Layout>
             <PersonaForm
                 onChange={this.handleChange}
                 form={this.state.form}
@@ -303,15 +279,12 @@ class RegistroDePersonal extends Component {
                 per_Nombre_NoValido={this.state.per_Nombre_NoValido}
                 per_Apellido_Paterno_NoValido={this.state.per_Apellido_Paterno_NoValido}
                 per_Fecha_Nacimiento_NoValido={this.state.per_Fecha_Nacimiento_NoValido}
-                per_Fecha_Boda_Civil_NoValido={this.state.per_Fecha_Boda_Civil_NoValido}
-                per_Fecha_Boda_Eclesiastica_NoValido={this.state.per_Fecha_Boda_Eclesiastica_NoValido}
-                per_Fecha_Bautismo_NoValido={this.state.per_Fecha_Bautismo_NoValido}
-                per_Fecha_Recibio_Espiritu_Santo_NoValido={this.state.per_Fecha_Recibio_Espiritu_Santo_NoValido}
                 changeRFCSinHomo={this.changeRFCSinHomo}
                 changeEstadoCivil={this.changeEstadoCivil}
                 fnGuardaPersona={this.fnGuardaPersona}
                 fnGuardaPersonaEnHogar={this.fnGuardaPersonaEnHogar}
             />
+            </Layout>
         )
     }
 }

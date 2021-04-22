@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
-import '../../assets/css/PersonaForm.css'
+import '../assets/css/PersonaForm.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
-import Global from '../../Global';
+import Global from '../Global';
 import { Link, Redirect } from 'react-router-dom';
 import PersonaEncontrada from './PersonaEncontrada'
-import HogarPersonaDomicilio from './HogarPersonaDomicilio';
+import HogarPersonaDomicilio from '../components/HogarPersonaDomicilio';
 import Modal from 'react-modal';
+import {
+    Container, Row, Col, Form, FormGroup, Input, Button,
+    FormFeedback, CardTitle, Card, CardBody, CardHeader
+} from 'reactstrap';
 
 class PersonaForm extends Component {
 
     url = Global.url_api;
-    fechaNoIngresada = "1900-01-01";
+    fechaNoIngresada = "01/01/1900";
+
+    // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
+    const_regex = {
+        alphaSpaceRequired: /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/,
+        formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
+        formatoEmail: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        formatoTelefono: /^(\+\d{1,3})*(\(\d{2,3}\))*\d{7,25}$/
+    }
 
     constructor(props) {
         super(props)
@@ -34,7 +46,14 @@ class PersonaForm extends Component {
             hd_Id_Hogar: "0",
             hp_Jerarquia: "1",
             redirect: false,
-            showModalAltaPersona: false
+            showModalAltaPersona: false,
+            emailInvalido: false,
+            fechaBautismoInvalida: false,
+            fechaBodaCivilInvalida: false,
+            fechaEspitiruSantoInvalida: false,
+            fechaBodaEclesiasticaInvalida: false,
+            telMovilInvalido: false,
+            mensajes: {}
         }
     }
 
@@ -76,6 +95,17 @@ class PersonaForm extends Component {
 
     componentWillMount() {
         this.getProfesionesOficios();
+        this.setState({
+            mensajes: {
+                ...this.state.mensajes,
+                emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
+                fechaBautismoInvalida: 'Formato admintido: dd/mm/aaaa.',
+                fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
+                fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
+                fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
+                telMovilInvalido: 'Formatos admintidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 numeros sin espacios.',
+            }
+        });
     };
 
     getProfesionesOficios = () => {
@@ -87,6 +117,7 @@ class PersonaForm extends Component {
                 });
             });
     };
+
 
     fnPromesaDelEspirituSanto = (e) => {
         if (e.target.checked) {
@@ -104,6 +135,7 @@ class PersonaForm extends Component {
             this.setState({ hp_Jerarquia: "1" })
         }
     }
+
 
     handle_hp_Jerarquia = (e) => {
         this.setState({
@@ -123,10 +155,6 @@ class PersonaForm extends Component {
             per_Nombre_NoValido,
             per_Apellido_Paterno_NoValido,
             per_Fecha_Nacimiento_NoValido,
-            per_Fecha_Boda_Civil_NoValido,
-            per_Fecha_Boda_Eclesiastica_NoValido,
-            per_Fecha_Bautismo_NoValido,
-            per_Fecha_Recibio_Espiritu_Santo_NoValido,
             changeRFCSinHomo,
             changeEstadoCivil,
             fnGuardaPersona,
@@ -136,6 +164,7 @@ class PersonaForm extends Component {
         const per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
         const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
 
+        // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
         const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
             // Obtener primera letra del apellido paterno
             var ap = per_Apellido_Paterno.split("")
@@ -156,6 +185,7 @@ class PersonaForm extends Component {
             getPersonaByRFCSinHomo(RFCSinHomo);
         }
 
+        // RECUPERA INFO DE PERSONA DUPLICADA DE ACUERDO AL RFC (SIN HOMOCLAVE)
         const getPersonaByRFCSinHomo = async (str) => {
             await axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
                 .then(res => {
@@ -165,41 +195,15 @@ class PersonaForm extends Component {
                             FrmValidaPersona: true,
                             datosPersonaEncontrada: res.data.persona[0]
                         })
-                        //DeshabilitaPestanas()
                     } else {
                         this.setState({
                             PersonaEncontrada: false,
                             FrmValidaPersona: false,
                             datosPersonaEncontrada: []
                         })
-                        //HabilitarPestanas(form.per_Categoria)
                     }
                 })
         }
-
-        /* const HabilitarPestanas = (per_Categoria) => {
-            if (per_Categoria === "ADULTO_HOMBRE" || per_Categoria === "ADULTO_MUJER") {
-                document.getElementById("generales-tab").classList.remove("disabled", "pertanaDeshabilitada")
-                document.getElementById("familiaAsendente-tab").classList.remove("disabled", "pertanaDeshabilitada")
-                document.getElementById("eclesiasticos-tab").classList.remove("disabled", "pertanaDeshabilitada")
-                document.getElementById("estado-civil-tab").classList.remove("disabled", "pertanaDeshabilitada")
-                document.getElementById("hogar-tab").classList.remove("disabled", "pertanaDeshabilitada")
-            }
-            if (per_Categoria === "JOVEN_HOMBRE" || per_Categoria === "JOVEN_MUJER") {
-                document.getElementById("generales-tab").classList.remove("disabled", "pertanaDeshabilitada")
-                document.getElementById("familiaAsendente-tab").classList.add("disabled", "pertanaDeshabilitada")
-                document.getElementById("eclesiasticos-tab").classList.remove("disabled", "pertanaDeshabilitada")
-                document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
-                document.getElementById("hogar-tab").classList.remove("disabled", "pertanaDeshabilitada")
-            }
-            if (per_Categoria === "NIÑO" || per_Categoria === "NIÑA") {
-                document.getElementById("generales-tab").classList.add("disabled", "pertanaDeshabilitada")
-                document.getElementById("familiaAsendente-tab").classList.add("disabled", "pertanaDeshabilitada")
-                document.getElementById("eclesiasticos-tab").classList.add("disabled", "pertanaDeshabilitada")
-                document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
-                document.getElementById("hogar-tab").classList.remove("disabled", "pertanaDeshabilitada")
-            }
-        } */
 
         const handleIgnorarDuplicados = () => {
             this.setState({
@@ -207,17 +211,9 @@ class PersonaForm extends Component {
                 FrmValidaPersona: false,
                 datosPersonaEncontrada: []
             })
-            // HabilitarPestanas(form.per_Categoria)
         }
 
-        /* const DeshabilitaPestanas = () => {
-            document.getElementById("generales-tab").classList.add("disabled", "pertanaDeshabilitada")
-            document.getElementById("familiaAsendente-tab").classList.add("disabled", "pertanaDeshabilitada")
-            document.getElementById("eclesiasticos-tab").classList.add("disabled", "pertanaDeshabilitada")
-            document.getElementById("estado-civil-tab").classList.add("disabled", "pertanaDeshabilitada")
-            document.getElementById("hogar-tab").classList.add("disabled", "pertanaDeshabilitada")
-        } */
-
+        // FUNCION QUE REVISA DUPLICADOS DEACUERDO A RFC (SIN HOMOCLAVE)
         const handle_verificarDuplicados = (e) => {
             if (categoriaSeleccionada
                 && !per_Nombre_NoValido
@@ -240,12 +236,6 @@ class PersonaForm extends Component {
 
                     CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
 
-                    /* if (this.state.PersonaEncontrada) {
-                        DeshabilitaPestanas()
-                    } else {
-                        HabilitarPestanas(form.per_Categoria)
-                    } */
-
                 } else {
                     this.setState({ per_Apellido_Materno_OK: false })
                     alert("Debes capturar correctamente los campos requeridos.")
@@ -256,6 +246,7 @@ class PersonaForm extends Component {
             }
         }
 
+        // FUNCION PARA MOSTRAR FORMULARIO DE EDICION DE CAMPOS GENERALES
         const handleEditaNombre = () => {
             this.setState({
                 PersonaEncontrada: false,
@@ -263,6 +254,7 @@ class PersonaForm extends Component {
             });
         }
 
+        // FUNCION PARA MOSTRAR CAMPOS DE ACUERDO AL ESTADO CIVIL
         const handle_per_Estado_Civil = (e) => {
             if (e.target.value === 'CASADO(A)'
                 || e.target.value === 'DIVORCIADO(A)'
@@ -290,19 +282,25 @@ class PersonaForm extends Component {
             changeEstadoCivil(e.target.value)
         }
 
+        // FUNCION PARA FORMATO DE FECHAS PARA BD
         const fnFormatoFecha = (fecha) => {
             let sub = fecha.split("/")
             let fechaFormateada = sub[1] + "/" + sub[0] + "/" + sub[2]
             return fechaFormateada
         }
 
-        const fechas = [
-            "per_Fecha_Bautismo",
-            "per_Fecha_Boda_Civil",
-            "per_Fecha_Ecelsiastica",
-            "per_Fecha_Nacimiento",
-            "per_Fecha_Recibio_Espiritu_Santo"
-        ]
+        // FUNCION PARA VALIDAR CAMPOS
+        const validaFormatos = (formato, campo, estado) => {
+            if (!this.const_regex[formato].test(campo)) {
+                this.setState({
+                    [estado]: true
+                })
+            } else {
+                this.setState({
+                    [estado]: false
+                })
+            }
+        }
 
         const enviarInfo = (e) => {
             e.preventDefault();
@@ -310,23 +308,49 @@ class PersonaForm extends Component {
             let objPersona = this.props.form
             let objDomicilio = this.props.domicilio
 
+            // RESTRUCTURA FECHAS
+            var  fechas = [
+                "per_Fecha_Bautismo",
+                "per_Fecha_Boda_Civil",
+                "per_Fecha_Boda_Eclesiastica",
+                "per_Fecha_Nacimiento",
+                "per_Fecha_Recibio_Espiritu_Santo"
+            ]
+            console.log(fechas)
             fechas.forEach(fecha => {
                 objPersona[fecha] = fnFormatoFecha(objPersona[fecha])
             });
 
-            if (this.state.hd_Id_Hogar === "0") {
-                let PersonaDomicilioHogar = {
-                    id: 1,
-                    PersonaEntity: objPersona,
-                    HogarDomicilioEntity: objDomicilio
-                }
-                fnGuardaPersona(PersonaDomicilioHogar)
-                this.setState({ redirect: true })
-                this.openModalAltaPersona()
+            // VALIDA CAMPOS DE PERSONA
+            var camposPersonaAValidar = [
+                {formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida"},
+                {formato: "formatoFecha", campo: "per_Fecha_Boda_Civil", estado: "fechaBodaCivilInvalida"},
+                {formato: "formatoFecha", campo: "per_Fecha_Boda_Eclesiastica", estado: "fechaBodaEclesiasticaInvalida"},
+                {formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida"},
+                {formato: "formatoEmail", campo: "per_Email_Personal", estado: "emailInvalido"},
+                {formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido"}
+            ]
+            camposPersonaAValidar.forEach(element => {
+                validaFormatos(element.formato, objPersona[element.campo], element.estado)
+            });
+            
+            if (!this.state.emailInvalido && !this.state.fechaBautismoInvalida &&
+                !this.state.fechaBodaCivilInvalida && !this.state.fechaEspitiruSantoInvalida &&
+                !this.state.fechaBodaEclesiasticaInvalida) {
+
+                /* if (this.state.hd_Id_Hogar === "0") {
+                    let PersonaDomicilioHogar = {
+                        id: 1,
+                        PersonaEntity: objPersona,
+                        HogarDomicilioEntity: objDomicilio
+                    }
+                    fnGuardaPersona(PersonaDomicilioHogar)
+                } else {
+                    fnGuardaPersonaEnHogar(objPersona, this.state.hp_Jerarquia, this.state.hd_Id_Hogar)
+                } */
+                console.log("Success: Campos validados")
             } else {
-                fnGuardaPersonaEnHogar(objPersona, this.state.hp_Jerarquia, this.state.hd_Id_Hogar)
-                this.setState({ redirect: true })
-                this.openModalAltaPersona()
+                console.log("Error: Campos invalidos")
             }
         }
 
@@ -335,22 +359,22 @@ class PersonaForm extends Component {
                 <h2 className="text-info">Agregar nuevo miembro</h2>
 
                 <div className="border">
-                    <form onSubmit={enviarInfo} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
-                        <div className="container">
+                    <Form onSubmit={enviarInfo} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
+                        <Container>
 
                             {/* Verificar Nuevo Registro / Datos personales */}
                             {this.state.FrmValidaPersona &&
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="card border-info acceso-directo">
-                                            <div className="card-header">
+                                <Row>
+                                    <Col xs="12">
+                                        <Card className="border-info acceso-directo">
+                                            <CardHeader>
                                                 <h5><strong>Datos Personales</strong></h5>
-                                            </div>
-                                            <div className="card-body">
+                                            </CardHeader>
+                                            <CardBody>
                                                 <div className="alert alert-warning mt-3" role="alert">
                                                     <h5><strong>AVISO: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
                                                 </div>
-                                                {/* <div className="form-group">
+                                                {/* <FormGroup>
                                                 <Distritos
                                                     handle_dis_Id_Distrito={this.handle_dis_Id_Distrito}
                                                 />
@@ -364,13 +388,13 @@ class PersonaForm extends Component {
                                             </div>
                                             <hr /> */}
 
-                                                <div className="form-group">
+                                                <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <label><strong>*</strong> Categoria</label>
+                                                            <label><strong>*</strong>Categoria</label>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <select
+                                                            <Input type="select"
                                                                 name="per_Categoria"
                                                                 onChange={onChange}
                                                                 className="form-control"
@@ -383,7 +407,7 @@ class PersonaForm extends Component {
                                                                 <option value="JOVEN_MUJER">Joven mujer</option>
                                                                 <option value="NIÑO">Niño</option>
                                                                 <option value="NIÑA">Niña</option>
-                                                            </select>
+                                                            </Input>
                                                         </div>
                                                         {categoriaSeleccionada &&
                                                             <span className="text-primary font-weight-bold font-italic">
@@ -396,15 +420,15 @@ class PersonaForm extends Component {
                                                             </span>
                                                         }
                                                     </div>
-                                                </div>
+                                                </FormGroup>
                                                 {habilitaPerBautizado &&
-                                                    <div className="form-group">
+                                                    <FormGroup>
                                                         <div className="row">
                                                             <div className="col-sm-3">
                                                                 <label>Bautizado</label>
                                                             </div>
                                                             <div className="col-sm-2">
-                                                                <input
+                                                                <Input
                                                                     type="checkbox"
                                                                     name="per_Bautizado"
                                                                     onChange={onChange}
@@ -412,16 +436,16 @@ class PersonaForm extends Component {
                                                                 />
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </FormGroup>
                                                 }
 
-                                                <div className="form-group">
+                                                <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
                                                             <label><strong>*</strong> Nombre</label>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <input
+                                                            <Input
                                                                 type="text"
                                                                 name="per_Nombre"
                                                                 onChange={onChange}
@@ -435,15 +459,15 @@ class PersonaForm extends Component {
                                                 </span>
                                                         }
                                                     </div>
-                                                </div>
+                                                </FormGroup>
 
-                                                <div className="form-group">
+                                                <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
                                                             <label><strong>*</strong> Apellido paterno</label>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <input
+                                                            <Input
                                                                 type="text"
                                                                 name="per_Apellido_Paterno"
                                                                 onChange={onChange}
@@ -457,15 +481,15 @@ class PersonaForm extends Component {
                                                 </span>
                                                         }
                                                     </div>
-                                                </div>
+                                                </FormGroup>
 
-                                                <div className="form-group">
+                                                <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
                                                             <label>Apellido materno</label>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <input
+                                                            <Input
                                                                 type="text"
                                                                 name="per_Apellido_Materno"
                                                                 onChange={onChange}
@@ -480,15 +504,15 @@ class PersonaForm extends Component {
                                                 </span>
                                                         }
                                                     </div>
-                                                </div>
+                                                </FormGroup>
 
-                                                <div className="form-group">
+                                                <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
                                                             <label><strong>*</strong> Fecha nacimiento</label>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <input
+                                                            <Input
                                                                 type="text"
                                                                 name="per_Fecha_Nacimiento"
                                                                 onChange={onChange}
@@ -503,38 +527,38 @@ class PersonaForm extends Component {
                                                 </span>
                                                         }
                                                     </div>
-                                                </div>
+                                                </FormGroup>
 
                                                 {/* Boton para verificar duplicados */}
-                                                <div className="form-group">
+                                                <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <button
+                                                            <Button
                                                                 type="button"
                                                                 onClick={handle_verificarDuplicados}
-                                                                className="btn btn-primary form-control"
+                                                                color="primary"
                                                             >
                                                                 <i>Continuar</i>
-                                                            </button>
+                                                            </Button>
                                                         </div>
                                                         {this.state.PersonaEncontrada === true &&
                                                             <div className="col-sm-">
-                                                                <button
+                                                                <Button
                                                                     type="button"
                                                                     onClick={handleIgnorarDuplicados}
-                                                                    className="btn btn-success form-control"
+                                                                    color="success"
                                                                 >
                                                                     <span
                                                                         className="fa fa-check fa-sm"
                                                                         style={{ paddingRight: "20px" }}>
                                                                     </span>
                                                                     <i>Ignorar duplicados y continuar</i>
-                                                                </button>
+                                                                </Button>
                                                             </div>
                                                         }
                                                         <div className="col-sm-4"></div>
                                                     </div>
-                                                </div>
+                                                </FormGroup>
 
                                                 {this.state.PersonaEncontrada === true &&
                                                     <PersonaEncontrada
@@ -542,10 +566,10 @@ class PersonaForm extends Component {
                                                     />
                                                 }
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    </Col>
+                                </Row>
                             }
                             {this.state.FrmValidaPersona === false &&
                                 <React.Fragment>
@@ -556,10 +580,10 @@ class PersonaForm extends Component {
                                                 <div className="col-sm-12">
                                                     <div className="card border-info acceso-directo">
                                                         <div className="card-body">
-                                                            <div className="form-group">
+                                                            <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-4">
-                                                                        <input
+                                                                        <Input
                                                                             type="text"
                                                                             className="form-control"
                                                                             value={form.per_Nombre}
@@ -568,7 +592,7 @@ class PersonaForm extends Component {
                                                                         <label>Nombre</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
-                                                                        <input
+                                                                        <Input
                                                                             type="text"
                                                                             className="form-control"
                                                                             value={form.per_Apellido_Paterno}
@@ -577,7 +601,7 @@ class PersonaForm extends Component {
                                                                         <label>Apellido paterno</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
-                                                                        <input
+                                                                        <Input
                                                                             type="text"
                                                                             className="form-control"
                                                                             value={form.per_Apellido_Materno}
@@ -586,11 +610,11 @@ class PersonaForm extends Component {
                                                                         <label>Apellido materno</label>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className="form-group">
+                                                            </FormGroup>
+                                                            <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-4">
-                                                                        <input
+                                                                        <Input
                                                                             type="text"
                                                                             className="form-control"
                                                                             value={form.per_Categoria}
@@ -599,7 +623,7 @@ class PersonaForm extends Component {
                                                                         <label>Categoria</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
-                                                                        <input
+                                                                        <Input
                                                                             type="text"
                                                                             className="form-control"
                                                                             value={form.per_Fecha_Nacimiento}
@@ -608,8 +632,8 @@ class PersonaForm extends Component {
                                                                         <label>Fecha de nacimiento</label>
                                                                     </div>
                                                                     <div className="col-sm-2">
-                                                                        <button
-                                                                            type="button"
+                                                                        <Button
+                                                                            type="Button"
                                                                             className="btn btn-success form-control"
                                                                             onClick={handleEditaNombre}
                                                                         >
@@ -618,10 +642,10 @@ class PersonaForm extends Component {
                                                                                 style={{ paddingRight: "10px" }}>
                                                                             </span>
                                                             Editar nombre
-                                                        </button>
+                                                        </Button>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </FormGroup>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -635,10 +659,10 @@ class PersonaForm extends Component {
                                                             <h5><strong>Datos Generales</strong></h5>
                                                         </div>
                                                         <div className="card-body">
-                                                            <div className="form-group">
-                                                                <div className="row">
-                                                                    <div className="col-sm-4">
-                                                                        <input
+                                                            <div className="row">
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <Input
                                                                             type="text"
                                                                             name="per_Nacionalidad"
                                                                             onChange={onChange}
@@ -646,9 +670,11 @@ class PersonaForm extends Component {
                                                                             value={form.per_Nacionalidad}
                                                                         />
                                                                         <label>Nacionalidad</label>
-                                                                    </div>
-                                                                    <div className="col-sm-4">
-                                                                        <input
+                                                                    </FormGroup>
+                                                                </div>
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <Input
                                                                             type="text"
                                                                             name="per_Lugar_De_Nacimiento"
                                                                             onChange={onChange}
@@ -656,24 +682,27 @@ class PersonaForm extends Component {
                                                                             value={form.per_Lugar_De_Nacimiento}
                                                                         />
                                                                         <label>Lugar de nacimiento</label>
-                                                                    </div>
-                                                                    <div className="col-sm-4">
-                                                                        <input
-                                                                            type="text"
+                                                                    </FormGroup>
+                                                                </div>
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <Input
+                                                                            type="email"
                                                                             name="per_Email_Personal"
                                                                             onChange={onChange}
-                                                                            className="form-control inputEmail"
+                                                                            invalid={this.state.emailInvalido}
                                                                         />
                                                                         <label>Email</label>
-                                                                    </div>
-
+                                                                        <FormFeedback>{this.state.mensajes.emailInvalido}</FormFeedback>
+                                                                    </FormGroup>
                                                                 </div>
                                                             </div>
 
-                                                            <div className="form-group">
-                                                                <div className="row">
-                                                                    <div className="col-sm-4">
-                                                                        <select
+
+                                                            <div className="row">
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <Input type="select"
                                                                             name="pro_Id_Profesion_Oficio1"
                                                                             className="form-control"
                                                                             onChange={onChange}
@@ -689,12 +718,13 @@ class PersonaForm extends Component {
                                                                                     )
                                                                                 })
                                                                             }
-                                                                        </select>
+                                                                        </Input>
                                                                         <label>Profesion oficio1</label>
-
-                                                                    </div>
-                                                                    <div className="col-sm-4">
-                                                                        <select
+                                                                    </FormGroup>
+                                                                </div>
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <Input type="select"
                                                                             name="pro_Id_Profesion_Oficio2"
                                                                             className="form-control"
                                                                             onChange={onChange}
@@ -710,26 +740,27 @@ class PersonaForm extends Component {
                                                                                     )
                                                                                 })
                                                                             }
-                                                                        </select>
+                                                                        </Input>
                                                                         <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesion oficio2</label>
-
-                                                                    </div>
-                                                                    <div className="col-sm-4">
-                                                                        <input
+                                                                    </FormGroup>
+                                                                </div>
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <Input
                                                                             type="text"
                                                                             name="per_Telefono_Movil"
                                                                             onChange={onChange}
-                                                                            className="form-control"
+                                                                            invalid={this.state.telMovilInvalido}
                                                                         />
                                                                         <label>Telefono movil</label>
-                                                                    </div>
+                                                                        <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
+                                                                    </FormGroup>
                                                                 </div>
                                                             </div>
-
-                                                            <div className="form-group">
+                                                            <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-4">
-                                                                        <input
+                                                                        <Input
                                                                             type="file"
                                                                             name="per_foto"
                                                                             onChange={onChange}
@@ -738,9 +769,9 @@ class PersonaForm extends Component {
                                                                         <label>Foto</label>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </FormGroup>
 
-                                                            <div className="form-group">
+                                                            <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-12">
                                                                         <textarea
@@ -752,7 +783,7 @@ class PersonaForm extends Component {
                                                                         <label>Cargos desempeñados</label>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </FormGroup>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -768,10 +799,10 @@ class PersonaForm extends Component {
                                                                     <h5><strong>Familia Asendente</strong></h5>
                                                                 </div>
                                                                 <div className="card-body">
-                                                                    <div className="form-group">
+                                                                    <FormGroup>
                                                                         <div className="row">
                                                                             <div className="col-sm-6">
-                                                                                <input
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Nombre_Padre"
                                                                                     onChange={onChange}
@@ -780,7 +811,7 @@ class PersonaForm extends Component {
                                                                                 <label>Padre</label>
                                                                             </div>
                                                                             <div className="col-sm-6">
-                                                                                <input
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Nombre_Madre"
                                                                                     onChange={onChange}
@@ -789,12 +820,12 @@ class PersonaForm extends Component {
                                                                                 <label>Madre</label>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </FormGroup>
 
-                                                                    <div className="form-group">
+                                                                    <FormGroup>
                                                                         <div className="row">
                                                                             <div className="col-sm-6">
-                                                                                <input
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuelo_Paterno"
                                                                                     onChange={onChange}
@@ -803,7 +834,7 @@ class PersonaForm extends Component {
                                                                                 <label>Abuelo paterno</label>
                                                                             </div>
                                                                             <div className="col-sm-6">
-                                                                                <input
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuela_Paterna"
                                                                                     onChange={onChange}
@@ -812,12 +843,12 @@ class PersonaForm extends Component {
                                                                                 <label>Abuela paterna</label>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </FormGroup>
 
-                                                                    <div className="form-group">
+                                                                    <FormGroup>
                                                                         <div className="row">
                                                                             <div className="col-sm-6">
-                                                                                <input
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuelo_Materno"
                                                                                     onChange={onChange}
@@ -826,7 +857,7 @@ class PersonaForm extends Component {
                                                                                 <label>Abuelo materno</label>
                                                                             </div>
                                                                             <div className="col-sm-6">
-                                                                                <input
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuela_Materna"
                                                                                     onChange={onChange}
@@ -835,7 +866,7 @@ class PersonaForm extends Component {
                                                                                 <label>Abuela materna</label>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </FormGroup>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -849,10 +880,10 @@ class PersonaForm extends Component {
                                                                     <h5><strong>Estado Civil</strong></h5>
                                                                 </div>
                                                                 <div className="card-body">
-                                                                    <div className="form-group">
+                                                                    <FormGroup>
                                                                         <div className="row">
                                                                             <div className="col-sm-4">
-                                                                                <select
+                                                                                <Input type="select"
                                                                                     value={form.per_Estado_Civil}
                                                                                     name="per_Estado_Civil"
                                                                                     onChange={handle_per_Estado_Civil}
@@ -864,7 +895,7 @@ class PersonaForm extends Component {
                                                                                     <option value="VIUDO(A)">Viudo/a</option>
                                                                                     <option value="CONCUBINATO">Unión libre/concubinato</option>
                                                                                     <option value="SOLTERO(A) CON HIJOS">Soltero/a CON hijos</option>
-                                                                                </select>
+                                                                                </Input>
                                                                                 <label>Estado civil</label>
                                                                             </div>
 
@@ -872,7 +903,7 @@ class PersonaForm extends Component {
                                                                             {this.state.CasadoDivorciadoViudo &&
                                                                                 <React.Fragment>
                                                                                     <div className="col-sm-4">
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Nombre_Conyuge"
                                                                                             onChange={onChange}
@@ -881,7 +912,7 @@ class PersonaForm extends Component {
                                                                                         <label>Nombre conyuge</label>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Fecha_Boda_Civil"
                                                                                             onChange={onChange}
@@ -894,14 +925,14 @@ class PersonaForm extends Component {
                                                                                 </React.Fragment>
                                                                             }
                                                                         </div>
-                                                                    </div>
+                                                                    </FormGroup>
                                                                     {/* Matrimonio */}
                                                                     {this.state.CasadoDivorciadoViudo &&
                                                                         <React.Fragment>
-                                                                            <div className="form-group">
+                                                                            <FormGroup>
                                                                                 <div className="row">
                                                                                     <div className="col-sm-4">
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Num_Acta_Boda_Civil"
                                                                                             onChange={onChange}
@@ -911,7 +942,7 @@ class PersonaForm extends Component {
                                                                                         <label>Num acta boda civil</label>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Libro_Acta_Boda_Civil"
                                                                                             onChange={onChange}
@@ -921,7 +952,7 @@ class PersonaForm extends Component {
                                                                                         <label>Libro acta boda civil</label>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Oficialia_Boda_Civil"
                                                                                             onChange={onChange}
@@ -931,27 +962,31 @@ class PersonaForm extends Component {
                                                                                         <label>Oficialia boda civil</label>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
+                                                                            </FormGroup>
                                                                         </React.Fragment>
                                                                     }
 
                                                                     {form.per_Bautizado &&
                                                                         <React.Fragment>
-                                                                            <div className="form-group">
-                                                                                <div className="row">
-                                                                                    <div className="col-sm-4">
-                                                                                        <input
+
+                                                                            <div className="row">
+                                                                                <div className="col-sm-4">
+                                                                                    <FormGroup>
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Fecha_Boda_Eclesiastica"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Fecha_Boda_Eclesiastica}
                                                                                             placeholder="DD/MM/AAAA"
-                                                                                            className="form-control"
+                                                                                            invalid={this.state.fechaBodaEclesiasticaInvalida}
                                                                                         />
                                                                                         <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
-                                                                                    </div>
-                                                                                    <div className="col-sm-4">
-                                                                                        <input
+                                                                                        <FormFeedback>{this.state.mensajes.fechaBodaEclesiasticaInvalida}</FormFeedback>
+                                                                                    </FormGroup>
+                                                                                </div>
+                                                                                <div className="col-sm-4">
+                                                                                    <FormGroup>
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Lugar_Boda_Eclesiastica"
                                                                                             onChange={onChange}
@@ -959,19 +994,20 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Lugar_Boda_Eclesiastica}
                                                                                         />
                                                                                         <label>Lugar boda eclesiastica</label>
-                                                                                    </div>
+                                                                                    </FormGroup>
                                                                                 </div>
                                                                             </div>
+
                                                                         </React.Fragment>
                                                                     }
 
                                                                     {this.state.ConcubinatoSolteroConHijos &&
                                                                         <React.Fragment>
                                                                             <div id="hijos">
-                                                                                <div className="form-group">
+                                                                                <FormGroup>
                                                                                     <div className="row">
                                                                                         <div className="col-sm-2">
-                                                                                            <input
+                                                                                            <Input
                                                                                                 type="number"
                                                                                                 name="per_Cantidad_Hijos"
                                                                                                 onChange={onChange}
@@ -981,9 +1017,9 @@ class PersonaForm extends Component {
                                                                                             <label>Cantidad hijos</label>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </FormGroup>
 
-                                                                                <div className="form-group">
+                                                                                <FormGroup>
                                                                                     <div className="row">
                                                                                         <div className="col-sm-12">
                                                                                             <textarea
@@ -994,7 +1030,7 @@ class PersonaForm extends Component {
                                                                                             <label>Nombre de los hijos</label>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </FormGroup>
                                                                             </div>
                                                                         </React.Fragment>
                                                                     }
@@ -1024,10 +1060,11 @@ class PersonaForm extends Component {
                                                                     {/* Bautismo */}
                                                                     {form.per_Bautizado &&
                                                                         <React.Fragment>
-                                                                            <div className="form-group">
-                                                                                <div className="row">
-                                                                                    <div className="col-sm-4">
-                                                                                        <input
+
+                                                                            <div className="row">
+                                                                                <div className="col-sm-4">
+                                                                                    <FormGroup>
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Lugar_Bautismo"
                                                                                             onChange={onChange}
@@ -1035,9 +1072,11 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                         />
                                                                                         <label>Lugar bautismo</label>
-                                                                                    </div>
-                                                                                    <div className="col-sm-4">
-                                                                                        <input
+                                                                                    </FormGroup>
+                                                                                </div>
+                                                                                <div className="col-sm-4">
+                                                                                    <FormGroup>
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Ministro_Que_Bautizo"
                                                                                             onChange={onChange}
@@ -1045,38 +1084,46 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                         />
                                                                                         <label>Ministro que bautizo</label>
-                                                                                    </div>
-                                                                                    <div className="col-sm-4">
-                                                                                        <input
+                                                                                    </FormGroup>
+                                                                                </div>
+                                                                                <div className="col-sm-4">
+                                                                                    <FormGroup>
+                                                                                        <Input
                                                                                             type="text"
                                                                                             name="per_Fecha_Bautismo"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Fecha_Bautismo}
                                                                                             placeholder="DD/MM/AAAA"
-                                                                                            className="form-control"
+                                                                                            invalid={this.state.fechaBautismoInvalida}
                                                                                         />
                                                                                         <label>Fecha bautismo</label>
-                                                                                    </div>
+                                                                                        <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
+                                                                                    </FormGroup>
                                                                                 </div>
                                                                             </div>
+
                                                                         </React.Fragment>
                                                                     }
 
-                                                                    <div className="form-group">
-                                                                        <div className="row">
-                                                                            <div className="col-sm-4">
-                                                                                <input
+
+                                                                    <div className="row">
+                                                                        <div className="col-sm-4">
+                                                                            <FormGroup>
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Fecha_Recibio_Espiritu_Santo"
                                                                                     onChange={onChange}
                                                                                     value={form.per_Fecha_Recibio_Espiritu_Santo}
                                                                                     placeholder="DD/MM/AAAA"
-                                                                                    className="form-control"
+                                                                                    invalid={this.state.fechaEspitiruSantoInvalida}
                                                                                 />
                                                                                 <label>Fecha recibio Espiritu Santo</label>
-                                                                            </div>
-                                                                            <div className="col-sm-4">
-                                                                                <input
+                                                                                <FormFeedback>{this.state.mensajes.fechaEspitiruSantoInvalida}</FormFeedback>
+                                                                            </FormGroup>
+                                                                        </div>
+                                                                        <div className="col-sm-4">
+                                                                            <FormGroup>
+                                                                                <Input
                                                                                     type="text"
                                                                                     name="per_Bajo_Imposicion_De_Manos"
                                                                                     onChange={onChange}
@@ -1084,9 +1131,10 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                 />
                                                                                 <label>Bajo imposicion de manos</label>
-                                                                            </div>
-                                                                            {/* <div className="col-sm-4">
-                                            <input
+                                                                            </FormGroup>
+                                                                        </div>
+                                                                        {/* <div className="col-sm-4">
+                                            <Input
                                                 type="checkbox"
                                                 name="PromesaDelEspirituSanto"
                                                 onChange={this.fnPromesaDelEspirituSanto}
@@ -1100,10 +1148,10 @@ class PersonaForm extends Component {
                                                 
                                             </React.Fragment>
                                         } */}
-                                                                        </div>
-
                                                                     </div>
-                                                                    <div className="form-group">
+
+
+                                                                    <FormGroup>
                                                                         <div className="row">
                                                                             <div className="col-sm-12">
                                                                                 <textarea
@@ -1114,7 +1162,7 @@ class PersonaForm extends Component {
                                                                                 <label>Cambios de domicilio</label>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </FormGroup>
                                                                     {/* {per_Fecha_Recibio_Espiritu_Santo_NoValido &&
                                                                     <span className="text-danger">
                                                                         Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
@@ -1153,7 +1201,7 @@ class PersonaForm extends Component {
                                             </div>
 
                                             {/* Botones al final de formulario */}
-                                            <div className="form-group">
+                                            <FormGroup>
                                                 <div className="row mt-3">
                                                     <div className="col-sm-2 offset-sm-2">
                                                         <Link
@@ -1165,24 +1213,24 @@ class PersonaForm extends Component {
                                                 </Link>
                                                     </div>
                                                     <div className="col-sm-2 offset-sm-2">
-                                                        <button
+                                                        <Button
                                                             type="submit"
                                                             className="btn btn-primary form-control"
                                                         >
                                                             <span className="fa fa-save" style={{ paddingRight: "10px" }}></span>
                                                     Guardar
-                                                </button>
+                                                </Button>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </FormGroup>
                                         </React.Fragment>
                                     }
                                 </React.Fragment>
                             }
 
-                        </div>
+                        </Container>
                         {/* </div> */}
-                    </form>
+                    </Form>
                 </div>
                 <Modal // Datos generales
                     isOpen={this.state.showModalAltaPersona}
@@ -1195,7 +1243,7 @@ class PersonaForm extends Component {
                         <div className="card-body">
                             La persona fue dada de alta correctamente.
                         </div>
-                        <button className="btn btn-sm btn-secondary" onClick={this.closeModalAltaPersona}>Cerrar</button>
+                        <Button className="btn btn-sm btn-secondary" onClick={this.closeModalAltaPersona}>Cerrar</Button>
                     </div>
                 </Modal>
             </React.Fragment>

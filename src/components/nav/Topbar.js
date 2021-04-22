@@ -1,10 +1,22 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 
-class Topbar extends Component{
+class Topbar extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
     emailUser = localStorage.getItem('emailUser');
 
-    render(){
-        return(
+    handleLogoff = () => {
+        localStorage.clear();
+        document.location.href = '/Signin/';
+    }
+
+    render() {
+        return (
             <React.Fragment>
                 {/* Topbar */}
                 <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -27,15 +39,15 @@ class Topbar extends Component{
                             </a>
                             {/* Dropdown - User Information */}
                             <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a href="#" className="dropdown-item">
+                                <Link to="" className="dropdown-item">
                                     <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
-                                </a>
+                                </Link>
                                 <div className="dropdown-divider"></div>
-                                <a href="#" className="dropdown-item" data-toggle="modal" data-target="#logoutModal">
+                                <Link to="" className="dropdown-item" data-toggle="modal" data-target="#logoutModal">
                                     <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Cerrar sesion
-                                </a>
+                                </Link>
                             </div>
                         </li>
 
@@ -56,7 +68,7 @@ class Topbar extends Component{
                             <div className="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                             <div className="modal-footer">
                                 <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <a className="btn btn-primary" href="login.html">Logout</a>
+                                <button className="btn btn-primary" onClick={this.handleLogoff}>Logout</button>
                             </div>
                         </div>
                     </div>
@@ -64,7 +76,7 @@ class Topbar extends Component{
                 {/* End Logout Modal*/}
                 {/* Begin Page Content */}
                 <div className="container-fluid"></div>
-            </React.Fragment>   
+            </React.Fragment>
         );
     }
 

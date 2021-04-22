@@ -4,6 +4,7 @@ import Global from '../../Global';
 import '../../assets/css/Persona.css';
 import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
+import Layout from '../Layout';
 
 class ListaDePersonal extends Component {
 
@@ -29,6 +30,10 @@ class ListaDePersonal extends Component {
         ConcubinadoSolteroConHijos: false,
         soltero: false
     };
+
+    componentDidMount() {
+        console.log(localStorage.getItem('token'));
+    }
 
     openModalPersonaGenerales = async (persona) => {
         let pro1;
@@ -254,6 +259,7 @@ class ListaDePersonal extends Component {
     render() {
         if (this.state.personas.length >= 1) {
             return (
+                <Layout>
                 <React.Fragment>
                     <h1 className="text-info">Listado de personal</h1>
                     <div className="row">
@@ -264,7 +270,7 @@ class ListaDePersonal extends Component {
                             </p>
                         </div>
                         <div className="col-2">
-                            <Link to="/RegistroDePersonal" className="btn bnt-sm btn-primary">Registrar persona</Link>
+                            <Link to="/RegistroDePersona" className="btn bnt-sm btn-primary">Registrar persona</Link>
                         </div>
                     </div>
                     <br />
@@ -496,20 +502,25 @@ class ListaDePersonal extends Component {
                         </div>
                     </Modal>
                 </React.Fragment>
+                </Layout>
             );
         } else if (this.state.personas.length === 0 && this.state.status === 'success') {
             return (
+                <Layout>
                 <React.Fragment>
                     <h3>Aun no hay personas registras!</h3>
                     <p>Haga clic en el boton Registrar persona para registrar una persona.</p>
                 </React.Fragment>
+                </Layout>
             );
         } else {
             return (
+                <Layout>
                 <React.Fragment>
                     <h3>Cargando información...</h3>
                     <p>Por favor espere.</p>
                 </React.Fragment>
+                </Layout>
             );
         }
     };

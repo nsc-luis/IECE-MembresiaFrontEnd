@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import ListaDePersonal from './components/Persona/ListaDePersonal';
-import Home from './pages/Home';
-import RegistroDePersonal from './components/Persona/RegistroDePersona';
+import Main from './pages/Main';
 import PaginaNoEncontrada from './pages/PaginaNoEncontrada';
-import Login from './components/auth/Login';
-import Sidebar from './components/nav/Sidebar';
-import Topbar from './components/nav/Topbar';
-import Footer from './components/nav/Footer';
+import Signin from './pages/Signin';
+import ListaDePersonal from './pages/Persona/ListaDePersonal';
+import RegistroDePersona from './pages/Persona/RegistroDePersona';
 
 class Router extends Component {
     constructor(props) {
@@ -17,59 +14,17 @@ class Router extends Component {
         }
     }
     render() {
-        if (this.state.isAuth) {
-            return (
-                <BrowserRouter>
-                    {/* CONFIGURAR RUTAS Y PAGINAS */}
-                    {/* Page Wrapper */}
-                    <div id="wrapper">
-
-                        <Sidebar />
-
-                        {/* Content Wrapper */}
-                        <div id="content-wrapper" className="d-flex flex-column">
-
-                            {/* Main Content */}
-                            <div id="content">
-
-                                <Topbar />
-
-                                {/* Begin Page Content */}
-                                <div className="container-fluid">
-
-                                    {/* Page Heading */}
-                                    <Switch>
-                                        <Route exact path="/" component={Home} />
-                                        <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
-                                        <Route exact path="/RegistroDePersonal" component={RegistroDePersonal} />
-                                        <Route exact path="/Login" component={Login} />
-
-                                        <Route component={PaginaNoEncontrada} />
-                                    </Switch>
-                                </div>
-                                {/* /.container-fluid */}
-
-                            </div>
-                            {/* End of Main Content */}
-
-                            <Footer />
-
-                        </div>
-                        {/* End of Content Wrapper */}
-
-                    </div>
-                    {/* End of Page Wrapper */}
-                </BrowserRouter>
-            )
-        } else {
-            return (
-                <BrowserRouter>
-                    <Route exact path="/Login" component={Login} />
-
+        return (
+            <BrowserRouter>
+                <Switch>
+                    <Route exact path="/" component={Main} />
+                    <Route exact path="/Signin" component={Signin} />
+                    <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
+                    <Route exact path="/RegistroDePersona" component={RegistroDePersona} />
                     <Route component={PaginaNoEncontrada} />
-                </BrowserRouter>
-            )
-        }
+                </Switch>
+            </BrowserRouter>
+        )
     }
 }
 

@@ -1,16 +1,16 @@
 import React from 'react';
 
 const PaginaNoEncontrada = () => (
-    <React.Fragment>
-        <div className="content text-center">
-            <div className="row">
-                <div className="col-md-12 auto-mx">
-                    <h1>Error 404</h1>
-                    <h3>La pagina a la que intentas acceder no existe.</h3>
-                </div>
+
+    <div className="content text-center">
+        <div className="row">
+            <div className="col-md-12 auto-mx">
+                <h1>Error 404</h1>
+                <h3>La pagina a la que intentas acceder no existe.</h3>
             </div>
         </div>
-    </React.Fragment>
+    </div>
+
 )
 
 export default PaginaNoEncontrada;
