@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../assets/css/PersonaForm.css'
+import '../assets/css/index.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
 import Global from '../Global';
@@ -21,7 +21,7 @@ class PersonaForm extends Component {
     const_regex = {
         alphaSpaceRequired: /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
-        formatoEmail: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        formatoEmail: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         formatoTelefono: /^(\+\d{1,3})*(\(\d{2,3}\))*\d{7,25}$/
     }
 
@@ -65,32 +65,6 @@ class PersonaForm extends Component {
     closeModalAltaPersona = () => {
         this.setState({ showModalAltaPersona: false });
         return <Redirect to='/ListaDePersonal' />;
-    }
-
-    handle_dis_Id_Distrito = (e) => {
-        this.setState({
-            distritoSeleccionado: e.target.value
-        })
-        if (e.target.value !== "0") {
-            this.getSectores(e.target.value)
-            this.setState({
-                sectorSeleccionado: "0"
-            })
-        }
-        if (e.target.value === "0") {
-            this.setState({
-                sectorSeleccionado: "0"
-            })
-        }
-    }
-
-    getSectores = async (distritoSeleccionado) => {
-        await axios.get(this.url + "/Sector/GetSectoresByDistrito/" + distritoSeleccionado)
-            .then(res => {
-                this.setState({
-                    sectores: res.data.sectores
-                })
-            })
     }
 
     componentWillMount() {
@@ -338,7 +312,7 @@ class PersonaForm extends Component {
                 !this.state.fechaBodaCivilInvalida && !this.state.fechaEspitiruSantoInvalida &&
                 !this.state.fechaBodaEclesiasticaInvalida) {
 
-                /* if (this.state.hd_Id_Hogar === "0") {
+                if (this.state.hd_Id_Hogar === "0") {
                     let PersonaDomicilioHogar = {
                         id: 1,
                         PersonaEntity: objPersona,
@@ -347,7 +321,7 @@ class PersonaForm extends Component {
                     fnGuardaPersona(PersonaDomicilioHogar)
                 } else {
                     fnGuardaPersonaEnHogar(objPersona, this.state.hp_Jerarquia, this.state.hd_Id_Hogar)
-                } */
+                }
                 console.log("Success: Campos validados")
             } else {
                 console.log("Error: Campos invalidos")

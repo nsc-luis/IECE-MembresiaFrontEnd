@@ -1,29 +1,29 @@
 import React, { Component } from 'react'
 import Globales from '../Global'
+import { Row, Col, Container, FormFeedback } from 'reactstrap'
 
 class Sectores extends Component {
     url = Globales.url_api
 
     constructor(props) {
         super(props)
-        this.state = {}
     }
 
     render() {
-        const { sectores, form, onChange } = this.props
+        const { sectores, handle_sec_Id_Sector, sectorSeleccionado } = this.props
 
         return (
-            <React.Fragment>
-                <div className="row">
-                    <div className="col-sm-2">
+            <Container>
+                <Row>
+                    <Col xs="4">
                         <label><strong>*</strong> Sector</label>
-                    </div>
-                    <div className="col-sm-4">
+                    </Col>
+                    <Col xs="8">
                         <select
                             name="sec_Id_Sector"
                             className="form-control"
-                            onChange={onChange}
-                            value={form.sec_Id_Sector}
+                            onChange={handle_sec_Id_Sector}
+                            value={sectorSeleccionado}
                         >
                             <option value="0">Seleccione un sector</option>
                             {
@@ -37,9 +37,9 @@ class Sectores extends Component {
                                 })
                             }
                         </select>
-                    </div>
-                </div>
-            </React.Fragment>
+                    </Col>
+                </Row>
+            </Container>
         )
     }
 }

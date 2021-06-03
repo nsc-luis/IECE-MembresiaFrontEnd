@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Global from '../../Global';
-import '../../assets/css/Persona.css';
+import '../../assets/css/index.css';
 import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
 import Layout from '../Layout';

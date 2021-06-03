@@ -12,7 +12,7 @@ class Topbar extends Component {
 
     handleLogoff = () => {
         localStorage.clear();
-        document.location.href = '/Signin/';
+        document.location.href = '/';
     }
 
     render() {

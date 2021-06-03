@@ -5,6 +5,7 @@ import PaginaNoEncontrada from './pages/PaginaNoEncontrada';
 import Signin from './pages/Signin';
 import ListaDePersonal from './pages/Persona/ListaDePersonal';
 import RegistroDePersona from './pages/Persona/RegistroDePersona';
+import Signup from './pages/Signup';
 
 class Router extends Component {
     constructor(props) {
@@ -15,10 +16,11 @@ class Router extends Component {
     }
     render() {
         return (
-            <BrowserRouter>
+            <BrowserRouter /* basename="/webapp" */>
                 <Switch>
-                    <Route exact path="/" component={Main} />
-                    <Route exact path="/Signin" component={Signin} />
+                    <Route exact path="/Main" component={Main} />
+                    <Route exact path="/" component={Signin} />
+                    <Route exact path="/Signup" component={Signup} />
                     <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
                     <Route exact path="/RegistroDePersona" component={RegistroDePersona} />
                     <Route component={PaginaNoEncontrada} />

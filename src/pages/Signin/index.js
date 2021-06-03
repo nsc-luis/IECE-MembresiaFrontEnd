@@ -5,6 +5,7 @@ import {
     Form, FormGroup, Input, Button, Row, Col,
     Container, FormFeedback, Card, CardBody, CardTitle
 } from 'reactstrap'
+import { Link } from 'react-router-dom';
 
 class Login extends Component {
     url = Globales.url_api;
@@ -99,7 +100,7 @@ class Login extends Component {
                             });
                             localStorage.setItem('token', this.state.token);
                             localStorage.setItem('emailUser', this.state.Email);
-                            setTimeout(() => { document.location.href = '/'; }, 3000);
+                            setTimeout(() => { document.location.href = '/Main'; }, 3000);
                         }
                         else {
                             this.setState({
@@ -141,7 +142,7 @@ class Login extends Component {
                                         <Col xs="3" />
                                         <Col xs="6" className="p-5">
                                             <CardTitle className="text-center">
-                                                <h1 className="h4 text-gray-900 mb-4">Bienvenido!</h1>
+                                                <h1 className="h4 text-gray-900 mb-4">Bienvenido! </h1>
                                             </CardTitle>
                                             <Form onSubmit={this.Login}>
                                                 <FormGroup>
@@ -165,12 +166,14 @@ class Login extends Component {
                                                         invalid={this.state.passwordInvalido} />
                                                     <FormFeedback>{this.state.mensajes.passwordAlert}</FormFeedback>
                                                 </FormGroup>
-                                                <FormGroup>
+                                                <FormGroup className="text-center">
                                                     <Button
                                                         color="primary"
                                                         type="submit" >
                                                         Iniciar sesion
                                                     </Button>
+                                                    <br />
+                                                    <Link to="/Signup">Registrar nuevo usuario.</Link>
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Input

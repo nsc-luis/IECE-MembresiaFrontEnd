@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import '../assets/css/Main.css';
+import '../assets/css/index.css';
 
 const Home = () => {
     return (

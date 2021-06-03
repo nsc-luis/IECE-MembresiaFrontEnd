@@ -9,7 +9,7 @@ class Sidebar extends Component {
                 <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
-                    <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/">
+                    <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/Main">
                         <div className="sidebar-brand-icon">
                             <i className="fas fa-building"></i>
                         </div>
