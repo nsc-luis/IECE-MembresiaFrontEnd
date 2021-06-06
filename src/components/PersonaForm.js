@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../assets/css/index.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
-import Global from '../Global';
+import helpers from './Helpers'
 import { Link, Redirect } from 'react-router-dom';
 import PersonaEncontrada from './PersonaEncontrada'
 import HogarPersonaDomicilio from '../components/HogarPersonaDomicilio';
@@ -14,7 +14,7 @@ import {
 
 class PersonaForm extends Component {
 
-    url = Global.url_api;
+    url = helpers.url_api;
     fechaNoIngresada = "01/01/1900";
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
@@ -474,7 +474,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {!this.state.per_Apellido_Materno_OK &&
                                                             <span className="text-primary font-italic">
-                                                                NO requerido pero solo acepta letras, numeros y espacios.
+                                                                (En blanco si se desconoce)
                                                 </span>
                                                         }
                                                     </div>

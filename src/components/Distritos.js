@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import Globales from '../Global'
+import helpers from './Helpers'
 import { Row, Col, Container, FormFeedback } from 'reactstrap'
 
 class Distritos extends Component {
-    url = Globales.url_api
+    url = helpers.url_api
 
     constructor(props) {
         super(props)

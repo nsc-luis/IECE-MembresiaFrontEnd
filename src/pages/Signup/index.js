@@ -34,7 +34,8 @@ class Signup extends Component {
             passwordInvalido: true,
             confirmacion: "",
             confirmacionInvalida: true,
-            habilitaBotonGuardar: false
+            habilitaBotonGuardar: false,
+            superSecreto: ""
         };
     }
 
@@ -128,10 +129,12 @@ class Signup extends Component {
     }
 
     getMinistros = async (sector) => {
-        await axios.get(this.url + "/PersonalMinisterial/GetMinistrosBySector/" + sector)
+        // await axios.get(this.url + "/PersonalMinisterial/GetMinistrosBySector/" + sector)
+        await axios.get(this.url + "/Sector/GetPastorBySector/" + sector)
             .then(res => {
                 this.setState({
-                    ministros: res.data.personalMinisterial
+                    // ministros: res.data.personalMinisterial
+                    ministros: res.data.ministros
                 })
             })
     }
@@ -234,14 +237,24 @@ class Signup extends Component {
         }
     }
 
+    handle_superSecreto = (e) => {
+        if (e.target.value !== "") {
+            this.setState({ superSecreto: e.target.value })
+        } else {
+            this.setState({ superSecreto: e.target.value })
+        }
+    }
+
     guardarNvoUsuario = async (e) => {
         e.preventDefault();
         var data = {
             Email: this.state.emailParaRegistro,
-            Password: this.state.passEmailRegistro
+            Password: this.state.passEmailRegistro,
+            superSecreto: this.state.superSecreto
         };
         var altaUsuario = false;
         var AspNetUserId = "";
+        this.setState({ superSecreto: "" });
         await axios.post(this.url + "/Usuario/Create/", data)
             .then(res => {
                 if (res.data.status === "success") {
@@ -250,21 +263,27 @@ class Signup extends Component {
                     AspNetUserId = res.data.nvoUsuario.id;
                 } else {
                     let mensaje = "Error! \n";
-                    res.data.mensaje.forEach(msj => {
-                        mensaje += "Codigo: " + msj.code + "\nDescripcion: " + msj.description + "\n";
-                    })
-                    alert(mensaje);
+                    if (Array.isArray(res.data.mensaje)) {
+                        res.data.mensaje.forEach(msj => {
+                            mensaje += "Codigo: " + msj.code + "\nDescripcion: " + msj.description + "\n";
+                        })
+                        alert(mensaje);
+                    }
+                    else {
+                        alert(res.data.mensaje);
+                    }
                 }
             })
         if (altaUsuario) {
             await axios.post(
-                this.url + "/Ministro_Usuario", 
-                { 
-                    mu_aspNetUsers_Id: AspNetUserId, 
-                    mu_pem_Id_Pastor: this.state.ministroSeleccionado, 
+                this.url + "/Ministro_Usuario",
+                {
+                    mu_aspNetUsers_Id: AspNetUserId,
+                    mu_pem_Id_Pastor: this.state.ministroSeleccionado,
                     mu_permiso: "CRUD"
                 }
             );
+            setTimeout(() => { document.location.href = '/'; }, 1500);
         }
     }
 
@@ -339,14 +358,34 @@ class Signup extends Component {
                                                             </FormGroup>
                                                         }
                                                         {this.state.habilitaBotonGuardar &&
-                                                            <FormGroup className="text-center">
-                                                                <Button
-                                                                    color="primary"
-                                                                    type="submit"
-                                                                >
-                                                                    Guardar
+                                                            <React.Fragment>
+                                                                <div className="alert alert-warning mt-3" role="alert">
+                                                                    <strong>AVISO: </strong>Por seguridad se requiere la <strong>clave secreta</strong> para el registro.
+                                                                </div>
+                                                                <FormGroup>
+                                                                    <Row>
+                                                                        <Col xs="4">
+                                                                            <label>* Super secreto: </label>
+                                                                        </Col>
+                                                                        <Col xs="8">
+                                                                            <Input
+                                                                                type="text"
+                                                                                onChange={this.handle_superSecreto}
+                                                                                value={this.state.superSecreto}
+                                                                                className="inputEmail"
+                                                                            />
+                                                                        </Col>
+                                                                    </Row>
+                                                                </FormGroup>
+                                                                <FormGroup className="text-center">
+                                                                    <Button
+                                                                        color="primary"
+                                                                        type="submit"
+                                                                    >
+                                                                        Guardar
                                                                 </Button>
-                                                            </FormGroup>
+                                                                </FormGroup>
+                                                            </React.Fragment>
                                                         }
                                                     </React.Fragment>
                                                 }

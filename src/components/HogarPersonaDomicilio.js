@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import Global from '../Global'
+import helpers from './Helpers'
 import PaisEstado from '../components/PaisEstado';
 
 class Domicilio extends React.Component {
-    url = Global.url_api;
+    url = helpers.url_api;
 
     constructor(props) {
         super(props)

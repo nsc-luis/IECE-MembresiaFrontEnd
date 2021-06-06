@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Global from '../../Global';
+import helpers from '../../components/Helpers';
 import '../../assets/css/index.css';
 import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,8 @@ import Layout from '../Layout';
 
 class ListaDePersonal extends Component {
 
-    url = Global.url_api;
+    url = helpers.url_api;
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     state = {
         personas: [],
@@ -30,11 +31,7 @@ class ListaDePersonal extends Component {
         ConcubinadoSolteroConHijos: false,
         soltero: false
     };
-
-    componentDidMount() {
-        console.log(localStorage.getItem('token'));
-    }
-
+    
     openModalPersonaGenerales = async (persona) => {
         let pro1;
         let pro2;
@@ -200,7 +197,7 @@ class ListaDePersonal extends Component {
     };
 
     getPersonas = () => {
-        axios.get(this.url + "/persona")
+        axios.get(this.url + "/persona/GetBySector/" + this.infoSesion.sec_Id_Sector)
             .then(res => {
                 this.setState({
                     personas: res.data,
@@ -247,7 +244,8 @@ class ListaDePersonal extends Component {
     } */
 
     getSector = () => {
-        axios.get(this.url + "/sector/227")
+        // axios.get(this.url + "/sector/" + infoSesion.sec_Id_Sector)
+        axios.get(this.url + "/sector/" + this.infoSesion.sec_Id_Sector)
             .then(res => {
                 this.setState({
                     sector: res.data[0],

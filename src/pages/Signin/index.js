@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Globales from '../../Global';
+import helpers from '../../components/Helpers';
 import axios from 'axios';
 import {
     Form, FormGroup, Input, Button, Row, Col,
@@ -8,7 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 
 class Login extends Component {
-    url = Globales.url_api;
+    url = helpers.url_api;
 
     constructor(props) {
         super(props);
@@ -66,7 +66,7 @@ class Login extends Component {
         e.preventDefault();
 
         localStorage.removeItem('token');
-        localStorage.removeItem('emailUser');
+        localStorage.removeItem('infoSesion');
 
         // VALIDA CAMPOS DE LOGIN
         var camposLoginAValidar = [
@@ -99,7 +99,7 @@ class Login extends Component {
                                 loginInvalido: true,
                             });
                             localStorage.setItem('token', this.state.token);
-                            localStorage.setItem('emailUser', this.state.Email);
+                            localStorage.setItem('infoSesion', JSON.stringify(res.data.infoSesion[0]));
                             setTimeout(() => { document.location.href = '/Main'; }, 3000);
                         }
                         else {

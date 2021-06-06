@@ -16,7 +16,7 @@ class Router extends Component {
     }
     render() {
         return (
-            <BrowserRouter /* basename="/webapp" */>
+            <BrowserRouter /* basename='/webapp' */>
                 <Switch>
                     <Route exact path="/Main" component={Main} />
                     <Route exact path="/" component={Signin} />

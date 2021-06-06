@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import Globales from '../Global'
+import helpers from './Helpers'
 import { Row, Col, Container, FormFeedback, FormGroup, Input } from 'reactstrap'
 
 class EmailMinistro extends Component {
-    url = Globales.url_api
+    url = helpers.url_api
 
     constructor(props) {
         super(props)

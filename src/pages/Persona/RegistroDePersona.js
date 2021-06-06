@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import PersonaForm from '../../components/PersonaForm';
 import axios from 'axios';
-import Global from '../../Global';
+import helpers from '../../components/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Layout from '../Layout';
+import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from 'reactstrap';
 
 class RegistroDePersonal extends Component {
 
-    url = Global.url_api;
+    url = helpers.url_api;
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     constructor(props) {
         super(props);
@@ -20,6 +22,8 @@ class RegistroDePersonal extends Component {
             per_Nombre_NoValido: true,
             per_Apellido_Paterno_NoValido: true,
             per_Fecha_Nacimiento_NoValido: true,
+            modalShow: false,
+            mensajeDelProceso: ""
         }
     }
 
@@ -40,7 +44,8 @@ class RegistroDePersonal extends Component {
                 per_Fecha_Boda_Eclesiastica: "01/01/1900",
                 per_Fecha_Bautismo: "01/01/1900",
                 per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
-                per_Cargos_Desempenados: ""
+                per_Cargos_Desempenados: "",
+                sec_Id_Sector: this.infoSesion.sec_Id_Sector
             },
             domicilio: {
                 ...this.state.domicilio,
@@ -233,31 +238,41 @@ class RegistroDePersonal extends Component {
     fnGuardaPersona = async (datos) => {
         try {
             await axios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
-            .then(res => {
-                if (res.data.status === "success") {
-                    alert("Datos guardados satisfactoriamente");
-                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                } else {
-                    alert("Error: No se pudo guardar. Revise los datos ingresados");
-                }
-            });
+                .then(res => {
+                    if (res.data.status === "success") {
+                        alert("Datos guardados satisfactoriamente");
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                    } else {
+                        alert("Error: No se pudo guardar. Revise los datos ingresados");
+                    }
+                });
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
     }
 
-    fnGuardaPersonaEnHogar = async(datos, jerarquia, hdId) => {
+    fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => {
         try {
             await axios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
-            .then(res => {
-                if (res.data.status === "success") {
-                    alert("Datos guardados satisfactoriamente");
-                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                } else {
-                    alert("Error: No se pudo guardar. Revise los datos ingresados");
-                }
-            })
+                .then(res => {
+                    if (res.data.status === "success") {
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        alert("Error: No se pudo guardar. Revise los datos ingresados");
+                    }
+                })
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
@@ -268,22 +283,34 @@ class RegistroDePersonal extends Component {
 
         return (
             <Layout>
-            <PersonaForm
-                onChange={this.handleChange}
-                form={this.state.form}
-                onChangeDomicilio={this.handleChangeDomicilio}
-                domicilio={this.state.domicilio}
-                categoriaSeleccionada={this.state.categoriaSeleccionada}
-                msjCategoriaSeleccionada={this.state.msjCategoriaSeleccionada}
-                habilitaPerBautizado={this.state.habilitaPerBautizado}
-                per_Nombre_NoValido={this.state.per_Nombre_NoValido}
-                per_Apellido_Paterno_NoValido={this.state.per_Apellido_Paterno_NoValido}
-                per_Fecha_Nacimiento_NoValido={this.state.per_Fecha_Nacimiento_NoValido}
-                changeRFCSinHomo={this.changeRFCSinHomo}
-                changeEstadoCivil={this.changeEstadoCivil}
-                fnGuardaPersona={this.fnGuardaPersona}
-                fnGuardaPersonaEnHogar={this.fnGuardaPersonaEnHogar}
-            />
+                <PersonaForm
+                    onChange={this.handleChange}
+                    form={this.state.form}
+                    onChangeDomicilio={this.handleChangeDomicilio}
+                    domicilio={this.state.domicilio}
+                    categoriaSeleccionada={this.state.categoriaSeleccionada}
+                    msjCategoriaSeleccionada={this.state.msjCategoriaSeleccionada}
+                    habilitaPerBautizado={this.state.habilitaPerBautizado}
+                    per_Nombre_NoValido={this.state.per_Nombre_NoValido}
+                    per_Apellido_Paterno_NoValido={this.state.per_Apellido_Paterno_NoValido}
+                    per_Fecha_Nacimiento_NoValido={this.state.per_Fecha_Nacimiento_NoValido}
+                    changeRFCSinHomo={this.changeRFCSinHomo}
+                    changeEstadoCivil={this.changeEstadoCivil}
+                    fnGuardaPersona={this.fnGuardaPersona}
+                    fnGuardaPersonaEnHogar={this.fnGuardaPersonaEnHogar}
+                />
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    {/* <ModalHeader>
+                        Solo prueba.
+                    </ModalHeader> */}
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                    {/* <ModalFooter>
+                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
+                    </ModalFooter> */}
+                </Modal>
             </Layout>
         )
     }
