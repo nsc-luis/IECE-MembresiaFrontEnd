@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: small;
 }
 
 code {
@@ -53,4 +54,12 @@ input[type=text] {
   border: 1px solid black;
   width: 150px;
   height: 150px;
+}
+
+.modalVerInfoPersona {
+  width: 800px;
+  height: auto;
+}
+.modalVerInfoPersona Input {
+  font-size: small;
 }
