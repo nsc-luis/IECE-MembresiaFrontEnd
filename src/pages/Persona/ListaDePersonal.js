@@ -341,8 +341,6 @@ class ListaDePersonal extends Component {
         });
     }
 
-
-
     render() {
         if (this.state.personas.length >= 1) {
             return (
@@ -357,7 +355,8 @@ class ListaDePersonal extends Component {
                                 </p>
                             </div>
                             <div className="col-2">
-                                <Link to="/RegistroDePersona" className="btn bnt-sm btn-primary">Registrar persona</Link>
+                                <Link to="/RegistroDePersona?id=0" className="btn bnt-sm btn-primary">Registrar persona</Link>
+                                {/* <button onClick={this.handle_RegistroNvaPersona()} className="btn bnt-sm btn-primary">Registrar persona</button> */}
                             </div>
                         </div>
                         <br />
