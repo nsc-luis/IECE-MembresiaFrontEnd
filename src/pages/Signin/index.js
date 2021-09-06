@@ -21,6 +21,9 @@ class Login extends Component {
             passwordInvalido: false,
             loginInvalido: false
         };
+        if(localStorage.getItem("infoSesion")) {
+            document.location.href = '/Main';
+        }
     }
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS

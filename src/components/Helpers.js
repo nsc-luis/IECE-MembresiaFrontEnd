@@ -30,6 +30,18 @@ const helpers = {
         } else {
             return true;
         }
+    },
+
+    // METODO PARA VERIFICAR SI SE HA INICIADO SESION
+    isLoggedIn: function() {
+        const statusInfoSession = localStorage.getItem("infoSesion") ? true : false;
+        const statusToken = localStorage.getItem("token") ? true : false;
+        if (statusInfoSession === false || statusToken === false) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }
 

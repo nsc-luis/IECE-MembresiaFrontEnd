@@ -8,51 +8,52 @@ import Sidebar from '../../components/nav/Sidebar';
 import Topbar from '../../components/nav/Topbar';
 import Footer from '../../components/nav/Footer';
 
-const Layout = ({ children }) => {
+class Layout extends Component {
 
-    const beforeUnloadListener = () => {
-        window.addEventListener("beforeunload", (ev) => {
-            ev.preventDefault();
-            return localStorage.clear();
-        })
+    constructor(props) {
+        super(props);
+        this.state = {};
     }
 
-    return (
-        <React.Fragment>
-            {/* CONFIGURAR RUTAS Y PAGINAS */}
-            {/* Page Wrapper */}
-            <div id="wrapper">
+    render() {
+        const { children } = this.props
+        return (
 
-                <Sidebar />
+            <React.Fragment>
+                {/* CONFIGURAR RUTAS Y PAGINAS */}
+                {/* Page Wrapper */}
+                <div id="wrapper">
 
-                {/* Content Wrapper */}
-                <div id="content-wrapper" className="d-flex flex-column">
+                    <Sidebar />
 
-                    {/* Main Content */}
-                    <div id="content">
+                    {/* Content Wrapper */}
+                    <div id="content-wrapper" className="d-flex flex-column">
 
-                        <Topbar />
+                        {/* Main Content */}
+                        <div id="content">
 
-                        {/* Begin Page Content */}
-                        <div className="container-fluid">
-                            {/* Page Heading */}
-                            {children}
+                            <Topbar />
+
+                            {/* Begin Page Content */}
+                            <div className="container-fluid">
+                                {/* Page Heading */}
+                                {children}
+                            </div>
+                            {/* /.container-fluid */}
+
                         </div>
-                        {/* /.container-fluid */}
+                        {/* End of Main Content */}
+
+                        <Footer />
 
                     </div>
-                    {/* End of Main Content */}
-
-                    <Footer />
+                    {/* End of Content Wrapper */}
 
                 </div>
-                {/* End of Content Wrapper */}
-
-            </div>
-            {/* End of Page Wrapper */}
-        </React.Fragment>
-    )
-
+                {/* End of Page Wrapper */}
+            </React.Fragment>
+        )
+    }
 }
 
 export default Layout;

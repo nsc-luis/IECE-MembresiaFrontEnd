@@ -67,7 +67,7 @@ class PersonaForm extends Component {
         return <Redirect to='/ListaDePersonal' />;
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getProfesionesOficios();
         this.setState({
             mensajes: {
@@ -665,6 +665,7 @@ class PersonaForm extends Component {
                                                                             name="per_Email_Personal"
                                                                             onChange={onChange}
                                                                             invalid={this.state.emailInvalido}
+                                                                            value={form.per_Email_Personal}
                                                                         />
                                                                         <label>Email</label>
                                                                         <FormFeedback>{this.state.mensajes.emailInvalido}</FormFeedback>
@@ -680,6 +681,7 @@ class PersonaForm extends Component {
                                                                             name="pro_Id_Profesion_Oficio1"
                                                                             className="form-control"
                                                                             onChange={onChange}
+                                                                            value={form.pro_Id_Profesion_Oficio1}
                                                                         >
                                                                             {
                                                                                 this.state.profesiones_oficios.map((profesion_oficio) => {
@@ -702,6 +704,7 @@ class PersonaForm extends Component {
                                                                             name="pro_Id_Profesion_Oficio2"
                                                                             className="form-control"
                                                                             onChange={onChange}
+                                                                            value={form.pro_Id_Profesion_Oficio2}
                                                                         >
                                                                             {
                                                                                 this.state.profesiones_oficios.map((profesion_oficio, i) => {
@@ -725,6 +728,7 @@ class PersonaForm extends Component {
                                                                             name="per_Telefono_Movil"
                                                                             onChange={onChange}
                                                                             invalid={this.state.telMovilInvalido}
+                                                                            value={form.per_Telefono_Movil}
                                                                         />
                                                                         <label>Telefono movil</label>
                                                                         <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
@@ -781,6 +785,7 @@ class PersonaForm extends Component {
                                                                                     name="per_Nombre_Padre"
                                                                                     onChange={onChange}
                                                                                     className="form-control"
+                                                                                    value={form.per_Nombre_Padre}
                                                                                 />
                                                                                 <label>Padre</label>
                                                                             </div>
@@ -790,6 +795,7 @@ class PersonaForm extends Component {
                                                                                     name="per_Nombre_Madre"
                                                                                     onChange={onChange}
                                                                                     className="form-control"
+                                                                                    value={form.per_Nombre_Madre}
                                                                                 />
                                                                                 <label>Madre</label>
                                                                             </div>
@@ -804,6 +810,7 @@ class PersonaForm extends Component {
                                                                                     name="per_Nombre_Abuelo_Paterno"
                                                                                     onChange={onChange}
                                                                                     className="form-control"
+                                                                                    value={form.per_Nombre_Abuelo_Paterno}
                                                                                 />
                                                                                 <label>Abuelo paterno</label>
                                                                             </div>
@@ -813,6 +820,7 @@ class PersonaForm extends Component {
                                                                                     name="per_Nombre_Abuela_Paterna"
                                                                                     onChange={onChange}
                                                                                     className="form-control"
+                                                                                    value={form.per_Nombre_Abuela_Paterna}
                                                                                 />
                                                                                 <label>Abuela paterna</label>
                                                                             </div>
@@ -827,6 +835,7 @@ class PersonaForm extends Component {
                                                                                     name="per_Nombre_Abuelo_Materno"
                                                                                     onChange={onChange}
                                                                                     className="form-control"
+                                                                                    value={form.per_Nombre_Abuelo_Materno}
                                                                                 />
                                                                                 <label>Abuelo materno</label>
                                                                             </div>
@@ -836,6 +845,7 @@ class PersonaForm extends Component {
                                                                                     name="per_Nombre_Abuela_Materna"
                                                                                     onChange={onChange}
                                                                                     className="form-control"
+                                                                                    value={form.per_Nombre_Abuela_Materna}
                                                                                 />
                                                                                 <label>Abuela materna</label>
                                                                             </div>

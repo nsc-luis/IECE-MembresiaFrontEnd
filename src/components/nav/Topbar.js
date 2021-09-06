@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class Topbar extends Component {
 
     constructor(props) {
         super(props);
         this.state = {};
+        if(!localStorage.getItem("infoSesion")) {
+            document.location.href = '/';
+        }
     }
+
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     handleLogoff = () => {

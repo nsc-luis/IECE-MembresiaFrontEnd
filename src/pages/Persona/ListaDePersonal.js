@@ -8,178 +8,42 @@ import {
     Container, Row, Col,
     Form, FormGroup, Label
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Layout from '../Layout';
 
 class ListaDePersonal extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            personas: [],
+            status: null,
+            sector: {},
+            distrito: {},
+            modalOpen: false,
+            showModalPersonaGenerales: false,
+            showModalPersonaFamiliaAsendente: false,
+            showModalPersonaEclesiasticos: false,
+            showModalPersonaEstadoCivil: false,
+            showModalPersonaHogar: false,
+            currentPersona: {},
+            currentProfesion1: {},
+            currentProfesion2: {},
+            MiembrosDelHogar: [],
+            DatosHogarDomicilio: {},
+            CasadoDivorciadoViudo: false,
+            ConcubinadoSolteroConHijos: false,
+            soltero: false,
+            modalInfoPersona: false,
+            currentPersona: {}
+        };
+        if (!localStorage.getItem("infoSesion")) {
+            document.location.href = '/';
+        }
+    }
+
     url = helpers.url_api;
-    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
-
-    state = {
-        personas: [],
-        status: null,
-        sector: {},
-        distrito: {},
-        modalOpen: false,
-        showModalPersonaGenerales: false,
-        showModalPersonaFamiliaAsendente: false,
-        showModalPersonaEclesiasticos: false,
-        showModalPersonaEstadoCivil: false,
-        showModalPersonaHogar: false,
-        currentPersona: {},
-        currentProfesion1: {},
-        currentProfesion2: {},
-        MiembrosDelHogar: [],
-        DatosHogarDomicilio: {},
-        CasadoDivorciadoViudo: false,
-        ConcubinadoSolteroConHijos: false,
-        soltero: false,
-        modalInfoPersona: false,
-        currentPersona: {}
-    };
-
-    /* openModalPersonaGenerales = async (persona) => {
-        let pro1;
-        let pro2;
-
-        if (await this.getProfesion1(persona.per_Id_Persona)) {
-            pro1 = await this.getProfesion1(persona.per_Id_Persona);
-        } else {
-            pro1 = [
-                {
-                    pro_Categoria: "Sin informacion",
-                    pro_Sub_Categoria: "Sin Informacion"
-                }
-            ]
-        }
-        if (await this.getProfesion2(persona.per_Id_Persona)) {
-            pro2 = await this.getProfesion2(persona.per_Id_Persona);
-        } else {
-            pro2 = [
-                {
-                    pro_Categoria: "Sin informacion",
-                    pro_Sub_Categoria: "Sin Informacion"
-                }
-            ]
-        }
-        await this.setState({
-            showModalPersonaGenerales: true,
-            currentPersona: persona
-        });
-        await this.setState({
-            currentProfesion1: pro1[0],
-            currentProfesion2: pro2[0]
-        });
-    }
-    closeModalPersonaGenerales = () => {
-        this.setState({ showModalPersonaGenerales: false });
-    }
-
-    openModalPersonaFamiliaAsendente = async (persona) => {
-        await this.setState({
-            showModalPersonaFamiliaAsendente: true,
-            currentPersona: persona
-        });
-    }
-    closeModalPersonaFamiliaAsendente = () => {
-        this.setState({ showModalPersonaFamiliaAsendente: false })
-    }
-
-    openModalPersonaEstadoCivil = (persona) => {
-
-        console.log(persona.per_Estado_Civil);
-
-        switch (persona.per_Estado_Civil) {
-            case 'CASADO(A)':
-                this.setState({
-                    CasadoDivorciadoViudo: true,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: false
-                });
-                break;
-            case 'DIVORCIADO(A)':
-                this.setState({
-                    CasadoDivorciadoViudo: true,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: false
-                });
-                break;
-            case 'VIUDO(A)':
-                this.setState({
-                    CasadoDivorciadoViudo: true,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: false
-                });
-                break;
-            case 'CONCUBINATO':
-                this.setState({
-                    CasadoDivorciadoViudo: false,
-                    ConcubinadoSolteroConHijos: true,
-                    soltero: false
-                });
-                break;
-            case 'SOLTERO(A) CON HIJOS':
-                this.setState({
-                    CasadoDivorciadoViudo: false,
-                    ConcubinadoSolteroConHijos: true,
-                    soltero: false
-                });
-                break;
-            default:
-                this.setState({
-                    CasadoDivorciadoViudo: false,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: true
-                });
-                break;
-        }
-
-        this.setState({
-            showModalPersonaEstadoCivil: true,
-            currentPersona: persona
-        });
-        console.log(persona);
-    }
-    closeModalPersonaEstadoCivil = () => {
-        this.setState({ showModalPersonaEstadoCivil: false })
-    }
-
-    openModalPersonaEclesiasticos = (persona) => {
-        this.setState({
-            showModalPersonaEclesiasticos: true,
-            currentPersona: persona
-        });
-        console.log(persona);
-    }
-    closeModalPersonaEclesiasticos = () => {
-        this.setState({ showModalPersonaEclesiasticos: false })
-    }
-
-    openModalPersonaHogar = async (persona) => {
-
-        let getHogar = await axios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
-            .then(res => res.data);
-
-        await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + getHogar.hd_Id_Hogar)
-            .then(res => {
-                this.setState({
-                    MiembrosDelHogar: res.data
-                });
-            });
-        await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
-            .then(res => {
-                this.setState({
-                    DatosHogarDomicilio: res.data,
-                    showModalPersonaHogar: true
-                });
-            });
-        console.log(this.state.DatosHogarDomicilio);
-        console.log(this.state.SelectHogarId);
-    }
-    closeModalPersonaHogar = () => {
-        this.setState({ showModalPersonaHogar: false });
-    } */
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));    
 
     getProfesion1 = async (persona) => {
         return await axios.get(this.url + "/persona/GetProfesion1/" + persona)
@@ -239,16 +103,6 @@ class ListaDePersonal extends Component {
         // console.log(infoStatus);
         return infoStatus;
     }
-
-    /* getDistrito = () => {
-        axios.get(this.url + "/distrito/42")
-            .then(res => {
-                this.setState({
-                    distrito: res.data,
-                    status: 'success'
-                });
-            });
-    } */
 
     getSector = () => {
         // axios.get(this.url + "/sector/" + infoSesion.sec_Id_Sector)
@@ -341,6 +195,21 @@ class ListaDePersonal extends Component {
         });
     }
 
+    handle_editarPersona = (infoPersona) => {
+        if(localStorage.getItem("idPersona")) {
+            localStorage.removeItem("idPersona");
+            localStorage.removeItem("currentPersona");
+        }
+        localStorage.setItem("idPersona", infoPersona.per_Id_Persona);
+        localStorage.setItem("currentPersona", JSON.stringify(infoPersona));
+        document.location.href="/RegistroDePersona";
+    }
+
+    handle_RegistroNvaPersona = () => {
+        localStorage.setItem("idPersona", "0");
+        this.props.history.push("/RegistroDePersona");
+    }
+
     render() {
         if (this.state.personas.length >= 1) {
             return (
@@ -355,8 +224,8 @@ class ListaDePersonal extends Component {
                                 </p>
                             </div>
                             <div className="col-2">
-                                <Link to="/RegistroDePersona?id=0" className="btn bnt-sm btn-primary">Registrar persona</Link>
-                                {/* <button onClick={this.handle_RegistroNvaPersona()} className="btn bnt-sm btn-primary">Registrar persona</button> */}
+                                {/* <Link to="/RegistroDePersona" className="btn bnt-sm btn-primary">Registrar persona</Link> */}
+                                <button onClick={this.handle_RegistroNvaPersona} className="btn bnt-sm btn-primary">Registrar persona</button>
                             </div>
                         </div>
                         <br />
@@ -414,13 +283,13 @@ class ListaDePersonal extends Component {
                                                             className="btn btn-success btn-sm"
                                                             title="Ver hoja de datos">
                                                             <span className="fas fa-eye"></span>Ver Info
-                                                    </button>
+                                                        </button>
                                                         <button
                                                             onClick={() => this.fnEliminaPersona(persona)}
                                                             className="btn btn-danger btn-sm"
                                                             title="Eliminar persona">
                                                             <span className="fas fa-trash-alt"></span>Eliminar
-                                                    </button>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                                 <Modal isOpen={this.state.modalInfoPersona} className="modalVerInfoPersona" size="lg" >
@@ -758,7 +627,7 @@ class ListaDePersonal extends Component {
                                                     <ModalFooter>
                                                         <Button color="secondary" onClick={this.handle_modalInfoPersonaClose}>Cancel</Button>
                                                         <Button color="danger" >Generar PDF</Button>
-                                                        <Button color="success" >Editar</Button>
+                                                        <Button color="success" onClick={() => this.handle_editarPersona(this.state.currentPersona)} >Editar</Button>
                                                     </ModalFooter>
                                                 </Modal>
                                             </React.Fragment>

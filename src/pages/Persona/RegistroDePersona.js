@@ -9,10 +9,13 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from 'reactstrap';
 class RegistroDePersonal extends Component {
 
     url = helpers.url_api;
-    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     constructor(props) {
         super(props);
+        if (!localStorage.getItem('infoSesion')) {
+            document.location.href = '/';
+        }
+
         this.state = {
             form: {},
             domicilio: {},
@@ -27,31 +30,98 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    componentWillMount() {
-        this.setState({
-            form: {
-                ...this.state.form,
-                per_Bautizado: false,
-                per_RFC_Sin_Homo: "XAXX010101XXX",
-                per_Estado_Civil: "SOLTERO(A)",
-                per_foto: uuidv4(),
-                per_Activo: 1,
-                per_En_Comunion: 1,
-                per_Vivo: 1,
-                pro_Id_Profesion_Oficio1: "1",
-                pro_Id_Profesion_Oficio2: "1",
-                per_Fecha_Boda_Civil: "01/01/1900",
-                per_Fecha_Boda_Eclesiastica: "01/01/1900",
-                per_Fecha_Bautismo: "01/01/1900",
-                per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
-                per_Cargos_Desempenados: "",
-                sec_Id_Sector: this.infoSesion.sec_Id_Sector
-            },
-            domicilio: {
-                ...this.state.domicilio,
-                hd_Tipo_Subdivision: "COL"
+    infoSesion = localStorage.getItem("infoSesion");
+
+    componentDidMount() {
+        if (localStorage.getItem("idPersona") === "0") {
+            this.setState({
+                form: {
+                    ...this.state.form,
+                    per_Categoria: "0",
+                    per_Bautizado: false,
+                    per_RFC_Sin_Homo: "XAXX010101XXX",
+                    per_Estado_Civil: "SOLTERO(A)",
+                    per_foto: uuidv4(),
+                    per_Activo: 1,
+                    per_En_Comunion: 1,
+                    per_Vivo: 1,
+                    pro_Id_Profesion_Oficio1: "1",
+                    pro_Id_Profesion_Oficio2: "1",
+                    per_Nombre_Padre: "",
+                    per_Nombre_Madre: "",
+                    per_Nombre_Abuelo_Paterno: "",
+                    per_Nombre_Abuela_Paterna: "",
+                    per_Nombre_Abuelo_Materno: "",
+                    per_Nombre_Abuela_Materna: "",
+                    per_Fecha_Boda_Civil: "01/01/1900",
+                    per_Fecha_Boda_Eclesiastica: "01/01/1900",
+                    per_Fecha_Bautismo: "01/01/1900",
+                    per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
+                    per_Cargos_Desempenados: "",
+
+                    sec_Id_Sector: this.infoSesion.sec_Id_Sector
+                },
+                domicilio: {
+                    ...this.state.domicilio,
+                    hd_Tipo_Subdivision: "COL"
+                }
+            })
+        } else {
+            let currentPersona = JSON.parse(localStorage.getItem('currentPersona'));
+            console.log(currentPersona);
+            /* this.state.FrmValidaPersona === false
+            this.state.PersonaEncontrada === false */
+            function reFormatoFecha(fecha) {
+                let foo = fecha.split("T");
+                let bar = foo[0].split("-");
+                let f = bar[2] + "/" + bar[1] + "/" + bar[0];
+                return f;
             }
-        })
+            this.setState({
+                categoriaSeleccionada: true,
+                per_Nombre_NoValido: false,
+                per_Apellido_Paterno_NoValido: false,
+                per_Fecha_Nacimiento_NoValido: false,
+                form: {
+                    ...this.state.form,
+                    per_Categoria: currentPersona.per_Categoria,
+                    per_Nombre: currentPersona.per_Nombre,
+                    per_Apellido_Paterno: currentPersona.per_Apellido_Paterno,
+                    per_Apellido_Materno: currentPersona.per_Apellido_Materno,
+                    per_Fecha_Nacimiento: reFormatoFecha(currentPersona.per_Fecha_Nacimiento),
+                    per_Fecha_Bautismo: reFormatoFecha(currentPersona.per_Fecha_Bautismo),
+                    per_Fecha_Boda_Civil: reFormatoFecha(currentPersona.per_Fecha_Boda_Civil),
+                    per_Fecha_Recibio_Espiritu_Santo: reFormatoFecha(currentPersona.per_Fecha_Recibio_Espiritu_Santo),
+                    per_Fecha_Boda_Eclesiastica: reFormatoFecha(currentPersona.per_Fecha_Boda_Eclesiastica),
+                    per_Bautizado: currentPersona.per_Bautizado,
+                    per_RFC_Sin_Homo: currentPersona.per_RFC_Sin_Homo,
+                    per_Estado_Civil: currentPersona.per_Estado_Civil,
+                    per_foto: currentPersona.per_foto,
+                    per_Activo: currentPersona.per_Activo,
+                    per_En_Comunion: currentPersona.per_En_Comunion,
+                    per_Vivo: currentPersona.per_Vivo,
+                    pro_Id_Profesion_Oficio1: currentPersona.pro_Id_Profesion_Oficio1,
+                    pro_Id_Profesion_Oficio2: currentPersona.pro_Id_Profesion_Oficio2,
+                    per_Cargos_Desempenados: currentPersona.per_Cargos_Desempenados,
+                    per_Nacionalidad: currentPersona.per_Nacionalidad,
+                    per_Lugar_De_Nacimiento: currentPersona.per_Lugar_De_Nacimiento,
+                    per_Email_Personal: currentPersona.per_Email_Personal,
+                    per_Telefono_Movil: currentPersona.per_Telefono_Movil,
+                    per_Nombre_Padre: currentPersona.per_Nombre_Padre,
+                    per_Nombre_Madre: currentPersona.per_Nombre_Madre,
+                    per_Nombre_Abuelo_Paterno: currentPersona.per_Nombre_Abuelo_Paterno,
+                    per_Nombre_Abuela_Paterna: currentPersona.per_Nombre_Abuela_Paterna,
+                    per_Nombre_Abuelo_Materno: currentPersona.per_Nombre_Abuelo_Materno,
+                    per_Nombre_Abuela_Materna: currentPersona.per_Nombre_Abuela_Materna,
+                    per_Lugar_Boda_Eclesiastica: currentPersona.per_Lugar_Boda_Eclesiastica,
+                    per_Lugar_Bautismo: currentPersona.per_Lugar_Bautismo,
+                    per_Ministro_Que_Bautizo: currentPersona.per_Ministro_Que_Bautizo,
+                    per_Bajo_Imposicion_De_Manos: currentPersona.per_Bajo_Imposicion_De_Manos,
+                    per_Cambios_De_DomicilioRef: currentPersona.per_Cambios_De_DomicilioRef,
+                    sec_Id_Sector: this.infoSesion.sec_Id_Sector
+                }
+            });
+        }
     }
 
     const_regex = {
