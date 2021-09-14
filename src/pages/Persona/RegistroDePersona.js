@@ -12,13 +12,16 @@ class RegistroDePersonal extends Component {
 
     constructor(props) {
         super(props);
-        if (!localStorage.getItem('infoSesion')) {
+        if (!localStorage.getItem('token')) {
             document.location.href = '/';
         }
 
         this.state = {
             form: {},
             domicilio: {},
+            /* hogar: {},
+            FrmValidaPersona: true,
+            PersonaEncontrada: false, */
             categoriaSeleccionada: false,
             msjCategoriaSeleccionada: "",
             habilitaPerBautizado: false,
@@ -29,8 +32,6 @@ class RegistroDePersonal extends Component {
             mensajeDelProceso: ""
         }
     }
-
-    infoSesion = localStorage.getItem("infoSesion");
 
     componentDidMount() {
         if (localStorage.getItem("idPersona") === "0") {
@@ -58,17 +59,30 @@ class RegistroDePersonal extends Component {
                     per_Fecha_Bautismo: "01/01/1900",
                     per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
                     per_Cargos_Desempenados: "",
-
-                    sec_Id_Sector: this.infoSesion.sec_Id_Sector
+                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
                 },
                 domicilio: {
                     ...this.state.domicilio,
                     hd_Tipo_Subdivision: "COL"
-                }
+                },
+                /* hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: 0,
+                    hp_Jerarquia: 1
+                } */
             })
         } else {
             let currentPersona = JSON.parse(localStorage.getItem('currentPersona'));
-            console.log(currentPersona);
+            /* axios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
+                .then(res =>{
+                    this.setState({
+                        hogar: {
+                            ...this.state.hogar,
+                            hd_Id_Hogar: res.data.hd_Id_Hogar,
+                            hp_Jerarquia: res.data.hp_Jerarquia
+                        }
+                    })
+                }) */
             /* this.state.FrmValidaPersona === false
             this.state.PersonaEncontrada === false */
             function reFormatoFecha(fecha) {
@@ -117,8 +131,7 @@ class RegistroDePersonal extends Component {
                     per_Lugar_Bautismo: currentPersona.per_Lugar_Bautismo,
                     per_Ministro_Que_Bautizo: currentPersona.per_Ministro_Que_Bautizo,
                     per_Bajo_Imposicion_De_Manos: currentPersona.per_Bajo_Imposicion_De_Manos,
-                    per_Cambios_De_DomicilioRef: currentPersona.per_Cambios_De_DomicilioRef,
-                    sec_Id_Sector: this.infoSesion.sec_Id_Sector
+                    per_Cambios_De_DomicilioRef: currentPersona.per_Cambios_De_DomicilioRef
                 }
             });
         }
@@ -146,7 +159,6 @@ class RegistroDePersonal extends Component {
             }
         })
         if (e.target.name === "per_Categoria") {
-            console.log(e.target.value)
             switch (e.target.value) {
                 default:
                     this.setState({
@@ -349,15 +361,24 @@ class RegistroDePersonal extends Component {
         }
     }
 
+    componentWillUnmount() {
+        this.setState({
+            form: {}
+        });
+    }
+
     render() {
 
         return (
             <Layout>
                 <PersonaForm
                     onChange={this.handleChange}
+                    /* FrmValidaPersona={this.FrmValidaPersona}
+                    PersonaEncontrada={this.PersonaEncontrada} */
                     form={this.state.form}
                     onChangeDomicilio={this.handleChangeDomicilio}
                     domicilio={this.state.domicilio}
+                    /* hogar={this.state.hogar} */
                     categoriaSeleccionada={this.state.categoriaSeleccionada}
                     msjCategoriaSeleccionada={this.state.msjCategoriaSeleccionada}
                     habilitaPerBautizado={this.state.habilitaPerBautizado}

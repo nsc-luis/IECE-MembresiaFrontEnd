@@ -42,6 +42,12 @@ const helpers = {
         else {
             return true;
         }
+    },
+
+    // METODO PARA INVOCAR UN FORMULARIO DE PERSONA NUEVO
+    handle_RegistroNvaPersona: function() {
+        localStorage.setItem("idPersona", "0");
+        document.location.href = "/RegistroDePersona";
     }
 }
 

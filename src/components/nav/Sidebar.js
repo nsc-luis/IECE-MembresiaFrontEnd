@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import helpers from '.././/Helpers';
 
 class Sidebar extends Component { 
     render() {
@@ -41,7 +42,8 @@ class Sidebar extends Component {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="/RegistroDePersona">
+                        {/* <Link className="nav-link collapsed" to="/RegistroDePersona"> */}
+                        <Link className="nav-link collapsed" to="#" onClick={helpers.handle_RegistroNvaPersona}>
                             <i className="fas fa-fw fa-id-card"></i>
                             <span>Regitrar miembro</span>
                         </Link>

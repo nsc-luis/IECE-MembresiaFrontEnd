@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-/* import ListaDePersonal from './components/Persona/ListaDePersonal';
-import Main from './pages/Main/index';
-import RegistroDePersonal from './components/Persona/RegistroDePersona';
-import PaginaNoEncontrada from './pages/Main/PaginaNoEncontrada';
-import Signin from './pages/Signin'; */
 import Sidebar from '../../components/nav/Sidebar';
 import Topbar from '../../components/nav/Topbar';
 import Footer from '../../components/nav/Footer';
@@ -13,6 +8,9 @@ class Layout extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        if (!localStorage.getItem("token")) {
+            document.location.href = '/';
+        }
     }
 
     render() {

@@ -43,8 +43,7 @@ class PersonaForm extends Component {
             distritoSeleccionado: "0",
             sectores: [],
             per_Apellido_Materno_OK: false,
-            hd_Id_Hogar: "0",
-            hp_Jerarquia: "1",
+            hogar: {},
             redirect: false,
             showModalAltaPersona: false,
             emailInvalido: false,
@@ -53,7 +52,13 @@ class PersonaForm extends Component {
             fechaEspitiruSantoInvalida: false,
             fechaBodaEclesiasticaInvalida: false,
             telMovilInvalido: false,
-            mensajes: {}
+            mensajes: {},
+            DatosHogarDomicilio: [],
+            MiembrosDelHogar: [],
+            JerarquiasDisponibles: []
+        };
+        if (!localStorage.getItem("token")) {
+            document.location.href = '/';
         }
     }
 
@@ -68,6 +73,13 @@ class PersonaForm extends Component {
     }
 
     componentDidMount() {
+        this.setState({
+            hogar: {
+                ...this.state.hogar,
+                hd_Id_Hogar: "0",
+                hp_Jerarquia: "1"
+            }
+        })
         this.getProfesionesOficios();
         this.setState({
             mensajes: {
@@ -80,6 +92,19 @@ class PersonaForm extends Component {
                 telMovilInvalido: 'Formatos admintidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 numeros sin espacios.',
             }
         });
+        if (localStorage.getItem("idPersona") !== "0") {
+            axios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
+                .then(res => {
+                    this.setState({
+                        hogar: {
+                            ...this.state.hogar,
+                            hd_Id_Hogar: String(res.data.hd_Id_Hogar),
+                            hp_Jerarquia: String(res.data.hp_Jerarquia)
+                        }
+                    })
+                    this.fnGetDatosDelHogar(res.data.hd_Id_Hogar)
+                })
+        }
     };
 
     getProfesionesOficios = () => {
@@ -101,21 +126,53 @@ class PersonaForm extends Component {
         }
     }
 
-    handle_hd_Id_Hogar = (str) => {
-        this.setState({
-            hd_Id_Hogar: str
-        })
-        if (str === "0") {
-            this.setState({ hp_Jerarquia: "1" })
+    /// METODOS PARA HOGAR - DOMICILIO ///
+    fnGetDatosDelHogar = async (id) => {
+        if (id !== "0") {
+            await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
+                .then(res => {
+                    this.setState({ MiembrosDelHogar: res.data })
+                })
+            await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+                .then(res => {
+                    this.setState({ DatosHogarDomicilio: res.data })
+                })
+
+            let jerarquias = [];
+            for (let i = 1; i <= this.state.MiembrosDelHogar.length + 1; i++) {
+                jerarquias.push(<option value={i}>{i}</option>)
+            }
+
+            await this.setState({ JerarquiasDisponibles: jerarquias })
+        } else {
+            this.setState({
+                MiembrosDelHogar: [],
+                DatosHogarDomicilio: [],
+                JerarquiasDisponibles: []
+            })
         }
     }
 
+    handle_hd_Id_Hogar = async (e) => {
+        let idHogar = e.target.value;
+        this.setState({
+            hogar: {
+                ...this.state.hogar,
+                hd_Id_Hogar: idHogar,
+                hp_Jerarquia: "1"
+            }
+        })
+        this.fnGetDatosDelHogar(idHogar);
+    }
 
     handle_hp_Jerarquia = (e) => {
         this.setState({
-            hp_Jerarquia: e.target.value
+            hogar: {
+                ...this.state.hogar,
+                hp_Jerarquia: e.target.value
+            }
         })
-    }
+    }    
 
     render() {
         const {
@@ -164,16 +221,18 @@ class PersonaForm extends Component {
             await axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
                 .then(res => {
                     if (res.data.status) {
+
                         this.setState({
-                            PersonaEncontrada: true,
+                            datosPersonaEncontrada: res.data.persona[0],
                             FrmValidaPersona: true,
-                            datosPersonaEncontrada: res.data.persona[0]
+                            PersonaEncontrada: true
                         })
                     } else {
+
                         this.setState({
-                            PersonaEncontrada: false,
+                            datosPersonaEncontrada: [],
                             FrmValidaPersona: false,
-                            datosPersonaEncontrada: []
+                            PersonaEncontrada: false
                         })
                     }
                 })
@@ -181,9 +240,9 @@ class PersonaForm extends Component {
 
         const handleIgnorarDuplicados = () => {
             this.setState({
-                PersonaEncontrada: false,
+                datosPersonaEncontrada: [],
                 FrmValidaPersona: false,
-                datosPersonaEncontrada: []
+                PersonaEncontrada: false
             })
         }
 
@@ -199,7 +258,6 @@ class PersonaForm extends Component {
                 } else {
                     this.setState({ infante: false })
                 }
-                console.log(form.per_Categoria)
 
                 var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
                 if (alphaSpaceRequired.test(per_Apellido_Materno.value)
@@ -223,8 +281,8 @@ class PersonaForm extends Component {
         // FUNCION PARA MOSTRAR FORMULARIO DE EDICION DE CAMPOS GENERALES
         const handleEditaNombre = () => {
             this.setState({
-                PersonaEncontrada: false,
-                FrmValidaPersona: true
+                FrmValidaPersona: true,
+                PersonaEncontrada: false
             });
         }
 
@@ -283,36 +341,35 @@ class PersonaForm extends Component {
             let objDomicilio = this.props.domicilio
 
             // RESTRUCTURA FECHAS
-            var  fechas = [
+            var fechas = [
                 "per_Fecha_Bautismo",
                 "per_Fecha_Boda_Civil",
                 "per_Fecha_Boda_Eclesiastica",
                 "per_Fecha_Nacimiento",
                 "per_Fecha_Recibio_Espiritu_Santo"
             ]
-            console.log(fechas)
             fechas.forEach(fecha => {
                 objPersona[fecha] = fnFormatoFecha(objPersona[fecha])
             });
 
             // VALIDA CAMPOS DE PERSONA
             var camposPersonaAValidar = [
-                {formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida"},
-                {formato: "formatoFecha", campo: "per_Fecha_Boda_Civil", estado: "fechaBodaCivilInvalida"},
-                {formato: "formatoFecha", campo: "per_Fecha_Boda_Eclesiastica", estado: "fechaBodaEclesiasticaInvalida"},
-                {formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida"},
-                {formato: "formatoEmail", campo: "per_Email_Personal", estado: "emailInvalido"},
-                {formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido"}
+                { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
+                { formato: "formatoFecha", campo: "per_Fecha_Boda_Civil", estado: "fechaBodaCivilInvalida" },
+                { formato: "formatoFecha", campo: "per_Fecha_Boda_Eclesiastica", estado: "fechaBodaEclesiasticaInvalida" },
+                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" },
+                { formato: "formatoEmail", campo: "per_Email_Personal", estado: "emailInvalido" },
+                { formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido" }
             ]
             camposPersonaAValidar.forEach(element => {
                 validaFormatos(element.formato, objPersona[element.campo], element.estado)
             });
-            
+
             if (!this.state.emailInvalido && !this.state.fechaBautismoInvalida &&
                 !this.state.fechaBodaCivilInvalida && !this.state.fechaEspitiruSantoInvalida &&
                 !this.state.fechaBodaEclesiasticaInvalida) {
 
-                if (this.state.hd_Id_Hogar === "0") {
+                if (this.state.hogar.hd_Id_Hogar === "0") {
                     let PersonaDomicilioHogar = {
                         id: 1,
                         PersonaEntity: objPersona,
@@ -320,7 +377,7 @@ class PersonaForm extends Component {
                     }
                     fnGuardaPersona(PersonaDomicilioHogar)
                 } else {
-                    fnGuardaPersonaEnHogar(objPersona, this.state.hp_Jerarquia, this.state.hd_Id_Hogar)
+                    fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
                 }
                 console.log("Success: Campos validados")
             } else {
@@ -348,19 +405,6 @@ class PersonaForm extends Component {
                                                 <div className="alert alert-warning mt-3" role="alert">
                                                     <h5><strong>AVISO: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
                                                 </div>
-                                                {/* <FormGroup>
-                                                <Distritos
-                                                    handle_dis_Id_Distrito={this.handle_dis_Id_Distrito}
-                                                />
-                                                {this.state.distritoSeleccionado !== "0" &&
-                                                    <Sectores
-                                                        sectores={this.state.sectores}
-                                                        form={form}
-                                                        onChange={onChange}
-                                                    />
-                                                }
-                                            </div>
-                                            <hr /> */}
 
                                                 <FormGroup>
                                                     <div className="row">
@@ -430,7 +474,7 @@ class PersonaForm extends Component {
                                                         {per_Nombre_NoValido &&
                                                             <span className="text-danger">
                                                                 Campo requerido, solo acepta letras, numeros y espacios.
-                                                </span>
+                                                            </span>
                                                         }
                                                     </div>
                                                 </FormGroup>
@@ -452,7 +496,7 @@ class PersonaForm extends Component {
                                                         {per_Apellido_Paterno_NoValido &&
                                                             <span className="text-danger">
                                                                 Campo requerido, solo acepta letras, numeros y espacios.
-                                                </span>
+                                                            </span>
                                                         }
                                                     </div>
                                                 </FormGroup>
@@ -475,7 +519,7 @@ class PersonaForm extends Component {
                                                         {!this.state.per_Apellido_Materno_OK &&
                                                             <span className="text-primary font-italic">
                                                                 (En blanco si se desconoce)
-                                                </span>
+                                                            </span>
                                                         }
                                                     </div>
                                                 </FormGroup>
@@ -498,7 +542,7 @@ class PersonaForm extends Component {
                                                         {per_Fecha_Nacimiento_NoValido &&
                                                             <span className="text-danger">
                                                                 Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                                </span>
+                                                            </span>
                                                         }
                                                     </div>
                                                 </FormGroup>
@@ -615,8 +659,8 @@ class PersonaForm extends Component {
                                                                                 className="fa fa-pencil fa-sm"
                                                                                 style={{ paddingRight: "10px" }}>
                                                                             </span>
-                                                            Editar nombre
-                                                        </Button>
+                                                                            Editar nombre
+                                                                        </Button>
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>
@@ -1178,6 +1222,10 @@ class PersonaForm extends Component {
                                                                 onChangeDomicilio={onChangeDomicilio}
                                                                 handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
                                                                 handle_hp_Jerarquia={this.handle_hp_Jerarquia}
+                                                                hogar={this.state.hogar}
+                                                                DatosHogarDomicilio={this.state.DatosHogarDomicilio}
+                                                                MiembrosDelHogar={this.state.MiembrosDelHogar}
+                                                                JerarquiasDisponibles={this.state.JerarquiasDisponibles}
                                                             />
                                                         </div>
                                                     </div>
@@ -1193,8 +1241,8 @@ class PersonaForm extends Component {
                                                             className="btn btn-success form-control"
                                                         >
                                                             <span className="fa fa-backspace" style={{ paddingRight: "10px" }}></span>
-                                                    Volver
-                                                </Link>
+                                                            Volver
+                                                        </Link>
                                                     </div>
                                                     <div className="col-sm-2 offset-sm-2">
                                                         <Button
@@ -1202,8 +1250,8 @@ class PersonaForm extends Component {
                                                             className="btn btn-primary form-control"
                                                         >
                                                             <span className="fa fa-save" style={{ paddingRight: "10px" }}></span>
-                                                    Guardar
-                                                </Button>
+                                                            Guardar
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </FormGroup>

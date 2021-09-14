@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import '../assets/css/index.css';
+import helpers from '../components/Helpers';
 
 const Home = () => {
     return (
@@ -28,7 +29,7 @@ const Home = () => {
                             <img src="./images/AddPerson.png" alt="Acceso a registro de personal" className="mx-auto card-img-top imgHome" />
                             <br />
                                 Acceso rapido a registro de pesonas en general. <br />
-                            <Link to="/RegistroDePersona" className="btn btn-sm btn-primary">Ingresar</Link>
+                            <Link to="#" onClick={helpers.handle_RegistroNvaPersona} className="btn btn-sm btn-primary">Ingresar</Link>
                         </div>
                     </div>
                 </div>

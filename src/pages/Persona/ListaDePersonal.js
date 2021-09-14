@@ -37,7 +37,7 @@ class ListaDePersonal extends Component {
             modalInfoPersona: false,
             currentPersona: {}
         };
-        if (!localStorage.getItem("infoSesion")) {
+        if (!localStorage.getItem("token")) {
             document.location.href = '/';
         }
     }
@@ -205,11 +205,6 @@ class ListaDePersonal extends Component {
         document.location.href="/RegistroDePersona";
     }
 
-    handle_RegistroNvaPersona = () => {
-        localStorage.setItem("idPersona", "0");
-        this.props.history.push("/RegistroDePersona");
-    }
-
     render() {
         if (this.state.personas.length >= 1) {
             return (
@@ -225,7 +220,7 @@ class ListaDePersonal extends Component {
                             </div>
                             <div className="col-2">
                                 {/* <Link to="/RegistroDePersona" className="btn bnt-sm btn-primary">Registrar persona</Link> */}
-                                <button onClick={this.handle_RegistroNvaPersona} className="btn bnt-sm btn-primary">Registrar persona</button>
+                                <button onClick={helpers.handle_RegistroNvaPersona} className="btn bnt-sm btn-primary">Registrar persona</button>
                             </div>
                         </div>
                         <br />

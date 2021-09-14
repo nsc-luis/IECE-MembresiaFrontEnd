@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import helpers from './Helpers'
 import PaisEstado from '../components/PaisEstado';
+import { ThemeConsumer } from 'styled-components';
 
 class Domicilio extends React.Component {
     url = helpers.url_api;
@@ -9,10 +10,7 @@ class Domicilio extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            ListaHogares: [],
-            DatosHogarDomicilio: [],
-            MiembrosDelHogar: [],
-            SelectHogarId: '0'
+            ListaHogares: []
         }
     }
 
@@ -35,43 +33,12 @@ class Domicilio extends React.Component {
             domicilio,
             onChangeDomicilio,
             handle_hd_Id_Hogar,
-            handle_hp_Jerarquia
+            handle_hp_Jerarquia,
+            hogar,
+            DatosHogarDomicilio,
+            MiembrosDelHogar,
+            JerarquiasDisponibles
         } = this.props
-
-        const handleHogarSeleccionado = async () => {
-            let idHogar = document.getElementById('hd_Id_Hogar').value
-            handle_hd_Id_Hogar(idHogar)
-
-            if (idHogar !== 0) {
-                await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + idHogar)
-                    .then(res => {
-                        this.setState({
-                            MiembrosDelHogar: res.data,
-                            SelectHogarId: idHogar
-                        })
-                    })
-                await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + idHogar)
-                    .then(res => {
-                        this.setState({
-                            DatosHogarDomicilio: res.data
-                        })
-                    })
-
-                let jerarquias = [];
-                for (let i = 1; i <= this.state.MiembrosDelHogar.length + 1; i++) {
-                    jerarquias.push(<option value={i}>{i}</option>)
-                }
-
-                await this.setState({
-                    JerarquiasDisponibles: jerarquias
-                })
-            } else {
-                this.setState({
-                    MiembrosDelHogar: [],
-                    SelectHogarId: idHogar
-                })
-            }
-        }
 
         return (
             <React.Fragment>
@@ -87,14 +54,15 @@ class Domicilio extends React.Component {
                             <select
                                 name="hd_Id_Hogar"
                                 className="form-control"
-                                onChange={handleHogarSeleccionado}
-                                id="hd_Id_Hogar"
+                                onChange={handle_hd_Id_Hogar}
+                                /* id="hd_Id_Hogar" */
+                                value={hogar.hd_Id_Hogar}
                             >
                                 <option value="0">Nuevo hogar / domicilio</option>
                                 {
-                                    this.state.ListaHogares.map((hogar) => {
+                                    this.state.ListaHogares.map((h) => {
                                         return (
-                                            <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno} | {hogar.hd_Calle} {hogar.hd_Numero_Exterior}, {hogar.hd_Localidad}, {hogar.est_Nombre}</option>
+                                            <option key={h.hd_Id_Hogar} value={h.hd_Id_Hogar}>{h.per_Nombre} {h.per_Apellido_Paterno} {h.per_Apellido_Materno} | {h.hd_Calle} {h.hd_Numero_Exterior}, {h.hd_Localidad}, {h.est_Nombre}</option>
                                         )
                                     })
                                 }
@@ -103,7 +71,7 @@ class Domicilio extends React.Component {
                     </div>
                 </div>
 
-                {this.state.SelectHogarId !== '0' &&
+                {hogar.hd_Id_Hogar !== '0' &&
                     <React.Fragment>
                         <div className="alert alert-warning mt-3" role="alert">
                             <h5>ATENCION: </h5>
@@ -116,12 +84,12 @@ class Domicilio extends React.Component {
                         <strong>HOGAR: </strong>
 
                         {
-                            this.state.DatosHogarDomicilio.map((HogarDomicilio) => {
+                            DatosHogarDomicilio.map((HogarDomicilio) => {
                                 return (
                                     <p key={HogarDomicilio.hd_Id_Hogar}>
                                         Calle: {HogarDomicilio.hd_Calle}, No.: {HogarDomicilio.hd_Numero_Exterior}, Interior: {HogarDomicilio.hd_Numero_Interior},
                                         Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
-                                        Localidad: {HogarDomicilio.hd_Localidad}, Municipio/cuidad: {HogarDomicilio.hd_Municipio_Ciudad}, 
+                                        Localidad: {HogarDomicilio.hd_Localidad}, Municipio/cuidad: {HogarDomicilio.hd_Municipio_Ciudad},
                                         {HogarDomicilio.est_Nombre}, Pais: {HogarDomicilio.pais_Nombre_Corto} <br />
                                         Telefono: {HogarDomicilio.hd_Telefono}
                                     </p>
@@ -137,7 +105,7 @@ class Domicilio extends React.Component {
                             </thead>
                             <tbody>
                                 {
-                                    this.state.MiembrosDelHogar.map((miembro, i) => {
+                                    MiembrosDelHogar.map((miembro, i) => {
                                         return (
                                             <tr key={i}>
                                                 <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
@@ -159,8 +127,9 @@ class Domicilio extends React.Component {
                                         name="hp_Jerarquia"
                                         className="form-control"
                                         onChange={handle_hp_Jerarquia}
+                                        value={hogar.hp_Jerarquia}
                                     >
-                                        {this.state.JerarquiasDisponibles}
+                                        {JerarquiasDisponibles}
                                     </select>
                                 </div>
                             </div>
@@ -169,7 +138,7 @@ class Domicilio extends React.Component {
                 }
 
                 {/* <Domicilio /> */}
-                {this.state.SelectHogarId === '0' &&
+                {hogar.hd_Id_Hogar === '0' &&
                     <React.Fragment>
                         <div className="form-group">
                             <div className="row">
@@ -271,8 +240,6 @@ class Domicilio extends React.Component {
                                 </div>
                             </div>
                         </div>
-
-
 
                         <div className="form-group">
                             <div className="row">

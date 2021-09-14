@@ -8,7 +8,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        if(!localStorage.getItem("infoSesion")) {
+        if(!localStorage.getItem("token")) {
             document.location.href = '/';
         }
     }
