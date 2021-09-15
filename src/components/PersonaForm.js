@@ -29,8 +29,6 @@ class PersonaForm extends Component {
         super(props)
         this.state = {
             profesiones_oficios: [],
-            FrmValidaPersona: true,
-            PersonaEncontrada: false,
             infante: false,
             DatosHogar: {},
             MiembroEsBautizado: false,
@@ -172,13 +170,17 @@ class PersonaForm extends Component {
                 hp_Jerarquia: e.target.value
             }
         })
-    }    
+    }
 
     render() {
         const {
             onChange,
             form,
             domicilio,
+            FrmValidaPersona,
+            bolPersonaEncontrada,
+            setFrmValidaPersona,
+            setBolPersonaEncontrada,
             onChangeDomicilio,
             categoriaSeleccionada,
             msjCategoriaSeleccionada,
@@ -189,7 +191,10 @@ class PersonaForm extends Component {
             changeRFCSinHomo,
             changeEstadoCivil,
             fnGuardaPersona,
-            fnGuardaPersonaEnHogar
+            fnGuardaPersonaEnHogar,
+            tituloAgregarEditar,
+            boolAgregarNvaPersona,
+            fnEditaPersona
         } = this.props
 
         const per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
@@ -221,29 +226,21 @@ class PersonaForm extends Component {
             await axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
                 .then(res => {
                     if (res.data.status) {
-
-                        this.setState({
-                            datosPersonaEncontrada: res.data.persona[0],
-                            FrmValidaPersona: true,
-                            PersonaEncontrada: true
-                        })
+                        setFrmValidaPersona(true)
+                        setBolPersonaEncontrada(true)
+                        this.setState({ datosPersonaEncontrada: res.data.persona[0] })
                     } else {
-
-                        this.setState({
-                            datosPersonaEncontrada: [],
-                            FrmValidaPersona: false,
-                            PersonaEncontrada: false
-                        })
+                        setFrmValidaPersona(false)
+                        setBolPersonaEncontrada(false)
+                        this.setState({ datosPersonaEncontrada: [] })
                     }
                 })
         }
 
         const handleIgnorarDuplicados = () => {
-            this.setState({
-                datosPersonaEncontrada: [],
-                FrmValidaPersona: false,
-                PersonaEncontrada: false
-            })
+            setFrmValidaPersona(false)
+            setBolPersonaEncontrada(false)
+            this.setState({ datosPersonaEncontrada: [] })
         }
 
         // FUNCION QUE REVISA DUPLICADOS DEACUERDO A RFC (SIN HOMOCLAVE)
@@ -280,10 +277,8 @@ class PersonaForm extends Component {
 
         // FUNCION PARA MOSTRAR FORMULARIO DE EDICION DE CAMPOS GENERALES
         const handleEditaNombre = () => {
-            this.setState({
-                FrmValidaPersona: true,
-                PersonaEncontrada: false
-            });
+            setFrmValidaPersona(true)
+            setBolPersonaEncontrada(false)
         }
 
         // FUNCION PARA MOSTRAR CAMPOS DE ACUERDO AL ESTADO CIVIL
@@ -314,13 +309,6 @@ class PersonaForm extends Component {
             changeEstadoCivil(e.target.value)
         }
 
-        // FUNCION PARA FORMATO DE FECHAS PARA BD
-        const fnFormatoFecha = (fecha) => {
-            let sub = fecha.split("/")
-            let fechaFormateada = sub[1] + "/" + sub[0] + "/" + sub[2]
-            return fechaFormateada
-        }
-
         // FUNCION PARA VALIDAR CAMPOS
         const validaFormatos = (formato, campo, estado) => {
             if (!this.const_regex[formato].test(campo)) {
@@ -336,22 +324,9 @@ class PersonaForm extends Component {
 
         const enviarInfo = (e) => {
             e.preventDefault();
-
-            let objPersona = this.props.form
-            let objDomicilio = this.props.domicilio
-
-            // RESTRUCTURA FECHAS
-            var fechas = [
-                "per_Fecha_Bautismo",
-                "per_Fecha_Boda_Civil",
-                "per_Fecha_Boda_Eclesiastica",
-                "per_Fecha_Nacimiento",
-                "per_Fecha_Recibio_Espiritu_Santo"
-            ]
-            fechas.forEach(fecha => {
-                objPersona[fecha] = fnFormatoFecha(objPersona[fecha])
-            });
-
+            var objPersona = this.props.form
+            var objDomicilio = this.props.domicilio
+            
             // VALIDA CAMPOS DE PERSONA
             var camposPersonaAValidar = [
                 { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
@@ -369,17 +344,33 @@ class PersonaForm extends Component {
                 !this.state.fechaBodaCivilInvalida && !this.state.fechaEspitiruSantoInvalida &&
                 !this.state.fechaBodaEclesiasticaInvalida) {
 
-                if (this.state.hogar.hd_Id_Hogar === "0") {
-                    let PersonaDomicilioHogar = {
-                        id: 1,
-                        PersonaEntity: objPersona,
-                        HogarDomicilioEntity: objDomicilio
-                    }
-                    fnGuardaPersona(PersonaDomicilioHogar)
-                } else {
-                    fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
-                }
                 console.log("Success: Campos validados")
+
+                if (boolAgregarNvaPersona) {
+                    // FUNCION PARA FORMATO DE FECHAS PARA BD
+                    helpers.fechas.forEach(fecha => {
+                        objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
+                    })
+
+                    if (this.state.hogar.hd_Id_Hogar === "0") {
+                        let PersonaDomicilioHogar = {
+                            id: 1,
+                            PersonaEntity: objPersona,
+                            HogarDomicilioEntity: objDomicilio
+                        }
+                        fnGuardaPersona(PersonaDomicilioHogar)
+                    } else {
+                        fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
+                    }
+                }
+                else {
+                    // FUNCION PARA FORMATO DE FECHAS PARA BD
+                    helpers.fechas.forEach(fecha => {
+                        objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
+                    })
+                    
+                    fnEditaPersona(objPersona)
+                }
             } else {
                 console.log("Error: Campos invalidos")
             }
@@ -387,14 +378,14 @@ class PersonaForm extends Component {
 
         return (
             <React.Fragment>
-                <h2 className="text-info">Agregar nuevo miembro</h2>
+                <h2 className="text-info">{tituloAgregarEditar}</h2>
 
                 <div className="border">
                     <Form onSubmit={enviarInfo} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
                         <Container>
 
                             {/* Verificar Nuevo Registro / Datos personales */}
-                            {this.state.FrmValidaPersona &&
+                            {FrmValidaPersona &&
                                 <Row>
                                     <Col xs="12">
                                         <Card className="border-info acceso-directo">
@@ -559,7 +550,7 @@ class PersonaForm extends Component {
                                                                 <i>Continuar</i>
                                                             </Button>
                                                         </div>
-                                                        {this.state.PersonaEncontrada === true &&
+                                                        {bolPersonaEncontrada === true &&
                                                             <div className="col-sm-">
                                                                 <Button
                                                                     type="button"
@@ -578,7 +569,7 @@ class PersonaForm extends Component {
                                                     </div>
                                                 </FormGroup>
 
-                                                {this.state.PersonaEncontrada === true &&
+                                                {bolPersonaEncontrada === true &&
                                                     <PersonaEncontrada
                                                         datosPersonaEncontrada={this.state.datosPersonaEncontrada}
                                                     />
@@ -589,9 +580,9 @@ class PersonaForm extends Component {
                                     </Col>
                                 </Row>
                             }
-                            {this.state.FrmValidaPersona === false &&
+                            {FrmValidaPersona === false &&
                                 <React.Fragment>
-                                    {this.state.PersonaEncontrada === false &&
+                                    {bolPersonaEncontrada === false &&
                                         <React.Fragment>
                                             {/* Datos de validacion */}
                                             <div className="row mx-auto mt-3">
@@ -991,41 +982,40 @@ class PersonaForm extends Component {
                                                                                     </div>
                                                                                 </div>
                                                                             </FormGroup>
-                                                                        </React.Fragment>
-                                                                    }
+                                                                            {form.per_Bautizado &&
+                                                                                <React.Fragment>
 
-                                                                    {form.per_Bautizado &&
-                                                                        <React.Fragment>
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-4">
+                                                                                            <FormGroup>
+                                                                                                <Input
+                                                                                                    type="text"
+                                                                                                    name="per_Fecha_Boda_Eclesiastica"
+                                                                                                    onChange={onChange}
+                                                                                                    value={form.per_Fecha_Boda_Eclesiastica}
+                                                                                                    placeholder="DD/MM/AAAA"
+                                                                                                    invalid={this.state.fechaBodaEclesiasticaInvalida}
+                                                                                                />
+                                                                                                <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
+                                                                                                <FormFeedback>{this.state.mensajes.fechaBodaEclesiasticaInvalida}</FormFeedback>
+                                                                                            </FormGroup>
+                                                                                        </div>
+                                                                                        <div className="col-sm-4">
+                                                                                            <FormGroup>
+                                                                                                <Input
+                                                                                                    type="text"
+                                                                                                    name="per_Lugar_Boda_Eclesiastica"
+                                                                                                    onChange={onChange}
+                                                                                                    className="form-control"
+                                                                                                    value={form.per_Lugar_Boda_Eclesiastica}
+                                                                                                />
+                                                                                                <label>Lugar boda eclesiastica</label>
+                                                                                            </FormGroup>
+                                                                                        </div>
+                                                                                    </div>
 
-                                                                            <div className="row">
-                                                                                <div className="col-sm-4">
-                                                                                    <FormGroup>
-                                                                                        <Input
-                                                                                            type="text"
-                                                                                            name="per_Fecha_Boda_Eclesiastica"
-                                                                                            onChange={onChange}
-                                                                                            value={form.per_Fecha_Boda_Eclesiastica}
-                                                                                            placeholder="DD/MM/AAAA"
-                                                                                            invalid={this.state.fechaBodaEclesiasticaInvalida}
-                                                                                        />
-                                                                                        <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
-                                                                                        <FormFeedback>{this.state.mensajes.fechaBodaEclesiasticaInvalida}</FormFeedback>
-                                                                                    </FormGroup>
-                                                                                </div>
-                                                                                <div className="col-sm-4">
-                                                                                    <FormGroup>
-                                                                                        <Input
-                                                                                            type="text"
-                                                                                            name="per_Lugar_Boda_Eclesiastica"
-                                                                                            onChange={onChange}
-                                                                                            className="form-control"
-                                                                                            value={form.per_Lugar_Boda_Eclesiastica}
-                                                                                        />
-                                                                                        <label>Lugar boda eclesiastica</label>
-                                                                                    </FormGroup>
-                                                                                </div>
-                                                                            </div>
-
+                                                                                </React.Fragment>
+                                                                            }
                                                                         </React.Fragment>
                                                                     }
 

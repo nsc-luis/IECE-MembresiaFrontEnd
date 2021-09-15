@@ -48,6 +48,30 @@ const helpers = {
     handle_RegistroNvaPersona: function() {
         localStorage.setItem("idPersona", "0");
         document.location.href = "/RegistroDePersona";
+    },
+
+    // ARRAY DE FECHAS A VALIDAR-FORMATEAR
+    fechas: [
+        "per_Fecha_Bautismo",
+        "per_Fecha_Boda_Civil",
+        "per_Fecha_Boda_Eclesiastica",
+        "per_Fecha_Nacimiento",
+        "per_Fecha_Recibio_Espiritu_Santo"
+    ],
+
+    // FUNCION PARA FORMATO DE FECHAS PARA BD
+    fnFormatoFecha: function(fecha) {
+        let sub = fecha.split("/")
+        let fechaFormateada = sub[1] + "/" + sub[0] + "/" + sub[2]
+        return fechaFormateada
+    },
+
+    // FUNCION PARA FORMATO DE FECHAS DESDE BD A WEBUI
+    reFormatoFecha: function(fecha) {
+        let foo = fecha.split("T");
+        let bar = foo[0].split("-");
+        let f = bar[2] + "/" + bar[1] + "/" + bar[0];
+        return f;
     }
 }
 

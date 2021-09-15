@@ -19,9 +19,9 @@ class RegistroDePersonal extends Component {
         this.state = {
             form: {},
             domicilio: {},
-            /* hogar: {},
+            /* hogar: {}, */
             FrmValidaPersona: true,
-            PersonaEncontrada: false, */
+            bolPersonaEncontrada: false,
             categoriaSeleccionada: false,
             msjCategoriaSeleccionada: "",
             habilitaPerBautizado: false,
@@ -29,8 +29,18 @@ class RegistroDePersonal extends Component {
             per_Apellido_Paterno_NoValido: true,
             per_Fecha_Nacimiento_NoValido: true,
             modalShow: false,
-            mensajeDelProceso: ""
+            mensajeDelProceso: "",
+            tituloAgregarEditar: "Agregar nuevo miembro",
+            boolAgregarNvaPersona: true
         }
+    }
+
+    setFrmValidaPersona = (bol) => {
+        this.setState( {FrmValidaPersona: bol} )
+    }
+
+    setBolPersonaEncontrada = (bol) => {
+        this.setState( {bolPersonaEncontrada: bol} )
     }
 
     componentDidMount() {
@@ -85,28 +95,32 @@ class RegistroDePersonal extends Component {
                 }) */
             /* this.state.FrmValidaPersona === false
             this.state.PersonaEncontrada === false */
-            function reFormatoFecha(fecha) {
+            /* function reFormatoFecha(fecha) {
                 let foo = fecha.split("T");
                 let bar = foo[0].split("-");
                 let f = bar[2] + "/" + bar[1] + "/" + bar[0];
                 return f;
-            }
+            } */
             this.setState({
                 categoriaSeleccionada: true,
                 per_Nombre_NoValido: false,
                 per_Apellido_Paterno_NoValido: false,
                 per_Fecha_Nacimiento_NoValido: false,
+                FrmValidaPersona: false,
+                bolPersonaEncontrada: false,
+                tituloAgregarEditar: "Editar información de la persona",
+                boolAgregarNvaPersona: false,
                 form: {
                     ...this.state.form,
                     per_Categoria: currentPersona.per_Categoria,
                     per_Nombre: currentPersona.per_Nombre,
                     per_Apellido_Paterno: currentPersona.per_Apellido_Paterno,
                     per_Apellido_Materno: currentPersona.per_Apellido_Materno,
-                    per_Fecha_Nacimiento: reFormatoFecha(currentPersona.per_Fecha_Nacimiento),
-                    per_Fecha_Bautismo: reFormatoFecha(currentPersona.per_Fecha_Bautismo),
-                    per_Fecha_Boda_Civil: reFormatoFecha(currentPersona.per_Fecha_Boda_Civil),
-                    per_Fecha_Recibio_Espiritu_Santo: reFormatoFecha(currentPersona.per_Fecha_Recibio_Espiritu_Santo),
-                    per_Fecha_Boda_Eclesiastica: reFormatoFecha(currentPersona.per_Fecha_Boda_Eclesiastica),
+                    per_Fecha_Nacimiento: currentPersona.per_Fecha_Nacimiento,
+                    per_Fecha_Bautismo: currentPersona.per_Fecha_Bautismo,
+                    per_Fecha_Boda_Civil: currentPersona.per_Fecha_Boda_Civil,
+                    per_Fecha_Recibio_Espiritu_Santo: currentPersona.per_Fecha_Recibio_Espiritu_Santo,
+                    per_Fecha_Boda_Eclesiastica: currentPersona.per_Fecha_Boda_Eclesiastica,
                     per_Bautizado: currentPersona.per_Bautizado,
                     per_RFC_Sin_Homo: currentPersona.per_RFC_Sin_Homo,
                     per_Estado_Civil: currentPersona.per_Estado_Civil,
@@ -131,7 +145,8 @@ class RegistroDePersonal extends Component {
                     per_Lugar_Bautismo: currentPersona.per_Lugar_Bautismo,
                     per_Ministro_Que_Bautizo: currentPersona.per_Ministro_Que_Bautizo,
                     per_Bajo_Imposicion_De_Manos: currentPersona.per_Bajo_Imposicion_De_Manos,
-                    per_Cambios_De_DomicilioRef: currentPersona.per_Cambios_De_DomicilioRef
+                    per_Cambios_De_DomicilioRef: currentPersona.per_Cambios_De_DomicilioRef,
+                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
                 }
             });
         }
@@ -334,6 +349,24 @@ class RegistroDePersonal extends Component {
         }
     }
 
+    fnEditaPersona = async (datos) => {
+        console.log(datos);
+        try {
+            await axios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), datos)
+                .then(res => {
+                    if (res.data.status === "success") {
+                        alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                    } else {
+                        alert(res.data.mensaje);
+                    }
+                });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+    }
+
     fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => {
         try {
             await axios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
@@ -373,8 +406,10 @@ class RegistroDePersonal extends Component {
             <Layout>
                 <PersonaForm
                     onChange={this.handleChange}
-                    /* FrmValidaPersona={this.FrmValidaPersona}
-                    PersonaEncontrada={this.PersonaEncontrada} */
+                    FrmValidaPersona={this.state.FrmValidaPersona}
+                    bolPersonaEncontrada={this.state.bolPersonaEncontrada}
+                    setFrmValidaPersona={this.setFrmValidaPersona}
+                    setBolPersonaEncontrada={this.setBolPersonaEncontrada}
                     form={this.state.form}
                     onChangeDomicilio={this.handleChangeDomicilio}
                     domicilio={this.state.domicilio}
@@ -389,6 +424,9 @@ class RegistroDePersonal extends Component {
                     changeEstadoCivil={this.changeEstadoCivil}
                     fnGuardaPersona={this.fnGuardaPersona}
                     fnGuardaPersonaEnHogar={this.fnGuardaPersonaEnHogar}
+                    tituloAgregarEditar={this.state.tituloAgregarEditar}
+                    boolAgregarNvaPersona={this.state.boolAgregarNvaPersona}
+                    fnEditaPersona={this.fnEditaPersona}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

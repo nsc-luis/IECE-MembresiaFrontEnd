@@ -34,8 +34,7 @@ class ListaDePersonal extends Component {
             CasadoDivorciadoViudo: false,
             ConcubinadoSolteroConHijos: false,
             soltero: false,
-            modalInfoPersona: false,
-            currentPersona: {}
+            modalInfoPersona: false
         };
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
@@ -116,6 +115,11 @@ class ListaDePersonal extends Component {
     }
 
     handle_modalInfoPersona = async (persona) => {
+        persona.per_Fecha_Bautismo = helpers.reFormatoFecha(persona.per_Fecha_Bautismo);
+        persona.per_Fecha_Boda_Civil = helpers.reFormatoFecha(persona.per_Fecha_Boda_Civil);
+        persona.per_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(persona.per_Fecha_Boda_Eclesiastica);
+        persona.per_Fecha_Nacimiento = helpers.reFormatoFecha(persona.per_Fecha_Nacimiento);
+        persona.per_Fecha_Recibio_Espiritu_Santo = helpers.reFormatoFecha(persona.per_Fecha_Recibio_Espiritu_Santo);
         this.setState({
             modalInfoPersona: true,
             currentPersona: persona
