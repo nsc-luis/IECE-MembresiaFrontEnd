@@ -112,6 +112,7 @@ class RegistroDePersonal extends Component {
                 boolAgregarNvaPersona: false,
                 form: {
                     ...this.state.form,
+                    per_Id_Persona: localStorage.getItem("idPersona"),
                     per_Categoria: currentPersona.per_Categoria,
                     per_Nombre: currentPersona.per_Nombre,
                     per_Apellido_Paterno: currentPersona.per_Apellido_Paterno,
