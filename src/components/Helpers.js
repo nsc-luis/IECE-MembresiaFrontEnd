@@ -1,3 +1,6 @@
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 const helpers = {
     // EXPRESIONES REGULARES
     regex: {
@@ -72,7 +75,17 @@ const helpers = {
         let bar = foo[0].split("-");
         let f = bar[2] + "/" + bar[1] + "/" + bar[0];
         return f;
-    }
+    },
+
+    ToPDF: function(div) {
+        html2canvas(document.querySelector(`#${div}`)).then(canvas => {
+            document.body.appendChild(canvas);  // if you want see your screenshot in body.
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF();
+            pdf.addImage(imgData, 'PNG', 0, 0);
+            pdf.save("HojaDeDatosEstadísticos.pdf"); 
+        });
+     }
 }
 
 export default helpers;

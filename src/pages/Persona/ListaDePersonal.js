@@ -10,8 +10,10 @@ import {
 } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
 import Layout from '../Layout';
+import IECELogo from '../../assets/images/IECE_logo.png'
 
 class ListaDePersonal extends Component {
+
 
     constructor(props) {
         super(props);
@@ -42,7 +44,7 @@ class ListaDePersonal extends Component {
     }
 
     url = helpers.url_api;
-    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));    
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     getProfesion1 = async (persona) => {
         return await axios.get(this.url + "/persona/GetProfesion1/" + persona)
@@ -115,17 +117,17 @@ class ListaDePersonal extends Component {
     }
 
     handle_modalInfoPersona = async (persona) => {
-        persona.per_Fecha_Bautismo = helpers.reFormatoFecha(persona.per_Fecha_Bautismo);
-        persona.per_Fecha_Boda_Civil = helpers.reFormatoFecha(persona.per_Fecha_Boda_Civil);
-        persona.per_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(persona.per_Fecha_Boda_Eclesiastica);
-        persona.per_Fecha_Nacimiento = helpers.reFormatoFecha(persona.per_Fecha_Nacimiento);
-        persona.per_Fecha_Recibio_Espiritu_Santo = helpers.reFormatoFecha(persona.per_Fecha_Recibio_Espiritu_Santo);
+        persona.per_Fecha_BautismoFormateada = helpers.reFormatoFecha(persona.per_Fecha_Bautismo);
+        persona.per_Fecha_Boda_CivilFormateada = helpers.reFormatoFecha(persona.per_Fecha_Boda_Civil);
+        persona.per_Fecha_Boda_EclesiasticaFormateada = helpers.reFormatoFecha(persona.per_Fecha_Boda_Eclesiastica);
+        persona.per_Fecha_NacimientoFormateada = helpers.reFormatoFecha(persona.per_Fecha_Nacimiento);
+        persona.per_Fecha_Recibio_Espiritu_SantoFormateada = helpers.reFormatoFecha(persona.per_Fecha_Recibio_Espiritu_Santo);
         this.setState({
             modalInfoPersona: true,
             currentPersona: persona
         });
 
-        switch (persona.per_Estado_Civil) {
+        /* switch (persona.per_Estado_Civil) {
             case 'CASADO(A)':
                 this.setState({
                     CasadoDivorciadoViudo: true,
@@ -168,21 +170,21 @@ class ListaDePersonal extends Component {
                     soltero: true
                 });
                 break;
-        }
+        } */
 
         let getHogar = await axios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
             .then(res => res.data);
 
-        await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + getHogar.hd_Id_Hogar)
+        /* await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + getHogar.hd_Id_Hogar)
             .then(res => {
                 this.setState({
                     MiembrosDelHogar: res.data
                 });
-            });
+            }); */
         await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
             .then(res => {
                 this.setState({
-                    DatosHogarDomicilio: res.data
+                    DatosHogarDomicilio: res.data[0]
                 });
             });
     }
@@ -200,13 +202,13 @@ class ListaDePersonal extends Component {
     }
 
     handle_editarPersona = (infoPersona) => {
-        if(localStorage.getItem("idPersona")) {
+        if (localStorage.getItem("idPersona")) {
             localStorage.removeItem("idPersona");
             localStorage.removeItem("currentPersona");
         }
         localStorage.setItem("idPersona", infoPersona.per_Id_Persona);
         localStorage.setItem("currentPersona", JSON.stringify(infoPersona));
-        document.location.href="/RegistroDePersona";
+        document.location.href = "/RegistroDePersona";
     }
 
     render() {
@@ -291,8 +293,169 @@ class ListaDePersonal extends Component {
                                                         </button>
                                                     </td>
                                                 </tr>
-                                                <Modal isOpen={this.state.modalInfoPersona} className="modalVerInfoPersona" size="lg" >
-                                                    <ModalHeader> Hoja de datos estadísticos </ModalHeader>
+                                                <Modal isOpen={this.state.modalInfoPersona} contentClassName="modalVerInfoPersona" size="lg">
+                                                    <Container>
+                                                        <div id="infoDatosEstadisticos">
+                                                        <ModalHeader>
+                                                            <Row>
+                                                                <Col sm="5">
+                                                                    <img src={IECELogo} className="imgLogoModalDatosEstadisticos" alt="Logo" />
+                                                                </Col>
+                                                                <Col sm="7" className="tituloDatosEstadisticos">
+                                                                    Hoja de Datos Estadísticos
+                                                                </Col>
+                                                            </Row>
+                                                        </ModalHeader>
+                                                        <ModalBody>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >1.- Nombre: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Nombre} {this.state.currentPersona.per_Apellido_Paterno} {this.state.currentPersona.per_Apellido_Materno} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >2.- Edad: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Fecha_NacimientoFormateada} </span>
+                                                                </Col>
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >Nacionalidad: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Nacionalidad} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >3.- Lugar y fecha de nacimiento: </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >4.- Nombre de sus padres: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Nombre_Padre}, {this.state.currentPersona.per_Nombre_Madre} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >5.- Abuelos paternos: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Nombre_Abuelo_Paterno}, {this.state.currentPersona.per_Nombre_Abuela_Paterna} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >6.- Abuelos maternos: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Nombre_Abuelo_Materno}, {this.state.currentPersona.per_Nombre_Abuela_Materna} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >7.- Estado civil: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Estado_Civil} </span>
+                                                                </Col>
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >Fecha de la boda civil: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Fecha_Boda_CivilFormateada} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >Según acta: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Num_Acta_Boda_Civil} </span>
+                                                                </Col>
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >Del Libro No.: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Libro_Acta_Boda_Civil} </span>
+                                                                </Col>
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >Que lleva la oficialía: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Oficialia_Boda_Civil} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >Del Registro Civil en: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Registro_Civil} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >8.- Contrajo Matrimonio Eclesiástico en la I.E.C.E el día: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Fecha_Boda_EclesiasticaFormateada} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >Lugar de Matrimonio Eclesiástico en la I.E.C.E.: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Lugar_Boda_Eclesiastica} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >10.- Cuantos hijos y sus nombres: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Cantidad_Hijos} </span>
+                                                                </Col>
+                                                                <Col sm="8">
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Nombre_Hijos} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >13.- Fecha en la que recibio la promesa del Espiritu Santo: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Fecha_Recibio_Espiritu_SantoFormateada} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >Bajo la imposición de manos del presbiterio: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Bajo_Imposicion_De_Manos} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >14.- Puestos desempeñados en la IECE: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Cargos_Desempenados} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >15.- Cambios de domicilio: </span>
+                                                                    <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Cambios_De_Domicilio} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="12">
+                                                                    <span className="tituloListaDatosEstadisticos" >16.- Domicilio actual: </span>
+                                                                    <span className="infoDatosEstadisticos" > 
+                                                                    Calle: {this.state.DatosHogarDomicilio.hd_Calle}, No.: {this.state.DatosHogarDomicilio.hd_Numero_Exterior}, Interior: {this.state.DatosHogarDomicilio.hd_Numero_Interior},
+                                                                    Tipo subdivision: {this.state.DatosHogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {this.state.DatosHogarDomicilio.hd_Subdivision} <br />
+                                                                    Localidad: {this.state.DatosHogarDomicilio.hd_Localidad}, Municipio/cuidad: {this.state.DatosHogarDomicilio.hd_Municipio_Ciudad},
+                                                                    {this.state.DatosHogarDomicilio.est_Nombre}, Pais: {this.state.DatosHogarDomicilio.pais_Nombre_Corto} <br />
+                                                                    Telefono: {this.state.DatosHogarDomicilio.hd_Telefono}
+                                                                    </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >17.- Teléfono: </span>
+                                                                    <span className="infoDatosEstadisticos" > {this.state.currentPersona.per_Telefono_Movil} </span>
+                                                                </Col>
+                                                                <Col sm="4">
+                                                                    <span className="tituloListaDatosEstadisticos" >E-mail: </span>
+                                                                    <span className="infoDatosEstadisticos" > {this.state.currentPersona.per_Email_Personal} </span>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row className="modalBodyRowDatosEstadisticos">
+                                                                <Col sm="6">
+                                                                    <span className="tituloListaDatosEstadisticos" >18.- Profesión / Oficio: </span>
+                                                                    <span className="infoDatosEstadisticos" > {this.state.currentPersona.pro_Id_Profesion_Oficio1} </span>
+                                                                </Col>
+                                                                <Col sm="6">
+                                                                    <span className="tituloListaDatosEstadisticos" >Profesión / Oficio: </span>
+                                                                    <span className="infoDatosEstadisticos" > {this.state.currentPersona.pro_Id_Profesion_Oficio2} </span>
+                                                                </Col>
+                                                            </Row>
+                                                        </ModalBody>
+                                                        </div>
+                                                    {/* <ModalHeader> Hoja de datos estadísticos </ModalHeader>
                                                     <ModalBody>
                                                         <Container>
                                                             <Form>
@@ -576,8 +739,8 @@ class ListaDePersonal extends Component {
                                                                         </Row>
                                                                     </React.Fragment>
                                                                 }
-                                                                <p className="text-center"><strong>Hogar</strong></p>
-                                                                {/* {this.state.DatosHogarDomicilio.map((HogarDomicilio, i) => {
+                                                                <p className="text-center"><strong>Hogar</strong></p> */}
+                                                    {/* {this.state.DatosHogarDomicilio.map((HogarDomicilio, i) => {
                                                                     return (
                                                                         <React.Fragment>
                                                                             <Row>
@@ -620,14 +783,15 @@ class ListaDePersonal extends Component {
                                                                         </React.Fragment>
                                                                     )
                                                                 })} */}
-                                                            </Form>
+                                                    {/* </Form>
                                                         </Container>
-                                                    </ModalBody>
+                                                    </ModalBody> */}
                                                     <ModalFooter>
                                                         <Button color="secondary" onClick={this.handle_modalInfoPersonaClose}>Cancel</Button>
-                                                        <Button color="danger" >Generar PDF</Button>
+                                                        <Button color="danger" onClick={() => helpers.ToPDF("infoDatosEstadisticos")} >Generar PDF</Button>
                                                         <Button color="success" onClick={() => this.handle_editarPersona(this.state.currentPersona)} >Editar</Button>
                                                     </ModalFooter>
+                                                    </Container>
                                                 </Modal>
                                             </React.Fragment>
                                         )

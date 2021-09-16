@@ -1173,9 +1173,9 @@ class PersonaForm extends Component {
                                                                         <div className="row">
                                                                             <div className="col-sm-12">
                                                                                 <textarea
-                                                                                    name="per_Cambios_De_DomicilioRef"
+                                                                                    name="per_Cambios_De_Domicilio"
                                                                                     onChange={onChange}
-                                                                                    value={form.per_Cambios_De_DomicilioRef}
+                                                                                    value={form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"></textarea>
                                                                                 <label>Cambios de domicilio</label>
                                                                             </div>

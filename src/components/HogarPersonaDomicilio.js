@@ -226,9 +226,9 @@ class Domicilio extends React.Component {
                                     <div className="col-sm-4">
                                         <input
                                             type="text"
-                                            name="hd_Municipio_Cuidad"
+                                            name="hd_Municipio_Ciudad"
                                             className="form-control"
-                                            value={domicilio.hd_Municipio_Cuidad}
+                                            value={domicilio.hd_Municipio_Ciudad}
                                             onChange={onChangeDomicilio}
                                         />
                                         <label>Municipio/Cuidad</label>

@@ -56,10 +56,29 @@ input[type=text] {
   height: 150px;
 }
 
-.modalVerInfoPersona {
-  width: 800px;
+.modalVerInfoPersona .modal-title {
+  width: 100%;
+  position: relative;
+}
+.modalVerInfoPersona .imgLogoModalDatosEstadisticos {
+  width: 300px;
   height: auto;
 }
-.modalVerInfoPersona Input {
-  font-size: small;
+
+.modalVerInfoPersona .tituloDatosEstadisticos {
+  position: absolute;
+  margin-top: 25px;
+  margin-left: 55%;
+}
+
+.modalVerInfoPersona .tituloListaDatosEstadisticos {
+  font-weight: bold;
+}
+
+.modalVerInfoPersona .infoDatosEstadisticos {
+  text-decoration: underline;
+}
+
+.modalVerInfoPersona .modalBodyRowDatosEstadisticos > .row {
+  margin-bottom: 1em;
 }
