@@ -4,7 +4,7 @@ import helpers from '../../components/Helpers';
 import '../../assets/css/index.css';
 import {
     Modal, ModalHeader, ModalBody, ModalFooter,
-    Button, Input,
+    Button, Input, Alert,
     Container, Row, Col,
     Form, FormGroup, Label
 } from 'reactstrap';
@@ -13,7 +13,6 @@ import Layout from '../Layout';
 import IECELogo from '../../assets/images/IECE_logo.png'
 
 class ListaDePersonal extends Component {
-
 
     constructor(props) {
         super(props);
@@ -36,7 +35,8 @@ class ListaDePersonal extends Component {
             CasadoDivorciadoViudo: false,
             ConcubinadoSolteroConHijos: false,
             soltero: false,
-            modalInfoPersona: false
+            modalInfoPersona: false,
+            showModalEliminaPersona: false
         };
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
@@ -114,6 +114,20 @@ class ListaDePersonal extends Component {
                     status: 'success'
                 });
             });
+    }
+
+    handle_modalEliminaPersona = (info) => {
+        this.setState({
+            showModalEliminaPersona: true,
+            currentPersona: info
+        });
+    }
+
+    handle_closeModalEliminaPersona = (info) => {
+        this.setState({
+            showModalEliminaPersona: false,
+            currentPersona: {}
+        });
     }
 
     handle_modalInfoPersona = async (persona) => {
@@ -286,7 +300,8 @@ class ListaDePersonal extends Component {
                                                             <span className="fas fa-eye"></span>Ver Info
                                                         </button>
                                                         <button
-                                                            onClick={() => this.fnEliminaPersona(persona)}
+                                                            /* onClick={() => this.fnEliminaPersona(persona)} */
+                                                            onClick={() => this.handle_modalEliminaPersona(persona)}
                                                             className="btn btn-danger btn-sm"
                                                             title="Eliminar persona">
                                                             <span className="fas fa-trash-alt"></span>Eliminar
@@ -799,6 +814,28 @@ class ListaDePersonal extends Component {
                                 }
                             </tbody>
                         </table>
+
+                        <Modal 
+                            isOpen={this.state.showModalEliminaPersona}
+                            onRequestClose={this.handle_closeModalEliminaPersona}
+                            size="lg"
+                        >
+                            <ModalHeader>
+                                Eliminar persona.
+                            </ModalHeader>
+                            <ModalBody>
+                                <Alert color="warning">
+                                    <strong>Advertencia: </strong><br />
+                                    Al eliminar una persona seran reorganizadas las jerarquias dentro del hogar y
+                                    si la persona es la ultima del hogar, entonces, el hogar tambien sera eliminado.
+                                </Alert>
+                                ¿Esta seguro de querer eliminar a la persona: <strong>{this.state.currentPersona.per_Nombre} {this.state.currentPersona.per_Apellido_Paterno} {this.state.currentPersona.per_Apellido_Materno}</strong>?
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="secondary" onClick={this.handle_closeModalEliminaPersona}>Cancelar</Button>
+                                <Button color="danger" onClick={() => this.fnEliminaPersona(this.state.currentPersona)}>Eliminar</Button>
+                            </ModalFooter>
+                        </Modal>
 
                         {/* <Modal // Datos generales
                             isOpen={this.state.showModalPersonaGenerales}

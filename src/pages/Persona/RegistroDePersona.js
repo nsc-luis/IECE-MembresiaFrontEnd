@@ -356,10 +356,32 @@ class RegistroDePersonal extends Component {
             await axios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), datos)
                 .then(res => {
                     if (res.data.status === "success") {
-                        alert(res.data.mensaje);
+                        // alert(res.data.mensaje);
                         setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
                     } else {
-                        alert(res.data.mensaje);
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
                     }
                 });
         } catch (error) {
