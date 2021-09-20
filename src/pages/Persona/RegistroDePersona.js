@@ -4,7 +4,7 @@ import axios from 'axios';
 import helpers from '../../components/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Layout from '../Layout';
-import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from 'reactstrap';
+import { Modal, ModalBody, /* ModalFooter, ModalHeader, Button */ } from 'reactstrap';
 
 class RegistroDePersonal extends Component {
 

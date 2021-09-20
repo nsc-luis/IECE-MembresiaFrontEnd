@@ -1,8 +1,8 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component/* , useEffect */ } from 'react';
 import axios from 'axios';
 import {
     Form, FormGroup, Input, Button, Row, Col,
-    Container, FormFeedback, Card, CardBody, CardTitle
+    Container, /* FormFeedback, */ Card, CardBody, CardTitle
 } from 'reactstrap'
 import Distritos from '../../components/Distritos';
 import Sectores from '../../components/Sectores';

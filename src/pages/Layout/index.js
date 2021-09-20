@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import Sidebar from '../../components/nav/Sidebar';
 import Topbar from '../../components/nav/Topbar';
 import Footer from '../../components/nav/Footer';
+import helpers from '../../components/Helpers';
 
 class Layout extends Component {
 
     constructor(props) {
         super(props);
         this.state = {};
-        if (!localStorage.getItem("token")) {
-            document.location.href = '/';
+        if(!localStorage.getItem("infoSesion")) {
+            return document.location.href = "/";
+        }
+        if(!helpers.isLoggedIn()) {
+            return document.location.href = "/";
         }
     }
 

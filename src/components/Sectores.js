@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import helpers from './Helpers'
-import { Row, Col, Container, FormFeedback } from 'reactstrap'
+import { Row, Col, Container/* , FormFeedback */ } from 'reactstrap'
 
 class Sectores extends Component {
     url = helpers.url_api
 
-    constructor(props) {
+    /* constructor(props) {
         super(props)
-    }
+    } */
 
     render() {
         const { sectores, handle_sec_Id_Sector, sectorSeleccionado } = this.props

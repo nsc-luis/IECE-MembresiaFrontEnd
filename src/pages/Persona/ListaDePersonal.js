@@ -4,11 +4,10 @@ import helpers from '../../components/Helpers';
 import '../../assets/css/index.css';
 import {
     Modal, ModalHeader, ModalBody, ModalFooter,
-    Button, Input, Alert,
+    Button, /* Input, */ Alert,
     Container, Row, Col,
-    Form, FormGroup, Label
+    /* Form, FormGroup, Label */
 } from 'reactstrap';
-import { Link, withRouter } from 'react-router-dom';
 import Layout from '../Layout';
 import IECELogo from '../../assets/images/IECE_logo.png'
 
@@ -41,18 +40,20 @@ class ListaDePersonal extends Component {
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
         }
+        this.getPersonas();
+        this.getSector();
     }
 
     url = helpers.url_api;
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     getProfesion1 = async (persona) => {
-        return await axios.get(this.url + "/persona/GetProfesion1/" + persona)
+        return await helpers.authAxios.get(this.url + "/persona/GetProfesion1/" + persona)
             .then(res => res.data)
             .catch(error => error);
     }
     getProfesion2 = async (persona) => {
-        return await axios.get(this.url + "/persona/GetProfesion2/" + persona)
+        return await helpers.authAxios.get(this.url + "/persona/GetProfesion2/" + persona)
             .then(res => res.data)
             .catch(error => error);
         /* .then(res => {
@@ -62,14 +63,8 @@ class ListaDePersonal extends Component {
         }); */
     }
 
-    componentWillMount() {
-        this.getPersonas();
-        //  this.getDistrito();
-        this.getSector();
-    };
-
     getPersonas = () => {
-        axios.get(this.url + "/persona/GetBySector/" + this.infoSesion.sec_Id_Sector)
+        helpers.authAxios.get(this.url + "/persona/GetBySector/" + this.infoSesion.sec_Id_Sector)
             .then(res => {
                 this.setState({
                     personas: res.data,
@@ -85,7 +80,7 @@ class ListaDePersonal extends Component {
     }
 
     fnEliminaPersona = async (persona) => {
-        await axios.delete(this.url + "/persona/" + persona.per_Id_Persona)
+        await helpers.authAxios.delete(this.url + "/persona/" + persona.per_Id_Persona)
             .then(res => res.data)
             .catch(error => error);
         window.location.reload();
@@ -186,7 +181,7 @@ class ListaDePersonal extends Component {
                 break;
         } */
 
-        let getHogar = await axios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
+        let getHogar = await helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
             .then(res => res.data);
 
         /* await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + getHogar.hd_Id_Hogar)
@@ -195,7 +190,7 @@ class ListaDePersonal extends Component {
                     MiembrosDelHogar: res.data
                 });
             }); */
-        await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
+        await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
             .then(res => {
                 this.setState({
                     DatosHogarDomicilio: res.data[0]
@@ -258,11 +253,10 @@ class ListaDePersonal extends Component {
                                 {
                                     this.state.personas.map((persona) => {
                                         return (
-                                            <React.Fragment>
-                                                <tr key={persona.per_Id_Persona}>
+                                            <React.Fragment key={persona.per_Id_Persona}>
+                                                <tr>
                                                     <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
-                                                    {
-                                                        <React.Fragment>
+                                                    
                                                             <td className="text-center">
                                                                 {this.InfoStatus(persona).bautizado}
                                                             </td>
@@ -272,8 +266,6 @@ class ListaDePersonal extends Component {
                                                             <td className="text-center">
                                                                 {this.InfoStatus(persona).vivo}
                                                             </td>
-                                                        </React.Fragment>
-                                                    }
                                                     {/* <td className="text-center">
                                                 <button onClick={() => this.openModalPersonaGenerales(persona)} className="bordeRedondo">
                                                     <span className="fas fa-info-circle fa-lg" title="Info general"></span>

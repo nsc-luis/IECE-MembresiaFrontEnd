@@ -114,7 +114,7 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Hogares */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="#">
+                        <Link className="nav-link" to="/Hogar">
                             <i className="fas fa-fw fa-home"></i>
                             <span>Hogares</span>
                         </Link>

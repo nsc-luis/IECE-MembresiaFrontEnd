@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import helpers from './Helpers'
-import { Row, Col, Container, FormFeedback, FormGroup, Input } from 'reactstrap'
+import { Row, Col, Container, FormFeedback, /* FormGroup, */ Input } from 'reactstrap'
 
 class EmailMinistro extends Component {
     url = helpers.url_api
 
-    constructor(props) {
+    /* constructor(props) {
         super(props)
-    }
+    } */
 
     render() {
         const { 

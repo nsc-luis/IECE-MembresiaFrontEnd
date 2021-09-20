@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import helpers from './Helpers'
-import { Row, Col, Container, FormFeedback } from 'reactstrap'
-import axios from 'axios'
+import { Row, Col, Container/* , FormFeedback */ } from 'reactstrap'
+/* import axios from 'axios' */
 
 class PersonalMinisterial extends Component {
     url = helpers.url_api

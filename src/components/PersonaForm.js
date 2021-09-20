@@ -9,7 +9,7 @@ import HogarPersonaDomicilio from '../components/HogarPersonaDomicilio';
 import Modal from 'react-modal';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button,
-    FormFeedback, CardTitle, Card, CardBody, CardHeader
+    FormFeedback, /* CardTitle, */ Card, CardBody, CardHeader
 } from 'reactstrap';
 
 class PersonaForm extends Component {
@@ -91,7 +91,7 @@ class PersonaForm extends Component {
             }
         });
         if (localStorage.getItem("idPersona") !== "0") {
-            axios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
+            helpers.authAxios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     this.setState({
                         hogar: {
@@ -127,11 +127,11 @@ class PersonaForm extends Component {
     /// METODOS PARA HOGAR - DOMICILIO ///
     fnGetDatosDelHogar = async (id) => {
         if (id !== "0") {
-            await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
+            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
                 })
-            await axios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data })
                 })
@@ -197,7 +197,7 @@ class PersonaForm extends Component {
             fnEditaPersona
         } = this.props
 
-        const per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
+        /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
 
         // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
@@ -223,7 +223,7 @@ class PersonaForm extends Component {
 
         // RECUPERA INFO DE PERSONA DUPLICADA DE ACUERDO AL RFC (SIN HOMOCLAVE)
         const getPersonaByRFCSinHomo = async (str) => {
-            await axios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
+            await helpers.authAxios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
                 .then(res => {
                     if (res.data.status) {
                         setFrmValidaPersona(true)

@@ -6,9 +6,6 @@ class Topbar extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        if(!localStorage.getItem("infoSesion")) {
-            document.location.href = '/';
-        }
     }
 
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));

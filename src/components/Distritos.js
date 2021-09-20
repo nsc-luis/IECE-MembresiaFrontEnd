@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import helpers from './Helpers'
-import { Row, Col, Container, FormFeedback } from 'reactstrap'
+import { Row, Col, Container/* , FormFeedback */ } from 'reactstrap'
 
 class Distritos extends Component {
     url = helpers.url_api

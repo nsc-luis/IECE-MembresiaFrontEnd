@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import axios from 'axios';
 
 const helpers = {
     // EXPRESIONES REGULARES
@@ -24,7 +25,7 @@ const helpers = {
 
     // URLs PARA PRUEBA
     url_api: "http://" + window.location.hostname + ":59239/api",
-    //url_api : "http://" + window.location.hostname + "/webapi/api",
+    // url_api : "http://" + window.location.hostname + "/webapi/api",
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
@@ -35,20 +36,36 @@ const helpers = {
         }
     },
 
+    authAxios: axios.create({
+        baseURL: "http://" + window.location.hostname + ":59239/api",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+    }),
+
     // METODO PARA VERIFICAR SI SE HA INICIADO SESION
-    isLoggedIn: function() {
+    isLoggedIn: async function () {
         const statusInfoSession = localStorage.getItem("infoSesion") ? true : false;
         const statusToken = localStorage.getItem("token") ? true : false;
         if (statusInfoSession === false || statusToken === false) {
             return false;
         }
-        else {
-            return true;
-        }
+        
+        await this.authAxios.get(this.url_api + "/persona")
+        .then(function (response) {
+            // console.log(response.status)
+            return true
+        })
+        .catch(function (error) {
+            /* console.log(error.response.status) // 401
+            console.log(error.response.statusText) // Unauthorized */
+            return false
+        });
+        
     },
 
     // METODO PARA INVOCAR UN FORMULARIO DE PERSONA NUEVO
-    handle_RegistroNvaPersona: function() {
+    handle_RegistroNvaPersona: function () {
         localStorage.setItem("idPersona", "0");
         document.location.href = "/RegistroDePersona";
     },
@@ -63,29 +80,29 @@ const helpers = {
     ],
 
     // FUNCION PARA FORMATO DE FECHAS PARA BD
-    fnFormatoFecha: function(fecha) {
+    fnFormatoFecha: function (fecha) {
         let sub = fecha.split("/")
         let fechaFormateada = sub[1] + "/" + sub[0] + "/" + sub[2]
         return fechaFormateada
     },
 
     // FUNCION PARA FORMATO DE FECHAS DESDE BD A WEBUI
-    reFormatoFecha: function(fecha) {
+    reFormatoFecha: function (fecha) {
         let foo = fecha.split("T");
         let bar = foo[0].split("-");
         let f = bar[2] + "/" + bar[1] + "/" + bar[0];
         return f;
     },
 
-    ToPDF: function(div) {
+    ToPDF: function (div) {
         html2canvas(document.querySelector(`#${div}`)).then(canvas => {
             document.body.appendChild(canvas);  // if you want see your screenshot in body.
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF();
             pdf.addImage(imgData, 'PNG', 0, 0);
-            pdf.save("HojaDeDatosEstadísticos.pdf"); 
+            pdf.save("HojaDeDatosEstadísticos.pdf");
         });
-     }
+    }
 }
 
 export default helpers;

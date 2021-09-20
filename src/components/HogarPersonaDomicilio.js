@@ -1,8 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 import helpers from './Helpers'
 import PaisEstado from '../components/PaisEstado';
-import { ThemeConsumer } from 'styled-components';
 
 class Domicilio extends React.Component {
     url = helpers.url_api;
@@ -19,7 +17,7 @@ class Domicilio extends React.Component {
     }
 
     getListaHogares = () => {
-        axios.get(this.url + "/Hogar_Persona/GetListaHogares")
+        helpers.authAxios.get(this.url + "/Hogar_Persona/GetListaHogares")
             .then(res => {
                 this.setState({
                     ListaHogares: res.data,

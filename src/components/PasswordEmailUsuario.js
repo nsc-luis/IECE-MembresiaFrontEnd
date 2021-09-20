@@ -1,7 +1,7 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component/* , useEffect */ } from 'react';
 import {
-    Form, FormGroup, Input, Button, Row, Col,
-    Container, FormFeedback, Card, CardBody, CardTitle
+    /* Form, FormGroup,  */Input, /* Button, */ Row, Col,
+    Container, FormFeedback, /* Card, CardBody, CardTitle */
 } from 'reactstrap';
 
 class PasswordEmailUsuario extends Component {
