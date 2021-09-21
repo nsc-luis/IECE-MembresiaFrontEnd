@@ -83,6 +83,10 @@ class Hogar extends Component {
         console.log(idHD.target.value);
     }
 
+    handle_EditaHogar = (info) => {
+        console.log(info);
+    }
+
     render() {
         if (this.state.listaDeHogares.length >= 0) {
             return (
@@ -109,16 +113,16 @@ class Hogar extends Component {
                                     {
                                         this.state.listaDeHogares.map((hogar) => {
                                             return (
-                                                <React.Fragment key={hogar.hd_Id_Domicilio}>
-                                                    <tr>
-                                                        <td></td>
+                                                <React.Fragment>
+                                                    <tr key={hogar.hd_Id_Domicilio}>
+                                                        <td> {hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno}</td>
                                                         <td> 
                                                             {hogar.hd_Calle} {hogar.hd_Numero_Exterior} {hogar.hd_Numero_Exterior} <br />
                                                             {hogar.hd_Tipo_Subdivision} {hogar.hd_Subdivision}
                                                         </td>
                                                         <td> {hogar.hd_Telefono} </td>
                                                         <td> {this.state.infoSector.sec_Alias} </td>
-                                                        <td> <Button color="success">Editar</Button> </td>
+                                                        <td> <Button color="success" onClick={() => this.handle_EditaHogar(hogar)}>Editar</Button> </td>
                                                     </tr>
                                                 </React.Fragment>
                                             )
