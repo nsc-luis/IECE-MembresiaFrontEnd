@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import {
     Container, Row, Col, Card, CardHeader,
     CardBody, CardFooter, Form, Input, Label,
-    Button, FormFeedback, Table
+    Button, FormFeedback, Table,
+    Modal, ModalFooter, ModalBody, ModalHeader
 } from 'reactstrap';
 import axios from 'axios';
-import Layout from '../Layout';
 import helpers from '../../components/Helpers';
-import PaisEstado from '../../components/PaisEstado';
+import Layout from '../Layout';
+import './style.css';
+import DomicilioJeraquia from './DomicilioJerarquia';
+import IECELogo from '../../assets/images/IECE_logo.png';
 
 class Hogar extends Component {
 
@@ -18,11 +21,14 @@ class Hogar extends Component {
         this.state = {
             listaDeHogares: [],
             domicilio: {},
-            currentDomicio: {},
             hd_Id_Domicilio: 0,
             bolHdIdDomicilioSelected: false,
             infoDistrito: {},
             infoSector: {},
+            modalInfoHogar: false,
+            modalListaHogares: false,
+            mensajeDelProceso: "",
+            modalShow: false
         }
     }
 
@@ -37,8 +43,8 @@ class Hogar extends Component {
                 hd_Subdivision: "",
                 hd_Localidad: "",
                 hd_Municipio_Ciudad: "",
-                pais_Id_Pais: "0",
-                est_Id_Estado: "0",
+                pais_Id_Pais: 0,
+                est_Id_Estado: 0,
                 hd_Telefono: "",
                 /* dis_Id_Distrito,
                 sec_Id_Sector */
@@ -70,11 +76,11 @@ class Hogar extends Component {
             })
     }
 
-    handle_onChange = (e) => {
+    onChangeDomicilio = (e) => {
         this.setState({
             domicilio: {
                 ...this.state.domicilio,
-                [e.target.name]: e.target.value
+                [e.target.name]: e.target.value.toUpperCase()
             }
         })
     }
@@ -83,8 +89,63 @@ class Hogar extends Component {
         console.log(idHD.target.value);
     }
 
-    handle_EditaHogar = (info) => {
-        console.log(info);
+    handle_EditaHogar = async (info) => {
+        await helpers.authAxios.get(this.url_api + "/HogarDomicilio/" + info)
+            .then(res => {
+                this.setState({
+                    domicilio: res.data,
+                    modalInfoHogar: true
+                });
+            });
+    }
+
+    modalInfoHogarClose = () => {
+        this.setState({
+            domicilio: {},
+            modalInfoHogar: false
+        });
+    }
+
+    handle_guardarDomicilio = async (info) => {
+        await helpers.authAxios.put(this.url_api + "/HogarDomicilio/" + info.hd_Id_Hogar, info)
+            .then(res => {
+                if (res.data.status === "success") {
+                    // alert(res.data.mensaje);
+                    setTimeout(() => { document.location.href = '/Hogar'; }, 3000);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                        });
+                    }, 1500);
+                    setTimeout(() => {
+                        document.location.href = '/Hogar'
+                    }, 3500);
+                } else {
+                    // alert(res.data.mensaje);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: res.data.mensaje,
+                            modalShow: false
+                        });
+                    }, 1500);
+                }
+            })
+    }
+
+    handle_RptListaHogares = () => {
+        this.setState({ modalListaHogares: true });
+    }
+
+    handle_modalListaHogaresClose = () => {
+        this.setState({ modalListaHogares: false });
     }
 
     render() {
@@ -98,11 +159,16 @@ class Hogar extends Component {
                         <Row>
                             Pertenecientes al distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias}, sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
                         </Row>
+
+                        <Row className="btnRptListaHogares">
+                            <Button color="primary" size="sm" onClick={this.handle_RptListaHogares}>Reporte de Lista de Hogares</Button>
+                        </Row>
+
                         <Row>
-                            <Table>
+                            <Table className="tblListaHogares">
                                 <thead>
                                     <tr>
-                                        <th>Jefe de hogar</th>
+                                        <th>Repesentante del hogar</th>
                                         <th>Direccion</th>
                                         <th>Telefono</th>
                                         <th>Sector</th>
@@ -116,13 +182,13 @@ class Hogar extends Component {
                                                 <React.Fragment>
                                                     <tr key={hogar.hd_Id_Domicilio}>
                                                         <td> {hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno}</td>
-                                                        <td> 
-                                                            {hogar.hd_Calle} {hogar.hd_Numero_Exterior} {hogar.hd_Numero_Exterior} <br />
+                                                        <td>
+                                                            {hogar.hd_Calle} {hogar.hd_Numero_Exterior} {hogar.hd_Numero_Interior} <br />
                                                             {hogar.hd_Tipo_Subdivision} {hogar.hd_Subdivision}
                                                         </td>
                                                         <td> {hogar.hd_Telefono} </td>
                                                         <td> {this.state.infoSector.sec_Alias} </td>
-                                                        <td> <Button color="success" onClick={() => this.handle_EditaHogar(hogar)}>Editar</Button> </td>
+                                                        <td> <Button color="success" size="sm" onClick={() => this.handle_EditaHogar(hogar.hd_Id_Hogar)}>Editar</Button> </td>
                                                     </tr>
                                                 </React.Fragment>
                                             )
@@ -131,6 +197,83 @@ class Hogar extends Component {
                                 </tbody>
                             </Table>
                         </Row>
+                        <Modal isOpen={this.state.modalInfoHogar} size="lg">
+                            <ModalHeader>
+                                Editar información del hogar.
+                            </ModalHeader>
+                            <ModalBody>
+                                <DomicilioJeraquia
+                                    onChangeDomicilio={this.onChangeDomicilio}
+                                    domicilio={this.state.domicilio}
+                                />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="secondary" size="sm" onClick={this.modalInfoHogarClose}>Cancelar</Button>
+                                <Button color="primary" size="sm" onClick={() => this.handle_guardarDomicilio(this.state.domicilio)}>Guardar</Button>
+                            </ModalFooter>
+                        </Modal>
+                        <Modal isOpen={this.state.modalListaHogares} contentClassName="modalListaHogares" size="lg">
+                            <div id="infoListaHogares">
+                                <ModalHeader>
+                                    <Row>
+                                        <Col sm="5">
+                                            <img src={IECELogo} className="imgLogoModal" alt="Logo" />
+                                        </Col>
+                                        <Col sm="7" className="tituloListaHogares">
+                                            Lista de hogares <br />
+                                            <spam className="subTituloListaHogares">
+                                                Distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias} <br />
+                                                Sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
+                                            </spam>
+                                        </Col>
+                                    </Row>
+                                </ModalHeader>
+                                <ModalBody>
+                                    <Table className="tblListaHogares">
+                                        <thead>
+                                            <tr>
+                                                <th>Titular</th>
+                                                <th>Nacimiento</th>
+                                                <th>Edad</th>
+                                                <th>Celular</th>
+                                                <th>Tel. Casa</th>
+                                                <th>Domicilio</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                this.state.listaDeHogares.map((hogar) => {
+                                                    return (
+                                                        <React.Fragment>
+                                                            <tr>
+                                                                <td> {hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno}</td>
+                                                                <td>Fecha</td>
+                                                                <td>Edad</td>
+                                                                <td> {hogar.hd_Telefono} </td>
+                                                                <td> {hogar.hd_Telefono} </td>
+                                                                <td>
+                                                                    {hogar.hd_Calle} {hogar.hd_Numero_Exterior} {hogar.hd_Numero_Interior} <br />
+                                                                    {hogar.hd_Tipo_Subdivision} {hogar.hd_Subdivision}
+                                                                </td>
+                                                            </tr>
+                                                        </React.Fragment>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </Table>
+                                </ModalBody>
+                            </div>
+                            <ModalFooter>
+                                <Button color="secondary" size="sm" onClick={this.handle_modalListaHogaresClose}>Cancelar</Button>
+                                <Button color="danger" size="sm" onClick={() => helpers.ToPDF("infoListaHogares")}>Crear PDF</Button>
+                            </ModalFooter>
+                        </Modal>
+                        <Modal isOpen={this.state.modalShow}>
+                            <ModalBody>
+                                {this.state.mensajeDelProceso}
+                            </ModalBody>
+                        </Modal>
                     </Container>
                 </Layout>
             )

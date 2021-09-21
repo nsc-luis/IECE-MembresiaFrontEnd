@@ -1,0 +1,26 @@
+.tblListaHogares {
+  margin-top: 2em;
+}
+
+.modalListaHogares .modal-title {
+  width: 100%;
+  position: relative;
+}
+
+.imgLogoModal {
+  width: 300px;
+  height: auto;
+}
+
+.tituloListaHogares {
+  position: absolute;
+  margin-left: 40%;
+}
+
+.subTituloListaHogares {
+  font-size: 12px;
+}
+
+.btnRptListaHogares {
+  margin-top: 2em;
+}

@@ -100,7 +100,7 @@ const helpers = {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF();
             pdf.addImage(imgData, 'PNG', 0, 0);
-            pdf.save("HojaDeDatosEstadísticos.pdf");
+            pdf.save("documento.pdf");
         });
     }
 }

@@ -29,17 +29,17 @@ class PaisEstado extends React.Component {
     }
 
     getEstados = async (pais_Id_Pais) => {
-        await axios.get(this.url + "/Estado/GetEstadoByIdPais/" + pais_Id_Pais)
-            .then(res => {
-                this.setState({
-                    estados: res.data.estados
-                });
-            });
         if (pais_Id_Pais === "151"
             || pais_Id_Pais === "66"
-            || pais_Id_Pais === "40")
+            || pais_Id_Pais === "40") {
+            await axios.get(this.url + "/Estado/GetEstadoByIdPais/" + pais_Id_Pais)
+                .then(res => {
+                    this.setState({
+                        estados: res.data.estados
+                    });
+                });
             this.setState({ mostrarEstados: true });
-        else
+        } else
             this.setState({ mostrarEstados: false });
     };
 
@@ -55,7 +55,6 @@ class PaisEstado extends React.Component {
     render() {
 
         const { domicilio, onChangeDomicilio } = this.props
-
         const handle_pais_Id_Pais = (e) => {
             this.getEstados(e.target.value)
             onChangeDomicilio(e)
