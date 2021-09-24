@@ -8,7 +8,7 @@ import {
 import axios from 'axios';
 import helpers from '../../components/Helpers';
 import Layout from '../Layout';
-import './style.css';
+/* import './style.css'; */
 import DomicilioJeraquia from './DomicilioJerarquia';
 import IECELogo from '../../assets/images/IECE_logo.png';
 
@@ -25,8 +25,6 @@ class Hogar extends Component {
             bolHdIdDomicilioSelected: false,
             infoDistrito: {},
             infoSector: {},
-            modalInfoHogar: false,
-            modalListaHogares: false,
             mensajeDelProceso: "",
             modalShow: false
         }
@@ -140,14 +138,6 @@ class Hogar extends Component {
             })
     }
 
-    handle_RptListaHogares = () => {
-        this.setState({ modalListaHogares: true });
-    }
-
-    handle_modalListaHogaresClose = () => {
-        this.setState({ modalListaHogares: false });
-    }
-
     render() {
         if (this.state.listaDeHogares.length >= 0) {
             return (
@@ -159,11 +149,6 @@ class Hogar extends Component {
                         <Row>
                             Pertenecientes al distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias}, sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
                         </Row>
-
-                        <Row className="btnRptListaHogares">
-                            <Button color="primary" size="sm" onClick={this.handle_RptListaHogares}>Reporte de Lista de Hogares</Button>
-                        </Row>
-
                         <Row>
                             <Table className="tblListaHogares">
                                 <thead>
@@ -188,7 +173,14 @@ class Hogar extends Component {
                                                         </td>
                                                         <td> {hogar.hd_Telefono} </td>
                                                         <td> {this.state.infoSector.sec_Alias} </td>
-                                                        <td> <Button color="success" size="sm" onClick={() => this.handle_EditaHogar(hogar.hd_Id_Hogar)}>Editar</Button> </td>
+                                                        <td>
+                                                            <Button
+                                                                color="success"
+                                                                size="sm"
+                                                                onClick={() => this.handle_EditaHogar(hogar.hd_Id_Hogar)}>
+                                                                <span className="fas fa-pencil-alt icon-btn-p"></span>Editar
+                                                            </Button>
+                                                        </td>
                                                     </tr>
                                                 </React.Fragment>
                                             )
@@ -208,71 +200,19 @@ class Hogar extends Component {
                                 />
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="secondary" size="sm" onClick={this.modalInfoHogarClose}>Cancelar</Button>
-                                <Button color="primary" size="sm" onClick={() => this.handle_guardarDomicilio(this.state.domicilio)}>Guardar</Button>
+                                <Button
+                                    color="secondary"
+                                    size="sm"
+                                    onClick={this.modalInfoHogarClose}>
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    color="primary"
+                                    size="sm"
+                                    onClick={() => this.handle_guardarDomicilio(this.state.domicilio)}>
+                                    <span className="fas fa-save icon-btn-p"></span>Guardar
+                                </Button>
                             </ModalFooter>
-                        </Modal>
-                        <Modal isOpen={this.state.modalListaHogares} contentClassName="modalListaHogares" size="lg">
-                            <div id="infoListaHogares">
-                                <ModalHeader>
-                                    <Row>
-                                        <Col sm="5">
-                                            <img src={IECELogo} className="imgLogoModal" alt="Logo" />
-                                        </Col>
-                                        <Col sm="7" className="tituloListaHogares">
-                                            Lista de hogares <br />
-                                            <spam className="subTituloListaHogares">
-                                                Distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias} <br />
-                                                Sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
-                                            </spam>
-                                        </Col>
-                                    </Row>
-                                </ModalHeader>
-                                <ModalBody>
-                                    <Table className="tblListaHogares">
-                                        <thead>
-                                            <tr>
-                                                <th>Titular</th>
-                                                <th>Nacimiento</th>
-                                                <th>Edad</th>
-                                                <th>Celular</th>
-                                                <th>Tel. Casa</th>
-                                                <th>Domicilio</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                this.state.listaDeHogares.map((hogar) => {
-                                                    return (
-                                                        <React.Fragment>
-                                                            <tr>
-                                                                <td> {hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno}</td>
-                                                                <td>Fecha</td>
-                                                                <td>Edad</td>
-                                                                <td> {hogar.hd_Telefono} </td>
-                                                                <td> {hogar.hd_Telefono} </td>
-                                                                <td>
-                                                                    {hogar.hd_Calle} {hogar.hd_Numero_Exterior} {hogar.hd_Numero_Interior} <br />
-                                                                    {hogar.hd_Tipo_Subdivision} {hogar.hd_Subdivision}
-                                                                </td>
-                                                            </tr>
-                                                        </React.Fragment>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </Table>
-                                </ModalBody>
-                            </div>
-                            <ModalFooter>
-                                <Button color="secondary" size="sm" onClick={this.handle_modalListaHogaresClose}>Cancelar</Button>
-                                <Button color="danger" size="sm" onClick={() => helpers.ToPDF("infoListaHogares")}>Crear PDF</Button>
-                            </ModalFooter>
-                        </Modal>
-                        <Modal isOpen={this.state.modalShow}>
-                            <ModalBody>
-                                {this.state.mensajeDelProceso}
-                            </ModalBody>
                         </Modal>
                     </Container>
                 </Layout>

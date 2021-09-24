@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Sidebar from '../../components/nav/Sidebar';
-import Topbar from '../../components/nav/Topbar';
-import Footer from '../../components/nav/Footer';
+import Sidebar from './Sidebar';
+import Topbar from './Topbar';
+import Footer from './Footer';
 import helpers from '../../components/Helpers';
 
 class Layout extends Component {

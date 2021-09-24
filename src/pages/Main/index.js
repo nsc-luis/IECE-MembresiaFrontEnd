@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Layout from '../Layout';
-import Home from '../../components/Home';
+import Home from './Home';
 /* import { withRouter } from 'react-router-dom';
 import helpers from '../../components/Helpers'; */
 

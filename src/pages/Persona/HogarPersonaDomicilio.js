@@ -1,6 +1,6 @@
 import React from 'react';
-import helpers from './Helpers'
-import PaisEstado from '../components/PaisEstado';
+import helpers from '../../components/Helpers'
+import PaisEstado from '../../components/PaisEstado';
 
 class Domicilio extends React.Component {
     url = helpers.url_api;
@@ -10,18 +10,28 @@ class Domicilio extends React.Component {
         this.state = {
             ListaHogares: []
         }
+        this.infoSesion = JSON.parse(localStorage.getItem("infoSesion"));
     }
 
     componentWillMount() {
         this.getListaHogares();
     }
 
-    getListaHogares = () => {
+    /* getListaHogares = () => {
         helpers.authAxios.get(this.url + "/Hogar_Persona/GetListaHogares")
             .then(res => {
                 this.setState({
                     ListaHogares: res.data,
                     status: 'success'
+                });
+            });
+    } */
+
+    getListaHogares = () => {
+        helpers.authAxios.get(this.url + "/HogarDomicilio/GetByDistrito/" + this.infoSesion.dis_Id_Distrito)
+            .then(res => {
+                this.setState({
+                    ListaHogares: res.data.data
                 });
             });
     }

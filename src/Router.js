@@ -7,6 +7,11 @@ import ListaDePersonal from './pages/Persona/ListaDePersonal';
 import RegistroDePersona from './pages/Persona/RegistroDePersona';
 import Hogar from './pages/Hogar';
 import Signup from './pages/Signup';
+import Matrimonio from './pages/Matrimonio';
+import PresentacionDeNino from './pages/PresentacionDeNino';
+import RptListaDeHogares from './pages/Reporte/RptListaDeHogares';
+import RptBautizados from './pages/Reporte/RptBautizados';
+import Sector from './pages/Sector';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -29,6 +34,11 @@ class Router extends Component {
                     <Route exact path="/Hogar" component={Hogar} />
                     <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
                     <Route exact path="/RegistroDePersona" component={RegistroDePersona} />
+                    <Route exact path="/PresentacionDeNino" component={PresentacionDeNino} />
+                    <Route exact path="/Matrimonio" component={Matrimonio} />
+                    <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
+                    <Route exact path="/RptBautizados" component={RptBautizados} />
+                    <Route exact path="/Sector" component={Sector} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>

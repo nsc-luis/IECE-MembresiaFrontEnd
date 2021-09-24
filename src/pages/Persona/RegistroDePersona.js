@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PersonaForm from '../../components/PersonaForm';
+import PersonaForm from './PersonaForm';
 import axios from 'axios';
 import helpers from '../../components/Helpers';
 import { v4 as uuidv4 } from 'uuid';
@@ -192,10 +192,10 @@ class RegistroDePersonal extends Component {
                     this.setState({
                         categoriaSeleccionada: true,
                         msjCategoriaSeleccionada: "Habilita todas las pestañas / Bautizado por defecto.",
-                        habilitaPerBautizado: false,
+                        habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
-                            per_Bautizado: true,
+                            // per_Bautizado: false,
                             [e.target.name]: e.target.value.toUpperCase()
                         }
                     });
@@ -204,10 +204,10 @@ class RegistroDePersonal extends Component {
                     this.setState({
                         categoriaSeleccionada: true,
                         msjCategoriaSeleccionada: "Habilita todas las pestañas / Bautizado por defecto.",
-                        habilitaPerBautizado: false,
+                        habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
-                            per_Bautizado: true,
+                            // per_Bautizado: false,
                             [e.target.name]: e.target.value.toUpperCase()
                         }
                     });
@@ -335,7 +335,7 @@ class RegistroDePersonal extends Component {
 
     fnGuardaPersona = async (datos) => {
         try {
-            await axios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
+            await helpers.authAxios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
                 .then(res => {
                     if (res.data.status === "success") {
                         alert("Datos guardados satisfactoriamente");
@@ -353,7 +353,7 @@ class RegistroDePersonal extends Component {
     fnEditaPersona = async (datos) => {
         console.log(datos);
         try {
-            await axios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), datos)
+            await helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), datos)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -392,7 +392,7 @@ class RegistroDePersonal extends Component {
 
     fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => {
         try {
-            await axios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
+            await helpers.authAxios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
                 .then(res => {
                     if (res.data.status === "success") {
                         this.setState({

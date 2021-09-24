@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import '../assets/css/index.css'
+import '../../assets/css/index.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
-import helpers from './Helpers'
+import helpers from '../../components/Helpers'
 import { Link, Redirect } from 'react-router-dom';
 import PersonaEncontrada from './PersonaEncontrada'
-import HogarPersonaDomicilio from '../components/HogarPersonaDomicilio';
+import HogarPersonaDomicilio from './HogarPersonaDomicilio';
 import Modal from 'react-modal';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button,
