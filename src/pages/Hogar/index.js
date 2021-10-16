@@ -164,8 +164,8 @@ class Hogar extends Component {
                                     {
                                         this.state.listaDeHogares.map((hogar) => {
                                             return (
-                                                <React.Fragment>
-                                                    <tr key={hogar.hd_Id_Domicilio}>
+                                                <React.Fragment key={hogar.hd_Id_Hogar}>
+                                                    <tr>
                                                         <td> {hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno}</td>
                                                         <td>
                                                             {hogar.hd_Calle} {hogar.hd_Numero_Exterior} {hogar.hd_Numero_Interior} <br />

@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import {
-    Container, Row, Col, Card, CardHeader,
-    CardBody, CardFooter, Form, Input, Label,
-    Button, FormFeedback, Table,
+    Container, Row, Col, Form, Input, Label,
+    Button, FormFeedback, Table, FormGroup,
     Modal, ModalFooter, ModalBody, ModalHeader
 } from 'reactstrap';
-import axios from 'axios';
 import helpers from '../../components/Helpers';
 import Layout from '../Layout';
-import './style.css';
 import '../../assets/css/index.css';
 
 class PresentacionDeNino extends Component {
@@ -20,13 +17,32 @@ class PresentacionDeNino extends Component {
             listaDeNinos: [],
             status: false,
             modalEliminaPresentacion: false,
-            modalEditaPresentacion: false,
-            currentPresentacion: {}
+            modalFrmPresentacion: false,
+            bolAgregarPresentacion: true,
+            currentPresentacion: {},
+            tituloModalFrmPresentacion: "",
+            nombreNino: "",
+            ninoSelectInvalido: false,
+            fechaPresentacionInvalida: false,
+            ministroOficianteInvalido: false,
+            modalShow: false,
+            mensajeDelProceso: ""
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
+        this.msjNinoSelectInvalido = "Debe seleccionar niño(a) para continuar.";
     }
 
     componentDidMount() {
+        this.setState({
+            currentPresentacion: {
+                ...this.state.currentPresentacion,
+                per_Id_Persona: "0",
+                pdn_Ministro_Oficiante: "",
+                pdn_Fecha_Presentacion: "01/01/1900",
+                sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                usu_Id_Usuario: "1"
+            }
+        });
         this.getListaDePresentaciones();
         this.getListaDeNinos();
     }
@@ -52,7 +68,6 @@ class PresentacionDeNino extends Component {
     }
 
     handle_modalEliminaPresentacion = (info) => {
-        console.log(info)
         this.setState({
             currentPresentacion: info,
             modalEliminaPresentacion: true
@@ -65,18 +80,216 @@ class PresentacionDeNino extends Component {
         })
     }
 
-    handle_modalEditaPresentacion = (info) => {
-        console.log(info)
+    handle_modalAgregarPresentacion = () => {
         this.setState({
-            currentPresentacion: info,
-            modalEditaPresentacion: true
+            currentPresentacion: {
+                ...this.state.currentPresentacion,
+                per_Id_Persona: "0",
+                pdn_Ministro_Oficiante: "",
+                pdn_Fecha_Presentacion: "01/01/1900",
+                sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                usu_Id_Usuario: "1"
+            },
+            modalFrmPresentacion: true,
+            tituloModalFrmPresentacion: "Registrar nueva presentacion de niño(a)",
+            bolAgregarPresentacion: true
         })
     }
-    handle_modalEditaPresentacionClose = () => {
+
+    handle_modalEditaPresentacion = (info) => {
         this.setState({
-            modalEditaPresentacion: false,
-            currentPresentacion: {}
+            currentPresentacion: {
+                ...this.state.currentPresentacion,
+                pdn_Id_Presentacion: info.pdn_Id_Presentacion,
+                per_Id_Persona: info.per_Id_Persona,
+                pdn_Ministro_Oficiante: info.pdn_Ministro_Oficiante.toUpperCase(),
+                pdn_Fecha_Presentacion: helpers.reFormatoFecha(info.pdn_Fecha_Presentacion),
+                sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                usu_Id_Usuario: "1"
+            },
+            modalFrmPresentacion: true,
+            tituloModalFrmPresentacion: "Editar registro de presentacion de niño(a)",
+            bolAgregarPresentacion: false,
+            nombreNino: info.per_Nombre + " " + info.per_Apellido_Paterno + " " + info.per_Apellido_Materno
         })
+    }
+    handle_modalFrmPresentacionClose = () => {
+        this.setState({
+            modalFrmPresentacion: false,
+            currentPresentacion: {},
+            ninoSelectInvalido: false,
+            ministroOficianteInvalido: false,
+            fechaPresentacionInvalida: false
+        })
+    }
+
+    handle_onChange = (e) => {
+        this.setState({
+            currentPresentacion: {
+                ...this.state.currentPresentacion,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+
+    validaFormatos = (formato, campo, estado) => {
+        if (!helpers.regex[formato].test(campo)) {
+            this.setState({
+                [estado]: true
+            })
+        } else {
+            this.setState({
+                [estado]: false
+            })
+        }
+    }
+
+    eliminaPresentacion = async () => {
+        try {
+            await helpers.authAxios.delete(helpers.url_api + "/Presentacion_Nino/" + this.state.currentPresentacion.pdn_Id_Presentacion)
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/PresentacionDeNino'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/PresentacionDeNino'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+    }
+
+    guardarPresentacion = (e) => {
+        e.preventDefault();
+        let camposAValidados = [
+            { formato: "formatoFecha", campo: "pdn_Fecha_Presentacion", estado: "fechaPresentacionInvalida" },
+            { formato: "alphaSpaceRequired", campo: "pdn_Ministro_Oficiante", estado: "ministroOficianteInvalido" }
+        ];
+        camposAValidados.forEach(element => {
+            this.validaFormatos(
+                element.formato,
+                this.state.currentPresentacion[element.campo],
+                element.estado);
+        });
+        if (this.state.currentPresentacion.per_Id_Persona === "0") {
+            this.setState({ ninoSelectInvalido: true })
+        } else {
+            this.setState({
+                ninoSelectInvalido: false,
+                currentPresentacion: {
+                    ...this.state.currentPresentacion,
+                    per_Id_Persona: e.target.value
+                }
+            })
+        }
+
+        if (this.state.bolAgregarPresentacion &&
+            !this.state.ministroOficianteInvalido && 
+            !this.state.fechaPresentacionInvalida) {
+            var info = this.state.currentPresentacion;
+            info.pdn_Fecha_Presentacion = helpers.fnFormatoFecha(this.state.currentPresentacion.pdn_Fecha_Presentacion);
+            info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante.toUpperCase();
+            try {
+                helpers.authAxios.post(helpers.url_api + "/Presentacion_Nino/", info)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            // alert(res.data.mensaje);
+                            setTimeout(() => { document.location.href = '/PresentacionDeNino'; }, 3000);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1500);
+                            setTimeout(() => {
+                                document.location.href = '/PresentacionDeNino'
+                            }, 3500);
+                        } else {
+                            // alert(res.data.mensaje);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: res.data.mensaje,
+                                    modalShow: false
+                                });
+                            }, 1500);
+                        }
+                    });
+            } catch (error) {
+                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+            }
+        } else if (!this.state.ministroOficianteInvalido && !this.state.fechaPresentacionInvalida) {
+            var info = this.state.currentPresentacion;
+            info.pdn_Fecha_Presentacion = helpers.fnFormatoFecha(this.state.currentPresentacion.pdn_Fecha_Presentacion);
+            info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante.toUpperCase();
+            try {
+                helpers.authAxios.put(helpers.url_api + "/Presentacion_Nino/" + info.pdn_Id_Presentacion, info)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            // alert(res.data.mensaje);
+                            setTimeout(() => { document.location.href = '/PresentacionDeNino'; }, 3000);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1500);
+                            setTimeout(() => {
+                                document.location.href = '/PresentacionDeNino'
+                            }, 3500);
+                        } else {
+                            // alert(res.data.mensaje);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: res.data.mensaje,
+                                    modalShow: false
+                                });
+                            }, 1500);
+                        }
+                    });
+            } catch (error) {
+                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+            }
+        }
     }
 
     render() {
@@ -88,9 +301,16 @@ class PresentacionDeNino extends Component {
                             <h1 className="text-info">Presentaciones de niños</h1>
                         </Row>
                         <Row>
-                            <Button color="primary" size="sm">
-                                Registrar nueva presentacion
-                            </Button>
+                            <Col sm="8"></Col>
+                            <Col sm="4">
+                                <Button
+                                    onClick={this.handle_modalAgregarPresentacion}
+                                    color="primary"
+                                    size="sm"
+                                    className="btnNuevoRegistro">
+                                    Registrar nueva presentacion de niño(a)
+                                </Button>
+                            </Col>
                         </Row>
                         <Table>
                             <thead>
@@ -105,11 +325,11 @@ class PresentacionDeNino extends Component {
                                 {
                                     this.state.listaDePresentaciones.map((presentacion) => {
                                         return (
-                                            <React.Fragment>
+                                            <React.Fragment key={presentacion.pdn_Id_Presentacion}>
                                                 <tr>
-                                                    <td> {presentacion.per_Nombre} {presentacion.per_ApellidoPaterno} {presentacion.per_ApellidoMaterno} </td>
+                                                    <td> {presentacion.per_Nombre} {presentacion.per_Apellido_Paterno} {presentacion.per_Apellido_Materno} </td>
                                                     <td> {presentacion.pdn_Ministro_Oficiante} </td>
-                                                    <td> {presentacion.pdn_Fecha_Presentacion} </td>
+                                                    <td> {helpers.reFormatoFecha(presentacion.pdn_Fecha_Presentacion)} </td>
                                                     <td>
                                                         <Button
                                                             color="success"
@@ -147,62 +367,123 @@ class PresentacionDeNino extends Component {
                                     onClick={this.handle_modalEliminaPresentacionClose}
                                     size="sm">Cancelar</Button>
                                 <Button
-                                    color="primary"
-                                    size="sm">
-                                    <span className="fas fa-save icon-btn-p"></span>Guardar
+                                    color="danger"
+                                    size="sm"
+                                    onClick={this.eliminaPresentacion}>
+                                    Eliminar
                                 </Button>
                             </ModalFooter>
                         </Modal>
-                        <Modal isOpen={this.state.modalEditaPresentacion} size="lg">
-                            <ModalHeader>
-                                Editar registro de presentacion
-                            </ModalHeader>
-                            <ModalBody>
-                                <Row>
-                                    <Label>Niño(a):</Label>
-                                </Row>
-                                <Row>
-                                    <select>
-                                        <option value="0">Selecciona un registro</option>
-                                        {
-                                            this.state.listaDeNinos.map(nino => {
-                                                return (
-                                                    <React.Fragment>
-                                                        <option value={nino.per_Id_Persona}> {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno} </option>
-                                                    </React.Fragment>
-                                                )
-                                            })
-                                        }
-                                    </select>
-                                </Row>
-                                <Row>
-                                    <Label>Ministro oficiante:</Label>
-                                    <Input 
-                                        type="text"
-                                        value={this.state.currentPresentacion.pdn_Ministro_Oficiante}
-                                    />
-                                </Row>
-                                <Row>
-                                    <Label>Fecha de presentacion:</Label>
-                                    <Input 
-                                        type="text"
-                                        value={this.state.currentPresentacion.pdn_Fecha_Presentacion}
-                                    />
-                                </Row>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    color="secondary"
-                                    onClick={this.handle_modalEditaPresentacionClose}
-                                    size="sm">Cancelar</Button>
-                                <Button
-                                    color="primary"
-                                    size="sm">
-                                    <span className="fas fa-save icon-btn-p"></span>Guardar
-                                </Button>
-                            </ModalFooter>
+
+                        <Modal isOpen={this.state.modalFrmPresentacion}>
+                            <Form onSubmit={this.guardarPresentacion}>
+                                <ModalHeader>
+                                    {this.state.tituloModalFrmPresentacion}
+                                </ModalHeader>
+                                <ModalBody>
+                                    {this.state.bolAgregarPresentacion === false &&
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Niño(a):</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        type="text"
+                                                        readOnly
+                                                        value={this.state.nombreNino}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    }
+                                    {this.state.bolAgregarPresentacion === true &&
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Niño(a):</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        name="per_Id_Persona"
+                                                        type="select"
+                                                        readOnly
+                                                        value={this.state.currentPresentacion.per_Id_Persona}
+                                                        onChange={this.handle_onChange}
+                                                        invalid={this.state.ninoSelectInvalido}
+                                                    >
+                                                        <option value="0">Selecciona un registro</option>
+                                                        {
+                                                            this.state.listaDeNinos.map(nino => {
+                                                                return (
+                                                                    <React.Fragment key={nino.per_Id_Persona}>
+                                                                        <option value={nino.per_Id_Persona}> {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno} </option>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Input>
+                                                    <FormFeedback>{this.state.msjNinoSelectInvalido}</FormFeedback>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    }
+                                    <FormGroup>
+                                        <Row>
+                                            <Col sm="4">
+                                                <Label>Ministro oficiante:</Label>
+                                            </Col>
+                                            <Col sm="8">
+                                                <Input
+                                                    name="pdn_Ministro_Oficiante"
+                                                    type="text"
+                                                    value={this.state.currentPresentacion.pdn_Ministro_Oficiante}
+                                                    onChange={this.handle_onChange}
+                                                    invalid={this.state.ministroOficianteInvalido}
+                                                />
+                                                <FormFeedback>{helpers.msjRegexInvalido.alphaSpaceRequired}</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+
+                                    <FormGroup>
+                                        <Row>
+                                            <Col sm="4">
+                                                <Label>Fecha de presentacion:</Label>
+                                            </Col>
+                                            <Col sm="8">
+                                                <Input
+                                                    name="pdn_Fecha_Presentacion"
+                                                    type="text"
+                                                    value={this.state.currentPresentacion.pdn_Fecha_Presentacion}
+                                                    onChange={this.handle_onChange}
+                                                    invalid={this.state.fechaPresentacionInvalida}
+                                                />
+                                                <FormFeedback>{helpers.msjRegexInvalido.formatoFecha}</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button
+                                        color="secondary"
+                                        onClick={this.handle_modalFrmPresentacionClose}
+                                        size="sm">Cancelar</Button>
+                                    <Button
+                                        color="primary"
+                                        type="submit"
+                                        size="sm">
+                                        <span className="fas fa-save icon-btn-p"></span>Guardar
+                                    </Button>
+                                </ModalFooter>
+                            </Form>
                         </Modal>
                     </Container>
+                    <Modal isOpen={this.state.modalShow}>
+                        <ModalBody>
+                            {this.state.mensajeDelProceso}
+                        </ModalBody>
+                    </Modal>
                 </Layout>
             )
         }
@@ -214,12 +495,118 @@ class PresentacionDeNino extends Component {
                             <h1 className="text-info">Presentaciones de niños</h1>
                         </Row>
                         <Row>
-                            <Button color="primary" size="sm">
-                                Registrar nueva presentacion
+                            <Button
+                                onClick={this.handle_modalAgregarPresentacion}
+                                color="primary"
+                                size="sm"
+                                className="btnNuevoRegistro">
+                                Registrar nueva presentacion de niño(a)
                             </Button>
                         </Row>
                         <h3>Aun no hay presentacion de niños registrados!</h3>
                         <p>Haga clic en el boton Registrar para registrar una nueva presentacion de niño.</p>
+                        <Modal isOpen={this.state.modalFrmPresentacion}>
+                            <Form onSubmit={this.guardarPresentacion}>
+                                <ModalHeader>
+                                    {this.state.tituloModalFrmPresentacion}
+                                </ModalHeader>
+                                <ModalBody>
+                                    {/* {this.state.bolAgregarPresentacion === false &&
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Niño(a):</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        type="text"
+                                                        readOnly
+                                                        value={this.state.nombreNino}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    }
+                                    {this.state.bolAgregarPresentacion === true && */}
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Niño(a):</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        name="per_Id_Persona"
+                                                        type="select"
+                                                        value={this.state.currentPresentacion.per_Id_Persona}
+                                                        onChange={this.handle_onChange}
+                                                        invalid={this.state.ninoSelectInvalido}
+                                                    >
+                                                        <option value="0">Selecciona un registro</option>
+                                                        {
+                                                            this.state.listaDeNinos.map(nino => {
+                                                                return (
+                                                                    <React.Fragment key={nino.per_Id_Persona}>
+                                                                        <option value={nino.per_Id_Persona}> {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno} </option>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Input>
+                                                    <FormFeedback>{this.state.msjNinoSelectInvalido}</FormFeedback>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    {/* } */}
+                                    <FormGroup>
+                                        <Row>
+                                            <Col sm="4">
+                                                <Label>Ministro oficiante:</Label>
+                                            </Col>
+                                            <Col sm="8">
+                                                <Input
+                                                    name="pdn_Ministro_Oficiante"
+                                                    type="text"
+                                                    value={this.state.currentPresentacion.pdn_Ministro_Oficiante}
+                                                    onChange={this.handle_onChange}
+                                                    invalid={this.state.ministroOficianteInvalido}
+                                                />
+                                                <FormFeedback>{helpers.msjRegexInvalido.alphaSpaceRequired}</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+
+                                    <FormGroup>
+                                        <Row>
+                                            <Col sm="4">
+                                                <Label>Fecha de presentacion:</Label>
+                                            </Col>
+                                            <Col sm="8">
+                                                <Input
+                                                    name="pdn_Fecha_Presentacion"
+                                                    type="text"
+                                                    value={this.state.currentPresentacion.pdn_Fecha_Presentacion}
+                                                    onChange={this.handle_onChange}
+                                                    invalid={this.state.fechaPresentacionInvalida}
+                                                />
+                                                <FormFeedback>{helpers.msjRegexInvalido.formatoFecha}</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button
+                                        color="secondary"
+                                        onClick={this.handle_modalFrmPresentacionClose}
+                                        size="sm">Cancelar</Button>
+                                    <Button
+                                        color="primary"
+                                        type="submit"
+                                        size="sm">
+                                        <span className="fas fa-save icon-btn-p"></span>Guardar
+                                    </Button>
+                                </ModalFooter>
+                            </Form>
+                        </Modal>
                     </Container>
                 </Layout >
             )

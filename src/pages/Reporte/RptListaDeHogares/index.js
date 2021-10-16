@@ -65,7 +65,8 @@ class RptListaDeHogares extends Component {
                         <Row>
                             <Button
                                 color="danger"
-                                size="sm" onClick={() => helpers.ToPDF("infoListaHogares")}>
+                                size="sm" onClick={() => helpers.ToPDF("infoListaHogares")}
+                                className="btnNuevoRegistro">
                                 <span className="fas fa-file-pdf icon-btn-p"></span>Crear PDF
                             </Button>
                         </Row>
@@ -86,7 +87,7 @@ class RptListaDeHogares extends Component {
                                         {
                                             this.state.listaDeHogares.map((hogar) => {
                                                 return (
-                                                    <React.Fragment>
+                                                    <React.Fragment key={hogar.hd_Id_Hogar}>
                                                         <tr>
                                                             <td> {hogar.per_Nombre} {hogar.per_Apellido_Paterno} {hogar.per_Apellido_Materno}</td>
                                                             <td>Fecha</td>
