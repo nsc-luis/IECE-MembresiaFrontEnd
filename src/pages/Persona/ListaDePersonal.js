@@ -243,6 +243,7 @@ class ListaDePersonal extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">Nombre</th>
+                                    <th scope="col" className="text-center">Categoria</th>
                                     <th scope="col" className="text-center">Status</th>
                                     <th scope="col" className="text-center">Activo</th>
                                     <th scope="col" className="text-center">Vivo</th>
@@ -256,7 +257,9 @@ class ListaDePersonal extends Component {
                                             <React.Fragment key={persona.per_Id_Persona}>
                                                 <tr>
                                                     <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
-
+                                                    <td className="text-center">
+                                                        {persona.per_Categoria}
+                                                    </td>
                                                     <td className="text-center">
                                                         {this.InfoStatus(persona).bautizado}
                                                     </td>
