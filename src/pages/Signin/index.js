@@ -103,7 +103,7 @@ class Login extends Component {
                             });
                             localStorage.setItem('token', this.state.token);
                             localStorage.setItem('infoSesion', JSON.stringify(res.data.infoSesion[0]));
-                            setTimeout(() => { document.location.href = '/Main'; }, 3000);
+                            setTimeout(() => { document.location.href = '/Login'; }, 3000);
                         }
                         else {
                             this.setState({
@@ -173,7 +173,8 @@ class Login extends Component {
                                                     <Button
                                                         color="primary"
                                                         type="submit" >
-                                                        Iniciar sesion
+                                                            <span className="fa fa-key"></span>
+                                                            Validar credenciales
                                                     </Button>
                                                     <br />
                                                     <Link to="/Signup">Registrar nuevo usuario.</Link>
