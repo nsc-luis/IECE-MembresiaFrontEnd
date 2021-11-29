@@ -6,6 +6,7 @@ import {
     Container, FormFeedback, Card, CardBody, CardTitle
 } from 'reactstrap'
 import { Link } from 'react-router-dom';
+import './style.css'
 
 class Login extends Component {
     url = helpers.url_api;
@@ -173,7 +174,7 @@ class Login extends Component {
                                                     <Button
                                                         color="primary"
                                                         type="submit" >
-                                                            <span className="fa fa-key"></span>
+                                                            <span className="fa fa-key faIconButton"></span>
                                                             Validar credenciales
                                                     </Button>
                                                     <br />

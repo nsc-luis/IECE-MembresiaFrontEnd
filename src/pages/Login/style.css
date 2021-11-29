@@ -10,3 +10,15 @@
 .faIconButton {
     margin-right: 5px;
 }
+.tarjetaDeRegitro {
+    margin-top: 4em;
+}
+.txtNegrita {
+    font-weight: bold;
+}
+.txtEncabezadoTarjeta {
+    font-size: 2em;
+}
+.txtSubrayado {
+    text-decoration: underline;
+}
