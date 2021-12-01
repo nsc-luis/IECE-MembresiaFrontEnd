@@ -6,10 +6,10 @@ import {
 } from 'reactstrap'
 import Distritos from '../../components/Distritos';
 import Sectores from '../../components/Sectores';
-import PersonalMinisterial from '../../components/PersonalMinisterial';
-import EmailsMinistro from '../../components/EmailsMinistro';
+import PersonalMinisterial from './PersonalMinisterial';
+import EmailsMinistro from './EmailsMinistro';
 import helpers from '../../components/Helpers';
-import PasswordEmailUsuario from '../../components/PasswordEmailUsuario';
+import PasswordEmailUsuario from './PasswordEmailUsuario';
 
 class Signup extends Component {
     url = helpers.url_api;

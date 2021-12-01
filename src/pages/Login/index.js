@@ -17,7 +17,9 @@ class Login extends Component {
             distritoSeleccionado: "0",
             listaDistritosPorMinistro: [],
             listaSectoresPorDistrito: [],
-            sectorSeleccionado: "0"
+            sectorSeleccionado: "0",
+            obispo: false,
+            idSector: 0
         }
     }
 
@@ -46,16 +48,33 @@ class Login extends Component {
     getListaDistritosPorMinistro = async () => {
         await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetAlcancePastoralByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
             .then(res => {
+                if (res.data.obispo === true) {
+                    this.setState({ obispo: true })
+                } else {
+                    this.setState({ 
+                        obispo: false,
+                        idSector: res.data.datos[0].sec_Id_Sector
+                    })
+                }
                 // console.log(res.data.datos);
                 this.setState({ listaDistritosPorMinistro: res.data.datos });
             });
     }
 
     getListaSectoresPorDistrito = async (idDistrito) => {
-        await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistrito)
+        if (this.state.obispo === true) {
+            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistrito)
             .then(res => {
                 this.setState({ listaSectoresPorDistrito: res.data.sectores });
             });
+        }
+        else {
+            await helpers.authAxios.get(this.url + '/Sector/' + this.state.idSector)
+            .then(res => {
+                this.setState({ listaSectoresPorDistrito: res.data });
+            });
+        }
+        
     }
 
     onChangeDistrito = (e) => {
@@ -76,6 +95,7 @@ class Login extends Component {
 
     iniciarSesion = (e) => {
         e.preventDefault();
+        document.location.href = '/Main';
     }
 
     render() {

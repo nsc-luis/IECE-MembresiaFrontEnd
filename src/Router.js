@@ -23,6 +23,7 @@ class Router extends Component {
         /* if(!localStorage.getItem("infoSesion")) {
             return <Signin />;
         } */
+        // localStorage.clear();
     }
 
     render() {

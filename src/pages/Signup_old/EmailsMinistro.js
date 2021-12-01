@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import helpers from './Helpers'
+import helpers from '../../components/Helpers'
 import { Row, Col, Container, FormFeedback, /* FormGroup, */ Input } from 'reactstrap'
 
 class EmailMinistro extends Component {
