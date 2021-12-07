@@ -17,6 +17,7 @@ class Login extends Component {
             distritoSeleccionado: "0",
             listaDistritosPorMinistro: [],
             listaSectoresPorDistrito: [],
+            listaSectoresPorMinistro: [],
             sectorSeleccionado: "0",
             obispo: false,
             idSector: 0
@@ -49,38 +50,58 @@ class Login extends Component {
         await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetAlcancePastoralByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
             .then(res => {
                 if (res.data.obispo === true) {
-                    this.setState({ obispo: true })
+                    this.setState({
+                        obispo: true,
+                        listaDistritosPorMinistro: res.data.datos
+                    })
                 } else {
-                    this.setState({ 
+                    this.setState({
                         obispo: false,
-                        idSector: res.data.datos[0].sec_Id_Sector
+                        idSector: res.data.datos[0].sec_Id_Sector,
+                        listaDistritosPorMinistro: res.data.datos[0]
                     })
                 }
                 // console.log(res.data.datos);
-                this.setState({ listaDistritosPorMinistro: res.data.datos });
+                // this.setState({ listaDistritosPorMinistro: res.data.datos });
             });
+    }
+
+    getListaSectoresPorMinistro = async (idDistrito, idMinistro) => {
+        if (this.state.obispo) {
+            await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
+                .then(res => {
+                    this.setState({ listaSectoresPorMinistro: res.data.sectores });
+                });
+        }
+        else {
+            await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByMinistro/' + idMinistro)
+                .then(res => {
+                    this.setState({ listaSectoresPorMinistro: res.data.sectores });
+                });
+        }
     }
 
     getListaSectoresPorDistrito = async (idDistrito) => {
         if (this.state.obispo === true) {
             await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistrito)
-            .then(res => {
-                this.setState({ listaSectoresPorDistrito: res.data.sectores });
-            });
+                .then(res => {
+                    this.setState({ listaSectoresPorDistrito: res.data.sectores });
+                });
         }
         else {
             await helpers.authAxios.get(this.url + '/Sector/' + this.state.idSector)
-            .then(res => {
-                this.setState({ listaSectoresPorDistrito: res.data });
-            });
+                .then(res => {
+                    this.setState({ listaSectoresPorDistrito: res.data });
+                });
         }
-        
+
     }
 
     onChangeDistrito = (e) => {
         // console.log(e.target.value);
         this.setState({ distritoSeleccionado: e.target.value });
-        this.getListaSectoresPorDistrito(e.target.value);
+        /* this.getListaSectoresPorDistrito(e.target.value); */
+        this.getListaSectoresPorMinistro(e.target.value, this.infoSesion.mu_pem_Id_Pastor);
     }
 
     onChangeSector = (e) => {
@@ -106,12 +127,12 @@ class Login extends Component {
                         <Card className="margen">
                             <CardBody>
                                 <Form onSubmit={this.iniciarSesion}>
-                                    {this.state.listaDistritosPorMinistro.length > 0 &&
-                                        <React.Fragment>
+                                    {/* {this.state.listaDistritosPorMinistro.length > 0 && */}
+                                    <React.Fragment>
                                         <Alert color="warning" className="alertLogin">
                                             <strong>Aviso: </strong> <br />
                                             <ul>
-                                                <li>Si el usuario (ministro) es <strong>obispo</strong>: 
+                                                <li>Si el usuario (ministro) es <strong>obispo</strong>:
                                                     <ul>
                                                         <li>Podra iniciar sesión seleccionando tan solo el distrito: en cuyo caso vera la información que correspone a los sectores del distrito.</li>
                                                         <li>Si selecciona el sector ademas del distrito: vera solo la información que corresponde al sector.</li>
@@ -126,28 +147,45 @@ class Login extends Component {
                                                     Distrito:
                                                 </Col>
                                                 <Col sm="4">
-                                                    <Input
-                                                        type="select"
-                                                        name="listaDistritos"
-                                                        value={this.state.distritoSeleccionado}
-                                                        onChange={this.onChangeDistrito}
-                                                    >
-                                                        <option value="0">Selecciona un distrito</option>
-                                                        {
-                                                            this.state.listaDistritosPorMinistro.map(distrito => {
-                                                                return (
-                                                                    <React.Fragment key={distrito.dis_Id_Distrito}>
-                                                                        <option value={distrito.dis_Id_Distrito}>{distrito.dis_Tipo_Distrito} {distrito.dis_Numero}: {distrito.dis_Alias}</option>
-                                                                    </React.Fragment>
-                                                                )
-                                                            })
-                                                        }
-                                                    </Input>
+                                                    {this.state.obispo &&
+                                                        <React.Fragment>
+                                                            <Input
+                                                                type="select"
+                                                                name="listaDistritos"
+                                                                value={this.state.distritoSeleccionado}
+                                                                onChange={this.onChangeDistrito}
+                                                            >
+                                                                <option value="0">Selecciona un distrito</option>
+                                                                {
+                                                                    this.state.listaDistritosPorMinistro.map(distrito => {
+                                                                        return (
+                                                                            <React.Fragment key={distrito.dis_Id_Distrito}>
+                                                                                <option value={distrito.dis_Id_Distrito}>{distrito.dis_Tipo_Distrito} {distrito.dis_Numero}: {distrito.dis_Alias}</option>
+                                                                            </React.Fragment>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </Input>
+                                                        </React.Fragment>
+                                                    }
+                                                    {!this.state.obispo &&
+                                                        <React.Fragment>
+                                                            <Input
+                                                                type="select"
+                                                                name="listaDistritos"
+                                                                value={this.state.distritoSeleccionado}
+                                                                onChange={this.onChangeDistrito}
+                                                            >
+                                                                <option value="0">Selecciona un distrito</option>
+                                                                <option value={this.state.listaDistritosPorMinistro.dis_Id_Distrito}>{this.state.listaDistritosPorMinistro.dis_Tipo_Distrito} {this.state.listaDistritosPorMinistro.dis_Numero}: {this.state.listaDistritosPorMinistro.dis_Alias}</option>
+                                                            </Input>
+                                                        </React.Fragment>
+                                                    }
                                                 </Col>
                                             </Row>
                                         </FormGroup>
-                                        </React.Fragment>
-                                    }
+                                    </React.Fragment>
+                                    {/* } */}
                                     {this.state.distritoSeleccionado !== "0" &&
                                         <FormGroup>
                                             <Row>
@@ -162,8 +200,17 @@ class Login extends Component {
                                                         onChange={this.onChangeSector}
                                                     >
                                                         <option value="0">Selecciona un sector</option>
-                                                        {
+                                                        {/* {
                                                             this.state.listaSectoresPorDistrito.map(sector => {
+                                                                return (
+                                                                    <React.Fragment key={sector.sec_Id_Sector}>
+                                                                        <option value={sector.sec_Id_Sector}>{sector.sec_Alias}</option>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })
+                                                        } */}
+                                                        {
+                                                            this.state.listaSectoresPorMinistro.map(sector => {
                                                                 return (
                                                                     <React.Fragment key={sector.sec_Id_Sector}>
                                                                         <option value={sector.sec_Id_Sector}>{sector.sec_Alias}</option>

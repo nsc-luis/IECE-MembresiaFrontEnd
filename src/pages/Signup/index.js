@@ -19,6 +19,7 @@ class Signup extends Component {
             confirmacion: "",
             claveFase1: "",
             claveFase2: "",
+            superSecreto: "",
             fase1Invalida: false,
             mesajeFase1Invalida: "",
             fase2Invalida: false,
@@ -36,7 +37,7 @@ class Signup extends Component {
 
     verificaFase1 = async (e) => {
         e.preventDefault();
-        await helpers.authAxios.get(helpers.url_api + "/Usuario/VerificaEmail/" + this.state.email + "/" + this.state.claveFase1)
+        await helpers.authAxios.get(helpers.url_api + "/Usuario/VerificaEmail/" + this.state.email/*  + "/" + this.state.claveFase1 */)
             .then(res => {
                 if (res.data.status === "success") {
                     console.log("ok");
@@ -66,7 +67,8 @@ class Signup extends Component {
         var data = {
             Email: this.state.email,
             Password: this.state.passEmailRegistro,
-            superSecreto: this.state.claveFase2
+            /* superSecreto: this.state.claveFase2 */
+            superSecreto: this.state.superSecreto
         };
         var altaUsuario = false;
         var AspNetUserId = "";
@@ -155,10 +157,10 @@ class Signup extends Component {
                                 <Form onSubmit={this.verificaFase1}>
                                     <CardHeader className="center">
                                         <CardTitle className="txtNegrita txtEncabezadoTarjeta">Registro de usuarios</CardTitle>
-                                        Fase 1
+                                        {/* Fase 1 */}
                                     </CardHeader>
                                     <CardBody>
-                                        <Row>
+                                        {/* <Row>
                                             <Col sm="12">
                                                 <Alert color="warning">
                                                     <span className="txtNegrita">Instrucciones:</span>
@@ -186,7 +188,7 @@ class Signup extends Component {
                                                     </ul>
                                                 </Alert>
                                             </Col>
-                                        </Row>
+                                        </Row> */}
                                         <FormGroup>
                                             <Row>
                                                 <Col sm="3"></Col>
@@ -198,12 +200,14 @@ class Signup extends Component {
                                                         name="email"
                                                         value={this.state.email}
                                                         onChange={this.handle_onChange}
+                                                        invalid={this.state.fase1Invalida}
                                                     />
+                                                    <FormFeedback>{this.state.mesajeFase1Invalida}</FormFeedback>
                                                 </Col>
                                                 <Col sm="3"></Col>
                                             </Row>
                                         </FormGroup>
-                                        <FormGroup>
+                                        {/* <FormGroup>
                                             <Row>
                                                 <Col sm="3"></Col>
                                                 <Col sm="2" className="txtNegrita">Clave fase 1: *</Col>
@@ -229,7 +233,7 @@ class Signup extends Component {
                                                 </Col>
                                                 <Col sm="3"></Col>
                                             </Row>
-                                        </FormGroup>
+                                        </FormGroup> */}
                                     </CardBody>
                                     <CardFooter>
                                         <FormGroup>
@@ -247,7 +251,8 @@ class Signup extends Component {
                                                         type="submit"
                                                         color="primary"
                                                     >
-                                                        Verificar Fase 1
+                                                        {/* Verificar Fase 1 */}
+                                                        Verficar e-mail
                                                     </Button>
                                                 </Col>
                                                 <Col sm="3"></Col>
@@ -348,7 +353,7 @@ class Signup extends Component {
                                                 <Col sm="3"></Col>
                                             </Row>
                                         </FormGroup> */}
-                                        <FormGroup>
+                                        {/* <FormGroup>
                                             <Row>
                                                 <Col sm="3"></Col>
                                                 <Col sm="2" className="txtNegrita">Clave fase 2: *</Col>
@@ -358,6 +363,22 @@ class Signup extends Component {
                                                         name="claveFase2"
                                                         onChange={this.handle_onChange}
                                                         value={this.state.claveFase2}
+                                                    />
+                                                </Col>
+                                                <Col sm="3"></Col>
+                                            </Row>
+                                        </FormGroup> */}
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="3"></Col>
+                                                <Col sm="2" className="txtNegrita">Super secreto: *</Col>
+                                                <Col sm="4">
+                                                    <Input
+                                                        type="text"
+                                                        name="superSecreto"
+                                                        onChange={this.handle_onChange}
+                                                        value={this.state.superSecreto}
+                                                        invalid={this.state.fase2Invalida}
                                                     />
                                                 </Col>
                                                 <Col sm="3"></Col>
@@ -380,7 +401,8 @@ class Signup extends Component {
                                                         type="submit"
                                                         color="primary"
                                                     >
-                                                        Verificar Fase 2
+                                                        {/* Verificar Fase 2 */}
+                                                        Registrar
                                                     </Button>
                                                 </Col>
                                                 <Col sm="3"></Col>
