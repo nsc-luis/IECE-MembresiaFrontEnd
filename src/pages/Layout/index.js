@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from './Sidebar';
+import SidebarObispo from './SidebarObispo';
 import Topbar from './Topbar';
 import Footer from './Footer';
 import helpers from '../../components/Helpers';
@@ -15,6 +16,10 @@ class Layout extends Component {
         if(!helpers.isLoggedIn()) {
             return document.location.href = "/";
         }
+        this.state = {
+            distrito : localStorage.getItem("dto"),
+            sector : localStorage.getItem("sector")
+        }
     }
 
     render() {
@@ -26,7 +31,7 @@ class Layout extends Component {
                 {/* Page Wrapper */}
                 <div id="wrapper">
 
-                    <Sidebar />
+                    {this.state.sector != null ? <Sidebar /> : <SidebarObispo />}
 
                     {/* Content Wrapper */}
                     <div id="content-wrapper" className="d-flex flex-column">

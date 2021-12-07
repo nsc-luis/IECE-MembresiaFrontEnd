@@ -2,7 +2,7 @@ import React, {Component, useState} from 'react';
 import { Link } from 'react-router-dom';
 import helpers from '../../components/Helpers';
 
-class Sidebar extends Component { 
+class SidebarObispo extends Component { 
     // infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     render() {
         return(
@@ -86,80 +86,6 @@ class Sidebar extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Movimientos de personal
-                    </div>
-
-                    {/* Nav Item - Altas Collapse Menu */}
-                        <li className="nav-item">
-                            <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPAltas" aria-expanded="true" aria-controls="collapsePages">
-                                <i className="fas fa-fw fa-user-check"></i>
-                                <span>Alta de personal</span>
-                            </Link>
-                            <div id="collapseMPAltas" className="collapse" aria-labelledby="headingMPAltas" data-parent="#accordionSidebar">
-                                <div className="bg-white py-2 collapse-inner rounded">
-                                    {/* <h6 className="collapse-header">Personal bautizado:</h6> */}
-                                    <Link className="collapse-item" to="#" onClick={helpers.handle_RegistroNvaPersona}>Nuevo registro</Link>
-                                    <Link className="collapse-item" to="#">Bautismo</Link>
-                                    {/* <Link className="collapse-item" to="#">Cambio de domicilio</Link> */}
-                                    <Link className="collapse-item" to="#">Restitución</Link>
-                                    {/* <h6 className="collapse-header">Personal no bautizado:</h6>
-                                    <Link className="collapse-item" to="#">Nuevo ingreso</Link>
-                                    <Link className="collapse-item" to="#">Cambio de domicilio</Link>
-                                    <Link className="collapse-item" to="#">Reactivación</Link> */}
-                                </div>
-                            </div>
-                        </li>
-    
-
-                    {/* Nav Item - Bajas Collapse Menu */}
-                    <li className="nav-item">
-                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPBajas" aria-expanded="true" aria-controls="collapsepages">
-                            <i className="fas fa-fw fa-user-times"></i>
-                            <span>Baja de personal</span>
-                        </Link>
-                        <div id="collapseMPBajas" className="collapse" aria-labelledby="headingMPBajas" data-parent="#accordionSidebar">
-                            <div className="bg-white py-2 collapse-inner rounded">
-                                {/* <h6 className="collapse-header">Personal bautizado:</h6>
-                                <Link className="collapse-item" to="#">Cambio de domicilio</Link>
-                                <Link className="collapse-item" to="#">Defuncion</Link> */}
-                                {/* <h6 className="collapse-header">Personal no bautizado:</h6> */}
-                                <Link className="collapse-item" to="#">Excomunion</Link>
-                                <Link className="collapse-item" to="#">Cambio de domicilio</Link>
-                                <Link className="collapse-item" to="#">Alejamiento</Link>
-                                <Link className="collapse-item" to="#">Defuncion</Link>
-                            </div>
-                        </div>
-                    </li>
-
-                    {/* Divider */}
-                    <hr className="sidebar-divider" />
-
-                    {/* Heading */}
-                    <div className="sidebar-heading">
-                        Movimientos estadisticos
-                    </div>
-
-                    {/* Nav Item - Matrimonios */}
-                    <li className="nav-item">
-                        <Link className="nav-link" to="Matrimonio">
-                            <i className="fas fa-fw fa-user-friends"></i>
-                            <span>Matrimonios</span>
-                        </Link>
-                    </li>
-
-                    {/* Nav Item - Presentaciones  */}
-                    <li className="nav-item">
-                        <Link className="nav-link" to="PresentacionDeNino">
-                            <i className="fas fa-fw fa-baby"></i>
-                            <span>Presentaciones</span>
-                        </Link>
-                    </li>
-
-                    {/* Divider */}
-                    <hr className="sidebar-divider" />
-
-                    {/* Heading */}
-                    <div className="sidebar-heading">
                         Seccion de reportes
                     </div>
 
@@ -194,4 +120,4 @@ class Sidebar extends Component {
         );
     }
 }
-export default Sidebar;
+export default SidebarObispo;
