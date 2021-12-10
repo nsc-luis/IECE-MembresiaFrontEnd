@@ -116,7 +116,18 @@ class Login extends Component {
 
     iniciarSesion = (e) => {
         e.preventDefault();
-        document.location.href = '/Main';
+        if (this.state.distritoSeleccionado === "0") {
+            alert("Error: Debe seleccionar un distrito para continuar.");
+        }
+        else if (this.state.obispo) {
+            document.location.href = '/Main';
+        }
+        else if (this.state.sectorSeleccionado !== "0") {
+            document.location.href = '/Main';
+        }
+        else {
+            alert("Error: Debe seleccionar un sector para continuar.");
+        }
     }
 
     render() {
