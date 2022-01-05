@@ -104,6 +104,7 @@ class Login extends Component {
         this.getListaSectoresPorMinistro(e.target.value, this.infoSesion.mu_pem_Id_Pastor);
         //Almacenar Distrito
         localStorage.setItem('dto',e.target.value)
+        console.log("Distrito: " + e.target.value)
     }
 
     onChangeSector = (e) => {
@@ -111,6 +112,7 @@ class Login extends Component {
         this.setState({ sectorSeleccionado: e.target.value });
         //Almacenar Sector
         localStorage.setItem('sector',e.target.value)
+        console.log("Sector: " + e.target.value)
     }
 
     handleLogoff = () => {
