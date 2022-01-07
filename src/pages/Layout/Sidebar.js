@@ -28,7 +28,7 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Resumen Membresia Actual */}
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="/ListaDePersonal">
+                        <Link className="nav-link collapsed" to="#">
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresía Actual</span>
                         </Link>
@@ -36,7 +36,7 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Información de Membresía */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/Hogar">
+                        <Link className="nav-link" to="/ListaDePersonal">
                             <i className="fas fa-fw fa-home"></i>
                             <span>Anális de Membresia</span>
                         </Link>
@@ -225,7 +225,7 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Hogares  */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="#">
+                        <Link className="nav-link" to="/Hogar">
                             <i className="fas fa-fw fa-baby"></i>
                             <span>Edicion de dirección</span>
                         </Link>
@@ -254,7 +254,7 @@ class Sidebar extends Component {
                         <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item text-wrap" to="#">Resumen de Membresia Actual</Link>
+                                <Link className="collapse-item text-wrap" to="#">Reporte de Membresia Actual</Link>
                                 <Link className="collapse-item text-wrap" to="#">Lista de Personal Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="#">Lista de Personal No Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="/RptListaDeHogares">Lista de hogares</Link>

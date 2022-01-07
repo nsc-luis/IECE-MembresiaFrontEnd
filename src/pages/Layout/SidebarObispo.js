@@ -23,7 +23,7 @@ class SidebarObispo extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Sector 
+                        Monitoreo 
                     </div>
                     {/* Nav Item - Sector
                     <li className="nav-item">
@@ -35,17 +35,17 @@ class SidebarObispo extends Component {
 
                     {/* Nav Item - Personal General */}
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="/ListaDePersonal">
+                        <Link className="nav-link collapsed" to="#">
                             <i className="fas fa-fw fa-address-book"></i>
-                            <span>Lista de personal</span>
+                            <span>Resumen de Membresia Actual</span>
                         </Link>
                     </li>
 
                     {/* Nav Item - Hogares */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/Hogar">
+                        <Link className="nav-link" to="/ListaDePersonal">
                             <i className="fas fa-fw fa-home"></i>
-                            <span>Hogares</span>
+                            <span>Análisis de Membresia</span>
                         </Link>
                     </li>
 
@@ -86,24 +86,73 @@ class SidebarObispo extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Seccion de reportes
+                        Reportes
                     </div>
-
+                    
                     {/* Nav Item - Reportes Collapse Menu */}
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseReportes" aria-expanded="true" aria-controls="collapsePages">
+                        <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-clipboard-list"></i>
-                            <span>Reportes</span>
+                            <span>Reporte de Membresia Actual</span>
                         </Link>
-                        <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
-                            <div className="bg-white py-2 collapse-inner rounded">
-                                <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item" to="#">Membresía general</Link>
-                                <Link className="collapse-item" to="#">Membresía bautizada</Link>
-                                <Link className="collapse-item" to="/RptListaDeHogares">Lista de hogares</Link>
-                                <Link className="collapse-item" to="#">Informe pastoral</Link>
-                            </div>
-                        </div>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="#">
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista de Personal Bautizado</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="#">
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista de Personal No Bautizado</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/RptListaDeHogares">
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista de hogares</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="#">
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista por Profesiones/Oficios</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="#">
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista por fecha de cumpleaños</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="#">
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Reporte de Movimiento Estadístico</span>
+                        </Link>
+                    </li>
+
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
+
+                    {/* Heading */}
+                    <div className="sidebar-heading">
+                        Exportaciones
+                    </div>
+
+                    {/* Nav Item - Exportaciones  */}
+                    <li className="nav-item">
+                        <Link className="nav-link" to="#">
+                            <i className="fas fa-fw fa-baby"></i>
+                            <span>Membresia a Excel</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link text-wrap" to="#">
+                            <i className="fas fa-fw fa-baby"></i>
+                            <span>Hogares a Excel</span>
+                        </Link>
                     </li>
 
                     {/* Divider */
