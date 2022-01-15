@@ -102,11 +102,17 @@ class Login extends Component {
         this.setState({ distritoSeleccionado: e.target.value });
         /* this.getListaSectoresPorDistrito(e.target.value); */
         this.getListaSectoresPorMinistro(e.target.value, this.infoSesion.mu_pem_Id_Pastor);
+        //Almacenar Distrito
+        localStorage.setItem('dto',e.target.value)
+        console.log("Distrito: " + e.target.value)
     }
 
     onChangeSector = (e) => {
         // console.log(e.target.value);
         this.setState({ sectorSeleccionado: e.target.value });
+        //Almacenar Sector
+        localStorage.setItem('sector',e.target.value)
+        console.log("Sector: " + e.target.value)
     }
 
     handleLogoff = () => {
