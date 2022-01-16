@@ -13,6 +13,7 @@ import RptListaDeHogares from './pages/Reporte/RptListaDeHogares';
 import RptBautizados from './pages/Reporte/RptBautizados';
 import Sector from './pages/Sector';
 import Login from './pages/Login';
+import ResumenMembresia from './pages/ResumenMembresia';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -42,6 +43,7 @@ class Router extends Component {
                     <Route exact path="/RptBautizados" component={RptBautizados} />
                     <Route exact path="/Sector" component={Sector} />
                     <Route exact path="/Login" component={Login} />
+                    <Route exact path="/ResumenMembresia" component={ResumenMembresia} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>

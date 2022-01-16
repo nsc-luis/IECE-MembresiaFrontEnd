@@ -1,0 +1,20 @@
+.negrita {
+    font-weight: bold;
+}
+.centrado {
+    text-align: center;
+}
+.liWidth {
+    display: inline-block;
+    width: 150px;
+}
+.totalWidth {
+    display: inline-block;
+    width: 235px;
+}
+.totalesTitulos {
+    font-size: 1.5em;
+}
+.fas-icon-margin {
+    margin-right: 5px;
+}

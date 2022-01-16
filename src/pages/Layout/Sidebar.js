@@ -28,7 +28,7 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Resumen Membresia Actual */}
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="#">
+                        <Link className="nav-link collapsed" to="/ResumenMembresia">
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresía Actual</span>
                         </Link>

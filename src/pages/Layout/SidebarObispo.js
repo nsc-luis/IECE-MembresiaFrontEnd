@@ -35,7 +35,7 @@ class SidebarObispo extends Component {
 
                     {/* Nav Item - Personal General */}
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="#">
+                        <Link className="nav-link collapsed" to="/ResumenMembresia">
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresia Actual</span>
                         </Link>
