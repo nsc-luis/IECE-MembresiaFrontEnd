@@ -15,6 +15,19 @@ class ResumenMembresia extends Component {
 
     url = helpers.url_api;
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
+    resumen = {
+        totalDeMiembros: 0,
+        hb: 0,
+        mb: 0,
+        jhb: 0,
+        jmb: 0,
+        totalBautizados: 0,
+        jhnb: 0,
+        jmnb: 0,
+        ninos: 0,
+        ninas: 0,
+        totalNoBautizados: 0
+    }
 
     constructor(props) {
         super(props);
@@ -49,14 +62,21 @@ class ResumenMembresia extends Component {
 
     handle_sectorSeleccionado = async (e) => {
         if (e.target.value === "todos") {
-            alert("ALERTA! Aqui podemos hacer 2 cosas:\n- Generar un ciclo que sume los sectores.\n- Agregar dis_Id_Distrito a la tabla de Personal (creo que esta es mejor opcion).");
+            this.setState({ sectorSeleccionado: e.target.value });
+            await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
+                .then(res => {
+                    // console.log(res.data.value);
+                    this.setState({ resumenDeMembresia: res.data.resumen })
+                });
+            // alert("ALERTA! Aqui podemos hacer 2 cosas:\n- Generar un ciclo que sume los sectores.\n- Agregar dis_Id_Distrito a la tabla de Personal (creo que esta es mejor opcion).");
         }
         else {
             this.setState({ sectorSeleccionado: e.target.value });
             await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + e.target.value)
                 .then(res => {
-                    this.setState({ resumenDeMembresia: res.data.resumen })
-                })
+                    // console.log(res.data.value);
+                    this.setState({ resumenDeMembresia: res.data.resumen.value })
+                });
         }
     }
 
@@ -65,6 +85,7 @@ class ResumenMembresia extends Component {
             alert('Error: Debes seleccionar un sector.');
         }
         else {
+            if (this.state.sectorSeleccionado !== "todos") { 
             await helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
                 .then(res => {
                     this.setState({ infoSector: res.data.sector[0] })
@@ -74,6 +95,19 @@ class ResumenMembresia extends Component {
                 .then(res => {
                     this.setState({ infoMinistro: res.data.ministros[0] });
                 })
+            }
+            else {
+                this.setState({
+                    infoSector: {
+                        ...this.state.infoSector,
+                        sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
+                    },
+                    infoMinistro: {
+                        ...this.state.infoMinistro,
+                        pem_Nombre: "OBISPO DEL DISTRITO"
+                    }
+                });
+            }
             const doc = new jsPDF();
             doc.addImage(nvologo, 'PNG', 5, 0, 80, 30);
             doc.text("RESUMEN DE MEMBRESIA GENERAL", 85, 10);
