@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import helpers from '../../components/Helpers';
 import '../../assets/css/index.css';
 import {
@@ -12,6 +11,9 @@ import Layout from '../Layout';
 import IECELogo from '../../assets/images/IECE_logo.png'
 
 class ListaDePersonal extends Component {
+
+    url = helpers.url_api;
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     constructor(props) {
         super(props);
@@ -40,12 +42,12 @@ class ListaDePersonal extends Component {
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
         }
+    }
+
+    componentDidMount() {
         this.getPersonas();
         this.getSector();
     }
-
-    url = helpers.url_api;
-    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     getProfesion1 = async (persona) => {
         return await helpers.authAxios.get(this.url + "/persona/GetProfesion1/" + persona)
@@ -64,13 +66,15 @@ class ListaDePersonal extends Component {
     }
 
     getPersonas = () => {
-        helpers.authAxios.get(this.url + "/persona/GetBySector/" + this.infoSesion.sec_Id_Sector)
-            .then(res => {
-                this.setState({
-                    personas: res.data,
-                    status: 'success'
+        if (localStorage.getItem('sector') !== null) {
+            helpers.authAxios.get(this.url + "/persona/GetBySector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({
+                        personas: res.data,
+                        status: 'success'
+                    });
                 });
-            });
+        }
     };
 
     InfoAdicional = () => {
@@ -96,19 +100,19 @@ class ListaDePersonal extends Component {
             activo,
             vivo
         }
-        // console.log(infoStatus);
         return infoStatus;
     }
 
-    getSector = () => {
-        // axios.get(this.url + "/sector/" + infoSesion.sec_Id_Sector)
-        axios.get(this.url + "/sector/" + this.infoSesion.sec_Id_Sector)
-            .then(res => {
-                this.setState({
-                    sector: res.data[0],
-                    status: 'success'
+    getSector = async () => {
+        if (localStorage.getItem('sector') !== null) {
+            // axios.get(this.url + "/sector/" + infoSesion.sec_Id_Sector)
+            await helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({
+                        sector: res.data.sector[0]
+                    });
                 });
-            });
+        }
     }
 
     handle_modalEliminaPersona = (info) => {
@@ -225,7 +229,7 @@ class ListaDePersonal extends Component {
             return (
                 <Layout>
                     <React.Fragment>
-                        <h1 className="text-info">Listado de personal</h1>
+                        {/* <h1 className="text-info">Listado de personal</h1> */}
                         <div className="row">
                             <div className="col-9">
                                 <p>
@@ -243,10 +247,10 @@ class ListaDePersonal extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">Nombre</th>
+                                    <th scope="col" className="text-center">Grupo</th>
                                     <th scope="col" className="text-center">Categoria</th>
-                                    <th scope="col" className="text-center">Status</th>
                                     <th scope="col" className="text-center">Activo</th>
-                                    <th scope="col" className="text-center">Vivo</th>
+                                    {/* <th scope="col" className="text-center">Vivo</th> */}
                                     <th scope="col" className="text-center">Acciones</th>
                                 </tr>
                             </thead>
@@ -258,17 +262,17 @@ class ListaDePersonal extends Component {
                                                 <tr>
                                                     <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
                                                     <td className="text-center">
-                                                        {persona.per_Categoria}
+                                                        {this.InfoStatus(persona).bautizado}
                                                     </td>
                                                     <td className="text-center">
-                                                        {this.InfoStatus(persona).bautizado}
+                                                        {persona.per_Categoria}
                                                     </td>
                                                     <td className="text-center">
                                                         {this.InfoStatus(persona).activo}
                                                     </td>
-                                                    <td className="text-center">
+                                                    {/* <td className="text-center">
                                                         {this.InfoStatus(persona).vivo}
-                                                    </td>
+                                                    </td> */}
                                                     {/* <td className="text-center">
                                                 <button onClick={() => this.openModalPersonaGenerales(persona)} className="bordeRedondo">
                                                     <span className="fas fa-info-circle fa-lg" title="Info general"></span>
@@ -289,18 +293,32 @@ class ListaDePersonal extends Component {
                                                     <td className="text-center">
                                                         <button
                                                             // onClick={this.handle_modalInfoPersona}
-                                                            onClick={() => this.handle_modalInfoPersona(persona)}
-                                                            className="btn btn-success btn-sm"
-                                                            title="Ver hoja de datos">
-                                                            <span className="fas fa-eye icon-btn-p"></span>Ver Info
+                                                            // onClick={() => this.handle_modalInfoPersona(persona)}
+                                                            className="btn btn-success btn-sm btnMarginRight"
+                                                            title="Analizar persona">
+                                                            <span className="fas fa-eye icon-btn-p"></span>Analizar
                                                         </button>
                                                         <button
-                                                            /* onClick={() => this.fnEliminaPersona(persona)} */
+                                                            // onClick={this.handle_modalInfoPersona}
+                                                            // onClick={() => this.handle_modalInfoPersona(persona)}
+                                                            className="btn btn-info btn-sm btnMarginRight"
+                                                            title="Hogar">
+                                                            <span className="fas fa-home icon-btn-p"></span>Hogar
+                                                        </button>
+                                                        <button
+                                                            // onClick={this.handle_modalInfoPersona}
+                                                            onClick={() => this.handle_modalInfoPersona(persona)}
+                                                            className="btn btn-danger btn-sm"
+                                                            title="Hoja de datos">
+                                                            <span className="fas fa-clipboard icon-btn-p"></span>Hoja Datos
+                                                        </button>
+                                                        {/* <button
+                                                            // onClick={() => this.fnEliminaPersona(persona)}
                                                             onClick={() => this.handle_modalEliminaPersona(persona)}
                                                             className="btn btn-danger btn-sm"
                                                             title="Eliminar persona">
                                                             <span className="fas fa-trash-alt icon-btn-p"></span>Eliminar
-                                                        </button>
+                                                        </button> */}
                                                     </td>
                                                 </tr>
                                                 <Modal isOpen={this.state.modalInfoPersona} contentClassName="modalVerInfoPersona" size="lg">

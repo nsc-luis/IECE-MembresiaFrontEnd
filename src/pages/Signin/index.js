@@ -104,6 +104,8 @@ class Login extends Component {
                             });
                             localStorage.setItem('token', this.state.token);
                             localStorage.setItem('infoSesion', JSON.stringify(res.data.infoSesion[0]));
+                            localStorage.setItem('seccion', '');
+                            localStorage.setItem('componente', '');
                             setTimeout(() => { document.location.href = '/Login'; }, 3000);
                         }
                         else {

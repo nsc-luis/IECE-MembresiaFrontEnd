@@ -20,6 +20,10 @@ class Topbar extends Component {
             <React.Fragment>
                 {/* Topbar */}
                 <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h5><span className="text-info">
+                        {localStorage.getItem('seccion')} <br />
+                        <strong>{localStorage.getItem('componente')}</strong>
+                    </span></h5>
 
                     {/* Sidebar Toggle (Topbar) */}
                     <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">

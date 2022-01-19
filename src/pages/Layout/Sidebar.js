@@ -4,6 +4,15 @@ import helpers from '../../components/Helpers';
 
 class Sidebar extends Component { 
     // infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
+    constructor(props) {
+        super(props);
+    }
+
+    handle_LinkEncabezado = (seccion, componente) => {
+        localStorage.setItem('seccion', seccion);
+        localStorage.setItem('componente', componente);
+    }
+
     render() {
         return(
             <React.Fragment>
@@ -11,7 +20,11 @@ class Sidebar extends Component {
                 <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
-                    <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/Main">
+                    <Link 
+                        className="sidebar-brand d-flex align-items-center justify-content-center" 
+                        to="/Main"
+                        onClick={() => this.handle_LinkEncabezado("", "")}
+                    >
                         <div className="sidebar-brand-icon">
                             <i className="fas fa-building"></i>
                         </div>
@@ -28,7 +41,11 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Resumen Membresia Actual */}
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="/ResumenMembresia">
+                        <Link 
+                            className="nav-link collapsed" 
+                            to="/ResumenMembresia" 
+                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Resúmen de membresía actual")}
+                        >
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresía Actual</span>
                         </Link>
@@ -36,7 +53,11 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Información de Membresía */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ListaDePersonal">
+                        <Link 
+                            className="nav-link" 
+                            to="/ListaDePersonal"
+                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
+                        >
                             <i className="fas fa-fw fa-home"></i>
                             <span>Anális de Membresia</span>
                         </Link>

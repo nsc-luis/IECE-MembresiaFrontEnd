@@ -38,6 +38,9 @@ class ResumenMembresia extends Component {
             infoSector: {},
             infoMinistro: {},
         }
+    }
+
+    componentDidMount() {
         this.getSectoresPorDistrito();
     }
 
@@ -89,7 +92,7 @@ class ResumenMembresia extends Component {
             await helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
                 .then(res => {
                     this.setState({ infoSector: res.data.sector[0] })
-                    console.log(res.data.sector);
+                    // console.log(res.data.sector);
                 });
             await helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
                 .then(res => {
@@ -108,7 +111,7 @@ class ResumenMembresia extends Component {
                     }
                 });
             }
-            const doc = new jsPDF();
+            const doc = new jsPDF("p", "mm", "letter");
             doc.addImage(nvologo, 'PNG', 5, 0, 80, 30);
             doc.text("RESUMEN DE MEMBRESIA GENERAL", 85, 10);
             doc.setFontSize(8);
@@ -156,13 +159,10 @@ class ResumenMembresia extends Component {
     }
 
     render() {
-        /* console.log(this.infoSesion);
-        console.log(localStorage.getItem('dto'));
-        console.log(localStorage.getItem('sector')); */
         return (
             <Layout>
                 <Container>
-                    <h1 className="text-info">Resumen de Membresía</h1>
+                    {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>
                             <Col xs="3">
@@ -190,7 +190,7 @@ class ResumenMembresia extends Component {
                                     })}
                                     {localStorage.getItem('sector') === null &&
                                         <React.Fragment>
-                                            <option value="todos">Todos los sectores</option>
+                                            <option value="todos">TODOS LOS SECTORES</option>
                                         </React.Fragment>
                                     }
                                 </Input>
