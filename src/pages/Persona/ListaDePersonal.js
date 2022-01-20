@@ -75,6 +75,15 @@ class ListaDePersonal extends Component {
                     });
                 });
         }
+        else {
+            helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({
+                        personas: res.data.personas,
+                        status: 'success'
+                    });
+                });
+        }
     };
 
     InfoAdicional = () => {
@@ -105,7 +114,6 @@ class ListaDePersonal extends Component {
 
     getSector = async () => {
         if (localStorage.getItem('sector') !== null) {
-            // axios.get(this.url + "/sector/" + infoSesion.sec_Id_Sector)
             await helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
@@ -140,60 +148,9 @@ class ListaDePersonal extends Component {
             currentPersona: persona
         });
 
-        /* switch (persona.per_Estado_Civil) {
-            case 'CASADO(A)':
-                this.setState({
-                    CasadoDivorciadoViudo: true,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: false
-                });
-                break;
-            case 'DIVORCIADO(A)':
-                this.setState({
-                    CasadoDivorciadoViudo: true,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: false
-                });
-                break;
-            case 'VIUDO(A)':
-                this.setState({
-                    CasadoDivorciadoViudo: true,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: false
-                });
-                break;
-            case 'CONCUBINATO':
-                this.setState({
-                    CasadoDivorciadoViudo: false,
-                    ConcubinadoSolteroConHijos: true,
-                    soltero: false
-                });
-                break;
-            case 'SOLTERO(A) CON HIJOS':
-                this.setState({
-                    CasadoDivorciadoViudo: false,
-                    ConcubinadoSolteroConHijos: true,
-                    soltero: false
-                });
-                break;
-            default:
-                this.setState({
-                    CasadoDivorciadoViudo: false,
-                    ConcubinadoSolteroConHijos: false,
-                    soltero: true
-                });
-                break;
-        } */
-
         let getHogar = await helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
             .then(res => res.data);
-
-        /* await axios.get(this.url + "/Hogar_Persona/GetMiembros/" + getHogar.hd_Id_Hogar)
-            .then(res => {
-                this.setState({
-                    MiembrosDelHogar: res.data
-                });
-            }); */
+            
         await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
             .then(res => {
                 this.setState({
@@ -232,10 +189,16 @@ class ListaDePersonal extends Component {
                         {/* <h1 className="text-info">Listado de personal</h1> */}
                         <div className="row">
                             <div className="col-9">
-                                <p>
-                                    Personal del {this.state.sector.dis_Tipo_Distrito} {this.state.sector.dis_Numero} ({this.state.sector.dis_Alias}, {this.state.sector.dis_Area}) <br />
-                                    {this.state.sector.sec_Tipo_Sector} {this.state.sector.sec_Numero}: {this.state.sector.sec_Alias}
-                                </p>
+                                
+                                {localStorage.getItem('sector') !== null &&
+                                    <p>
+                                        Personal del {this.state.sector.dis_Tipo_Distrito} {this.state.sector.dis_Numero} ({this.state.sector.dis_Alias}, {this.state.sector.dis_Area}) <br />
+                                        {this.state.sector.sec_Tipo_Sector} {this.state.sector.sec_Numero}: {this.state.sector.sec_Alias}
+                                    </p>
+                                }
+                                {localStorage.getItem('sector') === null &&
+                                    <p> Personal de TODOS los SECOTRES del DISTRITO. </p>
+                                }
                             </div>
                             <div className="col-2">
                                 {/* <Link to="/RegistroDePersona" className="btn bnt-sm btn-primary">Registrar persona</Link> */}
@@ -251,6 +214,7 @@ class ListaDePersonal extends Component {
                                     <th scope="col" className="text-center">Categoria</th>
                                     <th scope="col" className="text-center">Activo</th>
                                     {/* <th scope="col" className="text-center">Vivo</th> */}
+                                    <th scope="col" className="text-center">Sector</th>
                                     <th scope="col" className="text-center">Acciones</th>
                                 </tr>
                             </thead>
@@ -269,6 +233,9 @@ class ListaDePersonal extends Component {
                                                     </td>
                                                     <td className="text-center">
                                                         {this.InfoStatus(persona).activo}
+                                                    </td>
+                                                    <td className="text-center">
+                                                        {persona.sec_Numero}
                                                     </td>
                                                     {/* <td className="text-center">
                                                         {this.InfoStatus(persona).vivo}

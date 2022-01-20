@@ -1,17 +1,27 @@
-import React, {Component, useState} from 'react';
+import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
 import helpers from '../../components/Helpers';
 
-class SidebarObispo extends Component { 
+class SidebarObispo extends Component {
     // infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
+
+    handle_LinkEncabezado = (seccion, componente) => {
+        localStorage.setItem('seccion', seccion);
+        localStorage.setItem('componente', componente);
+    }
+
     render() {
-        return(
+        return (
             <React.Fragment>
                 {/* Sidebar */}
                 <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
-                    <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/Main">
+                    <Link
+                        className="sidebar-brand d-flex align-items-center justify-content-center"
+                        to="/Main"
+                        onClick={() => this.handle_LinkEncabezado("", "")}
+                    >
                         <div className="sidebar-brand-icon">
                             <i className="fas fa-building"></i>
                         </div>
@@ -23,7 +33,7 @@ class SidebarObispo extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Monitoreo 
+                        Monitoreo
                     </div>
                     {/* Nav Item - Sector
                     <li className="nav-item">
@@ -35,17 +45,25 @@ class SidebarObispo extends Component {
 
                     {/* Nav Item - Personal General */}
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="/ResumenMembresia">
+                        <Link
+                            className="nav-link collapsed"
+                            to="/ResumenMembresia"
+                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Resúmen de membresía actual")}
+                        >
                             <i className="fas fa-fw fa-address-book"></i>
-                            <span>Resumen de Membresia Actual</span>
+                            <span>Resumen de Membresía Actual</span>
                         </Link>
                     </li>
 
                     {/* Nav Item - Hogares */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ListaDePersonal">
+                        <Link
+                            className="nav-link"
+                            to="/ListaDePersonal"
+                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
+                        >
                             <i className="fas fa-fw fa-home"></i>
-                            <span>Análisis de Membresia</span>
+                            <span>Anális de Membresia</span>
                         </Link>
                     </li>
 
@@ -58,7 +76,7 @@ class SidebarObispo extends Component {
                     </li> */}
 
                     {/* <li className="nav-item"> */}
-                        {/* <Link className="nav-link collapsed" to="/RegistroDePersona">
+                    {/* <Link className="nav-link collapsed" to="/RegistroDePersona">
                         <Link className="nav-link collapsed" to="#" onClick={helpers.handle_RegistroNvaPersona}>
                             <i className="fas fa-fw fa-id-card"></i>
                             <span>Regitrar miembro</span>
@@ -88,7 +106,7 @@ class SidebarObispo extends Component {
                     <div className="sidebar-heading">
                         Reportes
                     </div>
-                    
+
                     {/* Nav Item - Reportes Collapse Menu */}
                     <li className="nav-item">
                         <Link className="nav-link" to="#">
@@ -156,7 +174,7 @@ class SidebarObispo extends Component {
                     </li>
 
                     {/* Divider */
-                    <hr className="sidebar-divider d-none d-md-block" />}
+                        <hr className="sidebar-divider d-none d-md-block" />}
 
                     {/* Sidebar Toggler (Sidebar) */}
                     <div className="text-center d-none d-md-inline">
