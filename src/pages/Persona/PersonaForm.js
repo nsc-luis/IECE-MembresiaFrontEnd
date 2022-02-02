@@ -129,7 +129,7 @@ class PersonaForm extends Component {
         if (id !== "0") {
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
-                    this.setState({ MiembrosDelHogar: res.data })
+                    this.setState({ MiembrosDelHogar: res.data.value })
                 })
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
