@@ -118,8 +118,8 @@ class Sidebar extends Component {
                                     <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                         <div className="bg-white py-2 collapse-inner rounded">
                                             <Link className="collapse-item" to="#" onClick={helpers.handle_RegistroNvaPersona}>Bautismo</Link>
-                                            <Link className="collapse-item" to="#">Restitución</Link>
-                                            <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
+                                            <Link className="collapse-item" to="/AltaRestitucion">Restitución</Link>
+                                            <Link className="collapse-item" to="/AltaCambioDomicilio">Cambio de Domicilio</Link>
                                         </div>
                                     </div>
 

@@ -14,6 +14,8 @@ import RptBautizados from './pages/Reporte/RptBautizados';
 import Sector from './pages/Sector';
 import Login from './pages/Login';
 import ResumenMembresia from './pages/ResumenMembresia';
+import AltaRestitucion from './pages/Persona/AltaRestitucion';
+import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio'
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -45,6 +47,8 @@ class Router extends Component {
                     <Route exact path="/Sector" component={Sector} />
                     <Route exact path="/Login" component={Login} />
                     <Route exact path="/ResumenMembresia" component={ResumenMembresia} />
+                    <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
+                    <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
                     <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
