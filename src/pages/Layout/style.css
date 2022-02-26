@@ -1,0 +1,12 @@
+.textoCentrado {
+    text-align: center;
+}
+.textoDerecha {
+    text-align: right;
+}
+.textoIzquierda {
+    text-align: left;
+}
+.entreBotones {
+    margin-right: 5px;
+}

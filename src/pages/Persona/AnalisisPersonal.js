@@ -28,7 +28,7 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Nombre:</Col>
-                            <Col xs="6"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
+                            <Col xs="6" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
                             <Col className="negrita" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -44,9 +44,9 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Grupo:</Col>
-                            <Col xs="2"> {this.bautizado} </Col>
+                            <Col xs="2" className="border border-dark"> {this.bautizado} </Col>
                             <Col className="negrita" xs="2">Categoria:</Col>
-                            <Col xs="2"> {this.objPersona.persona.per_Categoria} </Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Categoria} </Col>
                             <Col className="negrita" xs="2">
                                 {this.objPersona.persona.per_Comunion &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -62,9 +62,9 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Edad:</Col>
-                            <Col xs="2"> {this.objPersona.persona.edad} </Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.edad} </Col>
                             <Col className="negrita" xs="2">Estado civil:</Col>
-                            <Col xs="2"> {this.objPersona.persona.per_Estado_Civil} </Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Estado_Civil} </Col>
                             <Col className="negrita" xs="2">
                                 {this.objPersona.persona.per_Activo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -80,7 +80,7 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Direccion:</Col>
-                            <Col xs="6"> 
+                            <Col xs="6" className="border border-dark"> 
                                 {this.objPersona.domicilio[0].hd_Calle} {this.objPersona.domicilio[0].hd_Numero_Exterior}, Interior: {this.objPersona.domicilio[0].hd_Numero_Interior},
                                 {this.objPersona.domicilio[0].hd_Tipo_Subdivision} {this.objPersona.domicilio[0].hd_Subdivision}
                             </Col>
@@ -91,7 +91,7 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col xs="2"></Col>
-                            <Col xs="6">
+                            <Col xs="6" className="border border-dark">
                             {this.objPersona.domicilio[0].hd_Municipio_Ciudad}, {this.objPersona.domicilio[0].est_Nombre}, {this.objPersona.domicilio[0].pais_Nombre_Corto}
                             </Col>
                             <Col xs="2"></Col>
@@ -101,18 +101,18 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Celular:</Col>
-                            <Col xs="2"> {this.objPersona.persona.per_Telefono_Movil} </Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Telefono_Movil} </Col>
                             <Col className="negrita" xs="2">Email:</Col>
-                            <Col xs="3"> {this.objPersona.persona.per_Email_Personal} </Col>
+                            <Col xs="3" className="border border-dark"> {this.objPersona.persona.per_Email_Personal} </Col>
                             <Col xs="7"> </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Profesion/Oficio1:</Col>
-                            <Col xs="4"> {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
+                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
                             <Col className="negrita" xs="2">Profesion/Oficio2:</Col>
-                            <Col xs="4"> {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
+                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>

@@ -84,8 +84,7 @@ class RegistroDePersonal extends Component {
                 } */
             })
         } else {
-            let currentPersona = JSON.parse(localStorage.getItem('currentPersona'));
-            /* axios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
+            let currentPersona = helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res =>{
                     this.setState({
                         hogar: {
@@ -94,7 +93,8 @@ class RegistroDePersonal extends Component {
                             hp_Jerarquia: res.data.hp_Jerarquia
                         }
                     })
-                }) */
+                })
+            
             /* this.state.FrmValidaPersona === false
             this.state.PersonaEncontrada === false */
             /* function reFormatoFecha(fecha) {
