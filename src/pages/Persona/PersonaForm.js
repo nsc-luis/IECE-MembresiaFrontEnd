@@ -129,7 +129,8 @@ class PersonaForm extends Component {
         if (id !== "0") {
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
-                    this.setState({ MiembrosDelHogar: res.data.value })
+                    this.setState({ MiembrosDelHogar: res.data })
+                    console.log(res.data)
                 })
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
@@ -196,6 +197,7 @@ class PersonaForm extends Component {
             boolAgregarNvaPersona,
             fnEditaPersona
         } = this.props
+        
 
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/

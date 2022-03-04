@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import IECELogo from '../../assets/images/IECE_logo.png'
 import ModalInfoHogar from './ModalInfoHogar';
 import jsPDF from 'jspdf';
-import nvologo from '../../assets/images/nvoLogo.png'
+import nvologo from '../../assets/images/IECE_LogoOficial.jpg';
 
 class ListaDePersonal extends Component {
 
@@ -313,7 +313,7 @@ class ListaDePersonal extends Component {
         })
         
         // INICIA DOCUMENTO
-        doc.addImage(nvologo, 'PNG', 5, 0, 80, 30);
+        doc.addImage(nvologo, 'PNG', 13, 5, 80, 25);
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
         

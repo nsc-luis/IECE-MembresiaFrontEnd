@@ -14,14 +14,21 @@ class AnalisisPersonal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            historial: []
         }
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
         this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No bautizado';
+        this.getHistorial(this.objPersona.persona.per_Id_Persona);
+    }
+
+    getHistorial = async (id) => {
+        await helpers.authAxios.get(this.url + "/Historial_Transacciones_Estadisticas/" + id)
+            .then(res => {
+                this.setState({ historial: res.data.info });
+            })
     }
 
     render() {
-        console.log(this.objPersona)
         return (
             <Layout>
                 <Container>
@@ -80,7 +87,7 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Direccion:</Col>
-                            <Col xs="6" className="border border-dark"> 
+                            <Col xs="6" className="border border-dark">
                                 {this.objPersona.domicilio[0].hd_Calle} {this.objPersona.domicilio[0].hd_Numero_Exterior}, Interior: {this.objPersona.domicilio[0].hd_Numero_Interior},
                                 {this.objPersona.domicilio[0].hd_Tipo_Subdivision} {this.objPersona.domicilio[0].hd_Subdivision}
                             </Col>
@@ -92,7 +99,7 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col xs="2"></Col>
                             <Col xs="6" className="border border-dark">
-                            {this.objPersona.domicilio[0].hd_Municipio_Ciudad}, {this.objPersona.domicilio[0].est_Nombre}, {this.objPersona.domicilio[0].pais_Nombre_Corto}
+                                {this.objPersona.domicilio[0].hd_Municipio_Ciudad}, {this.objPersona.domicilio[0].est_Nombre}, {this.objPersona.domicilio[0].pais_Nombre_Corto}
                             </Col>
                             <Col xs="2"></Col>
                             <Col xs="2"></Col>
@@ -134,6 +141,25 @@ class AnalisisPersonal extends Component {
                                 <th>Distrito</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {
+                                this.state.historial.map((registro) => {
+                                    return (
+                                        <React.Fragment>
+                                            <tr key={registro.hte_Id_Transaccion}>
+                                                <td>{helpers.reFormatoFecha(registro.hte_Fecha_Transaccion)}</td>
+                                                <td>{registro.ct_Categoria}</td>
+                                                <td>{registro.ct_Subtipo}</td>
+                                                <td>{registro.hte_Comentario}</td>
+                                                <td>{registro.sec_Alias}</td>
+                                                <td>{registro.dis_Alias}</td>
+                                            </tr>
+                                        </React.Fragment>
+                                    )
+                                })
+                            }
+
+                        </tbody>
                     </table>
                 </Container>
             </Layout>

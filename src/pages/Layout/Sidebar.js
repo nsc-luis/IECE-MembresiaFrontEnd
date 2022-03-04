@@ -13,6 +13,7 @@ class Sidebar extends Component {
         super(props);
         this.state = {
             modalEditaPersona: false,
+            modalEditaPersonaNB: false,
             personas: [],
             personaSeleccionada: "0"
         }
@@ -24,19 +25,29 @@ class Sidebar extends Component {
     }
 
     openModalEditaPersona = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetBySector/" + localStorage.getItem('sector'))
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data });
+                this.setState({ personas: res.data.personas });
             });
         this.setState({ modalEditaPersona: !this.state.modalEditaPersona })
     }
 
+    openModalEditaPersonaNB = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalEditaPersonaNB: !this.state.modalEditaPersonaNB })
+    }
+
     handle_personaSeleccionada = (e) => {
+        // console.log(JSON.stringify(bar));
         this.setState({personaSeleccionada: e.target.value});
     }
 
     invocaFormularioDePersona = () => {
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
+        // console.log(localStorage.getItem("idPersona"));
         document.location.href = '/RegistroDePersona';
     }
 
@@ -236,7 +247,11 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseActNoBautizado" className="collapse" aria-labelledby="headingActNoBautizado" data-parent="#collapseMPAct">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#">Actualización</Link>
+                                        <Link 
+                                            className="collapse-item" 
+                                            to="#"
+                                            onClick={this.openModalEditaPersonaNB}
+                                        >Actualización</Link>
                                     </div>
                                 </div>
                             </div>
@@ -368,11 +383,11 @@ class Sidebar extends Component {
                                             onChange={this.handle_personaSeleccionada}
                                         >
                                             <option value="0">Selecciona una persona</option>
-                                            {this.state.personas.map(obj => {
+                                            {this.state.personas.map(persona => {
                                                 return (
-                                                    <React.Fragment key={obj.persona.per_Id_Persona}>
-                                                        <option value={obj.persona.per_Id_Persona} >
-                                                            {obj.persona.per_Nombre} {obj.persona.per_Apellido_Paterno} {obj.persona.per_Apellido_Materno}
+                                                    <React.Fragment key={persona.per_Id_Persona}>
+                                                        <option value={persona.per_Id_Persona} >
+                                                            {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
                                                         </option>
                                                     </React.Fragment>
                                                 )
@@ -387,6 +402,60 @@ class Sidebar extends Component {
                             <Button
                                 type="button"
                                 onClick={this.openModalEditaPersona}
+                                color="secondary"
+                                className="entreBotones"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="button"
+                                color="success"
+                                onClick={this.invocaFormularioDePersona}
+                            >
+                                <span className="fa fa-pencil"></span>Editar
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </Modal>
+
+                {/* MODAL ACTUALIZAR PERSONA NO BAUTIZADA */}
+                <Modal isOpen={this.state.modalEditaPersonaNB}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle><h3>Seleccione la persona a editar.</h3></CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="3">
+                                        PERSONA:
+                                    </Col>
+                                    <Col xs="9">
+                                        <Input
+                                            type="select"
+                                            value={this.state.personaSeleccionada}
+                                            onChange={this.handle_personaSeleccionada}
+                                        >
+                                            <option value="0">Selecciona una persona</option>
+                                            {this.state.personas.map(persona => {
+                                                return (
+                                                    <React.Fragment key={persona.per_Id_Persona}>
+                                                        <option value={persona.per_Id_Persona} >
+                                                            {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                        </option>
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                        </Input>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+
+                        </CardBody>
+                        <CardFooter>
+                            <Button
+                                type="button"
+                                onClick={this.openModalEditaPersonaNB}
                                 color="secondary"
                                 className="entreBotones"
                             >
