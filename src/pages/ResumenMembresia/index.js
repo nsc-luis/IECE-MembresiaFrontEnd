@@ -9,7 +9,8 @@ import { Link } from 'react-router-dom';
 import Layout from '../Layout';
 import './style.css';
 import { jsPDF } from "jspdf";
-import nvologo from '../../assets/images/nvoLogo.png'
+import nvologo from '../../assets/images/IECE_LogoOficial.jpg';
+import moment from 'moment';
 
 class ResumenMembresia extends Component {
 
@@ -88,16 +89,16 @@ class ResumenMembresia extends Component {
             alert('Error: Debes seleccionar un sector.');
         }
         else {
-            if (this.state.sectorSeleccionado !== "todos") { 
-            await helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
-                .then(res => {
-                    this.setState({ infoSector: res.data.sector[0] })
-                    // console.log(res.data.sector);
-                });
-            await helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
-                .then(res => {
-                    this.setState({ infoMinistro: res.data.ministros[0] });
-                })
+            if (this.state.sectorSeleccionado !== "todos") {
+                await helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
+                    .then(res => {
+                        this.setState({ infoSector: res.data.sector[0] })
+                        // console.log(res.data.sector);
+                    });
+                await helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
+                    .then(res => {
+                        this.setState({ infoMinistro: res.data.ministros[0] });
+                    })
             }
             else {
                 this.setState({
@@ -112,11 +113,24 @@ class ResumenMembresia extends Component {
                 });
             }
             const doc = new jsPDF("p", "mm", "letter");
-            doc.addImage(nvologo, 'PNG', 5, 0, 80, 30);
+
+            let fechaActual = moment();
+            let mesActual = fechaActual.format("MM");
+            let fechaTexto = `AL DÍA ${fechaActual.format('DD')} DE ${helpers.meses[mesActual]} DEL ${fechaActual.format('YYYY')}`;
+
+            doc.addImage(nvologo, 'JPG', 10, 5, 70, 20);
             doc.text("RESUMEN DE MEMBRESIA GENERAL", 85, 10);
             doc.setFontSize(8);
             doc.text(`${this.infoSesion.dis_Tipo_Distrito}: ${this.infoSesion.dis_Alias}`, 85, 15);
-            doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 20);
+
+            if (localStorage.getItem('sector') !== null) {
+                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 20);
+                doc.text(fechaTexto, 85, 25);
+            }
+            else {
+                doc.text(fechaTexto, 85, 20);
+            }
+            
             doc.line(10, 32, 200, 32);
 
             doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
@@ -149,11 +163,16 @@ class ResumenMembresia extends Component {
             doc.text("MEMBRESÍA GENERAL: ", 32, 95);
             doc.rect(70, 92, 15, 4);
             doc.text(`${this.state.resumenDeMembresia.totalDeMiembros}`, 80, 95);
-            doc.line(30, 140, 90, 140);
-            doc.text("PASTOR", 54, 143);
-            doc.text(`${this.state.infoMinistro.pem_Nombre}`, 38, 138);
-            doc.line(120, 140, 180, 140);
-            doc.text("SECRETARIO", 142, 143);
+
+            doc.text(`JUSTICIA Y VERDAD`, 100, 120);
+            doc.text(fechaTexto, 91, 125);
+
+            doc.line(30, 160, 90, 160);
+            doc.text("SECRETARIO", 51, 163);
+            // doc.text(`${this.state.infoMinistro.pem_Nombre}`, 38, 138);
+            doc.line(120, 160, 180, 160);
+            doc.text("PASTOR", 145, 163);
+            doc.text(`${this.state.infoMinistro.pem_Nombre}`, 130, 158);
             doc.save("ResumenEnPDF.pdf");
         }
     }
@@ -165,7 +184,7 @@ class ResumenMembresia extends Component {
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>
-                            <Col xs="3">
+                            <Col xs="12">
                                 <Input
                                     type="select"
                                     name="idDistrito"
@@ -173,7 +192,11 @@ class ResumenMembresia extends Component {
                                     <option value="1">{this.infoSesion.dis_Tipo_Distrito}: {this.infoSesion.dis_Alias}</option>
                                 </Input>
                             </Col>
-                            <Col xs="3">
+                        </Row>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
+                            <Col xs="12">
                                 <Input
                                     type="select"
                                     name="sectorSeleccionado"
@@ -195,12 +218,16 @@ class ResumenMembresia extends Component {
                                     }
                                 </Input>
                             </Col>
+                        </Row>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
                             <Col xs="3">
                                 <Button
                                     onClick={this.resumenMembresiaPDF}
                                     color="danger"
                                 >
-                                    <span className="fas fa-file-pdf fa-sm fas-icon-margin"></span>PDF
+                                    <span className="fas fa-file-pdf fa-sm fas-icon-margin"></span>Crear PDF
                                 </Button>
                             </Col>
                         </Row>

@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import IECELogo from '../../assets/images/IECE_logo.png'
 import ModalInfoHogar from './ModalInfoHogar';
 import jsPDF from 'jspdf';
-import nvologo from '../../assets/images/nvoLogo.png'
+import nvologo from '../../assets/images/IECE_LogoOficial.jpg';
 
 class ListaDePersonal extends Component {
 
@@ -290,41 +290,120 @@ class ListaDePersonal extends Component {
     }
 
     hojaDatosEstadisticosPDF = (info) => {
-        console.log(info);
+        
+        // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
-        doc.addImage(nvologo, 'PNG', 5, 0, 80, 30);
+
+        // AGREGA DECORACION underline AL TEXTO
+        //PARAMETROS: x = INICIO DE LINEA, contante = MARGEN, texto = TEXTO A DECORAR, y = ALTURA
+        const drawUnderlineTotext = (x, constante, texto, y) => {
+            let bar = doc.getTextWidth(x) + constante;
+            let foo = doc.getTextWidth(texto);
+            return doc.line(bar, y, bar+foo, y);
+        }
+
+        // ELIMINA TEXTO null
+        Object.keys(info.persona).forEach((key) => {
+            info.persona[key] = info.persona[key] === null ? '' : info.persona[key];
+        });
+
+        // FORMATEA FECHA PARA PDF
+        helpers.fechas.forEach(fecha => {
+            info.persona[fecha] = helpers.reFormatoFecha(info.persona[fecha])
+        })
+        
+        // INICIA DOCUMENTO
+        doc.addImage(nvologo, 'PNG', 13, 5, 80, 25);
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
-
+        
         doc.setFontSize(9)
         doc.text(`1.- Nombre(s): ${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`, 13, 40);
+        drawUnderlineTotext('1.- Nombre(s): ', 13, `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`, 40);
+
         doc.text(`2.- Edad: ${info.persona.edad}`, 13, 46);
+        drawUnderlineTotext('2.- Edad: ', 13, `${info.persona.edad}`, 46)
         doc.text(`Nacionalidad: ${info.persona.per_Nacionalidad}`, 50, 46);
+        drawUnderlineTotext('Nacionalidad: ', 50, `${info.persona.per_Nacionalidad}`, 46);
+
         doc.text(`3.- Lugar y fecha de nacimiento: ${info.persona.per_Lugar_De_Nacimiento}, EN FECHA: ${info.persona.per_Fecha_Nacimiento}`, 13, 52);
+        drawUnderlineTotext('3.- Lugar y fecha de nacimiento: ', 13, `${info.persona.per_Lugar_De_Nacimiento}`, 52);
+        drawUnderlineTotext(`3.- Lugar y fecha de nacimiento: ${info.persona.per_Lugar_De_Nacimiento}, EN FECHA: `, 13, `${info.persona.per_Fecha_Nacimiento}`, 52);
+
         doc.text(`4.- Nombre de sus padres: ${info.persona.per_Nombre_Padre}, ${info.persona.per_Nombre_Madre}`, 13, 58);
+        drawUnderlineTotext('4.- Nombre de sus padres: ', 13, `${info.persona.per_Nombre_Padre}, ${info.persona.per_Nombre_Madre}`, 58);
+
         doc.text(`5.- Abuelos paternos: ${info.persona.per_Nombre_Abuelo_Paterno}, ${info.persona.per_Nombre_Abuela_Paterna}`, 13, 64);
+        drawUnderlineTotext('5.- Abuelos paternos: ', 13, `${info.persona.per_Nombre_Abuelo_Paterno}, ${info.persona.per_Nombre_Abuela_Paterna}`, 64);
+
         doc.text(`6.- Abuelos maternos: ${info.persona.per_Nombre_Abuelo_Materno}, ${info.persona.per_Nombre_Abuela_Materna}`, 13, 70);
+        drawUnderlineTotext('6.- Abuelos maternos: ', 13, `${info.persona.per_Nombre_Abuelo_Materno}, ${info.persona.per_Nombre_Abuela_Materna}`, 70);
+
         doc.text(`7.- Estado civil: ${info.persona.per_Estado_Civil}`, 13, 76);
+        drawUnderlineTotext('7.- Estado civil: ', 13, `${info.persona.per_Estado_Civil}`, 76);
+
         doc.text(`Fecha boda civil: ${info.persona.per_Fecha_Boda_CivilFormateada}`, 120, 76);
+        drawUnderlineTotext('Fecha boda civil: ', 120, `${info.persona.per_Fecha_Boda_CivilFormateada}`, 76);
+
         doc.text(`Segun Acta No.: ${info.persona.per_Num_Acta_Boda_Civil}`, 18, 82);
+        drawUnderlineTotext('Segun Acta No.: ', 18, `${info.persona.per_Num_Acta_Boda_Civil}`, 82);
+
         doc.text(`Del libro No.: ${info.persona.per_Libro_Acta_Boda_Civil}`, 70, 82);
+        drawUnderlineTotext('Del libro No.: ', 70, `${info.persona.per_Libro_Acta_Boda_Civilre}`, 82);
+
         doc.text(`Que lleva la oficialia.: ${info.persona.per_Oficialia_Boda_Civil}`, 120, 82);
+        drawUnderlineTotext('Que lleva la oficialia.: ', 120, `${info.persona.per_Oficialia_Boda_Civil}`, 82);
+
         doc.text(`Del registro civil en: ${info.persona.per_Registro_Civil}`, 18, 88);
+        drawUnderlineTotext('Del registro civil en: ', 18, `${info.persona.per_Registro_Civil}`, 88);
+
         doc.text(`8.- Contrajo matrimonio eclesiastico en la IECE el día: ${info.persona.per_Fecha_Boda_Eclesiastica}`, 13, 94);
+        drawUnderlineTotext('8.- Contrajo matrimonio eclesiastico en la IECE el día: ', 13, `${info.persona.per_Fecha_Boda_Eclesiastica}`, 94);
+
         doc.text(`Lugar de matrimonio eclesiastico en la IECE: ${info.persona.per_Lugar_Boda_Eclesiastica}`, 18, 100);
+        drawUnderlineTotext('Lugar de matrimonio eclesiastico en la IECE: ', 18, `${info.persona.per_Lugar_Boda_Eclesiastica}`, 100);
+
         doc.text(`9.- Nombre de esposa(o): ${info.persona.per_Nombre_Conyuge}`, 13, 106);
+        drawUnderlineTotext('9.- Nombre de esposa(o): ', 13, `${info.persona.per_Nombre_Conyuge}`, 106);
+
         doc.text(`10.- Cuantos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos}`, 13, 112);
+        drawUnderlineTotext('10.- Cuantos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos}`, 112);
+
         doc.text(`${info.persona.per_Nombre_Hijos}`, 75, 112);
+        drawUnderlineTotext('', 75, `${info.persona.per_Nombre_Hijos}`, 112);
+
         doc.text(`11.- Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, EN FECHA: ${info.persona.per_Fecha_Bautismo}`, 13, 118);
+        drawUnderlineTotext('11.- Lugar y fecha de bautismo: ', 13, `${info.persona.per_Lugar_Bautismo}`, 118);
+        drawUnderlineTotext(`11.- Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, EN FECHA: `, 13, `${info.persona.per_Fecha_Bautismo}`, 118);
+
         doc.text(`12.- Por quien fue bautizado: ${info.persona.per_Ministro_Que_Bautizo}`, 13, 124);
-        doc.text(`13.- Fecha en la que recibio la Promesa del Espiritu Santo: ${info.persona.per_Ministro_Que_Bautizo}`, 13, 130);
+        drawUnderlineTotext('12.- Por quien fue bautizado: ', 13, `${info.persona.per_Ministro_Que_Bautizo}`, 124);
+
+        doc.text(`13.- Fecha en la que recibio la Promesa del Espiritu Santo: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 13, 130);
+        drawUnderlineTotext('13.- Fecha en la que recibio la Promesa del Espiritu Santo: ', 13, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 130);
+
         doc.text(`Bajo la imposicion de manos del presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 20, 136);
+        drawUnderlineTotext('Bajo la imposicion de manos del presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 136);
+
         doc.text(`14.- Puestos desempeñados en la IECE: ${info.persona.per_Cargos_Desempenados}`, 13, 142);
+        drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, `${info.persona.per_Cargos_Desempenados}`, 142);
+
         doc.text(`15.- Cambios de domicilio: ${info.persona.per_Cambios_De_Domicilio}`, 13, 148);
+        drawUnderlineTotext('15.- Cambios de domicilio: ', 13, `${info.persona.per_Cambios_De_Domicilio}`, 148);
+
         doc.text(`16.- Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: ${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto}`, 13, 154);
+        drawUnderlineTotext('16.- Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 154);
+        drawUnderlineTotext(`16.- Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: `, 13, `${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto}`, 154);
+
         doc.text(`17.- Telefonos: ${info.persona.per_Telefono_Movil}`, 13, 160);
+        drawUnderlineTotext('17.- Telefonos: ', 13, `${info.persona.per_Telefono_Movil}`, 160);
+
         doc.text(`18.- Profesion / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, 166);
+        drawUnderlineTotext('18.- Profesion / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 166);
+
         doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, 172);
+        drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 172);
+
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
         doc.line(120, 250, 180, 250);

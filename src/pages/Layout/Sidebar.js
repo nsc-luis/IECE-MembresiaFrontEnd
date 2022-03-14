@@ -1,11 +1,22 @@
-import React, {Component, useState} from 'react';
+import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
+import {
+    Card, CardBody, CardFooter, CardHeader, CardTitle,
+    Button, Modal, FormGroup, Input, Col, Row
+} from 'reactstrap';
 import helpers from '../../components/Helpers';
+import './style.css'
 
-class Sidebar extends Component { 
+class Sidebar extends Component {
     // infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     constructor(props) {
         super(props);
+        this.state = {
+            modalEditaPersona: false,
+            modalEditaPersonaNB: false,
+            personas: [],
+            personaSeleccionada: "0"
+        }
     }
 
     handle_LinkEncabezado = (seccion, componente) => {
@@ -13,15 +24,42 @@ class Sidebar extends Component {
         localStorage.setItem('componente', componente);
     }
 
+    openModalEditaPersona = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalEditaPersona: !this.state.modalEditaPersona })
+    }
+
+    openModalEditaPersonaNB = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalEditaPersonaNB: !this.state.modalEditaPersonaNB })
+    }
+
+    handle_personaSeleccionada = (e) => {
+        // console.log(JSON.stringify(bar));
+        this.setState({personaSeleccionada: e.target.value});
+    }
+
+    invocaFormularioDePersona = () => {
+        localStorage.setItem("idPersona", this.state.personaSeleccionada);
+        // console.log(localStorage.getItem("idPersona"));
+        document.location.href = '/RegistroDePersona';
+    }
+
     render() {
-        return(
+        return (
             <React.Fragment>
                 {/* Sidebar */}
                 <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
-                    <Link 
-                        className="sidebar-brand d-flex align-items-center justify-content-center" 
+                    <Link
+                        className="sidebar-brand d-flex align-items-center justify-content-center"
                         to="/Main"
                         onClick={() => this.handle_LinkEncabezado("", "")}
                     >
@@ -36,14 +74,14 @@ class Sidebar extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Monitoreo 
+                        Monitoreo
                     </div>
 
                     {/* Nav Item - Resumen Membresia Actual */}
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link collapsed" 
-                            to="/ResumenMembresia" 
+                        <Link
+                            className="nav-link collapsed"
+                            to="/ResumenMembresia"
                             onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Resúmen de membresía actual")}
                         >
                             <i className="fas fa-fw fa-address-book"></i>
@@ -53,8 +91,8 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Información de Membresía */}
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link" 
+                        <Link
+                            className="nav-link"
                             to="/ListaDePersonal"
                             onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                         >
@@ -72,7 +110,7 @@ class Sidebar extends Component {
                     </li> */}
 
                     {/* <li className="nav-item"> */}
-                        {/* <Link className="nav-link collapsed" to="/RegistroDePersona">
+                    {/* <Link className="nav-link collapsed" to="/RegistroDePersona">
                         <Link className="nav-link collapsed" to="#" onClick={helpers.handle_RegistroNvaPersona}>
                             <i className="fas fa-fw fa-id-card"></i>
                             <span>Regitrar miembro</span>
@@ -104,44 +142,44 @@ class Sidebar extends Component {
                     </div>
 
                     {/* Nav Item - Altas Collapse Menu */}
-                        <li className="nav-item">
-                            <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPAltas" aria-expanded="true" aria-controls="collapsePages">
-                                <i className="fas fa-fw fa-user-check"></i>
-                                <span>Alta de personal</span>
-                            </Link>
-                            <div id="collapseMPAltas" className="collapse" aria-labelledby="headingMPAltas" data-parent="#accordionSidebar">
-                                <div className="bg-white py-2 collapse-inner rounded">
-                                    {/* <h6 className="collapse-header">Personal bautizado:</h6> */}
-                                    <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseAltaBautizado" aria-expanded="true" aria-controls="collapseBautizado">
-                                        Personal Bautizado
-                                    </Link>
-                                    <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
-                                        <div className="bg-white py-2 collapse-inner rounded">
-                                            <Link className="collapse-item" to="#" onClick={helpers.handle_RegistroNvaPersona}>Bautismo</Link>
-                                            <Link className="collapse-item" to="/AltaRestitucion">Restitución</Link>
-                                            <Link className="collapse-item" to="/AltaCambioDomicilio">Cambio de Domicilio</Link>
-                                        </div>
+                    <li className="nav-item">
+                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPAltas" aria-expanded="true" aria-controls="collapsePages">
+                            <i className="fas fa-fw fa-user-check"></i>
+                            <span>Alta de personal</span>
+                        </Link>
+                        <div id="collapseMPAltas" className="collapse" aria-labelledby="headingMPAltas" data-parent="#accordionSidebar">
+                            <div className="bg-white py-2 collapse-inner rounded">
+                                {/* <h6 className="collapse-header">Personal bautizado:</h6> */}
+                                <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseAltaBautizado" aria-expanded="true" aria-controls="collapseBautizado">
+                                    Personal Bautizado
+                                </Link>
+                                <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
+                                    <div className="bg-white py-2 collapse-inner rounded">
+                                        <Link className="collapse-item" to="#" onClick={helpers.handle_RegistroNvaPersona}>Bautismo</Link>
+                                        <Link className="collapse-item" to="/AltaRestitucion">Restitución</Link>
+                                        <Link className="collapse-item" to="/AltaCambioDomicilio">Cambio de Domicilio</Link>
                                     </div>
+                                </div>
 
-                                    {/* <Link className="collapse-item" to="#">Cambio de domicilio</Link> */}
-                                    <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseAltaNoBautizado" aria-expanded="true" aria-controls="collapseNoBautizado">
-                                        Personal No Bautizado
-                                    </Link>
-                                    <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
-                                        <div className="bg-white py-2 collapse-inner rounded">
-                                            <Link className="collapse-item" to="#">Nuevo Ingreso</Link>
-                                            <Link className="collapse-item" to="#">Reativación</Link>
-                                            <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
-                                        </div>
+                                {/* <Link className="collapse-item" to="#">Cambio de domicilio</Link> */}
+                                <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseAltaNoBautizado" aria-expanded="true" aria-controls="collapseNoBautizado">
+                                    Personal No Bautizado
+                                </Link>
+                                <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
+                                    <div className="bg-white py-2 collapse-inner rounded">
+                                        <Link className="collapse-item" to="#">Nuevo Ingreso</Link>
+                                        <Link className="collapse-item" to="#">Reativación</Link>
+                                        <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
                                     </div>
-                                    {/* <h6 className="collapse-header">Personal no bautizado:</h6>
+                                </div>
+                                {/* <h6 className="collapse-header">Personal no bautizado:</h6>
                                     <Link className="collapse-item" to="#">Nuevo ingreso</Link>
                                     <Link className="collapse-item" to="#">Cambio de domicilio</Link>
                                     <Link className="collapse-item" to="#">Reactivación</Link> */}
-                                </div>
                             </div>
-                        </li>
-    
+                        </div>
+                    </li>
+
 
                     {/* Nav Item - Bajas Collapse Menu */}
                     <li className="nav-item">
@@ -156,25 +194,25 @@ class Sidebar extends Component {
                                 <Link className="collapse-item" to="#">Defuncion</Link> */}
                                 {/* <h6 className="collapse-header">Personal no bautizado:</h6> */}
                                 <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseBajaBautizado" aria-expanded="true" aria-controls="collapseBautizado">
-                                        Personal Bautizado
-                                    </Link>
-                                    <div id="collapseBajaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPBajas">
-                                        <div className="bg-white py-2 collapse-inner rounded">
-                                            <Link className="collapse-item" to="#">Defunción</Link>
-                                            <Link className="collapse-item" to="#">Excomunión</Link>
-                                            <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
-                                        </div>
+                                    Personal Bautizado
+                                </Link>
+                                <div id="collapseBajaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPBajas">
+                                    <div className="bg-white py-2 collapse-inner rounded">
+                                        <Link className="collapse-item" to="#">Defunción</Link>
+                                        <Link className="collapse-item" to="#">Excomunión</Link>
+                                        <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
                                     </div>
+                                </div>
                                 <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseBajaNoBautizado" aria-expanded="true" aria-controls="collapseNoBautizado">
-                                        Personal No Bautizado
-                                    </Link>
-                                    <div id="collapseBajaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPBajas">
-                                        <div className="bg-white py-2 collapse-inner rounded">
-                                            <Link className="collapse-item" to="#">Defunción</Link>
-                                            <Link className="collapse-item" to="#">Alejamiento</Link>
-                                            <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
-                                        </div>
+                                    Personal No Bautizado
+                                </Link>
+                                <div id="collapseBajaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPBajas">
+                                    <div className="bg-white py-2 collapse-inner rounded">
+                                        <Link className="collapse-item" to="#">Defunción</Link>
+                                        <Link className="collapse-item" to="#">Alejamiento</Link>
+                                        <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -193,21 +231,29 @@ class Sidebar extends Component {
                                 <Link className="collapse-item" to="#">Defuncion</Link> */}
                                 {/* <h6 className="collapse-header">Personal no bautizado:</h6> */}
                                 <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseActBautizado" aria-expanded="true" aria-controls="collapseActBautizado">
-                                        Personal Bautizado
-                                    </Link>
-                                    <div id="collapseActBautizado" className="collapse" aria-labelledby="headinActBautizado" data-parent="#collapseMPAct">
-                                        <div className="bg-white py-2 collapse-inner rounded">
-                                            <Link className="collapse-item" to="#">Actualización</Link>
-                                        </div>
+                                    Personal Bautizado
+                                </Link>
+                                <div id="collapseActBautizado" className="collapse" aria-labelledby="headinActBautizado" data-parent="#collapseMPAct">
+                                    <div className="bg-white py-2 collapse-inner rounded">
+                                        <Link
+                                            className="collapse-item"
+                                            to="#"
+                                            onClick={this.openModalEditaPersona}
+                                        >Actualización</Link>
                                     </div>
+                                </div>
                                 <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseActNoBautizado" aria-expanded="true" aria-controls="collapseActNoBautizado">
-                                        Personal No Bautizado
-                                    </Link>
-                                    <div id="collapseActNoBautizado" className="collapse" aria-labelledby="headingActNoBautizado" data-parent="#collapseMPAct">
-                                        <div className="bg-white py-2 collapse-inner rounded">
-                                            <Link className="collapse-item" to="#">Actualización</Link>
-                                        </div>
+                                    Personal No Bautizado
+                                </Link>
+                                <div id="collapseActNoBautizado" className="collapse" aria-labelledby="headingActNoBautizado" data-parent="#collapseMPAct">
+                                    <div className="bg-white py-2 collapse-inner rounded">
+                                        <Link 
+                                            className="collapse-item" 
+                                            to="#"
+                                            onClick={this.openModalEditaPersonaNB}
+                                        >Actualización</Link>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -308,8 +354,8 @@ class Sidebar extends Component {
                     </li>
 
                     {/* Divider */
-                    <hr className="sidebar-divider d-none d-md-block" />}
-                    
+                        <hr className="sidebar-divider d-none d-md-block" />}
+
 
                     {/* Sidebar Toggler (Sidebar) */}
                     <div className="text-center d-none d-md-inline">
@@ -317,6 +363,114 @@ class Sidebar extends Component {
                     </div>
 
                 </ul>
+
+                {/* MODAL ACTUALIZAR PERSONA BAUTIZADA */}
+                <Modal isOpen={this.state.modalEditaPersona}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle><h3>Seleccione la persona a editar.</h3></CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="3">
+                                        PERSONA:
+                                    </Col>
+                                    <Col xs="9">
+                                        <Input
+                                            type="select"
+                                            value={this.state.personaSeleccionada}
+                                            onChange={this.handle_personaSeleccionada}
+                                        >
+                                            <option value="0">Selecciona una persona</option>
+                                            {this.state.personas.map(persona => {
+                                                return (
+                                                    <React.Fragment key={persona.per_Id_Persona}>
+                                                        <option value={persona.per_Id_Persona} >
+                                                            {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                        </option>
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                        </Input>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+
+                        </CardBody>
+                        <CardFooter>
+                            <Button
+                                type="button"
+                                onClick={this.openModalEditaPersona}
+                                color="secondary"
+                                className="entreBotones"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="button"
+                                color="success"
+                                onClick={this.invocaFormularioDePersona}
+                            >
+                                <span className="fa fa-pencil"></span>Editar
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </Modal>
+
+                {/* MODAL ACTUALIZAR PERSONA NO BAUTIZADA */}
+                <Modal isOpen={this.state.modalEditaPersonaNB}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle><h3>Seleccione la persona a editar.</h3></CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="3">
+                                        PERSONA:
+                                    </Col>
+                                    <Col xs="9">
+                                        <Input
+                                            type="select"
+                                            value={this.state.personaSeleccionada}
+                                            onChange={this.handle_personaSeleccionada}
+                                        >
+                                            <option value="0">Selecciona una persona</option>
+                                            {this.state.personas.map(persona => {
+                                                return (
+                                                    <React.Fragment key={persona.per_Id_Persona}>
+                                                        <option value={persona.per_Id_Persona} >
+                                                            {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                        </option>
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                        </Input>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+
+                        </CardBody>
+                        <CardFooter>
+                            <Button
+                                type="button"
+                                onClick={this.openModalEditaPersonaNB}
+                                color="secondary"
+                                className="entreBotones"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="button"
+                                color="success"
+                                onClick={this.invocaFormularioDePersona}
+                            >
+                                <span className="fa fa-pencil"></span>Editar
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </Modal>
                 {/* End of Sidebar */}
             </React.Fragment>
         );
