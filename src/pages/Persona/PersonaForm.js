@@ -27,15 +27,36 @@ class PersonaForm extends Component {
 
     constructor(props) {
         super(props)
+        let CasadoDivorciadoViudo = false
+        let ConcubinatoSolteroConHijos = false
+        let soltero = false
+        if (localStorage.getItem('estadoCivil') === 'CASADO(A)'
+            || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
+            || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
+            CasadoDivorciadoViudo = true
+            ConcubinatoSolteroConHijos = false
+            soltero = false
+        }
+        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
+            || localStorage.getItem('estadoCivil') === 'CONCUBINATO') {
+            CasadoDivorciadoViudo = false
+            ConcubinatoSolteroConHijos = true
+            soltero = false
+        }
+        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A)') {
+            CasadoDivorciadoViudo = false
+            ConcubinatoSolteroConHijos = false
+            soltero = true
+        }
         this.state = {
             profesiones_oficios: [],
             infante: false,
             DatosHogar: {},
             MiembroEsBautizado: false,
             PromesaDelEspitiruSanto: false,
-            CasadoDivorciadoViudo: false,
-            ConcubinatoSolteroConHijos: false,
-            soltero: false,
+            CasadoDivorciadoViudo: CasadoDivorciadoViudo,
+            ConcubinatoSolteroConHijos: ConcubinatoSolteroConHijos,
+            soltero: soltero,
             datosPersonaEncontrada: {},
             RFCSinHomoclave: "",
             distritoSeleccionado: "0",
@@ -195,9 +216,11 @@ class PersonaForm extends Component {
             fnGuardaPersonaEnHogar,
             tituloAgregarEditar,
             boolAgregarNvaPersona,
+            boolComentarioEdicion,
+            handle_ComentarioHistorialTransacciones,
+            ComentarioHistorialTransacciones,
             fnEditaPersona
         } = this.props
-        
 
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
@@ -328,7 +351,7 @@ class PersonaForm extends Component {
             e.preventDefault();
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
-            
+
             // VALIDA CAMPOS DE PERSONA
             var camposPersonaAValidar = [
                 { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
@@ -370,7 +393,7 @@ class PersonaForm extends Component {
                     helpers.fechas.forEach(fecha => {
                         objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
                     })
-                    
+
                     fnEditaPersona(objPersona)
                 }
             } else {
@@ -929,6 +952,7 @@ class PersonaForm extends Component {
                                                                                             name="per_Nombre_Conyuge"
                                                                                             onChange={onChange}
                                                                                             className="form-control"
+                                                                                            value={form.per_Nombre_Conyuge}
                                                                                         />
                                                                                         <label>Nombre conyuge</label>
                                                                                     </div>
@@ -984,10 +1008,20 @@ class PersonaForm extends Component {
                                                                                     </div>
                                                                                 </div>
                                                                             </FormGroup>
-                                                                            {form.per_Bautizado &&
-                                                                                <React.Fragment>
-
-                                                                                    <div className="row">
+                                                                            <div className="row">
+                                                                                <div className="col-sm-4">
+                                                                                    <FormGroup>
+                                                                                        <Input
+                                                                                            type="text"
+                                                                                            name="per_Registro_Civil"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Registro_Civil}
+                                                                                        />
+                                                                                        <label htmlFor="per_Registro_Civil">Registro civil</label>
+                                                                                    </FormGroup>
+                                                                                </div>
+                                                                                {form.per_Bautizado &&
+                                                                                    <React.Fragment>
                                                                                         <div className="col-sm-4">
                                                                                             <FormGroup>
                                                                                                 <Input
@@ -1014,10 +1048,9 @@ class PersonaForm extends Component {
                                                                                                 <label>Lugar boda eclesiastica</label>
                                                                                             </FormGroup>
                                                                                         </div>
-                                                                                    </div>
-
-                                                                                </React.Fragment>
-                                                                            }
+                                                                                    </React.Fragment>
+                                                                                }
+                                                                            </div>
                                                                         </React.Fragment>
                                                                     }
 
@@ -1200,6 +1233,35 @@ class PersonaForm extends Component {
                                                 </React.Fragment>
                                             }
 
+                                            {/* Comentarios para el historico de transacciones */}
+                                            {boolComentarioEdicion &&
+                                                <React.Fragment>
+                                                    <FormGroup>
+                                                        <div className="row mx-auto mt-3">
+                                                            <div className="col-sm-12">
+                                                                <div className="card border-info acceso-directo">
+                                                                    <div className="card-header">
+                                                                        <h5><strong>Comentario para el Historial de Transacciones</strong></h5>
+                                                                    </div>
+                                                                    <div className="card-body">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-12">
+                                                                                <Input
+                                                                                    value={ComentarioHistorialTransacciones}
+                                                                                    onChange={handle_ComentarioHistorialTransacciones}
+                                                                                    type='text'
+                                                                                    placeholder='Comentario opcional'
+                                                                                    maxLength={200}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </FormGroup>
+                                                </React.Fragment>
+                                            }
 
                                             {/* Hogar */}
                                             <div className="row mx-auto mt-3">

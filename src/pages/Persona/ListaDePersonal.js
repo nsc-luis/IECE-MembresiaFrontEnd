@@ -48,6 +48,11 @@ class ListaDePersonal extends Component {
             fSector: '0',
             fGrupo: '0',
             fProfesionOficio: '',
+            habilitaFiltroNombre: '',
+            habilitaFiltroCategoria: '',
+            habilitaFiltroSector: '',
+            habilitaFiltroGrupo: '',
+            habilitaFiltroProfesionOficio: '',
             modalInfoHogar: false,
             objPersona: {},
         };
@@ -201,7 +206,7 @@ class ListaDePersonal extends Component {
 
     handle_filtroPorNombre = (e) => {
         this.setState({ fNombre: e.target.value })
-        if (e.target.value !== '') {
+        if (e.target.value !== '' && e.target.value.length > 2) {
             var result = this.state.personas.filter((obj) => {
                 const query = e.target.value.toLowerCase();
                 return (
@@ -210,7 +215,17 @@ class ListaDePersonal extends Component {
                     || obj.persona.per_Apellido_Materno.toLowerCase().includes(query)
                 );
             });
-            this.setState({ personas: result });
+            this.setState({
+                personas: result,
+                habilitaFiltroCategoria: 'disabled',
+                habilitaFiltroGrupo: 'disabled',
+                habilitaFiltroSector: 'disabled'
+            });
+        } else {
+            this.handle_BorrarFiltros();
+            this.setState({
+                personas: this.state.tempPersonas
+            })
         }
     }
 
@@ -222,6 +237,7 @@ class ListaDePersonal extends Component {
             });
             this.setState({ personas: result })
         }
+        this.setState({ habilitaFiltroCategoria: 'disabled' })
     }
 
     handle_filtroPorGrupo = (e) => {
@@ -233,6 +249,7 @@ class ListaDePersonal extends Component {
             });
             this.setState({ personas: result })
         }
+        this.setState({ habilitaFiltroGrupo: 'disabled' })
     }
 
     handle_filtroPorSector = (e) => {
@@ -243,11 +260,12 @@ class ListaDePersonal extends Component {
             });
             this.setState({ personas: result })
         }
+        this.setState({ habilitaFiltroSector: 'disabled' })
     }
 
     handle_filtroPorProfesion = (e) => {
         this.setState({ fProfesionOficio: e.target.value });
-        if (e.target.value !== '') {
+        if (e.target.value !== '' && e.target.value.length > 3) {
             var result = this.state.personas.filter((obj) => {
                 const query = e.target.value.toLowerCase();
                 return (
@@ -257,7 +275,17 @@ class ListaDePersonal extends Component {
                     || obj.persona.profesionOficio2[0].pro_Categoria.toLowerCase().includes(query)
                 );
             });
-            this.setState({ personas: result });
+            this.setState({
+                personas: result,
+                habilitaFiltroCategoria: 'disabled',
+                habilitaFiltroGrupo: 'disabled',
+                habilitaFiltroSector: 'disabled'
+            });
+        } else {
+            this.handle_BorrarFiltros();
+            this.setState({
+                personas: this.state.tempPersonas
+            })
         }
     }
 
@@ -265,10 +293,15 @@ class ListaDePersonal extends Component {
         this.setState({
             personas: this.state.tempPersonas,
             fCategoria: '0',
-            fNombre: '',
+            // fNombre: '',
             fGrupo: '0',
             fSector: '0',
-            fProfesionOficio: ''
+            fProfesionOficio: '',
+            habilitaFiltroCategoria: '',
+            habilitaFiltroGrupo: '',
+            habilitaFiltroNombre: '',
+            habilitaFiltroProfesionOficio: '',
+            habilitaFiltroSector: ''
         })
     }
 
@@ -290,7 +323,7 @@ class ListaDePersonal extends Component {
     }
 
     hojaDatosEstadisticosPDF = (info) => {
-        
+
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
 
@@ -299,24 +332,30 @@ class ListaDePersonal extends Component {
         const drawUnderlineTotext = (x, constante, texto, y) => {
             let bar = doc.getTextWidth(x) + constante;
             let foo = doc.getTextWidth(texto);
-            return doc.line(bar, y, bar+foo, y);
+            return doc.line(bar, y, bar + foo, y);
         }
 
         // ELIMINA TEXTO null
         Object.keys(info.persona).forEach((key) => {
             info.persona[key] = info.persona[key] === null ? '' : info.persona[key];
         });
+        Object.keys(info.domicilio[0]).forEach((key) => {
+            info.domicilio[0][key] = info.domicilio[0][key] === null ? '' : info.domicilio[0][key];
+        });
 
         // FORMATEA FECHA PARA PDF
         helpers.fechas.forEach(fecha => {
-            info.persona[fecha] = helpers.reFormatoFecha(info.persona[fecha])
+            // Comprueba si la fecha fue formateada previamente
+            if (/\d{4}-\d{2}-\d{2}T.{8}/.test(info.persona[fecha])) {
+                info.persona[fecha] = helpers.reFormatoFecha(info.persona[fecha])
+            }
         })
-        
+
         // INICIA DOCUMENTO
         doc.addImage(nvologo, 'PNG', 13, 5, 80, 25);
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
-        
+
         doc.setFontSize(9)
         doc.text(`1.- Nombre(s): ${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`, 13, 40);
         drawUnderlineTotext('1.- Nombre(s): ', 13, `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`, 40);
@@ -342,14 +381,14 @@ class ListaDePersonal extends Component {
         doc.text(`7.- Estado civil: ${info.persona.per_Estado_Civil}`, 13, 76);
         drawUnderlineTotext('7.- Estado civil: ', 13, `${info.persona.per_Estado_Civil}`, 76);
 
-        doc.text(`Fecha boda civil: ${info.persona.per_Fecha_Boda_CivilFormateada}`, 120, 76);
-        drawUnderlineTotext('Fecha boda civil: ', 120, `${info.persona.per_Fecha_Boda_CivilFormateada}`, 76);
+        doc.text(`Fecha boda civil: ${info.persona.per_Fecha_Boda_Civil}`, 120, 76);
+        drawUnderlineTotext('Fecha boda civil: ', 120, `${info.persona.per_Fecha_Boda_Civil}`, 76);
 
         doc.text(`Segun Acta No.: ${info.persona.per_Num_Acta_Boda_Civil}`, 18, 82);
         drawUnderlineTotext('Segun Acta No.: ', 18, `${info.persona.per_Num_Acta_Boda_Civil}`, 82);
 
         doc.text(`Del libro No.: ${info.persona.per_Libro_Acta_Boda_Civil}`, 70, 82);
-        drawUnderlineTotext('Del libro No.: ', 70, `${info.persona.per_Libro_Acta_Boda_Civilre}`, 82);
+        drawUnderlineTotext('Del libro No.: ', 70, `${info.persona.per_Libro_Acta_Boda_Civil}`, 82);
 
         doc.text(`Que lleva la oficialia.: ${info.persona.per_Oficialia_Boda_Civil}`, 120, 82);
         drawUnderlineTotext('Que lleva la oficialia.: ', 120, `${info.persona.per_Oficialia_Boda_Civil}`, 82);
@@ -385,24 +424,50 @@ class ListaDePersonal extends Component {
         doc.text(`Bajo la imposicion de manos del presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 20, 136);
         drawUnderlineTotext('Bajo la imposicion de manos del presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 136);
 
-        doc.text(`14.- Puestos desempeñados en la IECE: ${info.persona.per_Cargos_Desempenados}`, 13, 142);
-        drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, `${info.persona.per_Cargos_Desempenados}`, 142);
+        let line = 142
+        let cargosDesempenados = info.persona.per_Cargos_Desempenados.match(/.{1,65}/g);
+        if (cargosDesempenados !== null) {
+            doc.text(`14.- Puestos desempeñados en la IECE: ${cargosDesempenados[0]}`, 13, line);
+            drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, `${cargosDesempenados[0]}`, line);
+            for (let i = 1; i < cargosDesempenados.length; i++) {
+                line = line + 6;
+                doc.text(cargosDesempenados[i], 72, line);
+                drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, cargosDesempenados[i], line);
+            }
+        } else {
+            doc.text(`14.- Puestos desempeñados en la IECE: `, 13, line);
+        }
 
-        doc.text(`15.- Cambios de domicilio: ${info.persona.per_Cambios_De_Domicilio}`, 13, 148);
-        drawUnderlineTotext('15.- Cambios de domicilio: ', 13, `${info.persona.per_Cambios_De_Domicilio}`, 148);
+        line = line + 6;
+        let cambiosDeDomicilio = info.persona.per_Cambios_De_Domicilio.match(/.{1,75}/g);
+        if (cambiosDeDomicilio !== null) {
+            doc.text(`15.- Cambios de domicilio: ${cambiosDeDomicilio[0]}`, 13, line);
+            drawUnderlineTotext('15.- Cambios de domicilio: ', 13, cambiosDeDomicilio[0], line)
+            for (let i = 1; i < cambiosDeDomicilio.length; i++) {
+                line = line + 6;
+                doc.text(cambiosDeDomicilio[i], 50, line);
+                drawUnderlineTotext('15.- Cambios de domicilio: ', 13, cambiosDeDomicilio[i], line)
+            }
+        } else {
+            doc.text(`15.- Cambios de domicilio: `, 13, line);
+        }
 
-        doc.text(`16.- Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: ${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto}`, 13, 154);
-        drawUnderlineTotext('16.- Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 154);
-        drawUnderlineTotext(`16.- Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: `, 13, `${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto}`, 154);
+        line = line + 6;
+        doc.text(`16.- Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: ${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto}`, 13, line);
+        drawUnderlineTotext('16.- Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, line);
+        drawUnderlineTotext(`16.- Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: `, 13, `${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto}`, line);
 
-        doc.text(`17.- Telefonos: ${info.persona.per_Telefono_Movil}`, 13, 160);
-        drawUnderlineTotext('17.- Telefonos: ', 13, `${info.persona.per_Telefono_Movil}`, 160);
+        line = line + 6;
+        doc.text(`17.- Telefonos. ${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`, 13, line);
+        drawUnderlineTotext('17.- Telefonos. ', 13, `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`, line);
 
-        doc.text(`18.- Profesion / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, 166);
-        drawUnderlineTotext('18.- Profesion / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 166);
+        line = line + 6;
+        doc.text(`18.- Profesion / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, line);
+        drawUnderlineTotext('18.- Profesion / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
 
-        doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, 172);
-        drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 172);
+        line = line + 6;
+        doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
+        drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
 
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
@@ -442,6 +507,7 @@ class ListaDePersonal extends Component {
                                 type="select"
                                 onChange={this.handle_filtroPorSector}
                                 value={this.state.fSector}
+                                disabled={this.state.habilitaFiltroSector}
                             >
                                 {localStorage.getItem('sector') === null &&
                                     <React.Fragment>
@@ -486,6 +552,7 @@ class ListaDePersonal extends Component {
                                 type="select"
                                 value={this.state.fGrupo}
                                 onChange={this.handle_filtroPorGrupo}
+                                disabled={this.state.habilitaFiltroGrupo}
                             >
                                 <option value="0">TODOS</option>
                                 <option value="bautizado">Bautizado</option>
@@ -498,6 +565,7 @@ class ListaDePersonal extends Component {
                                 type="select"
                                 value={this.state.fCategoria}
                                 onChange={this.handle_filtroPorCategoria}
+                                disabled={this.state.habilitaFiltroCategoria}
                             >
                                 <option value="0">TODOS</option>
                                 <option value="ADULTO_HOMBRE">Adulto hombre</option>
@@ -517,7 +585,7 @@ class ListaDePersonal extends Component {
                             <Input
                                 type="text"
                                 placeholder='Ej: Medico, Carpintero'
-                                value={this.state.fProfesionOficio}
+                                /* value={this.state.fProfesionOficio} */
                                 onChange={this.handle_filtroPorProfesion}
                             />
                             <Label>Filtro por profesión/ocupación</Label>
