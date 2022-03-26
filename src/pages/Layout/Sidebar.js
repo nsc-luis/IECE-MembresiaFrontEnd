@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    Card, CardBody, CardFooter, CardHeader, CardTitle,
+    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert, 
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
@@ -670,8 +670,17 @@ class Sidebar extends Component {
 
                                 <FormGroup>
                                     <Row>
+                                        <Col xs="12">
+                                            <Alert color="warning">
+                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                            </Alert>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
                                         <Col xs="3">
-                                            PERSONA:
+                                            * PERSONA:
                                         </Col>
                                         <Col xs="9">
                                             <Input
@@ -697,7 +706,7 @@ class Sidebar extends Component {
                                 <FormGroup>
                                     <Row>
                                         <Col xs="3">
-                                            Tipo de Excomunión:
+                                            * Tipo de Excomunión:
                                         </Col>
                                         <Col xs="9">
                                             <Input
@@ -716,7 +725,7 @@ class Sidebar extends Component {
                                 <FormGroup>
                                     <Row>
                                         <Col xs="3">
-                                            Delito:
+                                            * Delito:
                                         </Col>
                                         <Col xs="9">
                                             <Input
@@ -731,7 +740,7 @@ class Sidebar extends Component {
                                 <FormGroup>
                                     <Row>
                                         <Col xs="3">
-                                            Fecha de transacción:
+                                            * Fecha de transacción:
                                         </Col>
                                         <Col xs="9">
                                             <Input
@@ -775,11 +784,19 @@ class Sidebar extends Component {
                                 <CardTitle><h3>Seleccione una persona.</h3></CardTitle>
                             </CardHeader>
                             <CardBody>
-
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="12">
+                                            <Alert color="warning">
+                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                            </Alert>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
                                 <FormGroup>
                                     <Row>
                                         <Col xs="3">
-                                            PERSONA:
+                                            * PERSONA:
                                         </Col>
                                         <Col xs="9">
                                             <Input
@@ -805,7 +822,7 @@ class Sidebar extends Component {
                                 <FormGroup>
                                     <Row>
                                         <Col xs="3">
-                                            Delito:
+                                            Comentario:
                                         </Col>
                                         <Col xs="9">
                                             <Input
@@ -820,7 +837,7 @@ class Sidebar extends Component {
                                 <FormGroup>
                                     <Row>
                                         <Col xs="3">
-                                            Fecha de transacción:
+                                            * Fecha de transacción:
                                         </Col>
                                         <Col xs="9">
                                             <Input
