@@ -2,7 +2,7 @@ import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Card, CardBody, CardFooter, CardHeader, CardTitle,
-    Button, Modal, FormGroup, Input, Col, Row
+    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
@@ -14,9 +14,51 @@ class Sidebar extends Component {
         this.state = {
             modalEditaPersona: false,
             modalEditaPersonaNB: false,
+            modalBajaBautizadoExcomunion: false,
             personas: [],
-            personaSeleccionada: "0"
+            formBajaBautizadoExcomunion: {},
+            personaSeleccionada: '0',
+            mensajeDelProceso: '',
+            modalShow: false,
+            modalBajaBautizadoDefuncion: false,
+            formBajaBautizadoDefuncion: {},
         }
+    }
+
+    componentDidMount() {
+        this.setState({
+            formBajaBautizadoExcomunion: {
+                ...this.state.bajaBautizadoExcomunion,
+                personaSeleccionada: '0',
+                tipoExcomunion: '0',
+                excomunionDelito: '',
+                fechaExcomunion: '01/01/1900'
+            },
+            formBajaBautizadoDefuncion: {
+                ...this.state.bajaBautizadoDefuncion,
+                personaSeleccionada: '0',
+                comentarioDefuncion: '',
+                fechaDefuncion: '01/01/1900'
+            }
+        });
+    }
+
+    onChangeBajaBautizadoExcomunion = (e) => {
+        this.setState({
+            formBajaBautizadoExcomunion: {
+                ...this.state.formBajaBautizadoExcomunion,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
+        })
+    }
+
+    onChangeBajaBautizadoDefuncion = (e) => {
+        this.setState({
+            formBajaBautizadoDefuncion: {
+                ...this.state.formBajaBautizadoDefuncion,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
+        })
     }
 
     handle_LinkEncabezado = (seccion, componente) => {
@@ -42,13 +84,150 @@ class Sidebar extends Component {
 
     handle_personaSeleccionada = (e) => {
         // console.log(JSON.stringify(bar));
-        this.setState({personaSeleccionada: e.target.value});
+        this.setState({ personaSeleccionada: e.target.value });
     }
 
     invocaFormularioDePersona = () => {
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
         // console.log(localStorage.getItem("idPersona"));
         document.location.href = '/RegistroDePersona';
+    }
+
+    openModalBajaBautizadoExcomunion = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosComunionBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalBajaBautizadoExcomunion: !this.state.modalBajaBautizadoExcomunion })
+    }
+
+    openModalBajaBautizadoDefuncion = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosComunionVivoBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalBajaBautizadoDefuncion: !this.state.modalBajaBautizadoDefuncion })
+    }
+
+    bajaBautizadoExcomunion = async (e) => {
+        e.preventDefault();
+        var datos = this.state.formBajaBautizadoExcomunion;
+
+        if (datos.personaSeleccionada === '0'
+            || datos.tipoExcomunion === '0'
+            || datos.excomunionDelito === ''
+            || datos.fechaExcomunion === ''
+            || datos.fechaExcomunion === '01/01/1900') {
+            alert('Error!\nDebe ingresar todos los datos requeridos.');
+            return false;
+        }
+        if (helpers.regex.formatoFecha.test(datos.fechaExcomunion) === false) {
+            alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
+            return false;
+        }
+        else {
+            var fechaExcomunion = helpers.fnFormatoFecha2(datos.fechaExcomunion);
+        }
+        console.log(fechaExcomunion);
+        try {
+            await helpers.authAxios.post(
+                helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
+                "/" + datos.tipoExcomunion +
+                "/" + datos.excomunionDelito +
+                "/" + fechaExcomunion)
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+    }
+
+    bajaBautizadoDefuncion = async (e) => {
+        e.preventDefault();
+        var datos = this.state.formBajaBautizadoDefuncion;
+
+        if (datos.personaSeleccionada === '0'
+            || datos.comentarioDefuncion === ''
+            || datos.fechaDefuncion === ''
+            || datos.fechaDefuncion === '01/01/1900') {
+            alert('Error!\nDebe ingresar todos los datos requeridos.');
+            return false;
+        }
+        if (helpers.regex.formatoFecha.test(datos.fechaDefuncion) === false) {
+            alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
+            return false;
+        }
+        else {
+            var fechaDefuncion = helpers.fnFormatoFecha2(datos.fechaDefuncion);
+        }
+        try {
+            await helpers.authAxios.post(
+                helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
+                "/" + datos.comentarioDefuncion +
+                "/" + fechaDefuncion)
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
     }
 
     render() {
@@ -198,8 +377,16 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseBajaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPBajas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#">Defunción</Link>
-                                        <Link className="collapse-item" to="#">Excomunión</Link>
+                                        <Link
+                                            className="collapse-item"
+                                            to="#"
+                                            onClick={this.openModalBajaBautizadoDefuncion}
+                                        >Defunción</Link>
+                                        <Link
+                                            className="collapse-item"
+                                            to="#"
+                                            onClick={this.openModalBajaBautizadoExcomunion}
+                                        >Excomunión</Link>
                                         <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -247,8 +434,8 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseActNoBautizado" className="collapse" aria-labelledby="headingActNoBautizado" data-parent="#collapseMPAct">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link 
-                                            className="collapse-item" 
+                                        <Link
+                                            className="collapse-item"
                                             to="#"
                                             onClick={this.openModalEditaPersonaNB}
                                         >Actualización</Link>
@@ -422,7 +609,7 @@ class Sidebar extends Component {
                 <Modal isOpen={this.state.modalEditaPersonaNB}>
                     <Card>
                         <CardHeader>
-                            <CardTitle><h3>Seleccione la persona a editar.</h3></CardTitle>
+                            <CardTitle><h3>Seleccione una persona a editar.</h3></CardTitle>
                         </CardHeader>
                         <CardBody>
                             <FormGroup>
@@ -471,6 +658,210 @@ class Sidebar extends Component {
                         </CardFooter>
                     </Card>
                 </Modal>
+
+                {/* MODAL BAJA/BAUTIZADO/EXCOMUNION */}
+                <Modal isOpen={this.state.modalBajaBautizadoExcomunion} size="lg">
+                    <Card>
+                        <Form onSubmit={this.bajaBautizadoExcomunion}>
+                            <CardHeader>
+                                <CardTitle><h3>Seleccione una persona.</h3></CardTitle>
+                            </CardHeader>
+                            <CardBody>
+
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            PERSONA:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                value={this.state.formBajaBautizadoExcomunion.personaSeleccionada}
+                                                name="personaSeleccionada"
+                                                onChange={this.onChangeBajaBautizadoExcomunion}
+                                            >
+                                                <option value="0">Selecciona una persona</option>
+                                                {this.state.personas.map(persona => {
+                                                    return (
+                                                        <React.Fragment key={persona.per_Id_Persona}>
+                                                            <option value={persona.per_Id_Persona} >
+                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            </option>
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Tipo de Excomunión:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                name="tipoExcomunion"
+                                                value={this.state.formBajaBautizadoExcomunion.tipoExcomunion}
+                                                onChange={this.onChangeBajaBautizadoExcomunion}
+                                            >
+                                                <option value="0">Selecciona una opcion</option>
+                                                <option value="11102">Excomunión temporal</option>
+                                                <option value="11103">Excomunión</option>
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Delito:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                name="excomunionDelito"
+                                                value={this.state.formBajaBautizadoExcomunion.excomunionDelito}
+                                                onChange={this.onChangeBajaBautizadoExcomunion}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Fecha de transacción:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                name="fechaExcomunion"
+                                                placeholder='DD/MM/AAAA'
+                                                value={this.state.formBajaBautizadoExcomunion.fechaExcomunion}
+                                                onChange={this.onChangeBajaBautizadoExcomunion}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+
+                            </CardBody>
+                            <CardFooter>
+                                <Button
+                                    type="button"
+                                    onClick={this.openModalBajaBautizadoExcomunion}
+                                    color="secondary"
+                                    className="entreBotones"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    color="success"
+                                /* onClick={this.invocaFormularioDePersona} */
+                                >
+                                    <span className="fa fa-pencil"></span>Proceder
+                                </Button>
+                            </CardFooter>
+                        </Form>
+                    </Card>
+                </Modal>
+
+                {/* MODAL BAJA/BAUTIZADO/DEFUNCION */}
+                <Modal isOpen={this.state.modalBajaBautizadoDefuncion} size="lg">
+                    <Card>
+                        <Form onSubmit={this.bajaBautizadoDefuncion}>
+                            <CardHeader>
+                                <CardTitle><h3>Seleccione una persona.</h3></CardTitle>
+                            </CardHeader>
+                            <CardBody>
+
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            PERSONA:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                value={this.state.formBajaBautizadoDefuncion.personaSeleccionada}
+                                                name="personaSeleccionada"
+                                                onChange={this.onChangeBajaBautizadoDefuncion}
+                                            >
+                                                <option value="0">Selecciona una persona</option>
+                                                {this.state.personas.map(persona => {
+                                                    return (
+                                                        <React.Fragment key={persona.per_Id_Persona}>
+                                                            <option value={persona.per_Id_Persona} >
+                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            </option>
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Delito:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                name="comentarioDefuncion"
+                                                value={this.state.formBajaBautizadoDefuncion.comentarioDefuncion}
+                                                onChange={this.onChangeBajaBautizadoDefuncion}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Fecha de transacción:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                name="fechaDefuncion"
+                                                placeholder='DD/MM/AAAA'
+                                                value={this.state.formBajaBautizadoDefuncion.fechaDefuncion}
+                                                onChange={this.onChangeBajaBautizadoDefuncion}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+
+                            </CardBody>
+                            <CardFooter>
+                                <Button
+                                    type="button"
+                                    onClick={this.openModalBajaBautizadoDefuncion}
+                                    color="secondary"
+                                    className="entreBotones"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    color="success"
+                                >
+                                    <span className="fa fa-pencil"></span>Proceder
+                                </Button>
+                            </CardFooter>
+                        </Form>
+                    </Card>
+                </Modal>
+
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
+
                 {/* End of Sidebar */}
             </React.Fragment>
         );

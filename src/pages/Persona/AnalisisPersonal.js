@@ -119,7 +119,7 @@ class AnalisisPersonal extends Component {
                             <Col className="negrita" xs="2">Profesion/Oficio1:</Col>
                             <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
                             <Col className="negrita" xs="2">Profesion/Oficio2:</Col>
-                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
+                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
