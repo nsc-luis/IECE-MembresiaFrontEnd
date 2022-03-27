@@ -410,7 +410,7 @@ class RegistroDePersonal extends Component {
         let info = {
             id: 0,
             PersonaEntity: datos,
-            ComentarioHTE: this.state.ComentarioHistorialTransacciones
+            ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
         };
         try {
             await helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)

@@ -22,6 +22,8 @@ class Sidebar extends Component {
             modalShow: false,
             modalBajaBautizadoDefuncion: false,
             formBajaBautizadoDefuncion: {},
+            modalBajaNoBautizadoDefuncionAlejamiento: false,
+            formBajaNoBautizadoDefuncionAlejamiento: {}
         }
     }
 
@@ -34,11 +36,19 @@ class Sidebar extends Component {
                 excomunionDelito: '',
                 fechaExcomunion: '01/01/1900'
             },
-            formBajaBautizadoDefuncion: {
-                ...this.state.bajaBautizadoDefuncion,
+            formBajaNoBautizadoDefuncionAlejamiento: {
+                ...this.state.formBajaNoBautizadoDefuncionAlejamiento,
                 personaSeleccionada: '0',
-                comentarioDefuncion: '',
-                fechaDefuncion: '01/01/1900'
+                codigoTransaccion: '0',
+                comentario: '',
+                fechaTransaccion: '01/01/1900'
+            },
+            formBajaNoBautizadoDefuncionAlejamiento: {
+                ...this.state.bajaNoBautizadoDefuncion,
+                personaSeleccionada: '0',
+                comentario: '',
+                codigoTransaccion: '0',
+                fechaTransaccion: '01/01/1900'
             }
         });
     }
@@ -56,6 +66,15 @@ class Sidebar extends Component {
         this.setState({
             formBajaBautizadoDefuncion: {
                 ...this.state.formBajaBautizadoDefuncion,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
+        })
+    }
+
+    onChangeBajaNoBautizadoDefuncionAlejamiento = (e) => {
+        this.setState({
+            formBajaNoBautizadoDefuncionAlejamiento: {
+                ...this.state.formBajaNoBautizadoDefuncionAlejamiento,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
@@ -107,6 +126,14 @@ class Sidebar extends Component {
                 this.setState({ personas: res.data.personas });
             });
         this.setState({ modalBajaBautizadoDefuncion: !this.state.modalBajaBautizadoDefuncion })
+    }
+
+    openModalBajaNoBautizadoDefuncionAlejamiento = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosDefuncionAlejamientoBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalBajaNoBautizadoDefuncionAlejamiento: !this.state.modalBajaNoBautizadoDefuncionAlejamiento })
     }
 
     bajaBautizadoExcomunion = async (e) => {
@@ -194,6 +221,66 @@ class Sidebar extends Component {
                 helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
                 "/" + datos.comentarioDefuncion +
                 "/" + fechaDefuncion)
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+    }
+
+    bajaNoBautizadoDefuncionAlejamiento = async (e) => {
+        e.preventDefault();
+        var datos = this.state.formBajaNoBautizadoDefuncionAlejamiento;
+
+        if (datos.personaSeleccionada === '0'
+            || datos.codigoTransaccion === '0'
+            || datos.fechaTransaccion === ''
+            || datos.fechaTransaccion === '01/01/1900') {
+            alert('Error!\nDebe ingresar todos los datos requeridos.');
+            return false;
+        }
+        if (helpers.regex.formatoFecha.test(datos.fechaTransaccion) === false) {
+            alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
+            return false;
+        }
+        else {
+            var fechaTransaccion = helpers.fnFormatoFecha2(datos.fechaTransaccion);
+        }
+        try {
+            await helpers.authAxios.post(
+                helpers.url_api + "/Persona/BajaNoBautizadoDefuncionAlejamiento/" + datos.personaSeleccionada +
+                "/" + datos.comentario +
+                "/" + datos.codigoTransaccion +
+                "/" + fechaTransaccion)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -395,8 +482,11 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseBajaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPBajas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#">Defunción</Link>
-                                        <Link className="collapse-item" to="#">Alejamiento</Link>
+                                        <Link 
+                                            className="collapse-item" 
+                                            to="#"
+                                            onClick={this.openModalBajaNoBautizadoDefuncionAlejamiento}
+                                        >Defunción/Alejamiento</Link>
                                         <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -856,6 +946,121 @@ class Sidebar extends Component {
                                 <Button
                                     type="button"
                                     onClick={this.openModalBajaBautizadoDefuncion}
+                                    color="secondary"
+                                    className="entreBotones"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    color="success"
+                                >
+                                    <span className="fa fa-pencil"></span>Proceder
+                                </Button>
+                            </CardFooter>
+                        </Form>
+                    </Card>
+                </Modal>
+
+                {/* MODAL BAJA/BAUTIZADO/DEFUNCION */}
+                <Modal isOpen={this.state.modalBajaNoBautizadoDefuncionAlejamiento} size="lg">
+                    <Card>
+                        <Form onSubmit={this.bajaNoBautizadoDefuncionAlejamiento}>
+                            <CardHeader>
+                                <CardTitle><h3>Seleccione una persona.</h3></CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="12">
+                                            <Alert color="warning">
+                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                            </Alert>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * PERSONA:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.personaSeleccionada}
+                                                name="personaSeleccionada"
+                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                            >
+                                                <option value="0">Selecciona una persona</option>
+                                                {this.state.personas.map(persona => {
+                                                    return (
+                                                        <React.Fragment key={persona.per_Id_Persona}>
+                                                            <option value={persona.per_Id_Persona} >
+                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            </option>
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Defuncion / Alejamiento:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                name="codigoTransaccion"
+                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.codigoTransaccion}
+                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                            >
+                                                <option value='0'>Seleccione una opcion</option>
+                                                <option value='12101'>Defuncion</option>
+                                                <option value='12102'>Alejamiento</option>
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Comentario:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                name="comentario"
+                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.comentario}
+                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Fecha de transacción:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                name="fechaTransaccion"
+                                                placeholder='DD/MM/AAAA'
+                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.fechaTransaccion}
+                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+
+                            </CardBody>
+                            <CardFooter>
+                                <Button
+                                    type="button"
+                                    onClick={this.openModalBajaNoBautizadoDefuncionAlejamiento}
                                     color="secondary"
                                     className="entreBotones"
                                 >
