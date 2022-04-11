@@ -23,7 +23,7 @@ export default class AltaRestitucion extends Component {
             fecha: null,
             isValidName: false,
             isValidDate: false,
-
+            mostrarHogar: false,
             profesiones_oficios: [],
             infante: false,
             DatosHogar: {},
@@ -57,6 +57,7 @@ export default class AltaRestitucion extends Component {
 
         this.handleDate = this.handleDate.bind(this);
         this.handleName = this.handleName.bind(this);
+        this.handleMostrarHogar = this.handleMostrarHogar.bind(this);
         this.handle_hd_Id_Hogar = this.handle_hd_Id_Hogar.bind(this);
         this.handle_hp_Jerarquia = this.handle_hp_Jerarquia.bind(this);
     }
@@ -66,6 +67,13 @@ export default class AltaRestitucion extends Component {
     }
     handleName(event){
         this.setState({isValidName: this.const_regex.alphaSpaceRequired.test(event.target.value) })
+    }
+    handleMostrarHogar(){
+        if(this.state.isValidDate && this.state.isValidName){
+            this.setState({mostrarHogar: true})
+        }else{
+            alert("Debes capturar correctamente los campos requeridos.")
+        }
     }
 
     handle_hd_Id_Hogar = async (e) => {
@@ -128,7 +136,7 @@ export default class AltaRestitucion extends Component {
                         <div className="col-sm-2">
                             <label><strong>*</strong> Persona</label>
                         </div>
-                            <div className="col-sm-4">
+                            <div className="col-sm-6">
                                     <Input
                                         type="search"
                                         name="nombre"
@@ -194,6 +202,7 @@ export default class AltaRestitucion extends Component {
                                 <Button
                                     type="button"
                                     color="primary"
+                                    onClick={this.handleMostrarHogar}
                                 >
                                     <i>Continuar</i>
                                 </Button>
@@ -203,7 +212,8 @@ export default class AltaRestitucion extends Component {
                   </div>
               </div>
           </div>
-            {/* Hogar */}
+
+          {this.state.mostrarHogar &&
             <div className="row mx-auto mt-3">
                 <div className="col-sm-12">
                     <div className="card border-info acceso-directo">
@@ -225,6 +235,7 @@ export default class AltaRestitucion extends Component {
                     </div>
                 </div>
             </div>
+          }
         </Container>
     </Layout>
 
