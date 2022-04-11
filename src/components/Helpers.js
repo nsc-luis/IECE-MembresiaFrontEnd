@@ -102,6 +102,13 @@ const helpers = {
     fnFormatoFecha: function (fecha) {
         let sub = fecha.split("/")
         let fechaFormateada = sub[1] + "/" + sub[0] + "/" + sub[2]
+        console.log(fechaFormateada)
+        return fechaFormateada
+    },
+
+    fnFormatoFecha2: function (fecha) {
+        let sub = fecha.split("/")
+        let fechaFormateada = sub[2] + "-" + sub[1] + "-" + sub[0]
         return fechaFormateada
     },
 

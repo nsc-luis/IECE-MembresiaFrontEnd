@@ -55,10 +55,10 @@ class AnalisisPersonal extends Component {
                             <Col className="negrita" xs="2">Categoria:</Col>
                             <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Categoria} </Col>
                             <Col className="negrita" xs="2">
-                                {this.objPersona.persona.per_Comunion &&
+                                {this.objPersona.persona.per_En_Comunion &&
                                     <span className="fa fa-check faIconMarginRight"></span>
                                 }
-                                {!this.objPersona.persona.per_Comunion &&
+                                {!this.objPersona.persona.per_En_Comunion &&
                                     <span className="fa fa-times faIconMarginRight"></span>
                                 }
                                 En comunion
@@ -119,7 +119,7 @@ class AnalisisPersonal extends Component {
                             <Col className="negrita" xs="2">Profesion/Oficio1:</Col>
                             <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
                             <Col className="negrita" xs="2">Profesion/Oficio2:</Col>
-                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
+                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -148,7 +148,7 @@ class AnalisisPersonal extends Component {
                                         <React.Fragment>
                                             <tr key={registro.hte_Id_Transaccion}>
                                                 <td>{helpers.reFormatoFecha(registro.hte_Fecha_Transaccion)}</td>
-                                                <td>{registro.ct_Categoria}</td>
+                                                <td>{registro.ct_Tipo}</td>
                                                 <td>{registro.ct_Subtipo}</td>
                                                 <td>{registro.hte_Comentario}</td>
                                                 <td>{registro.sec_Alias}</td>
