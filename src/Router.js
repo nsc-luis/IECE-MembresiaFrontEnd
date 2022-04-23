@@ -16,6 +16,9 @@ import Login from './pages/Login';
 import ResumenMembresia from './pages/ResumenMembresia';
 import AltaRestitucion from './pages/Persona/AltaRestitucion';
 import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio'
+import AltaNuevoIngreso from './pages/Persona/AltaNuevoIngreso'
+import AltaReactivacion from './pages/Persona/AltaReactivacion'
+import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB'
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -49,6 +52,9 @@ class Router extends Component {
                     <Route exact path="/ResumenMembresia" component={ResumenMembresia} />
                     <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
                     <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
+                    <Route exact path="/AltaNuevoIngreso" component={AltaNuevoIngreso} />
+                    <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
+                    <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
                     <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>

@@ -433,9 +433,9 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#">Nuevo Ingreso</Link>
-                                        <Link className="collapse-item" to="#">Reativación</Link>
-                                        <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
+                                        <Link className="collapse-item" to="/AltaNuevoIngreso">Nuevo Ingreso</Link>
+                                        <Link className="collapse-item" to="/AltaReactivacion">Reativación</Link>
+                                        <Link className="collapse-item" to="/AltaCambioDomicilioNB">Cambio de Domicilio</Link>
                                     </div>
                                 </div>
                                 {/* <h6 className="collapse-header">Personal no bautizado:</h6>

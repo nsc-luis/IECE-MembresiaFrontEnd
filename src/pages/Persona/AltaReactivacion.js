@@ -9,7 +9,7 @@ import {
 
 import React, { Component, useEffect, useState } from 'react';
 
-function AltaRestitucion() {
+function AltaReactivacion() {
     //Estados
     const [opcionesPersonas, setOpcionesPersonas] = useState([])
     const [opcionesHogares, setOpcionesHogares] = useState([])
@@ -24,12 +24,12 @@ function AltaRestitucion() {
 
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get("/Persona/GetPersonaRestitucion/227/true")
+        helpers.authAxios.get("/Persona")
             .then(res => {
-                setOpcionesPersonas(res.data.personas)
+                setOpcionesPersonas(res.data)
                 console.log(opcionesPersonas)
             });
-    }, [opcionesPersonas.length]);
+    }, [opcionesPersonas]);
 
     useEffect(() => {
         helpers.authAxios.get("/Hogar_Persona/GetListaHogares")
@@ -143,7 +143,7 @@ function AltaRestitucion() {
             <Container>
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
-                        Alta Restitución
+                        Alta Reactivación
                     </CardTitle>
                     <Form>
                         <FormGroup row>
@@ -438,7 +438,7 @@ function AltaRestitucion() {
     );
 }
 
-export default AltaRestitucion
+export default AltaReactivacion
 // export default class AltaRestitucion extends Component {
 //     url = helpers.url_api;
 
