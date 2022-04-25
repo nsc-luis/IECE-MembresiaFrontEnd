@@ -51,7 +51,7 @@ class RegistroDePersonal extends Component {
                 form: {
                     ...this.state.form,
                     per_Categoria: "0",
-                    per_Bautizado: false,
+                    per_Bautizado: true,
                     per_RFC_Sin_Homo: "XAXX010101XXX",
                     per_Estado_Civil: "SOLTERO(A)",
                     per_foto: uuidv4(),
@@ -86,6 +86,7 @@ class RegistroDePersonal extends Component {
                     sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector,
                     dis_Id_Distrito: JSON.parse(localStorage.getItem('infoSesion')).dis_Id_Distrito
                 },
+                habilitaPerBautizado: true
                 /* hogar: {
                     ...this.state.hogar,
                     hd_Id_Hogar: 0,
@@ -93,16 +94,7 @@ class RegistroDePersonal extends Component {
                 } */
             })
         } else {
-            /* helpers.authAxios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
-                .then(res => {
-                    this.setState({
-                        hogar: {
-                            ...this.state.hogar,
-                            hd_Id_Hogar: res.data.hd_Id_Hogar,
-                            hp_Jerarquia: res.data.hp_Jerarquia
-                        }
-                    })
-                }) */
+            
             helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     res.data.per_Fecha_Nacimiento = helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento);
@@ -115,26 +107,7 @@ class RegistroDePersonal extends Component {
                     })
                     localStorage.setItem('estadoCivil', res.data.per_Estado_Civil);
                 })
-
-            /* let currentPersona = helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
-                .then(res => {
-                    this.setState({
-                        hogar: {
-                            ...this.state.hogar,
-                            hd_Id_Hogar: res.data.hd_Id_Hogar,
-                            hp_Jerarquia: res.data.hp_Jerarquia
-                        }
-                    })
-                }) */
-
-            /* this.state.FrmValidaPersona === false
-            this.state.PersonaEncontrada === false */
-            /* function reFormatoFecha(fecha) {
-                let foo = fecha.split("T");
-                let bar = foo[0].split("-");
-                let f = bar[2] + "/" + bar[1] + "/" + bar[0];
-                return f
-            } */
+                
             this.setState({
                 categoriaSeleccionada: true,
                 per_Nombre_NoValido: false,
@@ -148,40 +121,6 @@ class RegistroDePersonal extends Component {
                 form: {
                     ...this.state.form,
                     per_Id_Persona: localStorage.getItem("idPersona"),
-                    /* per_Categoria: this.state.form.per_Categoria,
-                    per_Nombre: this.state.form.per_Nombre,
-                    per_Apellido_Paterno: this.state.form.per_Apellido_Paterno,
-                    per_Apellido_Materno: this.state.form.per_Apellido_Materno,
-                    per_Fecha_Nacimiento: this.state.form.per_Fecha_Nacimiento,
-                    per_Fecha_Bautismo: this.state.form.per_Fecha_Bautismo,
-                    per_Fecha_Boda_Civil: this.state.form.per_Fecha_Boda_Civil,
-                    per_Fecha_Recibio_Espiritu_Santo: this.state.form.per_Fecha_Recibio_Espiritu_Santo,
-                    per_Fecha_Boda_Eclesiastica: this.state.form.per_Fecha_Boda_Eclesiastica,
-                    per_Bautizado: this.state.form.per_Bautizado,
-                    per_RFC_Sin_Homo: this.state.form.per_RFC_Sin_Homo,
-                    per_Estado_Civil: this.state.form.per_Estado_Civil,
-                    per_foto: this.state.form.per_foto,
-                    per_Activo: this.state.form.per_Activo,
-                    per_En_Comunion: this.state.form.per_En_Comunion,
-                    per_Vivo: this.state.form.per_Vivo,
-                    pro_Id_Profesion_Oficio1: this.state.form.pro_Id_Profesion_Oficio1,
-                    pro_Id_Profesion_Oficio2: this.state.form.pro_Id_Profesion_Oficio2,
-                    per_Cargos_Desempenados: this.state.form.per_Cargos_Desempenados,
-                    per_Nacionalidad: this.state.form.per_Nacionalidad,
-                    per_Lugar_De_Nacimiento: this.state.form.per_Lugar_De_Nacimiento,
-                    per_Email_Personal: this.state.form.per_Email_Personal,
-                    per_Telefono_Movil: this.state.form.per_Telefono_Movil,
-                    per_Nombre_Padre: this.state.form.per_Nombre_Padre,
-                    per_Nombre_Madre: this.state.form.per_Nombre_Madre,
-                    per_Nombre_Abuelo_Paterno: this.state.form.per_Nombre_Abuelo_Paterno,
-                    per_Nombre_Abuela_Paterna: this.state.form.per_Nombre_Abuela_Paterna,
-                    per_Nombre_Abuelo_Materno: this.state.form.per_Nombre_Abuelo_Materno,
-                    per_Nombre_Abuela_Materna: this.state.form.per_Nombre_Abuela_Materna,
-                    per_Lugar_Boda_Eclesiastica: this.state.form.per_Lugar_Boda_Eclesiastica,
-                    per_Lugar_Bautismo: this.state.form.per_Lugar_Bautismo,
-                    per_Ministro_Que_Bautizo: this.state.form.per_Ministro_Que_Bautizo,
-                    per_Bajo_Imposicion_De_Manos: this.state.form.per_Bajo_Imposicion_De_Manos,
-                    per_Cambios_De_DomicilioRef: this.state.form.per_Cambios_De_DomicilioRef, */
                     sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
                 }
             });
