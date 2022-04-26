@@ -473,7 +473,7 @@ class ListaDePersonal extends Component {
         doc.text("FECHA", 54, 255);
         doc.line(120, 250, 180, 250);
         doc.text("LA COMISION", 142, 255);
-        doc.save("HojaDatosEstadisticos.pdf");
+        doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`);
     }
 
     render() {
@@ -796,7 +796,7 @@ class ListaDePersonal extends Component {
                                                                             <span className="tituloListaDatosEstadisticos" >16.- Domicilio actual: </span>
                                                                             <span className="infoDatosEstadisticos" >
                                                                                 Calle: {this.state.DatosHogarDomicilio.hd_Calle}, No.: {this.state.DatosHogarDomicilio.hd_Numero_Exterior}, Interior: {this.state.DatosHogarDomicilio.hd_Numero_Interior},
-                                                                                Tipo subdivision: {this.state.DatosHogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {this.state.DatosHogarDomicilio.hd_Subdivision} <br />
+                                                                                {this.state.DatosHogarDomicilio.hd_Tipo_Subdivision}, {this.state.DatosHogarDomicilio.hd_Subdivision} <br />
                                                                                 Localidad: {this.state.DatosHogarDomicilio.hd_Localidad}, Municipio/cuidad: {this.state.DatosHogarDomicilio.hd_Municipio_Ciudad},
                                                                                 {this.state.DatosHogarDomicilio.est_Nombre}, Pais: {this.state.DatosHogarDomicilio.pais_Nombre_Corto} <br />
                                                                                 Telefono: {this.state.DatosHogarDomicilio.hd_Telefono}

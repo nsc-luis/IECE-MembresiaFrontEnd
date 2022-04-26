@@ -26,7 +26,7 @@ class ModalInfoHogar extends Component {
                             <br />
                             <strong>Calle: </strong>{objPersona.domicilio[0].hd_Calle}, <strong>No.: </strong>{objPersona.domicilio[0].hd_Numero_Exterior}, <strong>Interior: </strong>{objPersona.domicilio[0].hd_Numero_Interior},
                             <br />
-                            <strong>Tipo subdivision: </strong>{objPersona.domicilio[0].hd_Tipo_Subdivision}, <strong>Subdivision: </strong>{objPersona.domicilio[0].hd_Subdivision}
+                            {/* <strong>Tipo subdivision: </strong> */}{objPersona.domicilio[0].hd_Tipo_Subdivision}, {/* <strong>Subdivision: </strong> */}{objPersona.domicilio[0].hd_Subdivision}
                             <br />
                             {/* <strong>Localidad: </strong>{objPersona.domicilio[0].hd_Localidad}, 
                             <br /> */}

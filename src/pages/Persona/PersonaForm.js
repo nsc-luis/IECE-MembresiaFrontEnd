@@ -354,10 +354,10 @@ class PersonaForm extends Component {
 
             // VALIDA CAMPOS DE PERSONA
             var camposPersonaAValidar = [
-                { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
+                /* { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Civil", estado: "fechaBodaCivilInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Eclesiastica", estado: "fechaBodaEclesiasticaInvalida" },
-                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" },
+                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" }, */
                 { formato: "formatoEmail", campo: "per_Email_Personal", estado: "emailInvalido" },
                 { formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido" }
             ]
@@ -373,9 +373,9 @@ class PersonaForm extends Component {
 
                 if (boolAgregarNvaPersona) {
                     // FUNCION PARA FORMATO DE FECHAS PARA BD
-                    helpers.fechas.forEach(fecha => {
+                    /* helpers.fechas.forEach(fecha => {
                         objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
-                    })
+                    }) */
 
                     if (this.state.hogar.hd_Id_Hogar === "0") {
                         let PersonaDomicilioHogar = {
@@ -390,9 +390,9 @@ class PersonaForm extends Component {
                 }
                 else {
                     // FUNCION PARA FORMATO DE FECHAS PARA BD
-                    helpers.fechas.forEach(fecha => {
+                    /* helpers.fechas.forEach(fecha => {
                         objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
-                    })
+                    }) */
 
                     fnEditaPersona(objPersona)
                 }
@@ -547,7 +547,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input
-                                                                type="text"
+                                                                type="date"
                                                                 name="per_Fecha_Nacimiento"
                                                                 onChange={onChange}
                                                                 value={form.per_Fecha_Nacimiento}
@@ -658,7 +658,7 @@ class PersonaForm extends Component {
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
-                                                                            type="text"
+                                                                            type="date"
                                                                             className="form-control"
                                                                             value={form.per_Fecha_Nacimiento}
                                                                             disabled
@@ -808,20 +808,6 @@ class PersonaForm extends Component {
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>
-
-                                                            <FormGroup>
-                                                                <div className="row">
-                                                                    <div className="col-sm-12">
-                                                                        <textarea
-                                                                            name="per_Cargos_Desempenados"
-                                                                            onChange={onChange}
-                                                                            className="form-control"
-                                                                            value={form.per_Cargos_Desempenados}
-                                                                        ></textarea>
-                                                                        <label>Cargos desempeñados</label>
-                                                                    </div>
-                                                                </div>
-                                                            </FormGroup>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -958,7 +944,7 @@ class PersonaForm extends Component {
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
-                                                                                            type="text"
+                                                                                            type="date"
                                                                                             name="per_Fecha_Boda_Civil"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Fecha_Boda_Civil}
@@ -1025,7 +1011,7 @@ class PersonaForm extends Component {
                                                                                         <div className="col-sm-4">
                                                                                             <FormGroup>
                                                                                                 <Input
-                                                                                                    type="text"
+                                                                                                    type="date"
                                                                                                     name="per_Fecha_Boda_Eclesiastica"
                                                                                                     onChange={onChange}
                                                                                                     value={form.per_Fecha_Boda_Eclesiastica}
@@ -1142,7 +1128,7 @@ class PersonaForm extends Component {
                                                                                 <div className="col-sm-4">
                                                                                     <FormGroup>
                                                                                         <Input
-                                                                                            type="text"
+                                                                                            type="date"
                                                                                             name="per_Fecha_Bautismo"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Fecha_Bautismo}
@@ -1163,7 +1149,7 @@ class PersonaForm extends Component {
                                                                         <div className="col-sm-4">
                                                                             <FormGroup>
                                                                                 <Input
-                                                                                    type="text"
+                                                                                    type="date"
                                                                                     name="per_Fecha_Recibio_Espiritu_Santo"
                                                                                     onChange={onChange}
                                                                                     value={form.per_Fecha_Recibio_Espiritu_Santo}
@@ -1213,6 +1199,19 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"></textarea>
                                                                                 <label>Cambios de domicilio</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </FormGroup>
+                                                                    <FormGroup>
+                                                                        <div className="row">
+                                                                            <div className="col-sm-12">
+                                                                                <textarea
+                                                                                    name="per_Cargos_Desempenados"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                    value={form.per_Cargos_Desempenados}
+                                                                                ></textarea>
+                                                                                <label>Cargos desempeñados</label>
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>

@@ -86,7 +86,7 @@ class PresentacionDeNino extends Component {
                 ...this.state.currentPresentacion,
                 per_Id_Persona: "0",
                 pdn_Ministro_Oficiante: "",
-                pdn_Fecha_Presentacion: "01/01/1900",
+                pdn_Fecha_Presentacion: "1900-01-01",
                 sec_Id_Sector: this.infoSesion.sec_Id_Sector,
                 usu_Id_Usuario: "1"
             },
@@ -186,7 +186,7 @@ class PresentacionDeNino extends Component {
     guardarPresentacion = (e) => {
         e.preventDefault();
         let camposAValidados = [
-            { formato: "formatoFecha", campo: "pdn_Fecha_Presentacion", estado: "fechaPresentacionInvalida" },
+            /* { formato: "formatoFecha", campo: "pdn_Fecha_Presentacion", estado: "fechaPresentacionInvalida" }, */
             { formato: "alphaSpaceRequired", campo: "pdn_Ministro_Oficiante", estado: "ministroOficianteInvalido" }
         ];
         camposAValidados.forEach(element => {
@@ -211,7 +211,8 @@ class PresentacionDeNino extends Component {
             !this.state.ministroOficianteInvalido && 
             !this.state.fechaPresentacionInvalida) {
             var info = this.state.currentPresentacion;
-            info.pdn_Fecha_Presentacion = helpers.fnFormatoFecha(this.state.currentPresentacion.pdn_Fecha_Presentacion);
+            /* info.pdn_Fecha_Presentacion = helpers.fnFormatoFecha(this.state.currentPresentacion.pdn_Fecha_Presentacion); */
+            info.pdn_Fecha_Presentacion = this.state.currentPresentacion.pdn_Fecha_Presentacion;
             info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante.toUpperCase();
             try {
                 helpers.authAxios.post(helpers.url_api + "/Presentacion_Nino/", info)
@@ -454,7 +455,7 @@ class PresentacionDeNino extends Component {
                                             <Col sm="8">
                                                 <Input
                                                     name="pdn_Fecha_Presentacion"
-                                                    type="text"
+                                                    type="date"
                                                     value={this.state.currentPresentacion.pdn_Fecha_Presentacion}
                                                     onChange={this.handle_onChange}
                                                     invalid={this.state.fechaPresentacionInvalida}
@@ -583,7 +584,7 @@ class PresentacionDeNino extends Component {
                                             <Col sm="8">
                                                 <Input
                                                     name="pdn_Fecha_Presentacion"
-                                                    type="text"
+                                                    type="date"
                                                     value={this.state.currentPresentacion.pdn_Fecha_Presentacion}
                                                     onChange={this.handle_onChange}
                                                     invalid={this.state.fechaPresentacionInvalida}

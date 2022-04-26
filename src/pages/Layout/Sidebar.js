@@ -165,20 +165,19 @@ class Sidebar extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
-        if (helpers.regex.formatoFecha.test(datos.fechaExcomunion) === false) {
+        /* if (helpers.regex.formatoFecha.test(datos.fechaExcomunion) === false) {
             alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
             return false;
         }
         else {
             var fechaExcomunion = helpers.fnFormatoFecha2(datos.fechaExcomunion);
-        }
-        console.log(fechaExcomunion);
+        } */
         try {
             await helpers.authAxios.post(
                 helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
                 "/" + datos.tipoExcomunion +
                 "/" + datos.excomunionDelito +
-                "/" + fechaExcomunion)
+                "/" + datos.fechaExcomunion)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -226,18 +225,18 @@ class Sidebar extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
-        if (helpers.regex.formatoFecha.test(datos.fechaDefuncion) === false) {
+        /* if (helpers.regex.formatoFecha.test(datos.fechaDefuncion) === false) {
             alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
             return false;
         }
         else {
             var fechaDefuncion = helpers.fnFormatoFecha2(datos.fechaDefuncion);
-        }
+        } */
         try {
             await helpers.authAxios.post(
                 helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
                 "/" + datos.comentarioDefuncion +
-                "/" + fechaDefuncion)
+                "/" + datos.fechaDefuncion)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -902,7 +901,7 @@ class Sidebar extends Component {
                                         </Col>
                                         <Col xs="9">
                                             <Input
-                                                type="text"
+                                                type="date"
                                                 name="fechaExcomunion"
                                                 placeholder='DD/MM/AAAA'
                                                 value={this.state.formBajaBautizadoExcomunion.fechaExcomunion}
@@ -999,7 +998,7 @@ class Sidebar extends Component {
                                         </Col>
                                         <Col xs="9">
                                             <Input
-                                                type="text"
+                                                type="date"
                                                 name="fechaDefuncion"
                                                 placeholder='DD/MM/AAAA'
                                                 value={this.state.formBajaBautizadoDefuncion.fechaDefuncion}
