@@ -15,7 +15,7 @@ import {
 class PersonaForm extends Component {
 
     url = helpers.url_api;
-    fechaNoIngresada = "01/01/1900";
+    fechaNoIngresada = "1900-01-01";
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
@@ -50,7 +50,7 @@ class PersonaForm extends Component {
         }
         this.state = {
             profesiones_oficios: [],
-            infante: false,
+            infante: JSON.parse(localStorage.getItem("nvaAltaBautizado")) ? false : true,
             DatosHogar: {},
             MiembroEsBautizado: false,
             PromesaDelEspitiruSanto: false,
@@ -135,7 +135,6 @@ class PersonaForm extends Component {
                 });
             });
     };
-
 
     fnPromesaDelEspirituSanto = (e) => {
         if (e.target.checked) {
@@ -238,8 +237,8 @@ class PersonaForm extends Component {
             // Obtener primera letra del primer nombre
             var n = per_Nombre.split("")
             // Reformateando fecha
-            var f = per_Fecha_Nacimiento.split("/")
-            var y = f[2].substr(2, 2)
+            var f = per_Fecha_Nacimiento.split("-")
+            var y = f[0].substr(2, 2)
             var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[0]
 
             changeRFCSinHomo(RFCSinHomo)
@@ -279,6 +278,10 @@ class PersonaForm extends Component {
                     this.setState({ infante: true })
                 } else {
                     this.setState({ infante: false })
+                }
+
+                if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false){
+                    this.setState({ infante: true })
                 }
 
                 var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
@@ -403,7 +406,7 @@ class PersonaForm extends Component {
 
         return (
             <React.Fragment>
-                <h2 className="text-info">{tituloAgregarEditar}</h2>
+                {/* <h2 className="text-info">{tituloAgregarEditar}</h2> */}
 
                 <div className="border">
                     <Form onSubmit={enviarInfo} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
@@ -439,8 +442,13 @@ class PersonaForm extends Component {
                                                                 <option value="ADULTO_MUJER">Adulto Mujer</option>
                                                                 <option value="JOVEN_HOMBRE">Joven hombre</option>
                                                                 <option value="JOVEN_MUJER">Joven mujer</option>
-                                                                <option value="NIÑO">Niño</option>
-                                                                <option value="NIÑA">Niña</option>
+                                                                {JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false &&
+                                                                    <React.Fragment>
+                                                                        <option value="NIÑO">Niño</option>
+                                                                        <option value="NIÑA">Niña</option>
+                                                                    </React.Fragment>
+                                                                }
+
                                                             </Input>
                                                         </div>
                                                         {categoriaSeleccionada &&
@@ -455,7 +463,7 @@ class PersonaForm extends Component {
                                                         }
                                                     </div>
                                                 </FormGroup>
-                                                {habilitaPerBautizado &&
+                                                {/* {habilitaPerBautizado &&
                                                     <FormGroup>
                                                         <div className="row">
                                                             <div className="col-sm-3">
@@ -471,7 +479,7 @@ class PersonaForm extends Component {
                                                             </div>
                                                         </div>
                                                     </FormGroup>
-                                                }
+                                                } */}
 
                                                 <FormGroup>
                                                     <div className="row">

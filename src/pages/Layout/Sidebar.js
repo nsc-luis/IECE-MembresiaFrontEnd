@@ -116,8 +116,20 @@ class Sidebar extends Component {
     }
 
     invocaFormularioDePersona = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
         // console.log(localStorage.getItem("idPersona"));
+        localStorage.setItem("nvaAltaBautizado", true);
+        localStorage.setItem("nvaAltaComunion", true);
+        document.location.href = '/RegistroDePersona';
+    }
+
+    invocaFormularioDePersonaNB = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
+        localStorage.setItem("idPersona", this.state.personaSeleccionada);
+        // console.log(localStorage.getItem("idPersona"));
+        localStorage.setItem("nvaAltaBautizado", false);
+        localStorage.setItem("nvaAltaComunion", false);
         document.location.href = '/RegistroDePersona';
     }
 
@@ -151,6 +163,23 @@ class Sidebar extends Component {
                 this.setState({ personas: res.data.personas });
             });
         this.setState({ modalBajaNoBautizadoAlejamiento: !this.state.modalBajaNoBautizadoAlejamiento })
+    }
+
+    // METODO PARA INVOCAR UN FORMULARIO DE PERSONA NUEVO
+    handle_AltaPersonaBautizada = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona Bautizada");
+        localStorage.setItem("idPersona", "0");
+        localStorage.setItem("nvaAltaBautizado", true);
+        localStorage.setItem("nvaAltaComunion", true);
+        document.location.href = "/RegistroDePersona";
+    }
+
+    handle_AltaPersonaNoBautizada = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada");
+        localStorage.setItem("idPersona", "0");
+        localStorage.setItem("nvaAltaBautizado", false);
+        localStorage.setItem("nvaAltaComunion", false);
+        document.location.href = "/RegistroDePersona";
     }
 
     bajaBautizadoExcomunion = async (e) => {
@@ -479,7 +508,7 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#" onClick={helpers.handle_RegistroNvaPersona}>Bautismo</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaBautizada}>Bautismo</Link>
                                         <Link className="collapse-item" to="/AltaRestitucion">Restitución</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilio">Cambio de Domicilio</Link>
                                     </div>
@@ -491,7 +520,7 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#">Nuevo Ingreso</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaNoBautizada}>Nuevo Ingreso</Link>
                                         <Link className="collapse-item" to="#">Reativación</Link>
                                         <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
                                     </div>
@@ -808,7 +837,7 @@ class Sidebar extends Component {
                             <Button
                                 type="button"
                                 color="success"
-                                onClick={this.invocaFormularioDePersona}
+                                onClick={this.invocaFormularioDePersonaNB}
                             >
                                 <span className="fa fa-pencil"></span>Editar
                             </Button>

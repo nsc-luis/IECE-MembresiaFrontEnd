@@ -51,12 +51,12 @@ class RegistroDePersonal extends Component {
                 form: {
                     ...this.state.form,
                     per_Categoria: "0",
-                    per_Bautizado: true,
+                    per_Bautizado: JSON.parse(localStorage.getItem("nvaAltaBautizado")),
                     per_RFC_Sin_Homo: "XAXX010101XXX",
                     per_Estado_Civil: "SOLTERO(A)",
                     per_foto: uuidv4(),
                     per_Activo: 1,
-                    per_En_Comunion: 1,
+                    per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
                     per_Vivo: 1,
                     pro_Id_Profesion_Oficio1: "1",
                     pro_Id_Profesion_Oficio2: "1",
@@ -66,15 +66,15 @@ class RegistroDePersonal extends Component {
                     per_Nombre_Abuela_Paterna: "",
                     per_Nombre_Abuelo_Materno: "",
                     per_Nombre_Abuela_Materna: "",
-                    per_Fecha_Boda_Civil: "01/01/1900",
-                    per_Fecha_Boda_Eclesiastica: "01/01/1900",
+                    per_Fecha_Boda_Civil: "1900-01-01",
+                    per_Fecha_Boda_Eclesiastica: "1900-01-01",
                     per_Num_Acta_Boda_Civil: "",
                     per_Oficialia_Boda_Civil: "",
                     per_Registro_Civil: "",
                     per_Nombre_Conyuge: "",
                     per_Libro_Acta_Boda_Civil: "",
-                    per_Fecha_Bautismo: "01/01/1900",
-                    per_Fecha_Recibio_Espiritu_Santo: "01/01/1900",
+                    per_Fecha_Bautismo: "1900-01-01",
+                    per_Fecha_Recibio_Espiritu_Santo: "1900-01-01",
                     per_Cargos_Desempenados: "",
                     per_Cantidad_Hijos: "0",
                     per_Nombre_Hijos: "",
@@ -94,7 +94,7 @@ class RegistroDePersonal extends Component {
                 } */
             })
         } else {
-            
+
             helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     res.data.per_Fecha_Nacimiento = helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento);
@@ -107,7 +107,7 @@ class RegistroDePersonal extends Component {
                     })
                     localStorage.setItem('estadoCivil', res.data.per_Estado_Civil);
                 })
-                
+
             this.setState({
                 categoriaSeleccionada: true,
                 per_Nombre_NoValido: false,
@@ -157,7 +157,7 @@ class RegistroDePersonal extends Component {
                         habilitaPerBautizado: false,
                         form: {
                             ...this.state.form,
-                            per_Bautizado: false,
+                            // per_Bautizado: false,
                             [e.target.name]: e.target.value.toUpperCase()
                         }
                     });
@@ -193,7 +193,7 @@ class RegistroDePersonal extends Component {
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
-                            per_Bautizado: false,
+                            // per_Bautizado: false,
                             [e.target.name]: e.target.value.toUpperCase()
                         }
                     });
@@ -205,7 +205,7 @@ class RegistroDePersonal extends Component {
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
-                            per_Bautizado: false,
+                            // per_Bautizado: false,
                             [e.target.name]: e.target.value.toUpperCase()
                         }
                     });
@@ -277,7 +277,7 @@ class RegistroDePersonal extends Component {
                 });
             }
         }
-        if (e.target.name === "per_Fecha_Nacimiento") {
+        /* if (e.target.name === "per_Fecha_Nacimiento") {
             if (!this.const_regex.formatoFecha.test(e.target.value)) {
                 this.setState({ per_Fecha_Nacimiento_NoValido: true });
             } else {
@@ -285,6 +285,16 @@ class RegistroDePersonal extends Component {
                     per_Fecha_Nacimiento_NoValido: false
                 });
 
+            }
+        } */
+        if (e.target.name === "per_Fecha_Nacimiento") {
+            if (e.target.value === '') {
+                this.setState({ per_Fecha_Nacimiento_NoValido: true });
+            }
+            else {
+                this.setState({
+                    per_Fecha_Nacimiento_NoValido: false
+                });
             }
         }
     }
