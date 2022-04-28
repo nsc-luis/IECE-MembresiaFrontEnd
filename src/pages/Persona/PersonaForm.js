@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import '../../assets/css/index.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
@@ -27,36 +27,15 @@ class PersonaForm extends Component {
 
     constructor(props) {
         super(props)
-        let CasadoDivorciadoViudo = false
-        let ConcubinatoSolteroConHijos = false
-        let soltero = false
-        if (localStorage.getItem('estadoCivil') === 'CASADO(A)'
-            || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
-            || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
-            CasadoDivorciadoViudo = true
-            ConcubinatoSolteroConHijos = false
-            soltero = false
-        }
-        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
-            || localStorage.getItem('estadoCivil') === 'CONCUBINATO') {
-            CasadoDivorciadoViudo = false
-            ConcubinatoSolteroConHijos = true
-            soltero = false
-        }
-        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A)') {
-            CasadoDivorciadoViudo = false
-            ConcubinatoSolteroConHijos = false
-            soltero = true
-        }
         this.state = {
             profesiones_oficios: [],
             infante: JSON.parse(localStorage.getItem("nvaAltaBautizado")) ? false : true,
             DatosHogar: {},
             MiembroEsBautizado: false,
             PromesaDelEspitiruSanto: false,
-            CasadoDivorciadoViudo: CasadoDivorciadoViudo,
-            ConcubinatoSolteroConHijos: ConcubinatoSolteroConHijos,
-            soltero: soltero,
+            CasadoDivorciadoViudo: false,
+            ConcubinatoSolteroConHijos: false,
+            soltero: false,
             datosPersonaEncontrada: {},
             RFCSinHomoclave: "",
             distritoSeleccionado: "0",
@@ -91,6 +70,35 @@ class PersonaForm extends Component {
         return <Redirect to='/ListaDePersonal' />;
     }
 
+    actualizaEstadoCivil = () => {
+        let cdv = false
+        let csh = false
+        let s = false
+        if (localStorage.getItem('estadoCivil') === 'CASADO(A)'
+            || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
+            || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
+            cdv = true
+            csh = true
+            s = false
+        }
+        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
+            || localStorage.getItem('estadoCivil') === 'CONCUBINATO') {
+            cdv = false
+            csh = true
+            s = false
+        }
+        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A)') {
+            cdv = false
+            csh = false
+            s = true
+        }
+        this.setState({
+            CasadoDivorciadoViudo: cdv,
+            ConcubinatoSolteroConHijos: csh,
+            soltero: s
+        })
+    }
+
     componentDidMount() {
         this.setState({
             hogar: {
@@ -123,6 +131,9 @@ class PersonaForm extends Component {
                     })
                     this.fnGetDatosDelHogar(res.data.hd_Id_Hogar)
                 })
+            setInterval(() => {
+                this.actualizaEstadoCivil();
+            }, 500);
         }
     };
 
@@ -221,6 +232,16 @@ class PersonaForm extends Component {
             fnEditaPersona
         } = this.props
 
+        /* const [CasadoDivorciadoViudo, setCasadoDivorciadoViudo] = useState()
+        const [ConcubinatoSolteroConHijos, setConcubinatoSolteroConHijos] = useState()
+        const [soltero, setSoltero] = useState()
+
+        useEffect(()=>{
+            setCasadoDivorciadoViudo(this.CasadoDivorciadoViudo)
+            setConcubinatoSolteroConHijos(this.ConcubinatoSolteroConHijos)
+            setSoltero(this.soltero)
+        }, []); */
+
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
 
@@ -280,7 +301,7 @@ class PersonaForm extends Component {
                     this.setState({ infante: false })
                 }
 
-                if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false){
+                if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false) {
                     this.setState({ infante: true })
                 }
 

@@ -334,6 +334,30 @@ class ListaDePersonal extends Component {
             let foo = doc.getTextWidth(texto);
             return doc.line(bar, y, bar + foo, y);
         }
+        var txt = "";
+        var i = 0;
+
+        // FUNCION PARA DIVIDIR TEXTBOX LARGOS
+        const dividirTextbox = (limitePrimeraLinea, texto) => {
+            let info = {
+                primerLinea: "",
+                textoTruncado: [],
+                totalDeLineas: 0
+            }
+            info.primerLinea = texto.substring(0, limitePrimeraLinea)
+            let restoDelTexto = texto.substring(limitePrimeraLinea, texto.length)
+            let siguientesLineas = restoDelTexto.match(/.{1,100}/g);
+            info.totalDeLineas = siguientesLineas.length;
+            if (info.totalDeLineas > 3) {
+                for (let i = 0; i < 3; i++) {
+                    info.textoTruncado.push(siguientesLineas[i]);
+                }
+            }
+            else {
+                info.textoTruncado = siguientesLineas;
+            }
+            return info
+        }
 
         // ELIMINA TEXTO null
         Object.keys(info.persona).forEach((key) => {
@@ -425,31 +449,36 @@ class ListaDePersonal extends Component {
         drawUnderlineTotext('Bajo la imposicion de manos del presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 136);
 
         let line = 142
-        let cargosDesempenados = info.persona.per_Cargos_Desempenados.match(/.{1,65}/g);
-        if (cargosDesempenados !== null) {
-            doc.text(`14.- Puestos desempeñados en la IECE: ${cargosDesempenados[0]}`, 13, line);
-            drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, `${cargosDesempenados[0]}`, line);
-            for (let i = 1; i < cargosDesempenados.length; i++) {
+        txt = dividirTextbox(67, info.persona.per_Cargos_Desempenados);
+        if (txt !== null) {
+            doc.text(`14.- Puestos desempeñados en la IECE: ${txt.primerLinea}`, 13, line);
+            drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, `${txt.primerLinea}`, line);
+            i = 0;
+            for (let i = 0; i < txt.textoTruncado.length; i++) {
                 line = line + 6;
-                doc.text(cargosDesempenados[i], 72, line);
-                drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, cargosDesempenados[i], line);
+                doc.text(txt.textoTruncado[i], 13, line);
+                drawUnderlineTotext('', 13, txt.textoTruncado[i], line);
             }
-        } else {
-            doc.text(`14.- Puestos desempeñados en la IECE: `, 13, line);
+            if (txt.totalDeLineas > 3) {
+                line = line + 6;
+                doc.text('. . . . . . . . . .', 13, line);
+            }
         }
 
         line = line + 6;
-        let cambiosDeDomicilio = info.persona.per_Cambios_De_Domicilio.match(/.{1,75}/g);
-        if (cambiosDeDomicilio !== null) {
-            doc.text(`15.- Cambios de domicilio: ${cambiosDeDomicilio[0]}`, 13, line);
-            drawUnderlineTotext('15.- Cambios de domicilio: ', 13, cambiosDeDomicilio[0], line)
-            for (let i = 1; i < cambiosDeDomicilio.length; i++) {
+        txt = dividirTextbox(79, info.persona.per_Cambios_De_Domicilio);
+        if (txt !== null) {
+            doc.text(`15.- Cambios de domicilio: ${txt.primerLinea}`, 13, line);
+            drawUnderlineTotext('15.- Cambios de domicilio: ', 13, `${txt.primerLinea}`, line);
+            for (let i = 0; i < txt.textoTruncado.length; i++) {
                 line = line + 6;
-                doc.text(cambiosDeDomicilio[i], 50, line);
-                drawUnderlineTotext('15.- Cambios de domicilio: ', 13, cambiosDeDomicilio[i], line)
+                doc.text(txt.textoTruncado[i], 13, line);
+                drawUnderlineTotext('', 13, txt.textoTruncado[i], line);
             }
-        } else {
-            doc.text(`15.- Cambios de domicilio: `, 13, line);
+            if (txt.totalDeLineas > 3) {
+                line = line + 6;
+                doc.text('. . . . . . . . . .', 13, line);
+            }
         }
 
         line = line + 6;

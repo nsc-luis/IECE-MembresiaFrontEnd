@@ -15,6 +15,11 @@ class RegistroDePersonal extends Component {
         if (!localStorage.getItem('token')) {
             document.location.href = '/';
         }
+        if (!localStorage.getItem("idPersona")) {
+            localStorage.setItem("idPersona", "0");
+            localStorage.setItem("nvaAltaBautizado", "false");
+            localStorage.setItem("nvaAltaComunion", "false");
+        }
 
         this.state = {
             form: {},
