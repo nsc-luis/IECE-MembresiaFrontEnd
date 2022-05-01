@@ -26,7 +26,8 @@ class PresentacionDeNino extends Component {
             fechaPresentacionInvalida: false,
             ministroOficianteInvalido: false,
             modalShow: false,
-            mensajeDelProceso: ""
+            mensajeDelProceso: "",
+            ministros: []
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
         this.msjNinoSelectInvalido = "Debe seleccionar niño(a) para continuar.";
@@ -45,6 +46,7 @@ class PresentacionDeNino extends Component {
         });
         this.getListaDePresentaciones();
         this.getListaDeNinos();
+        this.getMinistrosAncianoActivo();
     }
 
     getListaDePresentaciones = async () => {
@@ -65,6 +67,13 @@ class PresentacionDeNino extends Component {
                     status: res.data.status
                 })
             })
+    }
+
+    getMinistrosAncianoActivo = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/PersonalMinisterial/GetMinistrosAncianoActivoByDistrito/" + localStorage.getItem("dto"))
+            .then(res => {
+                this.setState({ ministros: res.data.ministros })
+            });
     }
 
     handle_modalEliminaPresentacion = (info) => {
@@ -208,7 +217,7 @@ class PresentacionDeNino extends Component {
         }
 
         if (this.state.bolAgregarPresentacion &&
-            !this.state.ministroOficianteInvalido && 
+            !this.state.ministroOficianteInvalido &&
             !this.state.fechaPresentacionInvalida) {
             var info = this.state.currentPresentacion;
             /* info.pdn_Fecha_Presentacion = helpers.fnFormatoFecha(this.state.currentPresentacion.pdn_Fecha_Presentacion); */
@@ -298,9 +307,9 @@ class PresentacionDeNino extends Component {
             return (
                 <Layout>
                     <Container>
-                        <Row>
+                        {/* <Row>
                             <h1 className="text-info">Presentaciones de niños</h1>
-                        </Row>
+                        </Row> */}
                         <Row>
                             <Col sm="8"></Col>
                             <Col sm="4">
@@ -437,11 +446,22 @@ class PresentacionDeNino extends Component {
                                             <Col sm="8">
                                                 <Input
                                                     name="pdn_Ministro_Oficiante"
-                                                    type="text"
+                                                    type="select"
                                                     value={this.state.currentPresentacion.pdn_Ministro_Oficiante}
                                                     onChange={this.handle_onChange}
                                                     invalid={this.state.ministroOficianteInvalido}
-                                                />
+                                                >
+                                                    <option value='0'>Selecciona una ministro</option>
+                                                    {
+                                                        this.state.ministros.map(ministro => {
+                                                            return (
+                                                                <React.Fragment key={ministro.pem_Id_Ministro}>
+                                                                    <option value={ministro.pem_Id_Ministro}>{ministro.pem_Nombre}</option>
+                                                                </React.Fragment>
+                                                            )
+                                                        })
+                                                    }
+                                                </Input>
                                                 <FormFeedback>{helpers.msjRegexInvalido.alphaSpaceRequired}</FormFeedback>
                                             </Col>
                                         </Row>
@@ -492,9 +512,9 @@ class PresentacionDeNino extends Component {
             return (
                 <Layout>
                     <Container>
-                        <Row>
+                        {/* <Row>
                             <h1 className="text-info">Presentaciones de niños</h1>
-                        </Row>
+                        </Row> */}
                         <Row>
                             <Button
                                 onClick={this.handle_modalAgregarPresentacion}
@@ -529,34 +549,34 @@ class PresentacionDeNino extends Component {
                                         </FormGroup>
                                     }
                                     {this.state.bolAgregarPresentacion === true && */}
-                                        <FormGroup>
-                                            <Row>
-                                                <Col sm="4">
-                                                    <Label>Niño(a):</Label>
-                                                </Col>
-                                                <Col sm="8">
-                                                    <Input
-                                                        name="per_Id_Persona"
-                                                        type="select"
-                                                        value={this.state.currentPresentacion.per_Id_Persona}
-                                                        onChange={this.handle_onChange}
-                                                        invalid={this.state.ninoSelectInvalido}
-                                                    >
-                                                        <option value="0">Selecciona un registro</option>
-                                                        {
-                                                            this.state.listaDeNinos.map(nino => {
-                                                                return (
-                                                                    <React.Fragment key={nino.per_Id_Persona}>
-                                                                        <option value={nino.per_Id_Persona}> {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno} </option>
-                                                                    </React.Fragment>
-                                                                )
-                                                            })
-                                                        }
-                                                    </Input>
-                                                    <FormFeedback>{this.state.msjNinoSelectInvalido}</FormFeedback>
-                                                </Col>
-                                            </Row>
-                                        </FormGroup>
+                                    <FormGroup>
+                                        <Row>
+                                            <Col sm="4">
+                                                <Label>Niño(a):</Label>
+                                            </Col>
+                                            <Col sm="8">
+                                                <Input
+                                                    name="per_Id_Persona"
+                                                    type="select"
+                                                    value={this.state.currentPresentacion.per_Id_Persona}
+                                                    onChange={this.handle_onChange}
+                                                    invalid={this.state.ninoSelectInvalido}
+                                                >
+                                                    <option value="0">Selecciona un registro</option>
+                                                    {
+                                                        this.state.listaDeNinos.map(nino => {
+                                                            return (
+                                                                <React.Fragment key={nino.per_Id_Persona}>
+                                                                    <option value={nino.per_Id_Persona}> {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno} </option>
+                                                                </React.Fragment>
+                                                            )
+                                                        })
+                                                    }
+                                                </Input>
+                                                <FormFeedback>{this.state.msjNinoSelectInvalido}</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
                                     {/* } */}
                                     <FormGroup>
                                         <Row>
@@ -566,11 +586,22 @@ class PresentacionDeNino extends Component {
                                             <Col sm="8">
                                                 <Input
                                                     name="pdn_Ministro_Oficiante"
-                                                    type="text"
+                                                    type="select"
                                                     value={this.state.currentPresentacion.pdn_Ministro_Oficiante}
                                                     onChange={this.handle_onChange}
                                                     invalid={this.state.ministroOficianteInvalido}
-                                                />
+                                                >
+                                                    <option value='0'>Selecciona una ministro</option>
+                                                    {
+                                                        this.state.ministros.map(ministro => {
+                                                            return (
+                                                                <React.Fragment key={ministro.pem_Id_Ministro}>
+                                                                    <option value={ministro.pem_Id_Ministro}>{ministro.pem_Nombre}</option>
+                                                                </React.Fragment>
+                                                            )
+                                                        })
+                                                    }
+                                                </Input>
                                                 <FormFeedback>{helpers.msjRegexInvalido.alphaSpaceRequired}</FormFeedback>
                                             </Col>
                                         </Row>

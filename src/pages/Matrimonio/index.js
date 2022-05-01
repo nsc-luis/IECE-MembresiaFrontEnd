@@ -117,9 +117,9 @@ class Matrimonio extends Component {
                     <Container>
                         {!this.state.enableFrmRegistroMatLegal &&
                             <React.Fragment>
-                                <Row>
+                                {/* <Row>
                                     <h1 className="text-info">Matrimonios y legalizaciones</h1>
-                                </Row>
+                                </Row> */}
                                 <Row>
                                     <Col sm="8"></Col>
                                     <Col sm="4">
@@ -226,9 +226,9 @@ class Matrimonio extends Component {
                     <Container>
                         {!this.state.enableFrmRegistroMatLegal &&
                             <React.Fragment>
-                                <Row>
+                                {/* <Row>
                                     <h1 className="text-info">Matrimonios y legalizaciones</h1>
-                                </Row>
+                                </Row> */}
                                 <Row>
                                     <Col sm="8"></Col>
                                     <Col sm="4">

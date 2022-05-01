@@ -324,10 +324,10 @@ class FrmMatrimonioLegalizacion extends Component {
                                     <Row>
                                         <Col xs="6">
                                             <Card>
-                                                <CardHeader>
+                                                <CardHeader className='cardTituloContrayenteHombre'>
                                                     Contrayente hombre
                                                 </CardHeader>
-                                                <CardBody>
+                                                <CardBody className='cardBodyContrayenteHombre'>
                                                     <FormGroup>
                                                         <Row>
                                                             <Col xs="3">
@@ -390,10 +390,10 @@ class FrmMatrimonioLegalizacion extends Component {
                                         </Col>
                                         <Col xs="6">
                                             <Card>
-                                                <CardHeader>
+                                                <CardHeader className='cardTituloContrayenteMujer'>
                                                     Contrayente mujer
                                                 </CardHeader>
-                                                <CardBody>
+                                                <CardBody className='cardBodyContrayenteMujer'>
                                                     <FormGroup>
                                                         <Row>
                                                             <Col xs="3">

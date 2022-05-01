@@ -641,7 +641,10 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Matrimonios */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="Matrimonio">
+                        <Link className="nav-link" 
+                            to="/Matrimonio"
+                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
+                        >
                             <i className="fas fa-fw fa-user-friends"></i>
                             <span>Matrimonio / Legalización</span>
                         </Link>
@@ -649,9 +652,12 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Presentaciones  */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="PresentacionDeNino">
+                        <Link className="nav-link" 
+                            to="/PresentacionDeNino"
+                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estádisticos', 'Presentación de niños')}
+                        >
                             <i className="fas fa-fw fa-baby"></i>
-                            <span>Presentacion de niños</span>
+                            <span>Presentación de niños</span>
                         </Link>
                     </li>
 
