@@ -598,8 +598,8 @@ class Sidebar extends Component {
                         <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item text-wrap" to="#">Reporte de Membresia Actual</Link>
-                                <Link className="collapse-item text-wrap" to="#">Lista de Personal Bautizado</Link>
+                                <Link className="collapse-item text-wrap" to="/ResumenMembresia">Reporte de Membresia Actual</Link>
+                                <Link className="collapse-item text-wrap" to="/ReportePersonalBautizado">Lista de Personal Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="#">Lista de Personal No Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="/RptListaDeHogares">Lista de hogares</Link>
                                 <Link className="collapse-item text-wrap" to="#">Lista por Profesiones/Oficios</Link>
