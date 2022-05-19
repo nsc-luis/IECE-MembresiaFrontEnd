@@ -22,8 +22,10 @@ class Sidebar extends Component {
             modalShow: false,
             modalBajaBautizadoDefuncion: false,
             formBajaBautizadoDefuncion: {},
-            modalBajaNoBautizadoDefuncionAlejamiento: false,
-            formBajaNoBautizadoDefuncionAlejamiento: {}
+            modalBajaNoBautizadoDefuncion: false,
+            modalBajaNoBautizadoAlejamiento: false,
+            formBajaNoBautizadoDefuncion: {},
+            formBajaNoBautizadoAlejamiento: {}
         }
     }
 
@@ -36,17 +38,15 @@ class Sidebar extends Component {
                 excomunionDelito: '',
                 fechaExcomunion: '01/01/1900'
             },
-            formBajaNoBautizadoDefuncionAlejamiento: {
-                ...this.state.formBajaNoBautizadoDefuncionAlejamiento,
+            formBajaNoBautizadoDefuncion: {
+                ...this.state.formBajaNoBautizadoDefuncion,
                 personaSeleccionada: '0',
-                codigoTransaccion: '0',
                 comentario: '',
                 fechaTransaccion: '01/01/1900'
             },
-            formBajaNoBautizadoDefuncionAlejamiento: {
-                ...this.state.bajaNoBautizadoDefuncion,
+            formBajaNoBautizadoAlejamiento: {
+                ...this.state.formBajaNoBautizadoAlejamiento,
                 personaSeleccionada: '0',
-                comentario: '',
                 codigoTransaccion: '0',
                 fechaTransaccion: '01/01/1900'
             }
@@ -71,10 +71,19 @@ class Sidebar extends Component {
         })
     }
 
-    onChangeBajaNoBautizadoDefuncionAlejamiento = (e) => {
+    onChangeBajaNoBautizadoDefuncion = (e) => {
         this.setState({
-            formBajaNoBautizadoDefuncionAlejamiento: {
-                ...this.state.formBajaNoBautizadoDefuncionAlejamiento,
+            formBajaNoBautizadoDefuncion: {
+                ...this.state.formBajaNoBautizadoDefuncion,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
+        })
+    }
+
+    onChangeBajaNoBautizadoAlejamiento = (e) => {
+        this.setState({
+            formBajaNoBautizadoAlejamiento: {
+                ...this.state.formBajaNoBautizadoAlejamiento,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
@@ -107,8 +116,20 @@ class Sidebar extends Component {
     }
 
     invocaFormularioDePersona = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
         // console.log(localStorage.getItem("idPersona"));
+        localStorage.setItem("nvaAltaBautizado", true);
+        localStorage.setItem("nvaAltaComunion", true);
+        document.location.href = '/RegistroDePersona';
+    }
+
+    invocaFormularioDePersonaNB = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
+        localStorage.setItem("idPersona", this.state.personaSeleccionada);
+        // console.log(localStorage.getItem("idPersona"));
+        localStorage.setItem("nvaAltaBautizado", false);
+        localStorage.setItem("nvaAltaComunion", false);
         document.location.href = '/RegistroDePersona';
     }
 
@@ -128,12 +149,37 @@ class Sidebar extends Component {
         this.setState({ modalBajaBautizadoDefuncion: !this.state.modalBajaBautizadoDefuncion })
     }
 
-    openModalBajaNoBautizadoDefuncionAlejamiento = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosDefuncionAlejamientoBySector/" + localStorage.getItem('sector'))
+    openModalBajaNoBautizadoDefuncion = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosDefuncionBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas });
             });
-        this.setState({ modalBajaNoBautizadoDefuncionAlejamiento: !this.state.modalBajaNoBautizadoDefuncionAlejamiento })
+        this.setState({ modalBajaNoBautizadoDefuncion: !this.state.modalBajaNoBautizadoDefuncion })
+    }
+
+    openModalBajaNoBautizadoAlejamiento = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalBajaNoBautizadoAlejamiento: !this.state.modalBajaNoBautizadoAlejamiento })
+    }
+
+    // METODO PARA INVOCAR UN FORMULARIO DE PERSONA NUEVO
+    handle_AltaPersonaBautizada = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona Bautizada");
+        localStorage.setItem("idPersona", "0");
+        localStorage.setItem("nvaAltaBautizado", true);
+        localStorage.setItem("nvaAltaComunion", true);
+        document.location.href = "/RegistroDePersona";
+    }
+
+    handle_AltaPersonaNoBautizada = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada");
+        localStorage.setItem("idPersona", "0");
+        localStorage.setItem("nvaAltaBautizado", false);
+        localStorage.setItem("nvaAltaComunion", false);
+        document.location.href = "/RegistroDePersona";
     }
 
     bajaBautizadoExcomunion = async (e) => {
@@ -148,20 +194,19 @@ class Sidebar extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
-        if (helpers.regex.formatoFecha.test(datos.fechaExcomunion) === false) {
+        /* if (helpers.regex.formatoFecha.test(datos.fechaExcomunion) === false) {
             alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
             return false;
         }
         else {
             var fechaExcomunion = helpers.fnFormatoFecha2(datos.fechaExcomunion);
-        }
-        console.log(fechaExcomunion);
+        } */
         try {
             await helpers.authAxios.post(
                 helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
                 "/" + datos.tipoExcomunion +
                 "/" + datos.excomunionDelito +
-                "/" + fechaExcomunion)
+                "/" + datos.fechaExcomunion)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -209,18 +254,18 @@ class Sidebar extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
-        if (helpers.regex.formatoFecha.test(datos.fechaDefuncion) === false) {
+        /* if (helpers.regex.formatoFecha.test(datos.fechaDefuncion) === false) {
             alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
             return false;
         }
         else {
             var fechaDefuncion = helpers.fnFormatoFecha2(datos.fechaDefuncion);
-        }
+        } */
         try {
             await helpers.authAxios.post(
                 helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
                 "/" + datos.comentarioDefuncion +
-                "/" + fechaDefuncion)
+                "/" + datos.fechaDefuncion)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -257,30 +302,72 @@ class Sidebar extends Component {
         }
     }
 
-    bajaNoBautizadoDefuncionAlejamiento = async (e) => {
+    bajaNoBautizadoDefuncion = async (e) => {
         e.preventDefault();
-        var datos = this.state.formBajaNoBautizadoDefuncionAlejamiento;
+        var datos = this.state.formBajaNoBautizadoDefuncion;
 
         if (datos.personaSeleccionada === '0'
-            || datos.codigoTransaccion === '0'
             || datos.fechaTransaccion === ''
             || datos.fechaTransaccion === '01/01/1900') {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
-        if (helpers.regex.formatoFecha.test(datos.fechaTransaccion) === false) {
-            alert('Error!\nEl formato de fecha es incorrecto; debe ingresar de acuerdo al formato: DD/MM/AAAA.');
-            return false;
+        try {
+            await helpers.authAxios.post(
+                helpers.url_api + "/Persona/BajaNoBautizadoDefuncion/" + datos.personaSeleccionada +
+                "/" + datos.comentario +
+                "/" + datos.fechaTransaccion)
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
-        else {
-            var fechaTransaccion = helpers.fnFormatoFecha2(datos.fechaTransaccion);
+    }
+
+    bajaNoBautizadoAlejamiento = async (e) => {
+        e.preventDefault();
+        var datos = this.state.formBajaNoBautizadoAlejamiento;
+
+        if (datos.personaSeleccionada === '0'
+            || datos.fechaTransaccion === ''
+            || datos.fechaTransaccion === '01/01/1900') {
+            alert('Error!\nDebe ingresar todos los datos requeridos.');
+            return false;
         }
         try {
             await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaNoBautizadoDefuncionAlejamiento/" + datos.personaSeleccionada +
+                helpers.url_api + "/Persona/BajaNoBautizadoAlejamiento/" + datos.personaSeleccionada +
                 "/" + datos.comentario +
-                "/" + datos.codigoTransaccion +
-                "/" + fechaTransaccion)
+                "/" + datos.fechaTransaccion)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -421,7 +508,7 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#" onClick={helpers.handle_RegistroNvaPersona}>Bautismo</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaBautizada}>Bautismo</Link>
                                         <Link className="collapse-item" to="/AltaRestitucion">Restitución</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilio">Cambio de Domicilio</Link>
                                     </div>
@@ -485,8 +572,17 @@ class Sidebar extends Component {
                                         <Link 
                                             className="collapse-item" 
                                             to="#"
-                                            onClick={this.openModalBajaNoBautizadoDefuncionAlejamiento}
-                                        >Defunción/Alejamiento</Link>
+                                            onClick={this.openModalBajaNoBautizadoDefuncion}
+                                        >
+                                            Defunción
+                                        </Link>
+                                        <Link 
+                                            className="collapse-item" 
+                                            to="#"
+                                            onClick={this.openModalBajaNoBautizadoAlejamiento}
+                                        >
+                                            Alejamiento
+                                        </Link>
                                         <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -545,7 +641,10 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Matrimonios */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="Matrimonio">
+                        <Link className="nav-link" 
+                            to="/Matrimonio"
+                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
+                        >
                             <i className="fas fa-fw fa-user-friends"></i>
                             <span>Matrimonio / Legalización</span>
                         </Link>
@@ -553,9 +652,12 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Presentaciones  */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="PresentacionDeNino">
+                        <Link className="nav-link" 
+                            to="/PresentacionDeNino"
+                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estádisticos', 'Presentación de niños')}
+                        >
                             <i className="fas fa-fw fa-baby"></i>
-                            <span>Presentacion de niños</span>
+                            <span>Presentación de niños</span>
                         </Link>
                     </li>
 
@@ -741,7 +843,7 @@ class Sidebar extends Component {
                             <Button
                                 type="button"
                                 color="success"
-                                onClick={this.invocaFormularioDePersona}
+                                onClick={this.invocaFormularioDePersonaNB}
                             >
                                 <span className="fa fa-pencil"></span>Editar
                             </Button>
@@ -834,7 +936,7 @@ class Sidebar extends Component {
                                         </Col>
                                         <Col xs="9">
                                             <Input
-                                                type="text"
+                                                type="date"
                                                 name="fechaExcomunion"
                                                 placeholder='DD/MM/AAAA'
                                                 value={this.state.formBajaBautizadoExcomunion.fechaExcomunion}
@@ -931,7 +1033,7 @@ class Sidebar extends Component {
                                         </Col>
                                         <Col xs="9">
                                             <Input
-                                                type="text"
+                                                type="date"
                                                 name="fechaDefuncion"
                                                 placeholder='DD/MM/AAAA'
                                                 value={this.state.formBajaBautizadoDefuncion.fechaDefuncion}
@@ -962,12 +1064,12 @@ class Sidebar extends Component {
                     </Card>
                 </Modal>
 
-                {/* MODAL BAJA/BAUTIZADO/DEFUNCION */}
-                <Modal isOpen={this.state.modalBajaNoBautizadoDefuncionAlejamiento} size="lg">
+                {/* MODAL BAJA/NOBAUTIZADO/DEFUNCION */}
+                <Modal isOpen={this.state.modalBajaNoBautizadoDefuncion} size="lg">
                     <Card>
-                        <Form onSubmit={this.bajaNoBautizadoDefuncionAlejamiento}>
+                        <Form onSubmit={this.bajaNoBautizadoDefuncion}>
                             <CardHeader>
-                                <CardTitle><h3>Seleccione una persona.</h3></CardTitle>
+                                <CardTitle><h3>Baja de persona No Bautizada por defunción.</h3></CardTitle>
                             </CardHeader>
                             <CardBody>
                                 <FormGroup>
@@ -987,9 +1089,9 @@ class Sidebar extends Component {
                                         <Col xs="9">
                                             <Input
                                                 type="select"
-                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.personaSeleccionada}
+                                                value={this.state.formBajaNoBautizadoDefuncion.personaSeleccionada}
                                                 name="personaSeleccionada"
-                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                                onChange={this.onChangeBajaNoBautizadoDefuncion}
                                             >
                                                 <option value="0">Selecciona una persona</option>
                                                 {this.state.personas.map(persona => {
@@ -1008,18 +1110,95 @@ class Sidebar extends Component {
                                 <FormGroup>
                                     <Row>
                                         <Col xs="3">
-                                            * Defuncion / Alejamiento:
+                                            Comentario:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                name="comentario"
+                                                value={this.state.formBajaNoBautizadoDefuncion.comentario}
+                                                onChange={this.onChangeBajaNoBautizadoDefuncion}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Fecha de transacción:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="date"
+                                                name="fechaTransaccion"
+                                                placeholder='DD/MM/AAAA'
+                                                value={this.state.formBajaNoBautizadoDefuncion.fechaTransaccion}
+                                                onChange={this.onChangeBajaNoBautizadoDefuncion}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+
+                            </CardBody>
+                            <CardFooter>
+                                <Button
+                                    type="button"
+                                    onClick={this.openModalBajaNoBautizadoDefuncion}
+                                    color="secondary"
+                                    className="entreBotones"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    color="success"
+                                >
+                                    <span className="fa fa-pencil"></span>Proceder
+                                </Button>
+                            </CardFooter>
+                        </Form>
+                    </Card>
+                </Modal>
+
+                {/* MODAL BAJA/NOBAUTIZADO/ALEJAMIENTO */}
+                <Modal isOpen={this.state.modalBajaNoBautizadoAlejamiento} size="lg">
+                    <Card>
+                        <Form onSubmit={this.bajaNoBautizadoAlejamiento}>
+                            <CardHeader>
+                                <CardTitle><h3>Baja de persona No Bautizada por alejamiento.</h3></CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="12">
+                                            <Alert color="warning">
+                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                            </Alert>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * PERSONA:
                                         </Col>
                                         <Col xs="9">
                                             <Input
                                                 type="select"
-                                                name="codigoTransaccion"
-                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.codigoTransaccion}
-                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                                value={this.state.formBajaNoBautizadoAlejamiento.personaSeleccionada}
+                                                name="personaSeleccionada"
+                                                onChange={this.onChangeBajaNoBautizadoAlejamiento}
                                             >
-                                                <option value='0'>Seleccione una opcion</option>
-                                                <option value='12101'>Defuncion</option>
-                                                <option value='12102'>Alejamiento</option>
+                                                <option value="0">Selecciona una persona</option>
+                                                {this.state.personas.map(persona => {
+                                                    return (
+                                                        <React.Fragment key={persona.per_Id_Persona}>
+                                                            <option value={persona.per_Id_Persona} >
+                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            </option>
+                                                        </React.Fragment>
+                                                    )
+                                                })}
                                             </Input>
                                         </Col>
                                     </Row>
@@ -1033,8 +1212,8 @@ class Sidebar extends Component {
                                             <Input
                                                 type="text"
                                                 name="comentario"
-                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.comentario}
-                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                                value={this.state.formBajaNoBautizadoAlejamiento.comentario}
+                                                onChange={this.onChangeBajaNoBautizadoAlejamiento}
                                             />
                                         </Col>
                                     </Row>
@@ -1046,11 +1225,11 @@ class Sidebar extends Component {
                                         </Col>
                                         <Col xs="9">
                                             <Input
-                                                type="text"
+                                                type="date"
                                                 name="fechaTransaccion"
                                                 placeholder='DD/MM/AAAA'
-                                                value={this.state.formBajaNoBautizadoDefuncionAlejamiento.fechaTransaccion}
-                                                onChange={this.onChangeBajaNoBautizadoDefuncionAlejamiento}
+                                                value={this.state.formBajaNoBautizadoAlejamiento.fechaTransaccion}
+                                                onChange={this.onChangeBajaNoBautizadoAlejamiento}
                                             />
                                         </Col>
                                     </Row>
@@ -1060,7 +1239,7 @@ class Sidebar extends Component {
                             <CardFooter>
                                 <Button
                                     type="button"
-                                    onClick={this.openModalBajaNoBautizadoDefuncionAlejamiento}
+                                    onClick={this.openModalBajaNoBautizadoAlejamiento}
                                     color="secondary"
                                     className="entreBotones"
                                 >

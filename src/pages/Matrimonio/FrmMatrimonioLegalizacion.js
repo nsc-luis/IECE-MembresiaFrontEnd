@@ -38,12 +38,12 @@ class FrmMatrimonioLegalizacion extends Component {
                 per_Id_Persona_Mujer: "",
                 mat_Nombre_Contrayente_Hombre_Foraneo: "",
                 mat_Nombre_Contrayente_Mujer_Foraneo: "",
-                mat_Fecha_Boda_Civil: "",
+                mat_Fecha_Boda_Civil: "1900-01-01",
                 mat_Numero_Acta: "",
                 mat_Libro_Acta: "",
                 mat_Oficialia: "",
                 mat_Registro_Civil: "",
-                mat_Fecha_Boda_Eclesiastica: "",
+                mat_Fecha_Boda_Eclesiastica: "1900-01-01",
                 mat_Cantidad_Hijos: "",
                 mat_Nombre_Hijos: "",
                 dis_Id_Distrito: this.infoSesion.dis_Id_Distrito,
@@ -60,12 +60,12 @@ class FrmMatrimonioLegalizacion extends Component {
                     per_Id_Persona_Mujer: "0",
                     mat_Nombre_Contrayente_Hombre_Foraneo: "",
                     mat_Nombre_Contrayente_Mujer_Foraneo: "",
-                    mat_Fecha_Boda_Civil: "",
+                    mat_Fecha_Boda_Civil: "1900-01-01",
                     mat_Numero_Acta: "",
                     mat_Libro_Acta: "",
                     mat_Oficialia: "",
                     mat_Registro_Civil: "",
-                    mat_Fecha_Boda_Eclesiastica: "",
+                    mat_Fecha_Boda_Eclesiastica: "1900-01-01",
                     mat_Cantidad_Hijos: "",
                     mat_Nombre_Hijos: "",
                     dis_Id_Distrito: this.infoSesion.dis_Id_Distrito,
@@ -77,6 +77,8 @@ class FrmMatrimonioLegalizacion extends Component {
         else {
             helpers.authAxios.get(helpers.url_api + "/Matrimonio_Legalizacion/" + this.props.mat_Id_MatrimonioLegalizacion)
             .then(res => {
+                res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil);
+                res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica)
                 this.setState({ 
                     matLegal: res.data.matrimonioLegalizacion,
                     bolForaneoHombre: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Hombre_Foraneo !== "" ? true : false,
@@ -322,10 +324,10 @@ class FrmMatrimonioLegalizacion extends Component {
                                     <Row>
                                         <Col xs="6">
                                             <Card>
-                                                <CardHeader>
+                                                <CardHeader className='cardTituloContrayenteHombre'>
                                                     Contrayente hombre
                                                 </CardHeader>
-                                                <CardBody>
+                                                <CardBody className='cardBodyContrayenteHombre'>
                                                     <FormGroup>
                                                         <Row>
                                                             <Col xs="3">
@@ -388,10 +390,10 @@ class FrmMatrimonioLegalizacion extends Component {
                                         </Col>
                                         <Col xs="6">
                                             <Card>
-                                                <CardHeader>
+                                                <CardHeader className='cardTituloContrayenteMujer'>
                                                     Contrayente mujer
                                                 </CardHeader>
-                                                <CardBody>
+                                                <CardBody className='cardBodyContrayenteMujer'>
                                                     <FormGroup>
                                                         <Row>
                                                             <Col xs="3">
@@ -462,7 +464,7 @@ class FrmMatrimonioLegalizacion extends Component {
                                                 <Input
                                                     name="mat_Fecha_Boda_Civil"
                                                     onChange={this.onChange}
-                                                    type="text"
+                                                    type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Civil}
                                                 />
                                                 <Label><strong>Fecha Boda Civil: </strong></Label>
@@ -524,7 +526,7 @@ class FrmMatrimonioLegalizacion extends Component {
                                                 <Input
                                                     name="mat_Fecha_Boda_Eclesiastica"
                                                     onChange={this.onChange}
-                                                    type="text"
+                                                    type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Eclesiastica}
                                                 />
                                                 <Label><strong>Fecha Boda Eclesiastica: </strong></Label>

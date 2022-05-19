@@ -1,3 +1,15 @@
 .btnCancelarCaptura {
     margin-right: 15px;
 }
+.cardTituloContrayenteHombre {
+    background-color:lightblue;
+}
+.cardBodyContrayenteHombre {
+    background-color: #eafdff;
+}
+.cardTituloContrayenteMujer {
+    background-color:lightpink
+}
+.cardBodyContrayenteMujer {
+    background-color: #fff2ff;
+}

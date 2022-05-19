@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import '../../assets/css/index.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
@@ -15,7 +15,7 @@ import {
 class PersonaForm extends Component {
 
     url = helpers.url_api;
-    fechaNoIngresada = "01/01/1900";
+    fechaNoIngresada = "1900-01-01";
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
@@ -27,36 +27,15 @@ class PersonaForm extends Component {
 
     constructor(props) {
         super(props)
-        let CasadoDivorciadoViudo = false
-        let ConcubinatoSolteroConHijos = false
-        let soltero = false
-        if (localStorage.getItem('estadoCivil') === 'CASADO(A)'
-            || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
-            || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
-            CasadoDivorciadoViudo = true
-            ConcubinatoSolteroConHijos = false
-            soltero = false
-        }
-        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
-            || localStorage.getItem('estadoCivil') === 'CONCUBINATO') {
-            CasadoDivorciadoViudo = false
-            ConcubinatoSolteroConHijos = true
-            soltero = false
-        }
-        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A)') {
-            CasadoDivorciadoViudo = false
-            ConcubinatoSolteroConHijos = false
-            soltero = true
-        }
         this.state = {
             profesiones_oficios: [],
-            infante: false,
+            infante: JSON.parse(localStorage.getItem("nvaAltaBautizado")) ? false : true,
             DatosHogar: {},
             MiembroEsBautizado: false,
             PromesaDelEspitiruSanto: false,
-            CasadoDivorciadoViudo: CasadoDivorciadoViudo,
-            ConcubinatoSolteroConHijos: ConcubinatoSolteroConHijos,
-            soltero: soltero,
+            CasadoDivorciadoViudo: false,
+            ConcubinatoSolteroConHijos: false,
+            soltero: false,
             datosPersonaEncontrada: {},
             RFCSinHomoclave: "",
             distritoSeleccionado: "0",
@@ -91,6 +70,35 @@ class PersonaForm extends Component {
         return <Redirect to='/ListaDePersonal' />;
     }
 
+    actualizaEstadoCivil = () => {
+        let cdv = false
+        let csh = false
+        let s = false
+        if (localStorage.getItem('estadoCivil') === 'CASADO(A)'
+            || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
+            || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
+            cdv = true
+            csh = true
+            s = false
+        }
+        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
+            || localStorage.getItem('estadoCivil') === 'CONCUBINATO') {
+            cdv = false
+            csh = true
+            s = false
+        }
+        if (localStorage.getItem('estadoCivil') === 'SOLTERO(A)') {
+            cdv = false
+            csh = false
+            s = true
+        }
+        this.setState({
+            CasadoDivorciadoViudo: cdv,
+            ConcubinatoSolteroConHijos: csh,
+            soltero: s
+        })
+    }
+
     componentDidMount() {
         this.setState({
             hogar: {
@@ -123,6 +131,9 @@ class PersonaForm extends Component {
                     })
                     this.fnGetDatosDelHogar(res.data.hd_Id_Hogar)
                 })
+            setInterval(() => {
+                this.actualizaEstadoCivil();
+            }, 500);
         }
     };
 
@@ -135,7 +146,6 @@ class PersonaForm extends Component {
                 });
             });
     };
-
 
     fnPromesaDelEspirituSanto = (e) => {
         if (e.target.checked) {
@@ -222,6 +232,16 @@ class PersonaForm extends Component {
             fnEditaPersona
         } = this.props
 
+        /* const [CasadoDivorciadoViudo, setCasadoDivorciadoViudo] = useState()
+        const [ConcubinatoSolteroConHijos, setConcubinatoSolteroConHijos] = useState()
+        const [soltero, setSoltero] = useState()
+
+        useEffect(()=>{
+            setCasadoDivorciadoViudo(this.CasadoDivorciadoViudo)
+            setConcubinatoSolteroConHijos(this.ConcubinatoSolteroConHijos)
+            setSoltero(this.soltero)
+        }, []); */
+
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
 
@@ -238,8 +258,8 @@ class PersonaForm extends Component {
             // Obtener primera letra del primer nombre
             var n = per_Nombre.split("")
             // Reformateando fecha
-            var f = per_Fecha_Nacimiento.split("/")
-            var y = f[2].substr(2, 2)
+            var f = per_Fecha_Nacimiento.split("-")
+            var y = f[0].substr(2, 2)
             var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[0]
 
             changeRFCSinHomo(RFCSinHomo)
@@ -279,6 +299,10 @@ class PersonaForm extends Component {
                     this.setState({ infante: true })
                 } else {
                     this.setState({ infante: false })
+                }
+
+                if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false) {
+                    this.setState({ infante: true })
                 }
 
                 var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
@@ -354,10 +378,10 @@ class PersonaForm extends Component {
 
             // VALIDA CAMPOS DE PERSONA
             var camposPersonaAValidar = [
-                { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
+                /* { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Civil", estado: "fechaBodaCivilInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Eclesiastica", estado: "fechaBodaEclesiasticaInvalida" },
-                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" },
+                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" }, */
                 { formato: "formatoEmail", campo: "per_Email_Personal", estado: "emailInvalido" },
                 { formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido" }
             ]
@@ -373,9 +397,9 @@ class PersonaForm extends Component {
 
                 if (boolAgregarNvaPersona) {
                     // FUNCION PARA FORMATO DE FECHAS PARA BD
-                    helpers.fechas.forEach(fecha => {
+                    /* helpers.fechas.forEach(fecha => {
                         objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
-                    })
+                    }) */
 
                     if (this.state.hogar.hd_Id_Hogar === "0") {
                         let PersonaDomicilioHogar = {
@@ -390,9 +414,9 @@ class PersonaForm extends Component {
                 }
                 else {
                     // FUNCION PARA FORMATO DE FECHAS PARA BD
-                    helpers.fechas.forEach(fecha => {
+                    /* helpers.fechas.forEach(fecha => {
                         objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
-                    })
+                    }) */
 
                     fnEditaPersona(objPersona)
                 }
@@ -403,7 +427,7 @@ class PersonaForm extends Component {
 
         return (
             <React.Fragment>
-                <h2 className="text-info">{tituloAgregarEditar}</h2>
+                {/* <h2 className="text-info">{tituloAgregarEditar}</h2> */}
 
                 <div className="border">
                     <Form onSubmit={enviarInfo} id="FrmRegistroPersona" className="p-3" /* onChange={this.FrmRegistroPersona} */ >
@@ -439,8 +463,13 @@ class PersonaForm extends Component {
                                                                 <option value="ADULTO_MUJER">Adulto Mujer</option>
                                                                 <option value="JOVEN_HOMBRE">Joven hombre</option>
                                                                 <option value="JOVEN_MUJER">Joven mujer</option>
-                                                                <option value="NIÑO">Niño</option>
-                                                                <option value="NIÑA">Niña</option>
+                                                                {JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false &&
+                                                                    <React.Fragment>
+                                                                        <option value="NIÑO">Niño</option>
+                                                                        <option value="NIÑA">Niña</option>
+                                                                    </React.Fragment>
+                                                                }
+
                                                             </Input>
                                                         </div>
                                                         {categoriaSeleccionada &&
@@ -455,7 +484,7 @@ class PersonaForm extends Component {
                                                         }
                                                     </div>
                                                 </FormGroup>
-                                                {habilitaPerBautizado &&
+                                                {/* {habilitaPerBautizado &&
                                                     <FormGroup>
                                                         <div className="row">
                                                             <div className="col-sm-3">
@@ -471,7 +500,7 @@ class PersonaForm extends Component {
                                                             </div>
                                                         </div>
                                                     </FormGroup>
-                                                }
+                                                } */}
 
                                                 <FormGroup>
                                                     <div className="row">
@@ -547,7 +576,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input
-                                                                type="text"
+                                                                type="date"
                                                                 name="per_Fecha_Nacimiento"
                                                                 onChange={onChange}
                                                                 value={form.per_Fecha_Nacimiento}
@@ -658,7 +687,7 @@ class PersonaForm extends Component {
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
-                                                                            type="text"
+                                                                            type="date"
                                                                             className="form-control"
                                                                             value={form.per_Fecha_Nacimiento}
                                                                             disabled
@@ -808,20 +837,6 @@ class PersonaForm extends Component {
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>
-
-                                                            <FormGroup>
-                                                                <div className="row">
-                                                                    <div className="col-sm-12">
-                                                                        <textarea
-                                                                            name="per_Cargos_Desempenados"
-                                                                            onChange={onChange}
-                                                                            className="form-control"
-                                                                            value={form.per_Cargos_Desempenados}
-                                                                        ></textarea>
-                                                                        <label>Cargos desempeñados</label>
-                                                                    </div>
-                                                                </div>
-                                                            </FormGroup>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -958,7 +973,7 @@ class PersonaForm extends Component {
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
-                                                                                            type="text"
+                                                                                            type="date"
                                                                                             name="per_Fecha_Boda_Civil"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Fecha_Boda_Civil}
@@ -1025,7 +1040,7 @@ class PersonaForm extends Component {
                                                                                         <div className="col-sm-4">
                                                                                             <FormGroup>
                                                                                                 <Input
-                                                                                                    type="text"
+                                                                                                    type="date"
                                                                                                     name="per_Fecha_Boda_Eclesiastica"
                                                                                                     onChange={onChange}
                                                                                                     value={form.per_Fecha_Boda_Eclesiastica}
@@ -1142,7 +1157,7 @@ class PersonaForm extends Component {
                                                                                 <div className="col-sm-4">
                                                                                     <FormGroup>
                                                                                         <Input
-                                                                                            type="text"
+                                                                                            type="date"
                                                                                             name="per_Fecha_Bautismo"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Fecha_Bautismo}
@@ -1163,7 +1178,7 @@ class PersonaForm extends Component {
                                                                         <div className="col-sm-4">
                                                                             <FormGroup>
                                                                                 <Input
-                                                                                    type="text"
+                                                                                    type="date"
                                                                                     name="per_Fecha_Recibio_Espiritu_Santo"
                                                                                     onChange={onChange}
                                                                                     value={form.per_Fecha_Recibio_Espiritu_Santo}
@@ -1213,6 +1228,19 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"></textarea>
                                                                                 <label>Cambios de domicilio</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </FormGroup>
+                                                                    <FormGroup>
+                                                                        <div className="row">
+                                                                            <div className="col-sm-12">
+                                                                                <textarea
+                                                                                    name="per_Cargos_Desempenados"
+                                                                                    onChange={onChange}
+                                                                                    className="form-control"
+                                                                                    value={form.per_Cargos_Desempenados}
+                                                                                ></textarea>
+                                                                                <label>Cargos desempeñados</label>
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>

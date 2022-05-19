@@ -114,9 +114,11 @@ const helpers = {
 
     // FUNCION PARA FORMATO DE FECHAS DESDE BD A WEBUI
     reFormatoFecha: function (fecha) {
-        let foo = fecha.split("T");
+        /* let foo = fecha.split("T");
         let bar = foo[0].split("-");
-        let f = bar[2] + "/" + bar[1] + "/" + bar[0];
+        let f = bar[2] + "/" + bar[1] + "/" + bar[0]; */
+        let foo = fecha.split("T");
+        let f = foo[0];
         return f;
     },
 

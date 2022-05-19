@@ -48,11 +48,14 @@ class ListaDePersonal extends Component {
             fSector: '0',
             fGrupo: '0',
             fProfesionOficio: '',
+            fActivoComunionVivo: 'activo',
             habilitaFiltroNombre: '',
             habilitaFiltroCategoria: '',
             habilitaFiltroSector: '',
             habilitaFiltroGrupo: '',
             habilitaFiltroProfesionOficio: '',
+            habilitaFiltroCategoria: '',
+            habilitaFiltroActivoComunionVivo: '',
             modalInfoHogar: false,
             objPersona: {},
         };
@@ -289,6 +292,22 @@ class ListaDePersonal extends Component {
         }
     }
 
+    handle_filtroActivoComunionVivo = (e) => {
+        this.setState({ fActivoComunionVivo: e.target.value })
+        if (e.target.value !== 'activo') {
+            var result = this.state.personas.filter((obj) => {
+                switch (e.target.value) {
+                    case 'sinComunion':
+                        return obj.persona.per_En_Comunion === false;
+                    case 'inactivo':
+                        return obj.persona.per_Activo === false;
+                }
+            });
+            this.setState({ personas: result })
+        }
+        this.setState({ habilitaFiltroActivoComunionVivo: 'disabled' })
+    }
+
     handle_BorrarFiltros = () => {
         this.setState({
             personas: this.state.tempPersonas,
@@ -297,11 +316,13 @@ class ListaDePersonal extends Component {
             fGrupo: '0',
             fSector: '0',
             fProfesionOficio: '',
+            fActivoComunionVivo: 'activo',
             habilitaFiltroCategoria: '',
             habilitaFiltroGrupo: '',
             habilitaFiltroNombre: '',
             habilitaFiltroProfesionOficio: '',
-            habilitaFiltroSector: ''
+            habilitaFiltroSector: '',
+            habilitaFiltroActivoComunionVivo: ''
         })
     }
 
@@ -333,6 +354,39 @@ class ListaDePersonal extends Component {
             let bar = doc.getTextWidth(x) + constante;
             let foo = doc.getTextWidth(texto);
             return doc.line(bar, y, bar + foo, y);
+        }
+        var txt = "";
+        var i = 0;
+
+        // FUNCION PARA DIVIDIR TEXTBOX LARGOS
+        const dividirTextbox = (limitePrimeraLinea, texto) => {
+            let info = {
+                primerLinea: "",
+                textoTruncado: [],
+                totalDeLineas: 0
+            }
+            info.primerLinea = texto.substring(0, limitePrimeraLinea)
+            if (texto.length > limitePrimeraLinea) {
+                let restoDelTexto = texto.substring(limitePrimeraLinea, texto.length)
+                let siguientesLineas = restoDelTexto.match(/.{1,100}/g);
+                info.totalDeLineas = siguientesLineas.length;
+                if (info.totalDeLineas > 3) {
+                    for (let i = 0; i < 3; i++) {
+                        info.textoTruncado.push(siguientesLineas[i]);
+                    }
+                }
+                else {
+                    info.textoTruncado = siguientesLineas;
+                }
+                return info
+            }
+            else {
+                return info = {
+                    primerLinea: texto,
+                    textoTruncado: [],
+                    totalDeLineas: 0
+                }
+            }
         }
 
         // ELIMINA TEXTO null
@@ -425,30 +479,45 @@ class ListaDePersonal extends Component {
         drawUnderlineTotext('Bajo la imposicion de manos del presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 136);
 
         let line = 142
-        let cargosDesempenados = info.persona.per_Cargos_Desempenados.match(/.{1,65}/g);
-        if (cargosDesempenados !== null) {
-            doc.text(`14.- Puestos desempeñados en la IECE: ${cargosDesempenados[0]}`, 13, line);
-            drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, `${cargosDesempenados[0]}`, line);
-            for (let i = 1; i < cargosDesempenados.length; i++) {
-                line = line + 6;
-                doc.text(cargosDesempenados[i], 72, line);
-                drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, cargosDesempenados[i], line);
+        if (info.persona.per_Cargos_Desempenados !== null) {
+            txt = dividirTextbox(67, info.persona.per_Cargos_Desempenados);
+            doc.text(`14.- Puestos desempeñados en la IECE: ${txt.primerLinea}`, 13, line);
+            drawUnderlineTotext('14.- Puestos desempeñados en la IECE: ', 13, `${txt.primerLinea}`, line);
+            if (txt.textoTruncado.length > 0) {
+                i = 0;
+                for (let i = 0; i < txt.textoTruncado.length; i++) {
+                    line = line + 6;
+                    doc.text(txt.textoTruncado[i], 13, line);
+                    drawUnderlineTotext('', 13, txt.textoTruncado[i], line);
+                }
+                if (txt.totalDeLineas > 3) {
+                    line = line + 6;
+                    doc.text('. . . . . . . . . .', 13, line);
+                }
             }
-        } else {
+        }
+        else {
             doc.text(`14.- Puestos desempeñados en la IECE: `, 13, line);
         }
 
         line = line + 6;
-        let cambiosDeDomicilio = info.persona.per_Cambios_De_Domicilio.match(/.{1,75}/g);
-        if (cambiosDeDomicilio !== null) {
-            doc.text(`15.- Cambios de domicilio: ${cambiosDeDomicilio[0]}`, 13, line);
-            drawUnderlineTotext('15.- Cambios de domicilio: ', 13, cambiosDeDomicilio[0], line)
-            for (let i = 1; i < cambiosDeDomicilio.length; i++) {
-                line = line + 6;
-                doc.text(cambiosDeDomicilio[i], 50, line);
-                drawUnderlineTotext('15.- Cambios de domicilio: ', 13, cambiosDeDomicilio[i], line)
+        if (info.persona.per_Cambios_De_Domicilio !== null) {
+            txt = dividirTextbox(79, info.persona.per_Cambios_De_Domicilio);
+            doc.text(`15.- Cambios de domicilio: ${txt.primerLinea}`, 13, line);
+            drawUnderlineTotext('15.- Cambios de domicilio: ', 13, `${txt.primerLinea}`, line);
+            if (txt.textoTruncado.length > 0) {
+                for (let i = 0; i < txt.textoTruncado.length; i++) {
+                    line = line + 6;
+                    doc.text(txt.textoTruncado[i], 13, line);
+                    drawUnderlineTotext('', 13, txt.textoTruncado[i], line);
+                }
+                if (txt.totalDeLineas > 3) {
+                    line = line + 6;
+                    doc.text('. . . . . . . . . .', 13, line);
+                }
             }
-        } else {
+        }
+        else {
             doc.text(`15.- Cambios de domicilio: `, 13, line);
         }
 
@@ -473,7 +542,7 @@ class ListaDePersonal extends Component {
         doc.text("FECHA", 54, 255);
         doc.line(120, 250, 180, 250);
         doc.text("LA COMISION", 142, 255);
-        doc.save("HojaDatosEstadisticos.pdf");
+        doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`);
     }
 
     render() {
@@ -589,6 +658,19 @@ class ListaDePersonal extends Component {
                                 onChange={this.handle_filtroPorProfesion}
                             />
                             <Label>Filtro por profesión/ocupación</Label>
+                        </Col>
+                        <Col xs="3">
+                            <Input
+                                type="select"
+                                value={this.state.fActivoComunionVivo}
+                                onChange={this.handle_filtroActivoComunionVivo}
+                                disabled={this.state.habilitaFiltroActivoComunionVivo}
+                            >
+                                <option value="activo" defaultChecked>Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                                <option value="sinComunion">Sin comunion</option>
+                            </Input>
+                            <Label>Filtro por estatus de la persona</Label>
                         </Col>
                         <Col xs="3">
                             <Button
@@ -796,7 +878,7 @@ class ListaDePersonal extends Component {
                                                                             <span className="tituloListaDatosEstadisticos" >16.- Domicilio actual: </span>
                                                                             <span className="infoDatosEstadisticos" >
                                                                                 Calle: {this.state.DatosHogarDomicilio.hd_Calle}, No.: {this.state.DatosHogarDomicilio.hd_Numero_Exterior}, Interior: {this.state.DatosHogarDomicilio.hd_Numero_Interior},
-                                                                                Tipo subdivision: {this.state.DatosHogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {this.state.DatosHogarDomicilio.hd_Subdivision} <br />
+                                                                                {this.state.DatosHogarDomicilio.hd_Tipo_Subdivision}, {this.state.DatosHogarDomicilio.hd_Subdivision} <br />
                                                                                 Localidad: {this.state.DatosHogarDomicilio.hd_Localidad}, Municipio/cuidad: {this.state.DatosHogarDomicilio.hd_Municipio_Ciudad},
                                                                                 {this.state.DatosHogarDomicilio.est_Nombre}, Pais: {this.state.DatosHogarDomicilio.pais_Nombre_Corto} <br />
                                                                                 Telefono: {this.state.DatosHogarDomicilio.hd_Telefono}

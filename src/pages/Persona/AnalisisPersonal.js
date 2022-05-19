@@ -108,7 +108,7 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Celular:</Col>
-                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Telefono_Movil} </Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Telefono_Movil} , {this.objPersona.domicilio[0].hd_Telefono} </Col>
                             <Col className="negrita" xs="2">Email:</Col>
                             <Col xs="3" className="border border-dark"> {this.objPersona.persona.per_Email_Personal} </Col>
                             <Col xs="7"> </Col>
@@ -117,9 +117,9 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Profesion/Oficio1:</Col>
-                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
+                            <Col xs="4" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
                             <Col className="negrita" xs="2">Profesion/Oficio2:</Col>
-                            <Col xs="4" className="border border-dark"> {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
+                            <Col xs="4" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -152,7 +152,7 @@ class AnalisisPersonal extends Component {
                                                 <td>{registro.ct_Subtipo}</td>
                                                 <td>{registro.hte_Comentario}</td>
                                                 <td>{registro.sec_Alias}</td>
-                                                <td>{registro.dis_Alias}</td>
+                                                <td>{registro.dis_Tipo_Distrito} {registro.dis_Numero}, {registro.dis_Alias}</td>
                                             </tr>
                                         </React.Fragment>
                                     )
