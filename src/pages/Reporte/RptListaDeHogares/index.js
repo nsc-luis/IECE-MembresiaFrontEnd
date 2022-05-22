@@ -47,6 +47,7 @@ class RptListaDeHogares extends Component {
     getInfoSector = () => {
         axios.get(this.url_api + "/Sector/" + this.infoSesion.sec_Id_Sector)
             .then(res => {
+                console.log(res)
                 this.setState({ infoSector: res.data[0] });
             })
     }
@@ -59,9 +60,11 @@ class RptListaDeHogares extends Component {
                         <Row>
                             <h1 className="text-info">Listado de hogares</h1>
                         </Row>
-                        <Row>
-                            Pertenecientes al distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias}, sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
-                        </Row>
+                        {this.state.infoDistrito && this.state.infoSector ? 
+                            <Row>
+                                Pertenecientes al distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias}, sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
+                            </Row> : null
+                        }
                         <Row>
                             <Button
                                 color="danger"
