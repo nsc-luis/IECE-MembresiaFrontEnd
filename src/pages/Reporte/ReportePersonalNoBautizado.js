@@ -14,7 +14,7 @@ import 'moment/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
 
-export default function ReportePersonalBautizado(){
+export default function ReportePersonalNoBautizado(){
     //Estados
     const [personas, setPersonas] = useState([])
     const dto = JSON.parse(localStorage.getItem("dto"))
@@ -24,19 +24,19 @@ export default function ReportePersonalBautizado(){
         if(sector == null){
             helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
                 .then(res => {
-                    setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion))
+                    setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado))
                 });
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
-                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion))
+                setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado))
             });
         }
     }, [personas.length])
 
     const downloadTable = () =>{
         TableToExcel.convert(document.getElementById("table1"), {
-            name: "Personal_Bautizado.xlsx",
+            name: "Personal_No_Bautizado.xlsx",
             sheet: {
               name: "Hoja 1"
             }
@@ -62,7 +62,7 @@ export default function ReportePersonalBautizado(){
         const doc = new jsPDF("p", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("REPORTE DE PERSONAL BAUTIZADO", 85, 10);
+        doc.text("REPORTE DE PERSONAL NO BAUTIZADO", 85, 10);
         doc.setFontSize(8);
         doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 15)
         
@@ -76,40 +76,6 @@ export default function ReportePersonalBautizado(){
         doc.line(10, 32, 200, 32);
         
         let yAxis = 35
-        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-        doc.rect(10, yAxis, 190, 4, "F");
-        doc.setFont("", "", "bold");
-        yAxis += 3;
-        doc.text("ADULTOS HOMBRES", 15, yAxis);
-        doc.text(`${countPersons("ADULTO_HOMBRE")}`, 80, yAxis);
-        yAxis += 7;
-        personas.map((persona) => {
-            if(persona.persona.per_Categoria === "ADULTO_HOMBRE"){
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-                yAxis+=5;
-                index++;
-            }
-        })
-
-        index = 1;
-        yAxis += 7;
-        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-        doc.rect(10, yAxis, 190, 4, "F");
-        doc.setFont("", "", "bold");
-        yAxis += 3;
-        doc.text("ADULTOS MUJERES", 15, yAxis);
-        doc.text(`${countPersons("ADULTO_MUJER")}`, 80, yAxis);
-        yAxis += 7;
-        personas.map((persona) => {
-            if(persona.persona.per_Categoria === "ADULTO_MUJER"){
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-                yAxis+=5;
-                index++;
-            }
-        })
-
-        index = 1;
-        yAxis += 7;
         doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
@@ -142,10 +108,44 @@ export default function ReportePersonalBautizado(){
             }
         })
 
+        index = 1;
+        yAxis += 7;
+        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        doc.rect(10, yAxis, 190, 4, "F");
+        doc.setFont("", "", "bold");
+        yAxis += 3;
+        doc.text("NIÑOS", 15, yAxis);
+        doc.text(`${countPersons("NIÑO")}`, 80, yAxis);
+        yAxis += 7;
+        personas.map((persona) => {
+            if(persona.persona.per_Categoria === "NIÑO"){
+                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
+                yAxis+=5;
+                index++;
+            }
+        })
+
+        index = 1;
+        yAxis += 7;
+        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        doc.rect(10, yAxis, 190, 4, "F");
+        doc.setFont("", "", "bold");
+        yAxis += 3;
+        doc.text("NIÑAS", 15, yAxis);
+        doc.text(`${countPersons("NIÑA")}`, 80, yAxis);
+        yAxis += 7;
+        personas.map((persona) => {
+            if(persona.persona.per_Categoria === "NIÑA"){
+                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
+                yAxis+=5;
+                index++;
+            }
+        })
+
         yAxis += 2;
         doc.rect(75, yAxis, 15, 4);
         yAxis += 3;
-        doc.text("TOTAL DE PERSONAL BAUTIZADO:", 20, yAxis);
+        doc.text("TOTAL DE PERSONAL NO BAUTIZADO:", 20, yAxis);
         doc.text(`${totalCount}`, 80, yAxis);
 
         yAxis += 25;
@@ -163,7 +163,7 @@ export default function ReportePersonalBautizado(){
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
 
 
-        doc.save("ReportePersonalBautizado.pdf");
+        doc.save("ReportePersonalNoBautizado.pdf");
     }
     return(
         <Layout>
@@ -177,45 +177,13 @@ export default function ReportePersonalBautizado(){
                         </Col>
                         <Col lg="7">
                             <CardTitle className="text-left" tag="h3">
-                                REPORTE DE PERSONAL BAUTIZADO
+                                REPORTE DE PERSONAL NO BAUTIZADO
                                 <h5 className="mt-3"><strong>Distrito: </strong>{JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
                                 {sector ? <h5 className="mt-3"><strong>Sector: </strong>{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
                             </CardTitle>
                         </Col>
                     </Row>
                     <CardBody>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="adultos_hombres">Adultos hombres: {countPersons("ADULTO_HOMBRE")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Card>
-                                <CardBody>
-                                    <h5>
-                                        <ol type="1">
-                                        {personas.map((persona) => {
-                                            if(persona.persona.per_Categoria === "ADULTO_HOMBRE"){
-                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
-                                            }
-                                        })}
-                                        </ol>
-                                    </h5>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="adultos_mujeres">Adultos mujeres: {countPersons("ADULTO_MUJER")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
-                            <Card>
-                                <CardBody>
-                                    <h5>
-                                        <ol type="1">
-                                        {personas.map((persona) => {
-                                            if(persona.persona.per_Categoria === "ADULTO_MUJER"){
-                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
-                                            }
-                                        })}
-                                        </ol>
-                                    </h5>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
                         <Button color="primary" size="lg" className="text-left mb-2" block id="jovenes_hombres">Jovenes hombres: {countPersons("JOVEN_HOMBRE")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
                             <Card>
@@ -248,8 +216,40 @@ export default function ReportePersonalBautizado(){
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
+                        <Button color="primary" size="lg" className="text-left mb-2" block id="niños">Niños: {countPersons("NIÑO")}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#niños">
+                            <Card>
+                                <CardBody>
+                                    <h5>
+                                        <ol type="1">
+                                        {personas.map((persona) => {
+                                            if(persona.persona.per_Categoria === "NIÑO"){
+                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                            }
+                                        })}
+                                        </ol>
+                                    </h5>
+                                </CardBody>
+                            </Card>
+                        </UncontrolledCollapse>
+                        <Button color="primary" size="lg" className="text-left mb-2" block id="niñas">Niñas: {countPersons("NIÑA")}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#niñas">
+                            <Card>
+                                <CardBody>
+                                    <h5>
+                                        <ol type="1">
+                                        {personas.map((persona) => {
+                                            if(persona.persona.per_Categoria === "NIÑA"){
+                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                            }
+                                        })}
+                                        </ol>
+                                    </h5>
+                                </CardBody>
+                            </Card>
+                        </UncontrolledCollapse>
 
-                        <h4 className="text-right m-4">Total de personal bautizado: <strong>{totalCount}</strong></h4>
+                        <h4 className="text-right m-4">Total de personal no bautizado: <strong>{totalCount}</strong></h4>
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
                         {sector ?
                             <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias} a <Moment locale="es" format="LL"></Moment></h4> :

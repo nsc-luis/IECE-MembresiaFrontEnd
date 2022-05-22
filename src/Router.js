@@ -21,6 +21,7 @@ import AltaReactivacion from './pages/Persona/AltaReactivacion'
 import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB'
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
+import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -58,6 +59,7 @@ class Router extends Component {
                     <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
                     <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />
                     <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
+                    <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>
