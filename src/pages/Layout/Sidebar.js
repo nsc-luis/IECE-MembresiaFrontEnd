@@ -704,7 +704,7 @@ class Sidebar extends Component {
                                 <Link className="collapse-item text-wrap" to="/ReportePersonalBautizado">Lista de Personal Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="/ReportePersonalNoBautizado">Lista de Personal No Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="/RptListaDeHogares">Lista de hogares</Link>
-                                <Link className="collapse-item text-wrap" to="#">Lista por Profesiones/Oficios</Link>
+                                <Link className="collapse-item text-wrap" to="/ReporteOficiosProfesiones">Lista por Profesiones/Oficios</Link>
                                 <Link className="collapse-item text-wrap" to="#">Lista por fecha de cumpleaños</Link>
                                 <Link className="collapse-item text-wrap" to="#">Reporte de Movimiento Estadístico</Link>
                             </div>

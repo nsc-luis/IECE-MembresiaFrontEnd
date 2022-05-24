@@ -22,6 +22,7 @@ import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB'
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
+import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -60,6 +61,7 @@ class Router extends Component {
                     <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />
                     <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                     <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
+                    <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>
