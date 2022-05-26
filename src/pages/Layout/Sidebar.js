@@ -520,9 +520,9 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaNoBautizada}>Nuevo Ingreso</Link>
-                                        <Link className="collapse-item" to="#">Reativación</Link>
-                                        <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
+                                        <Link className="collapse-item" to="/AltaNuevoIngreso">Nuevo Ingreso</Link>
+                                        <Link className="collapse-item" to="/AltaReactivacion">Reativación</Link>
+                                        <Link className="collapse-item" to="/AltaCambioDomicilioNB">Cambio de Domicilio</Link>
                                     </div>
                                 </div>
                                 {/* <h6 className="collapse-header">Personal no bautizado:</h6>
@@ -700,11 +700,11 @@ class Sidebar extends Component {
                         <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item text-wrap" to="#">Reporte de Membresia Actual</Link>
-                                <Link className="collapse-item text-wrap" to="#">Lista de Personal Bautizado</Link>
-                                <Link className="collapse-item text-wrap" to="#">Lista de Personal No Bautizado</Link>
+                                <Link className="collapse-item text-wrap" to="/ResumenMembresia">Reporte de Membresia Actual</Link>
+                                <Link className="collapse-item text-wrap" to="/ReportePersonalBautizado">Lista de Personal Bautizado</Link>
+                                <Link className="collapse-item text-wrap" to="/ReportePersonalNoBautizado">Lista de Personal No Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="/RptListaDeHogares">Lista de hogares</Link>
-                                <Link className="collapse-item text-wrap" to="#">Lista por Profesiones/Oficios</Link>
+                                <Link className="collapse-item text-wrap" to="/ReporteOficiosProfesiones">Lista por Profesiones/Oficios</Link>
                                 <Link className="collapse-item text-wrap" to="#">Lista por fecha de cumpleaños</Link>
                                 <Link className="collapse-item text-wrap" to="#">Reporte de Movimiento Estadístico</Link>
                             </div>

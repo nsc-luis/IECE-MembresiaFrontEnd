@@ -115,13 +115,13 @@ class SidebarObispo extends Component {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="#">
+                        <Link className="nav-link" to="/ReportePersonalBautizado">
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de Personal Bautizado</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="#">
+                        <Link className="nav-link" to="/ReportePersonalNoBautizado">
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de Personal No Bautizado</span>
                         </Link>
@@ -133,7 +133,7 @@ class SidebarObispo extends Component {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="#">
+                        <Link className="nav-link" to="/ReporteOficiosProfesiones">
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista por Profesiones/Oficios</span>
                         </Link>

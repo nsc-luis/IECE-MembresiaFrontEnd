@@ -1,6 +1,6 @@
 import Layout from '../Layout';
 import helpers from '../../components/Helpers'
-import moment from 'moment';
+
 import { Link, Redirect } from 'react-router-dom';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button,
@@ -9,11 +9,12 @@ import {
 
 import React, { Component, useEffect, useState } from 'react';
 
-function AltaRestitucion() {
+function AltaNuevoIngreso() {
     //Estados
     const [opcionesPersonas, setOpcionesPersonas] = useState([])
     const [opcionesHogares, setOpcionesHogares] = useState([])
     const [data, setData] = useState({})
+    const [transaccion, setTransaccion] = useState({})
     const [hogar, setHogar] = useState(null)
     const [jerarquia, setJerarquia] = useState(null)
     const [miembrosHogar, setMiembrosHogar] = useState([])
@@ -21,11 +22,9 @@ function AltaRestitucion() {
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
 
-    const user = JSON.parse(localStorage.getItem('infoSesion'))
-
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${user.sec_Id_Sector}/true`)
+        helpers.authAxios.get("/Persona/GetPersonaRestitucion/227/true")
             .then(res => {
                 setOpcionesPersonas(res.data.personas)
                 console.log(opcionesPersonas)
@@ -49,19 +48,23 @@ function AltaRestitucion() {
     }, [paises.length]);
 
     //Manejo de eventos de datos generales
-    const handlePersona = (value) => {
-        helpers.authAxios.get(`/Persona/${value}`)
-            .then(res => {
-                setData(res.data)
-            })
-            .then(() => {
-                setData( prevState => ({
-                    ...prevState,
-                    per_Activo: true,
-                    per_En_Comunion: true,
-                    per_Visibilidad_Abierta: false
-                }))
-            })
+    const handleNombre = (value) => {
+        setData( prevState => ({
+            ...prevState,
+            per_nombre: value,
+        }))
+    };
+    const handleAPaterno = (value) => {
+        setData( prevState => ({
+            ...prevState,
+            per_Apellido_Paterno: value,
+        }))
+    };
+    const handleAMaterno = (value) => {
+        setData( prevState => ({
+            ...prevState,
+            per_Apellido_Materno: value,
+        }))
     };
     const handleCategoria = (value) => {
         setData( prevState => ({
@@ -69,27 +72,14 @@ function AltaRestitucion() {
             per_Categoria: value
         }))
     };
-    const handleComentario = (value) => {
-        setData( prevState => ({
-            ...prevState,
-            hte_Comentario: value
-        }))
-    };
-    const handleFechaTransaccion = (value) => {
-        console.log(value)
+
+    const handleFechaNacimiento = (value) => {
         if(value == "") setMostrarHogar(false)
     
-        setData( prevState => ({
+        setTransaccion( prevState => ({
             ...prevState,
-            fecha_transaccion: value
+            per_Fecha_Nacimiento: value
         }))
-    };
-    const handleHogarInfo = (event) => {
-        setData( prevState => ({
-            ...prevState,
-            [event.name]: event.value
-        }))
-        console.log(data)
     };
 
     //Manejo de eventos de hogar
@@ -120,97 +110,84 @@ function AltaRestitucion() {
                 });
             }
     };
-
+    const handleEstado = (value) => {
+    };
     
     //Validaciones
     const validarDatosPersona = () => {
-        if(!data.per_Id_Persona || data.per_Id_Persona == 0){
-            alert('Seleccione una persona')
+        if(data.per_nombre == "" || data.per_nombre == null ){
+            alert('Ingrese el nombre de la persona')
             return
         };
-        if(data.fecha_transaccion == null || !data.fecha_transaccion ){
-            alert('Seleccione una fecha para la transacción')
+        if(data.per_Apellido_Paterno == "" || data.per_Apellido_Paterno == null ){
+            alert('Ingrese el apellido paterno de la persona')
+            return
+        };
+        if(data.per_Apellido_Materno == "" || data.per_Apellido_Materno == null ){
+            alert('Ingrese el apellido materno de la persona')
+            return
+        };
+        if(transaccion.per_Fecha_Nacimiento == null || !transaccion.per_Fecha_Nacimiento ){
+            alert('Seleccione una fecha de nacimiento')
             return
         }
         setMostrarHogar(true)
     };
     //Pruebas
     const postData = () => {
-        let formattedData = {}
-
-        if(mostrarHogar){
-            formattedData = {
-                id: 0,
-                per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: data.sec_Id_Sector,
-                ct_Codigo_Transaccion: 11002, 
-                Usu_Usuario_Id: user.pem_Id_Ministro,
-                hte_Fecha_Transaccion: data.fecha_transaccion,
-                hte_Comentario: data.hte_Comentario,
-                jerarquia: jerarquia,
-                hp_Id_Hogar_Persona: hogar.hd_Id_Hogar,
-            }
-            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
+        helpers.authAxios.post(`/Persona/Post/${data.per_Id_Persona}`, data)
             .then(res => {
                 console.log(res)
             });
-        }else{
-            formattedData = {
-                id: 0,
-                per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: data.sec_Id_Sector,
-                ct_Codigo_Transaccion: 11002, 
-                Usu_Usuario_Id: user.pem_Id_Ministro,
-                hte_Fecha_Transaccion: data.fecha_transaccion,
-                hte_Comentario: data.hte_Comentario,
-                HD: {
-                    hd_Id_Hogar: 0,
-                    hd_Calle: data.hd_Calle,
-                    hd_Numero_Exterior: data.hd_Numero_Exterior,
-                    hd_Numero_Interior: data.hd_Numero_Interior,
-                    hd_Tipo_Subdivision: data.hd_Tipo_Subdivision,
-                    hd_Subdivision: data.hd_Subdivision,
-                    hd_Localidad: data.hd_Localidad,
-                    hd_Municipio_Ciudad: data.hd_Municipio_Ciudad,
-                    pais_Id_Pais: data.pais_Id_Pais,
-                    est_Id_Estado: data.est_Id_Estado,
-                    hd_Telefono: data.hd_Telefono,
-                    dis_Id_Distrito: user.dis_Id_Distrito,
-                    sec_Id_Sector: user.sec_Id_Sector,
-                    usu_Id_Usuario: user.pem_Id_Ministro,
-                    Fecha_Registro: moment(),
-                }
-            }
-            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, formattedData)
-                .then(res => {
-                    console.log(res)
-                });
-        }
-        console.log(formattedData)
-
+        helpers.authAxios.post(`/Persona/AddPersonaHogar/${jerarquia}/${hogar.hd_Id_Hogar}`, data)
+            .then(res => {
+                console.log(res)
+            });
     };
     return(
         <Layout>
             <Container>
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
-                        Alta Restitución
+                        Alta Nuevo Ingreso
                     </CardTitle>
                     <Form>
                         <FormGroup row>
                             <Label for='NombrePersona' sm={3}>
-                                <h5>Persona: </h5>
+                                <h5>Nombre: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
                                 id='NombrePersona'
                                 name='nombre'
-                                type='select'
-                                onChange={e => {handlePersona(e.target.value)}}>
-                                <option value="0" selected disabled>Selecionar persona...</option>
-                                {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno}</option>
-                                ))}
+                                type='text'
+                                onChange={e => {handleNombre(e.target.value)}}>
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label for='APaterno' sm={3}>
+                                <h5>Apellido Paterno: </h5>
+                            </Label>
+                            <Col sm={9}>
+                                <Input
+                                id='APaterno'
+                                name='apaterno'
+                                type='text'
+                                onChange={e => {handleAPaterno(e.target.value)}}>
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label for='AMaterno' sm={3}>
+                                <h5>Apellido Materno: </h5>
+                            </Label>
+                            <Col sm={9}>
+                                <Input
+                                id='AMaterno'
+                                name='amaterno'
+                                type='text'
+                                onChange={e => {handleAMaterno(e.target.value)}}>
                                 </Input>
                             </Col>
                         </FormGroup>
@@ -227,37 +204,24 @@ function AltaRestitucion() {
                                 onChange={(e) => handleCategoria( e.target.value )}
                                >
                                 <option value="0" selected disabled >Selecionar categoria</option>
-                                <option value="ADULTO_HOMBRE">Adulto Hombre</option>
-                                <option value="ADULTO_MUJER">Adulto Mujer</option>
                                 <option value="JOVEN_HOMBRE">Joven hombre</option>
                                 <option value="JOVEN_MUJER">Joven mujer</option>
+                                <option value="NIÑO">Niño</option>
+                                <option value="NIÑA">Niña</option>
 
                                 </Input>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Label for='Comentario' sm={3}>
-                                <h5>Comentario: (opcional) </h5>
-                            </Label>
-                            <Col sm={9}>
-                                <Input
-                                id='Comentario'
-                                name='comentario'
-                                type='textarea'
-                                onInput={(e) => handleComentario( e.target.value )}>
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
                             <Label for='Fecha' sm={3}>
-                                <h5>Fecha de transaccion: </h5>
+                                <h5>Fecha de nacimiento: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
                                 id='Fecha'
                                 name='fecha'
                                 type='date'
-                                onChange={(e) => handleFechaTransaccion( e.target.value )}>
+                                onChange={(e) => handleFechaNacimiento( e.target.value )}>
                                 </Input>
                             </Col>
                         </FormGroup>
@@ -363,7 +327,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Calle
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Calle' name='hd_Calle' placeholder='Nombre de la calle' type='text'></Input>
+                                    <Input id='calle' name='calle' placeholder='Nombre de la calle' type='text'></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -371,7 +335,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Numero Exterior
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Numero_Exterior' name='hd_Numero_Exterior' placeholder='0000' type='text'></Input>
+                                    <Input id='extNumber' name='extNumber' placeholder='0000' type='text'></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -379,7 +343,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Numero Interior
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Numero_Interior' name='hd_Numero_Interior' placeholder='0000' type='text'></Input>
+                                    <Input id='intNumber' name='intNumber' placeholder='0000' type='text'></Input>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -389,8 +353,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Tipo subdivisión
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Tipo_Subdivision' name='hd_Tipo_Subdivision' placeholder='Tipo subdivisión' type='select'>
-                                        <option value="0" selected disabled >Selecionar tipo subdivisión</option>
+                                    <Input id='subDivType' name='subDivType' placeholder='Tipo subdivisión' type='select'>
                                         <option value="COL">COLONIA</option>
                                         <option value="FRACC">FRACC</option>
                                         <option value="EJ">EJIDO</option>
@@ -412,7 +375,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Subdivisión
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Subdivision' name='hd_Subdivision' placeholder='Subdivisión' type='text'></Input>
+                                    <Input id='subDiv' name='subDiv' placeholder='Subdivisión' type='text'></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -420,7 +383,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Localidad
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Localidad' name='hd_Localidad' placeholder='Localidad' type='text'></Input>
+                                    <Input id='localidad' name='localidad' placeholder='Localidad' type='text'></Input>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -430,7 +393,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Municipio / Ciudad
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Municipio_Ciudad' name='hd_Municipio_Ciudad' placeholder='Nombre de Municipio / Ciudad' type='text'></Input>
+                                    <Input id='municipioCiudad' name='municipioCiudad' placeholder='Nombre de Municipio / Ciudad' type='text'></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -438,7 +401,7 @@ function AltaRestitucion() {
                                     <Label>
                                         País
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='pais_Id_Pais' name='pais_Id_Pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
+                                    <Input id='pais' name='pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
                                         <option value="0" selected disabled >Selecciona un país</option>
                                         {paises.map(pais => (
                                             <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}>{pais.pais_Nombre}</option>
@@ -451,7 +414,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Estado
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='est_Id_Estado' name='est_Id_Estado' placeholder='Selecciona un estado' type='select'>
+                                    <Input id='estado' name='estado' placeholder='Selecciona un estado' type='select' onChange={(e) => handleEstado( e.target.value )}>
                                         <option value="0" selected disabled >Selecciona un estado</option>
                                         {estados.map(estado => (
                                             <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}>{estado.est_Nombre}</option>
@@ -466,7 +429,7 @@ function AltaRestitucion() {
                                     <Label>
                                         Telefono
                                     </Label>
-                                    <Input onInput={(e) => handleHogarInfo( e.target )} id='hd_Telefono' name='hd_Telefono' placeholder='555 555 5555' type='tel'></Input>
+                                    <Input id='tel' name='tel' placeholder='555 555 5555' type='tel'></Input>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -490,7 +453,7 @@ function AltaRestitucion() {
     );
 }
 
-export default AltaRestitucion
+export default AltaNuevoIngreso
 // export default class AltaRestitucion extends Component {
 //     url = helpers.url_api;
 
