@@ -128,6 +128,11 @@ const helpers = {
             pdf.addImage(imgData, 'PNG', 0, 0);
             pdf.save("documento.pdf");
         });
+    },
+
+    handle_LinkEncabezado: function (seccion, componente) {
+        localStorage.setItem('seccion', seccion);
+        localStorage.setItem('componente', componente);
     }
 }
 

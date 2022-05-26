@@ -39,6 +39,7 @@ class Matrimonio extends Component {
     }
 
     handle_frmMatrimonioLegalizacion = () => {
+        localStorage.setItem("mat_Id_MatrimonioLegalizacion", "0")
         this.setState({ 
             enableFrmRegistroMatLegal: true,
             mat_Id_MatrimonioLegalizacion: "0"
@@ -46,6 +47,7 @@ class Matrimonio extends Component {
     }
 
     editarMatrimonioLegalizacion = (id) => {
+        localStorage.setItem("mat_Id_MatrimonioLegalizacion", id)
         this.setState({ 
             enableFrmRegistroMatLegal: true,
             mat_Id_MatrimonioLegalizacion: id
@@ -108,6 +110,10 @@ class Matrimonio extends Component {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
+    }
+
+    componentWillUnmount() {
+        localStorage.removeItem("mat_Id_MatrimonioLegalizacion");
     }
 
     render() {

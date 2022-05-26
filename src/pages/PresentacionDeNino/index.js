@@ -10,6 +10,9 @@ import '../../assets/css/index.css';
 
 class PresentacionDeNino extends Component {
 
+    sector = localStorage.getItem('sector');
+    infoSesion = JSON.parse(localStorage.getItem(this.infoSesion));
+
     constructor(props) {
         super(props);
         this.state = {
@@ -38,7 +41,7 @@ class PresentacionDeNino extends Component {
             currentPresentacion: {
                 ...this.state.currentPresentacion,
                 per_Id_Persona: "0",
-                pdn_Ministro_Oficiante: "",
+                pdn_Ministro_Oficiante: "0",
                 pdn_Fecha_Presentacion: "01/01/1900",
                 sec_Id_Sector: this.infoSesion.sec_Id_Sector,
                 usu_Id_Usuario: "1"
@@ -67,6 +70,7 @@ class PresentacionDeNino extends Component {
                     status: res.data.status
                 })
             })
+        console.log(this.infoSesion);
     }
 
     getMinistrosAncianoActivo = async () => {
@@ -82,6 +86,7 @@ class PresentacionDeNino extends Component {
             modalEliminaPresentacion: true
         })
     }
+
     handle_modalEliminaPresentacionClose = () => {
         this.setState({
             modalEliminaPresentacion: false,
@@ -94,7 +99,7 @@ class PresentacionDeNino extends Component {
             currentPresentacion: {
                 ...this.state.currentPresentacion,
                 per_Id_Persona: "0",
-                pdn_Ministro_Oficiante: "",
+                pdn_Ministro_Oficiante: "0",
                 pdn_Fecha_Presentacion: "1900-01-01",
                 sec_Id_Sector: this.infoSesion.sec_Id_Sector,
                 usu_Id_Usuario: "1"
@@ -122,6 +127,7 @@ class PresentacionDeNino extends Component {
             nombreNino: info.per_Nombre + " " + info.per_Apellido_Paterno + " " + info.per_Apellido_Materno
         })
     }
+
     handle_modalFrmPresentacionClose = () => {
         this.setState({
             modalFrmPresentacion: false,
@@ -194,37 +200,22 @@ class PresentacionDeNino extends Component {
 
     guardarPresentacion = (e) => {
         e.preventDefault();
-        let camposAValidados = [
-            /* { formato: "formatoFecha", campo: "pdn_Fecha_Presentacion", estado: "fechaPresentacionInvalida" }, */
-            { formato: "alphaSpaceRequired", campo: "pdn_Ministro_Oficiante", estado: "ministroOficianteInvalido" }
-        ];
-        camposAValidados.forEach(element => {
-            this.validaFormatos(
-                element.formato,
-                this.state.currentPresentacion[element.campo],
-                element.estado);
-        });
-        if (this.state.currentPresentacion.per_Id_Persona === "0") {
-            this.setState({ ninoSelectInvalido: true })
-        } else {
-            this.setState({
-                ninoSelectInvalido: false,
-                currentPresentacion: {
-                    ...this.state.currentPresentacion,
-                    per_Id_Persona: e.target.value
-                }
-            })
-        }
 
-        if (this.state.bolAgregarPresentacion &&
-            !this.state.ministroOficianteInvalido &&
-            !this.state.fechaPresentacionInvalida) {
+        if (this.state.bolAgregarPresentacion) {
+            setTimeout(
+                this.setState({
+                    ministroOficianteInvalido: this.state.currentPresentacion.pdn_Ministro_Oficiante === '0' ? true : false,
+                    ninoSelectInvalido: this.state.currentPresentacion.per_Id_Persona === '0' ? true : false,
+                    fechaPresentacionInvalida: this.state.currentPresentacion.pdn_Fecha_Presentacion === '1900-01-01' || this.state.currentPresentacion.pdn_Fecha_Presentacion === null ? true : false
+                }), 500
+            )
+            if (this.state.currentPresentacion.per_Id_Persona === "0") return false;
+            if (this.state.currentPresentacion.pdn_Fecha_Presentacion === "1900-01-01" || this.state.currentPresentacion.pdn_Fecha_Presentacion === null) return false;
+            if (this.state.currentPresentacion.pdn_Ministro_Oficiante === "0") return false;
+
             var info = this.state.currentPresentacion;
-            /* info.pdn_Fecha_Presentacion = helpers.fnFormatoFecha(this.state.currentPresentacion.pdn_Fecha_Presentacion); */
-            info.pdn_Fecha_Presentacion = this.state.currentPresentacion.pdn_Fecha_Presentacion;
-            info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante.toUpperCase();
             try {
-                helpers.authAxios.post(helpers.url_api + "/Presentacion_Nino/", info)
+                helpers.authAxios.post(helpers.url_api + `/Presentacion_Nino/${this.infoSesion.sec_Id_Sector}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -259,12 +250,11 @@ class PresentacionDeNino extends Component {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
             }
-        } else if (!this.state.ministroOficianteInvalido && !this.state.fechaPresentacionInvalida) {
+        }
+        else {
             var info = this.state.currentPresentacion;
-            info.pdn_Fecha_Presentacion = helpers.fnFormatoFecha(this.state.currentPresentacion.pdn_Fecha_Presentacion);
-            info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante.toUpperCase();
             try {
-                helpers.authAxios.put(helpers.url_api + "/Presentacion_Nino/" + info.pdn_Id_Presentacion, info)
+                helpers.authAxios.put(helpers.url_api + "/Presentacion_Nino/" + this.state.currentPresentacion.pdn_Id_Presentacion, info)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -451,12 +441,12 @@ class PresentacionDeNino extends Component {
                                                     onChange={this.handle_onChange}
                                                     invalid={this.state.ministroOficianteInvalido}
                                                 >
-                                                    <option value='0'>Selecciona una ministro</option>
+                                                    <option value="0">Selecciona una ministro</option>
                                                     {
                                                         this.state.ministros.map(ministro => {
                                                             return (
                                                                 <React.Fragment key={ministro.pem_Id_Ministro}>
-                                                                    <option value={ministro.pem_Id_Ministro}>{ministro.pem_Nombre}</option>
+                                                                    <option value={ministro.pem_Nombre}>{ministro.pem_Nombre}</option>
                                                                 </React.Fragment>
                                                             )
                                                         })
@@ -591,12 +581,12 @@ class PresentacionDeNino extends Component {
                                                     onChange={this.handle_onChange}
                                                     invalid={this.state.ministroOficianteInvalido}
                                                 >
-                                                    <option value='0'>Selecciona una ministro</option>
+                                                    <option value="0">Selecciona una ministro</option>
                                                     {
                                                         this.state.ministros.map(ministro => {
                                                             return (
                                                                 <React.Fragment key={ministro.pem_Id_Ministro}>
-                                                                    <option value={ministro.pem_Id_Ministro}>{ministro.pem_Nombre}</option>
+                                                                    <option value={ministro.pem_Nombre}>{ministro.pem_Nombre}</option>
                                                                 </React.Fragment>
                                                             )
                                                         })
