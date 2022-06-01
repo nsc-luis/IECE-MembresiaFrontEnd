@@ -22,11 +22,13 @@ function AltaCambioDomicilio() {
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
 
+    const user = JSON.parse(localStorage.getItem('infoSesion'))
+
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get("/Persona")
+        helpers.authAxios.get(`/Persona/GetPersonaCambioDomicilio/${user.sec_Id_Sector}/true`)
             .then(res => {
-                setOpcionesPersonas(res.data)
+                setOpcionesPersonas(res.data.personas)
                 console.log(opcionesPersonas)
             });
     }, [opcionesPersonas.length]);

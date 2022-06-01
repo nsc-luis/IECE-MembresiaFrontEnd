@@ -262,7 +262,7 @@ export default function ReporteOficiosProfesiones(){
                         <img src={logo} width="100%"></img> 
                     </Col>
                     <Col>
-                        Reporte de Personal Bautizado
+                        Reporte de Profesiones y Oficios
                         <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
                         {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
                     </Col>
@@ -287,8 +287,8 @@ export default function ReporteOficiosProfesiones(){
                                     <td>{index + 1}</td>
                                     <td>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</td>
                                     <td>{persona.persona.per_Bautizado ? "Bautizado" : "No Bautizado"}</td>
-                                    <td>{persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
-                                    <td>{persona.persona.profesionOficio2[0].pro_Sub_Categoria}</td>
+                                    <td>{persona.persona.profesionOficio1[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
+                                    <td>{persona.persona.profesionOficio2[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
                                     <td>{persona.persona.per_Telefono_Movil}</td>
                                     <td>{persona.persona.per_Email_Personal}</td>
                                 </tr>
