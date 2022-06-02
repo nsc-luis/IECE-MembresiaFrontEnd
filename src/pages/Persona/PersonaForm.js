@@ -619,7 +619,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {bolPersonaEncontrada === true &&
                                                             <>
-                                                                <div className="col-sm-2">
+                                                                {/* <div className="col-sm-2">
                                                                     <Button
                                                                         type="button"
                                                                         color="success"
@@ -631,7 +631,7 @@ class PersonaForm extends Component {
                                                                         </span>
                                                                         <i>Editar</i>
                                                                     </Button>
-                                                                </div>
+                                                                </div> */}
                                                                 <div className="col-sm-4">
                                                                     <Button
                                                                         type="button"
