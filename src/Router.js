@@ -40,7 +40,8 @@ class Router extends Component {
         return (
             <BrowserRouter /* basename='/webapp' */>
                 <Switch>
-                    <Route exact path="/Main" component={Main}/>
+                    {/* <Route exact path="/Main" component={Main}/> */}
+                    <Route exact path="/Main" component={ResumenMembresia}/>
                     <Route exact path="/" component={Signin} />
                     <Route exact path="/Signup" component={Signup} />
                     <Route exact path="/Hogar" component={Hogar} />
