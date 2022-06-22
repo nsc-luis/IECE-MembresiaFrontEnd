@@ -69,7 +69,7 @@ class PaisEstado extends React.Component {
                         onChange={handle_pais_Id_Pais}
                         value={domicilio.pais_Id_Pais}
                     >
-                        <option value="0">Selecciona un pais</option>
+                        <option value="0">Selecciona un pais *</option>
                         {
                             this.state.paises.map((pais) => {
                                 return (

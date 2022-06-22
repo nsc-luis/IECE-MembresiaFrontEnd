@@ -20,7 +20,8 @@ class Login extends Component {
             Password: '',
             emailInvalido: false,
             passwordInvalido: false,
-            loginInvalido: false
+            loginInvalido: false,
+            loginSuccess: ""
         };
         if(localStorage.getItem("infoSesion")) {
             document.location.href = '/Main';
@@ -101,6 +102,7 @@ class Login extends Component {
                                     loginAlert: res.data.message
                                 },
                                 loginInvalido: true,
+                                loginSuccess: "loginAlertSuccess"
                             });
                             localStorage.setItem('token', this.state.token);
                             localStorage.setItem('infoSesion', JSON.stringify(res.data.infoSesion[0]));
@@ -114,7 +116,8 @@ class Login extends Component {
                                     ...this.state.mensajes,
                                     loginAlert: res.data.message
                                 },
-                                loginInvalido: true
+                                loginInvalido: true,
+                                loginSuccess: ""
                             });
                         }
                     });
@@ -186,7 +189,7 @@ class Login extends Component {
                                                     <Input
                                                         invalid={this.state.loginInvalido}
                                                         hidden={true} />
-                                                    <FormFeedback>{this.state.mensajes.loginAlert}</FormFeedback>
+                                                    <FormFeedback className={`loginAlert ${this.state.loginSuccess}`} >{this.state.mensajes.loginAlert}</FormFeedback>
                                                 </FormGroup>
                                             </Form>
                                         </Col>

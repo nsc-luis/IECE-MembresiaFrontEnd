@@ -15,7 +15,7 @@ import {
 class PersonaForm extends Component {
 
     url = helpers.url_api;
-    fechaNoIngresada = "1900-01-01";
+    fechaNoIngresada = "";
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
@@ -394,9 +394,9 @@ class PersonaForm extends Component {
                 /* { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Civil", estado: "fechaBodaCivilInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Eclesiastica", estado: "fechaBodaEclesiasticaInvalida" },
-                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" }, */
+                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" },
                 { formato: "formatoEmail", campo: "per_Email_Personal", estado: "emailInvalido" },
-                { formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido" }
+                { formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido" } */
             ]
             camposPersonaAValidar.forEach(element => {
                 validaFormatos(element.formato, objPersona[element.campo], element.estado)
@@ -420,6 +420,13 @@ class PersonaForm extends Component {
                             PersonaEntity: objPersona,
                             HogarDomicilioEntity: objDomicilio
                         }
+                        if (domicilio.pais_Id_Pais === "0"
+                            || domicilio.hd_Calle === "" 
+                            || domicilio.hd_Localidad === "" ||
+                            domicilio.hd_Numero_Exterior === "") {
+                                alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
+                                return false;
+                            }
                         fnGuardaPersona(PersonaDomicilioHogar)
                     } else {
                         fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)

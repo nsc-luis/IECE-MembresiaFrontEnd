@@ -48,7 +48,7 @@ class ListaDePersonal extends Component {
             fSector: '0',
             fGrupo: '0',
             fProfesionOficio: '',
-            fActivoComunionVivo: 'activo',
+            fActivoComunionVivo: 'todos',
             habilitaFiltroNombre: '',
             habilitaFiltroCategoria: '',
             habilitaFiltroSector: '',
@@ -294,13 +294,15 @@ class ListaDePersonal extends Component {
 
     handle_filtroActivoComunionVivo = (e) => {
         this.setState({ fActivoComunionVivo: e.target.value })
-        if (e.target.value !== 'activo') {
+        if (e.target.value !== 'todos') {
             var result = this.state.personas.filter((obj) => {
                 switch (e.target.value) {
                     case 'sinComunion':
                         return obj.persona.per_En_Comunion === false;
                     case 'inactivo':
                         return obj.persona.per_Activo === false;
+                    default:
+                        return obj.persona.per_Activo === true;
                 }
             });
             this.setState({ personas: result })
@@ -312,18 +314,18 @@ class ListaDePersonal extends Component {
         this.setState({
             personas: this.state.tempPersonas,
             fCategoria: '0',
-            // fNombre: '',
+            /* fNombre: '', */
             fGrupo: '0',
-            fSector: '0',
-            fProfesionOficio: '',
-            fActivoComunionVivo: 'activo',
+            fSector: '0',   
+            /* fProfesionOficio: '', */
+            fActivoComunionVivo: 'todos',
             habilitaFiltroCategoria: '',
             habilitaFiltroGrupo: '',
             habilitaFiltroNombre: '',
             habilitaFiltroProfesionOficio: '',
             habilitaFiltroSector: '',
             habilitaFiltroActivoComunionVivo: ''
-        })
+        });
     }
 
     handle_showModalInfoHogar = async (info) => {
@@ -571,7 +573,7 @@ class ListaDePersonal extends Component {
 
                     {/* SECCION DE FILTROS 1 */}
                     <Row>
-                        <Col xs="3">
+                        <Col xs="6">
                             <Input
                                 type="select"
                                 onChange={this.handle_filtroPorSector}
@@ -605,16 +607,6 @@ class ListaDePersonal extends Component {
                                 }
                             </Input>
                             <Label>Filtro por sector</Label>
-                        </Col>
-                        <Col xs="3">
-                            <Input
-                                type="text"
-                                placeholder='Ej: Nombre o Apellido'
-                                value={this.state.fNombre}
-                                onChange={this.handle_filtroPorNombre}
-                            >
-                            </Input>
-                            <Label>Filtro por nombre</Label>
                         </Col>
                         <Col xs="3">
                             <Input
@@ -653,8 +645,18 @@ class ListaDePersonal extends Component {
                         <Col xs="3">
                             <Input
                                 type="text"
+                                placeholder='Ej: Nombre o Apellido'
+                                value={this.state.fNombre}
+                                onChange={this.handle_filtroPorNombre}
+                            >
+                            </Input>
+                            <Label>Filtro por nombre</Label>
+                        </Col>
+                        <Col xs="3">
+                            <Input
+                                type="text"
                                 placeholder='Ej: Medico, Carpintero'
-                                /* value={this.state.fProfesionOficio} */
+                                value={this.state.fProfesionOficio}
                                 onChange={this.handle_filtroPorProfesion}
                             />
                             <Label>Filtro por profesión/ocupación</Label>
@@ -666,7 +668,8 @@ class ListaDePersonal extends Component {
                                 onChange={this.handle_filtroActivoComunionVivo}
                                 disabled={this.state.habilitaFiltroActivoComunionVivo}
                             >
-                                <option value="activo" defaultChecked>Activo</option>
+                                <option value="todos" defaultChecked>Todos</option>
+                                <option value="activo" >Activo</option>
                                 <option value="inactivo">Inactivo</option>
                                 <option value="sinComunion">Sin comunion</option>
                             </Input>

@@ -38,6 +38,7 @@ class ResumenMembresia extends Component {
             resumenDeMembresia: {},
             infoSector: {},
             infoMinistro: {},
+            infoSecretario: {}
         }
     }
 
@@ -85,6 +86,7 @@ class ResumenMembresia extends Component {
     }
 
     resumenMembresiaPDF = async () => {
+
         if (this.state.sectorSeleccionado === '0') {
             alert('Error: Debes seleccionar un sector.');
         }
@@ -99,6 +101,10 @@ class ResumenMembresia extends Component {
                     .then(res => {
                         this.setState({ infoMinistro: res.data.ministros[0] });
                     })
+                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
+                .then(res => {
+                    this.setState({ infoSecretario: res.data.infoSecretario[0] });
+                })
             }
             else {
                 this.setState({
@@ -121,14 +127,15 @@ class ResumenMembresia extends Component {
             doc.addImage(nvologo, 'JPG', 10, 5, 70, 20);
             doc.text("RESUMEN DE MEMBRESIA GENERAL", 85, 10);
             doc.setFontSize(8);
-            doc.text(`${this.infoSesion.dis_Tipo_Distrito}: ${this.infoSesion.dis_Alias}`, 85, 15);
 
             if (localStorage.getItem('sector') !== null) {
-                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 20);
-                doc.text(fechaTexto, 85, 25);
+                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 15);
+                /* doc.text(fechaTexto, 85, 25); */
             }
             else {
-                doc.text(fechaTexto, 85, 20);
+                doc.text(`${this.infoSesion.dis_Tipo_Distrito}: ${this.infoSesion.dis_Alias}`, 85, 15);
+                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 20);
+                /* doc.text(fechaTexto, 85, 20); */
             }
             
             doc.line(10, 32, 200, 32);
@@ -169,7 +176,7 @@ class ResumenMembresia extends Component {
 
             doc.line(30, 160, 90, 160);
             doc.text("SECRETARIO", 51, 163);
-            // doc.text(`${this.state.infoMinistro.pem_Nombre}`, 38, 138);
+            doc.text(`${this.state.infoSecretario.pem_Nombre}`, 38, 158);
             doc.line(120, 160, 180, 160);
             doc.text("PASTOR", 145, 163);
             doc.text(`${this.state.infoMinistro.pem_Nombre}`, 130, 158);
@@ -184,7 +191,7 @@ class ResumenMembresia extends Component {
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>
-                            <Col xs="12">
+                            <Col xs="10">
                                 <Input
                                     type="select"
                                     name="idDistrito"
@@ -196,7 +203,7 @@ class ResumenMembresia extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col xs="12">
+                            <Col xs="10">
                                 <Input
                                     type="select"
                                     name="sectorSeleccionado"

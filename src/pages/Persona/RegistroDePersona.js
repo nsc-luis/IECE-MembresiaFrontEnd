@@ -89,7 +89,11 @@ class RegistroDePersonal extends Component {
                     ...this.state.domicilio,
                     hd_Tipo_Subdivision: "COL",
                     sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector,
-                    dis_Id_Distrito: JSON.parse(localStorage.getItem('infoSesion')).dis_Id_Distrito
+                    dis_Id_Distrito: JSON.parse(localStorage.getItem('infoSesion')).dis_Id_Distrito,
+                    pais_Id_Pais: "0",
+                    hd_Calle: "",
+                    hd_Localidad: "",
+                    hd_Numero_Exterior: ""
                 },
                 habilitaPerBautizado: true
                 /* hogar: {
