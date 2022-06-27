@@ -43,7 +43,7 @@ const helpers = {
     // URLs PARA PRUEBA
     // url_api: "http://" + window.location.hostname + ":59239/api",
     url_api: "http://iece-tpr.ddns.net/webapi/api",
-    //url_api : "http://" + window.location.hostname + "/webapi/api",
+    // url_api : "http://localhost:59239/webapi/api",
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
@@ -55,7 +55,7 @@ const helpers = {
     },
 
     authAxios: axios.create({
-        // baseURL: "http://" + window.location.hostname + ":59239/api",
+        // baseURL: "http://localhost:59239/webapi/api",
         baseURL: "http://iece-tpr.ddns.net/webapi/api",
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`

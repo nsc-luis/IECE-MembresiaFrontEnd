@@ -14,7 +14,7 @@ import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
 
-export default function ReporteOficiosProfesiones(){
+export default function ReporteCumpleaños(){
     //Estados
     const [personas, setPersonas] = useState([])
     const dto = JSON.parse(localStorage.getItem("dto"))
@@ -24,20 +24,25 @@ export default function ReporteOficiosProfesiones(){
         if(sector == null){
             helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
                 .then(res => {
-                    setPersonas(res.data)
+                    const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
+                        return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
+                    })
+                    setPersonas(sortedData)
                 });
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
-                console.log(res.data)
-                setPersonas(res.data)
+                const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
+                    return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
+                })
+                setPersonas(sortedData)
             });
         }
     }, [personas.length])
 
     const downloadTable = () =>{
         TableToExcel.convert(document.getElementById("table1"), {
-            name: "Personal_Oficios_y_Profesiones.xlsx",
+            name: "Cumpleaños_membresia.xlsx",
             sheet: {
               name: "Hoja 1"
             }
@@ -63,7 +68,7 @@ export default function ReporteOficiosProfesiones(){
         const doc = new jsPDF("p", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("REPORTE PROFESIONES Y OFICIOS", 85, 10);
+        doc.text("REPORTE CUMPLEAÑOS", 85, 10);
         doc.setFontSize(8);
         doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 15)
         
@@ -80,52 +85,17 @@ export default function ReporteOficiosProfesiones(){
             'Indice',
             'Nombre',
             'Grupo',
-            'Profesion_Oficio_1',
-            'Profesion_Oficio_2',
-            'Tel_Celular',
-            'Email',
+            'Fecha_Nacimiento',
+            'Edad_Actual',
         ]
         const data = personas.map((persona,index) => ({
             Indice: String(index+1),
-            Nombre: persona.persona.per_Nombre + ' ' + persona.persona.per_Apellido_Paterno + ' ' + persona.persona.per_Apellido_Materno,
+            Nombre: persona.persona ? persona.persona.per_Nombre : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Paterno : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Materno : " ",
             Grupo: persona.persona.per_Bautizado ? "Bautizado" : "No Bautizado",
-            Profesion_Oficio_1: String(persona.persona.profesionOficio1[0].pro_Sub_Categoria),
-            Profesion_Oficio_2: String(persona.persona.profesionOficio2[0].pro_Sub_Categoria),
-            Tel_Celular: String(persona.persona.per_Telefono_Movil ? persona.persona.per_Telefono_Movil : 'n/a'),
-            Email: String(persona.persona.per_Email_Personal)
+            Fecha_Nacimiento: String(moment(persona.persona.per_Fecha_Nacimiento).format("DD/MM/YYYY")),
+            Edad_Actual: String(moment().diff(persona.persona.per_Fecha_Nacimiento, "years")),
         }))
-        doc.table(10, 35, data, headers, {autoSize:true, fontSize: 6, padding:1})
-        // doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-        // doc.rect(10, yAxis, 190, 4, "F");
-        // doc.setFont("", "", "bold");
-        // yAxis += 3;
-        // doc.text("Indice", 11, yAxis);
-        // doc.text("Nombre Completo", 20, yAxis);
-        // doc.text("Grupo", 60, yAxis);
-        // doc.text("Profesión/Oficio 1", 80, yAxis);
-        // doc.text("Profesión/Oficio 2", 110, yAxis);
-        // doc.text("Teléfono Movil", 140, yAxis);
-        // doc.text("E-mail", 170, yAxis);
-        // yAxis += 7;
-        // doc.setFontSize(6);
-        // personas.map((persona) => {
-        //     doc.text(`${index}`, 13, yAxis);
-        //     doc.text(`${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-        //     doc.text(`${persona.persona.per_Bautizado ? 'Bautizado' : 'No Bautizado'}`, 60, yAxis);
-        //     doc.text(`${persona.persona.profesionOficio1[0].pro_Sub_Categoria}`, 80, yAxis);
-        //     doc.text(`${persona.persona.profesionOficio2[0].pro_Sub_Categoria}`, 110, yAxis);
-        //     doc.text(`${persona.persona.per_Telefono_Movil}`, 140, yAxis);
-        //     doc.text(`${persona.persona.per_Email_Personal}`, 170, yAxis);
-        //     yAxis+=5;
-        //     index++;
-            
-        // })
-
-        // yAxis += 2;
-        // doc.rect(75, yAxis, 15, 4);
-        // yAxis += 3;
-        // doc.text("TOTAL DE PERSONAL BAUTIZADO:", 20, yAxis);
-        // doc.text(`${totalCount}`, 80, yAxis);
+        doc.table(10, 35, data, headers, {autoSize:true, fontSize: 8, padding:1})
 
         let yAxis = 160
         doc.setFontSize(8);
@@ -145,7 +115,7 @@ export default function ReporteOficiosProfesiones(){
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
 
 
-        doc.save("ReporteOficiosProfesiones.pdf");
+        doc.save("ReporteCumpleaños.pdf");
     }
     return(
         <Layout>
@@ -161,35 +131,31 @@ export default function ReporteOficiosProfesiones(){
                         <img src={logo} width="100%"></img> 
                     </Col>
                     <Col>
-                        REPORTE DE PROFESIONES Y OFICIOS
+                        REPORTE DE CUMPLEAÑOS
                         <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
                         {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
                     </Col>
                 </Row>
                 </CardTitle>
                 <CardBody>
-                    <Table responsive hover id="table1" data-cols-width="10,40,20,40,40,20,30">
+                    <Table responsive hover id="table1" data-cols-width="10,40,20,40,30">
                         <thead>
                             <tr>
                                 <th data-f-bold>Indice</th>
                                 <th data-f-bold>Nombre Completo</th>
                                 <th data-f-bold>Grupo</th>
-                                <th data-f-bold>Profesión / Oficio 1</th>
-                                <th data-f-bold>Profesión / Oficio 2</th>
-                                <th data-f-bold>Telefono Movil</th>
-                                <th data-f-bold>E-mail</th>
+                                <th data-f-bold>Fecha Nacimiento</th>
+                                <th data-f-bold>Edad Actual</th>
                             </tr>
                         </thead>
                         <tbody>
                             {personas.map((persona, index) => (
-                                <tr key={persona.persona.per_Id_Persona}>
+                                <tr key={persona.per_Id_Persona}>
                                     <td>{index + 1}</td>
-                                    <td>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</td>
-                                    <td>{persona.persona.per_Bautizado ? "Bautizado" : "No Bautizado"}</td>
-                                    <td>{persona.persona.profesionOficio1[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
-                                    <td>{persona.persona.profesionOficio2[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
-                                    <td>{persona.persona.per_Telefono_Movil}</td>
-                                    <td>{persona.persona.per_Email_Personal}</td>
+                                    <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                    <td>{persona.per_Bautizado ? "Bautizado" : "No Bautizado"}</td>
+                                    <td>{moment(persona.per_Fecha_Nacimiento).format("LL")}</td>
+                                    <td>{moment().diff(persona.per_Fecha_Nacimiento, "years")}</td>
                                 </tr>
                             ))}
                         </tbody>
