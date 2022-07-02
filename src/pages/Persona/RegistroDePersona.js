@@ -89,7 +89,11 @@ class RegistroDePersonal extends Component {
                     ...this.state.domicilio,
                     hd_Tipo_Subdivision: "COL",
                     sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector,
-                    dis_Id_Distrito: JSON.parse(localStorage.getItem('infoSesion')).dis_Id_Distrito
+                    dis_Id_Distrito: JSON.parse(localStorage.getItem('infoSesion')).dis_Id_Distrito,
+                    pais_Id_Pais: "0",
+                    hd_Calle: "",
+                    hd_Localidad: "",
+                    hd_Numero_Exterior: ""
                 },
                 habilitaPerBautizado: true
                 /* hogar: {
@@ -107,6 +111,10 @@ class RegistroDePersonal extends Component {
                     res.data.per_Fecha_Boda_Civil = helpers.reFormatoFecha(res.data.per_Fecha_Boda_Civil);
                     res.data.per_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(res.data.per_Fecha_Boda_Eclesiastica);
                     res.data.per_Fecha_Recibio_Espiritu_Santo = helpers.reFormatoFecha(res.data.per_Fecha_Recibio_Espiritu_Santo);
+                    res.data.per_Bautizado = JSON.parse(localStorage.getItem("nvaAltaBautizado"));
+                    res.data.per_En_Comunion = JSON.parse(localStorage.getItem("nvaAltaComunion"));
+                    res.data.per_Categoria = localStorage.getItem("categoria") ? localStorage.getItem("categoria") : res.data.per_Categoria;
+
                     this.setState({
                         form: res.data
                     })
@@ -125,6 +133,9 @@ class RegistroDePersonal extends Component {
                 boolComentarioEdicion: true,
                 form: {
                     ...this.state.form,
+                    /* per_Bautizado: JSON.parse(localStorage.getItem("nvaAltaBautizado")),
+                    per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
+                    per_Categoria: localStorage.getItem("categoria"), */
                     per_Id_Persona: localStorage.getItem("idPersona"),
                     sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
                 }
@@ -370,8 +381,6 @@ class RegistroDePersonal extends Component {
             await helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                 .then(res => {
                     if (res.data.status === "success") {
-                        // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                         this.setState({
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
@@ -435,6 +444,11 @@ class RegistroDePersonal extends Component {
         this.setState({
             form: {}
         });
+        localStorage.removeItem("CambiarABautizado");
+        localStorage.removeItem("idPersona");
+        localStorage.removeItem("nvaAltaBautizado");
+        localStorage.removeItem("nvaAltaComunion");
+        localStorage.removeItem("categoria");
     }
 
     handle_ComentarioHistorialTransacciones = (e) => {

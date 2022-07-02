@@ -15,7 +15,7 @@ import {
 class PersonaForm extends Component {
 
     url = helpers.url_api;
-    fechaNoIngresada = "1900-01-01";
+    fechaNoIngresada = "";
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
@@ -260,7 +260,7 @@ class PersonaForm extends Component {
             // Reformateando fecha
             var f = per_Fecha_Nacimiento.split("-")
             var y = f[0].substr(2, 2)
-            var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[0]
+            var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[2]
 
             changeRFCSinHomo(RFCSinHomo)
             getPersonaByRFCSinHomo(RFCSinHomo);
@@ -371,6 +371,19 @@ class PersonaForm extends Component {
             }
         }
 
+        const invocaFormularioDePersonaNB = () => {
+            if (this.state.datosPersonaEncontrada.per_Bautizado) {
+                helpers.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
+            }
+            else {
+                helpers.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
+            }
+            localStorage.setItem("idPersona", this.state.datosPersonaEncontrada.per_Id_Persona);
+            localStorage.setItem("nvaAltaBautizado", this.state.datosPersonaEncontrada.per_Bautizado);
+            localStorage.setItem("nvaAltaComunion", this.state.datosPersonaEncontrada.per_En_Comunion);
+            document.location.href = '/RegistroDePersona';
+        }
+
         const enviarInfo = (e) => {
             e.preventDefault();
             var objPersona = this.props.form
@@ -381,9 +394,9 @@ class PersonaForm extends Component {
                 /* { formato: "formatoFecha", campo: "per_Fecha_Bautismo", estado: "fechaBautismoInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Civil", estado: "fechaBodaCivilInvalida" },
                 { formato: "formatoFecha", campo: "per_Fecha_Boda_Eclesiastica", estado: "fechaBodaEclesiasticaInvalida" },
-                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" }, */
+                { formato: "formatoFecha", campo: "per_Fecha_Recibio_Espiritu_Santo", estado: "fechaEspitiruSantoInvalida" },
                 { formato: "formatoEmail", campo: "per_Email_Personal", estado: "emailInvalido" },
-                { formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido" }
+                { formato: "formatoTelefono", campo: "per_Telefono_Movil", estado: "telMovilInvalido" } */
             ]
             camposPersonaAValidar.forEach(element => {
                 validaFormatos(element.formato, objPersona[element.campo], element.estado)
@@ -407,6 +420,13 @@ class PersonaForm extends Component {
                             PersonaEntity: objPersona,
                             HogarDomicilioEntity: objDomicilio
                         }
+                        if (domicilio.pais_Id_Pais === "0"
+                            || domicilio.hd_Calle === "" 
+                            || domicilio.hd_Localidad === "" ||
+                            domicilio.hd_Numero_Exterior === "") {
+                                alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
+                                return false;
+                            }
                         fnGuardaPersona(PersonaDomicilioHogar)
                     } else {
                         fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
@@ -443,7 +463,7 @@ class PersonaForm extends Component {
                                             </CardHeader>
                                             <CardBody>
                                                 <div className="alert alert-warning mt-3" role="alert">
-                                                    <h5><strong>AVISO: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
+                                                    <h5><strong>Ignorar</strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
                                                 </div>
 
                                                 <FormGroup>
@@ -605,21 +625,36 @@ class PersonaForm extends Component {
                                                             </Button>
                                                         </div>
                                                         {bolPersonaEncontrada === true &&
-                                                            <div className="col-sm-">
-                                                                <Button
-                                                                    type="button"
-                                                                    onClick={handleIgnorarDuplicados}
-                                                                    color="success"
-                                                                >
-                                                                    <span
-                                                                        className="fa fa-check fa-sm"
-                                                                        style={{ paddingRight: "20px" }}>
-                                                                    </span>
-                                                                    <i>Ignorar duplicados y continuar</i>
-                                                                </Button>
-                                                            </div>
+                                                            <>
+                                                                {/* <div className="col-sm-2">
+                                                                    <Button
+                                                                        type="button"
+                                                                        color="success"
+                                                                        onClick={invocaFormularioDePersonaNB}
+                                                                    >
+                                                                        <span
+                                                                            className="fa fa-pen fa-sm"
+                                                                            style={{ paddingRight: "5px" }}>
+                                                                        </span>
+                                                                        <i>Editar</i>
+                                                                    </Button>
+                                                                </div> */}
+                                                                <div className="col-sm-4">
+                                                                    <Button
+                                                                        type="button"
+                                                                        onClick={handleIgnorarDuplicados}
+                                                                        color="danger"
+                                                                    >
+                                                                        <span
+                                                                            className="fa fa-times fa-sm"
+                                                                            style={{ paddingRight: "5px" }}>
+                                                                        </span>
+                                                                        <i>Ignorar y duplicar registro</i>
+                                                                    </Button>
+                                                                </div>
+                                                            </>
                                                         }
-                                                        <div className="col-sm-4"></div>
+
                                                     </div>
                                                 </FormGroup>
 
@@ -701,7 +736,7 @@ class PersonaForm extends Component {
                                                                             onClick={handleEditaNombre}
                                                                         >
                                                                             <span
-                                                                                className="fa fa-pencil fa-sm"
+                                                                                className="fa fa-pen fa-sm"
                                                                                 style={{ paddingRight: "10px" }}>
                                                                             </span>
                                                                             Editar nombre

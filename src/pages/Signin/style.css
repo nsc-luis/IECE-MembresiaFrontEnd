@@ -1,3 +1,10 @@
 .faIconButton {
     margin-right: 5px;
 }
+.loginAlert {
+    text-align: center;
+    font-size: 1em;
+}
+.loginAlertSuccess {
+    color: green!important;
+}

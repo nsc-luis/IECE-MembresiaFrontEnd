@@ -51,7 +51,7 @@ class FrmMatrimonioLegalizacion extends Component {
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
             }
         })
-        if (this.props.mat_Id_MatrimonioLegalizacion === "0") {
+        if (localStorage.getItem("mat_Id_MatrimonioLegalizacion") === "0") {
             this.setState({
                 matLegal: {
                     ...this.state.matLegal,
@@ -75,7 +75,7 @@ class FrmMatrimonioLegalizacion extends Component {
             })
         }
         else {
-            helpers.authAxios.get(helpers.url_api + "/Matrimonio_Legalizacion/" + this.props.mat_Id_MatrimonioLegalizacion)
+            helpers.authAxios.get(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"))
             .then(res => {
                 res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil);
                 res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica)
@@ -207,14 +207,19 @@ class FrmMatrimonioLegalizacion extends Component {
         }
     }
 
+    componentWillUnmount() {
+        localStorage.removeItem("mat_Id_MatrimonioLegalizacion");
+    }
+
     render() {
         const {
-            handle_CancelaCaptura
+            handle_CancelaCaptura,
+            mat_Id_MatrimonioLegalizacion
         } = this.props
 
         const handle_Submit = async (e) => {
             e.preventDefault();
-            if (this.props.mat_Id_MatrimonioLegalizacion === "0") {
+            if (localStorage.getItem("mat_Id_MatrimonioLegalizacion") === "0") {
                 try {
                     await helpers.authAxios.post(helpers.url_api + "/Matrimonio_Legalizacion/", this.state.matLegal)
                         .then(res => {
@@ -254,7 +259,7 @@ class FrmMatrimonioLegalizacion extends Component {
             }
             else {
                 try {
-                    await helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + this.props.mat_Id_MatrimonioLegalizacion, this.state.matLegal)
+                    await helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
                         .then(res => {
                             if (res.data.status === "success") {
                                 // alert(res.data.mensaje);

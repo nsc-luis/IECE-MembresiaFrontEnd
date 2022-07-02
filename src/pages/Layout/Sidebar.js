@@ -520,7 +520,7 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="/AltaNuevoIngreso">Nuevo Ingreso</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaNoBautizada}>Nuevo Ingreso</Link>
                                         <Link className="collapse-item" to="/AltaReactivacion">Reativación</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilioNB">Cambio de Domicilio</Link>
                                     </div>

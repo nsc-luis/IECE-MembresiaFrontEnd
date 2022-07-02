@@ -163,7 +163,7 @@ class Login extends Component {
                                                 <Col sm="2">
                                                     Distrito:
                                                 </Col>
-                                                <Col sm="4">
+                                                <Col sm="10">
                                                     {this.state.obispo &&
                                                         <React.Fragment>
                                                             <Input
@@ -209,7 +209,7 @@ class Login extends Component {
                                                 <Col sm="2">
                                                     Sector:
                                                 </Col>
-                                                <Col sm="4">
+                                                <Col sm="10">
                                                     <Input
                                                         type="select"
                                                         name="listaSectores"
