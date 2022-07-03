@@ -594,7 +594,7 @@ class Sidebar extends Component {
                     {/* Nav Item - Actualización Collapse Menu */}
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPAct" aria-expanded="true" aria-controls="collapsepages">
-                            <i className="fas fa-fw fa-user-times"></i>
+                            <i className="fas fa-fw fa-user-edit"></i>
                             <span>Actualizacion de personal</span>
                         </Link>
                         <div id="collapseMPAct" className="collapse" aria-labelledby="headingMPAct" data-parent="#accordionSidebar">
