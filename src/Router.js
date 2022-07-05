@@ -30,10 +30,13 @@ class Router extends Component {
     constructor(props) {
         super(props)
         this.state = {}
-        /* if(!localStorage.getItem("infoSesion")) {
-            return <Signin />;
-        } */
-        // localStorage.clear();
+    }
+
+    componentDidMount() {
+        if (localStorage.getItem('infoSesion')) {
+            console.log(localStorage.getItem('infoSesion'));
+            //document.location.href = '/';
+        }
     }
 
     render() {

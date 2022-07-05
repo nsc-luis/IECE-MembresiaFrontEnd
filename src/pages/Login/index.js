@@ -29,7 +29,7 @@ class Login extends Component {
     }
 
     onChangeMinistro = (e) => {
-        console.log(e.target.value);
+        // console.log(e.target.value);
         if (e.target.value !== "0") {
             this.getListaDistritosPorMinistro(e.target.value);
             this.setState({
@@ -46,7 +46,7 @@ class Login extends Component {
         }
     }
 
-    getListaDistritosPorMinistro = async () => {
+    /* getListaDistritosPorMinistro = async () => {
         await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetAlcancePastoralByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
             .then(res => {
                 if (res.data.obispo === true) {
@@ -63,6 +63,15 @@ class Login extends Component {
                 }
                 // console.log(res.data.datos);
                 // this.setState({ listaDistritosPorMinistro: res.data.datos });
+            });
+    } */
+
+    getListaDistritosPorMinistro = async () => {
+        await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
+            .then(res => {
+                this.setState({
+                    listaDistritosPorMinistro: res.data.sectores
+                })
             });
     }
 
@@ -81,38 +90,51 @@ class Login extends Component {
         }
     }
 
-    getListaSectoresPorDistrito = async (idDistrito) => {
-        if (this.state.obispo === true) {
-            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistrito)
+    getListaSectoresPorDistrito = async (idDistritoSector, obispo) => {
+        if (obispo) {
+            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistritoSector)
                 .then(res => {
                     this.setState({ listaSectoresPorDistrito: res.data.sectores });
                 });
         }
         else {
-            await helpers.authAxios.get(this.url + '/Sector/' + this.state.idSector)
+            await helpers.authAxios.get(this.url + '/Sector/' + idDistritoSector)
                 .then(res => {
-                    this.setState({ listaSectoresPorDistrito: res.data });
+                    this.setState({ listaSectoresPorDistrito: res.data.sector });
                 });
         }
 
     }
 
     onChangeDistrito = (e) => {
-        // console.log(e.target.value);
         this.setState({ distritoSeleccionado: e.target.value });
-        /* this.getListaSectoresPorDistrito(e.target.value); */
-        this.getListaSectoresPorMinistro(e.target.value, this.infoSesion.mu_pem_Id_Pastor);
-        //Almacenar Distrito
-        localStorage.setItem('dto',e.target.value)
-        console.log("Distrito: " + e.target.value)
+
+        // Almacenar Distrito en LocalStorage
+        localStorage.setItem('dto', e.target.value)
+        if (e.target.value === "0") {
+            this.setState({ listaSectoresPorDistrito: [] })
+            return false
+        }
+
+        this.state.listaDistritosPorMinistro.forEach(distrito => {
+            if (distrito.dis_Id_Distrito === parseInt(e.target.value)) {
+                if (distrito.pem_Id_Obispo === this.infoSesion.mu_pem_Id_Pastor) {
+                    this.setState({ obispo: true })
+                    this.getListaSectoresPorDistrito(e.target.value, true)
+                }
+                else {
+                    this.setState({ obispo: false })
+                    this.getListaSectoresPorDistrito(distrito.sec_Id_Sector, false)
+                }
+            }
+        });
+
     }
 
     onChangeSector = (e) => {
-        // console.log(e.target.value);
         this.setState({ sectorSeleccionado: e.target.value });
-        //Almacenar Sector
-        localStorage.setItem('sector',e.target.value)
-        console.log("Sector: " + e.target.value)
+        // Almacenar Sector en LocalStorage
+        localStorage.setItem('sector', e.target.value)
     }
 
     handleLogoff = () => {
@@ -164,28 +186,29 @@ class Login extends Component {
                                                     Distrito:
                                                 </Col>
                                                 <Col sm="10">
-                                                    {this.state.obispo &&
-                                                        <React.Fragment>
-                                                            <Input
-                                                                type="select"
-                                                                name="listaDistritos"
-                                                                value={this.state.distritoSeleccionado}
-                                                                onChange={this.onChangeDistrito}
-                                                            >
-                                                                <option value="0">Selecciona un distrito</option>
-                                                                {
-                                                                    this.state.listaDistritosPorMinistro.map(distrito => {
-                                                                        return (
-                                                                            <React.Fragment key={distrito.dis_Id_Distrito}>
-                                                                                <option value={distrito.dis_Id_Distrito}>{distrito.dis_Tipo_Distrito} {distrito.dis_Numero}: {distrito.dis_Alias}</option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </Input>
-                                                        </React.Fragment>
-                                                    }
-                                                    {!this.state.obispo &&
+                                                    <React.Fragment>
+                                                        <Input
+                                                            type="select"
+                                                            name="listaDistritos"
+                                                            value={this.state.distritoSeleccionado}
+                                                            onChange={this.onChangeDistrito}
+                                                        >
+                                                            <option value="0">Selecciona un distrito</option>
+                                                            {
+                                                                this.state.listaDistritosPorMinistro.map(distrito => {
+                                                                    return (
+                                                                        <React.Fragment key={distrito.dis_Id_Distrito}>
+                                                                            <option value={distrito.dis_Id_Distrito}>{distrito.dis_Tipo_Distrito} {distrito.dis_Numero}: {distrito.dis_Alias}</option>
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </Input>
+                                                    </React.Fragment>
+                                                    {/* {this.state.obispo &&
+                                                        
+                                                    } */}
+                                                    {/* {!this.state.obispo &&
                                                         <React.Fragment>
                                                             <Input
                                                                 type="select"
@@ -197,7 +220,7 @@ class Login extends Component {
                                                                 <option value={this.state.listaDistritosPorMinistro.dis_Id_Distrito}>{this.state.listaDistritosPorMinistro.dis_Tipo_Distrito} {this.state.listaDistritosPorMinistro.dis_Numero}: {this.state.listaDistritosPorMinistro.dis_Alias}</option>
                                                             </Input>
                                                         </React.Fragment>
-                                                    }
+                                                    } */}
                                                 </Col>
                                             </Row>
                                         </FormGroup>
@@ -217,7 +240,7 @@ class Login extends Component {
                                                         onChange={this.onChangeSector}
                                                     >
                                                         <option value="0">Selecciona un sector</option>
-                                                        {/* {
+                                                        {
                                                             this.state.listaSectoresPorDistrito.map(sector => {
                                                                 return (
                                                                     <React.Fragment key={sector.sec_Id_Sector}>
@@ -225,8 +248,8 @@ class Login extends Component {
                                                                     </React.Fragment>
                                                                 )
                                                             })
-                                                        } */}
-                                                        {
+                                                        }
+                                                        {/* {
                                                             this.state.listaSectoresPorMinistro.map(sector => {
                                                                 return (
                                                                     <React.Fragment key={sector.sec_Id_Sector}>
@@ -234,7 +257,7 @@ class Login extends Component {
                                                                     </React.Fragment>
                                                                 )
                                                             })
-                                                        }
+                                                        } */}
                                                     </Input>
                                                 </Col>
                                             </Row>
