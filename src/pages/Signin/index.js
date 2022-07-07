@@ -196,7 +196,7 @@ class Login extends Component {
                                                         Validar credenciales
                                                     </Button>
                                                     <br />
-                                                    <Link to="/Signup">Registrar nuevo usuario.</Link>
+                                                    <Link to="/Signup">Registrar nuevo usuario.</Link> | <Link to="/SolicitudDeRestablecimiento">¿Olvidaste la contraseña?.</Link>
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Input

@@ -23,6 +23,8 @@ import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
+import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
+import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -66,6 +68,8 @@ class Router extends Component {
                     <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                     <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                     <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
+                    <Route exact path="/SolicitudDeRestablecimiento" component={SolicitudDeRestablecimiento} />
+                    <Route exact path="/ValidaCambioDeContrasena" component={ValidaCambioDeContrasena} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>
