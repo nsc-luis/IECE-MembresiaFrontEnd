@@ -36,7 +36,7 @@ class Router extends Component {
 
     componentDidMount() {
         if (localStorage.getItem('infoSesion')) {
-            console.log(localStorage.getItem('infoSesion'));
+            //console.log(localStorage.getItem('infoSesion'));
             //document.location.href = '/';
         }
     }
