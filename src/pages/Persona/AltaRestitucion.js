@@ -28,7 +28,7 @@ function AltaRestitucion() {
         helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${user.sec_Id_Sector}/true`)
             .then(res => {
                 setOpcionesPersonas(res.data.personas)
-                console.log(opcionesPersonas)
+                //console.log(opcionesPersonas)
             });
     }, [opcionesPersonas.length]);
 
@@ -36,7 +36,7 @@ function AltaRestitucion() {
         helpers.authAxios.get("/Hogar_Persona/GetListaHogares")
             .then(res => {
                 setOpcionesHogares(res.data)
-                console.log(opcionesHogares)
+                //console.log(opcionesHogares)
             });
     }, [opcionesHogares.length]);
 
@@ -44,7 +44,7 @@ function AltaRestitucion() {
         helpers.authAxios.get("/pais")
             .then(res => {
                 setPaises(res.data)
-                console.log(paises)
+                //console.log(paises)
             });
     }, [paises.length]);
 
@@ -76,7 +76,7 @@ function AltaRestitucion() {
         }))
     };
     const handleFechaTransaccion = (value) => {
-        console.log(value)
+        //console.log(value)
         if(value == "") setMostrarHogar(false)
     
         setData( prevState => ({
@@ -89,7 +89,7 @@ function AltaRestitucion() {
             ...prevState,
             [event.name]: event.value
         }))
-        console.log(data)
+        //console.log(data)
     };
 
     //Manejo de eventos de hogar
@@ -105,8 +105,8 @@ function AltaRestitucion() {
             .then(res => {
                 setMiembrosHogar(res.data)
             });
-            console.log(hogar)
-            console.log(miembrosHogar)
+            //console.log(hogar)
+            //console.log(miembrosHogar)
 
     };
     const handleJerarquia = (value) => {
@@ -150,9 +150,15 @@ function AltaRestitucion() {
                 jerarquia: jerarquia,
                 hp_Id_Hogar_Persona: hogar.hd_Id_Hogar,
             }
+            console.log(formattedData)
             helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
             .then(res => {
-                console.log(res)
+                if(res.data.status === 'error') {
+                    console.log(res.data.mensaje)
+                } 
+                else {
+                    console.log(res.data)
+                }
             });
         }else{
             formattedData = {
@@ -183,11 +189,15 @@ function AltaRestitucion() {
             }
             helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, formattedData)
                 .then(res => {
-                    console.log(res)
+                    if(res.data.status === 'error') {
+                        console.log(res.data.mensaje)
+                    } 
+                    else {
+                        console.log(res.data)
+                    }
                 });
         }
-        console.log(formattedData)
-
+        //console.log(formattedData)
     };
     return(
         <Layout>
@@ -350,7 +360,7 @@ function AltaRestitucion() {
                                 {miembrosHogar.map((miembro, index) => (
                                     <option key={miembro.hd_Id_Hogar} value={index + 1}>{index + 1}</option>
                                 ))}
-                                <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option>
+                                {/* <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option> */}
                                 </Input>
                             </Col>
                         </FormGroup>

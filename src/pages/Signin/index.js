@@ -23,9 +23,6 @@ class Login extends Component {
             loginInvalido: false,
             loginSuccess: ""
         };
-        if(localStorage.getItem("infoSesion")) {
-            document.location.href = '/Main';
-        }
     }
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
@@ -89,26 +86,42 @@ class Login extends Component {
                 await axios.post(
                     this.url + '/usuario/login',
                     {
-                        Email: this.state.Email, 
+                        Email: this.state.Email,
                         Password: this.state.Password
                     })
                     .then(res => {
                         // VALIDA CREDENCIALES
                         if (res.data.status === "success") {
-                            this.setState({
-                                token: res.data.token,
-                                mensajes: {
-                                    ...this.state.mensajes,
-                                    loginAlert: res.data.message
-                                },
-                                loginInvalido: true,
-                                loginSuccess: "loginAlertSuccess"
-                            });
-                            localStorage.setItem('token', this.state.token);
-                            localStorage.setItem('infoSesion', JSON.stringify(res.data.infoSesion[0]));
-                            localStorage.setItem('seccion', '');
-                            localStorage.setItem('componente', '');
-                            setTimeout(() => { document.location.href = '/Login'; }, 3000);
+                            if (res.data.infoSesion[0] === undefined) {
+                                this.setState({
+                                    mensajes: {
+                                        ...this.state.mensajes,
+                                        loginAlert: "Error: El usuario/ministro no tiene asignado un sector."
+                                    },
+                                    loginInvalido: true,
+                                    loginSuccess: ""
+                                });
+
+                                localStorage.removeItem('token');
+                                localStorage.removeItem('infoSesion');
+                            }
+                            else {
+                                this.setState({
+                                    token: res.data.token,
+                                    mensajes: {
+                                        ...this.state.mensajes,
+                                        loginAlert: res.data.message
+                                    },
+                                    loginInvalido: true,
+                                    loginSuccess: "loginAlertSuccess"
+                                });
+                                localStorage.setItem('token', this.state.token);
+                                localStorage.setItem('infoSesion', JSON.stringify(res.data.infoSesion[0]));
+                                localStorage.setItem('seccion', '');
+                                localStorage.setItem('componente', '');
+
+                                setTimeout(() => { document.location.href = '/Login'; }, 3000);
+                            }
                         }
                         else {
                             this.setState({
@@ -179,11 +192,11 @@ class Login extends Component {
                                                     <Button
                                                         color="primary"
                                                         type="submit" >
-                                                            <span className="fa fa-key faIconButton"></span>
-                                                            Validar credenciales
+                                                        <span className="fa fa-key faIconButton"></span>
+                                                        Validar credenciales
                                                     </Button>
                                                     <br />
-                                                    <Link to="/Signup">Registrar nuevo usuario.</Link>
+                                                    <Link to="/Signup">Registrar nuevo usuario.</Link> | <Link to="/SolicitudDeRestablecimiento">¿Olvidaste la contraseña?.</Link>
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Input

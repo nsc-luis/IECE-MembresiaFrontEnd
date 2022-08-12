@@ -169,7 +169,7 @@ class PersonaForm extends Component {
                 })
 
             let jerarquias = [];
-            for (let i = 1; i <= this.state.MiembrosDelHogar.length + 1; i++) {
+            for (let i = 1; i < this.state.MiembrosDelHogar.length + 1; i++) {
                 jerarquias.push(<option value={i}>{i}</option>)
             }
 
@@ -185,13 +185,33 @@ class PersonaForm extends Component {
 
     handle_hd_Id_Hogar = async (e) => {
         let idHogar = e.target.value;
-        this.setState({
-            hogar: {
-                ...this.state.hogar,
-                hd_Id_Hogar: idHogar,
-                hp_Jerarquia: "1"
-            }
-        })
+        if (idHogar !== "0") {
+            await helpers.authAxios.get(this.url + '/Hogar_Persona/GetMiembros/' + idHogar)
+                .then(res => {
+                    this.setState({
+                        hogar: {
+                            ...this.state.hogar,
+                            hp_Jerarquia: res.data.length
+                        }
+                    })
+                });
+            this.setState({
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: idHogar
+                }
+            })
+        }
+        else {
+            this.setState({
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: idHogar,
+                    hp_Jerarquia: "1"
+                }
+            })
+        }
+
         this.fnGetDatosDelHogar(idHogar);
     }
 
@@ -421,12 +441,12 @@ class PersonaForm extends Component {
                             HogarDomicilioEntity: objDomicilio
                         }
                         if (domicilio.pais_Id_Pais === "0"
-                            || domicilio.hd_Calle === "" 
+                            || domicilio.hd_Calle === ""
                             || domicilio.hd_Localidad === "" ||
                             domicilio.hd_Numero_Exterior === "") {
-                                alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
-                                return false;
-                            }
+                            alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
+                            return false;
+                        }
                         fnGuardaPersona(PersonaDomicilioHogar)
                     } else {
                         fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
@@ -479,8 +499,12 @@ class PersonaForm extends Component {
                                                                 value={form.per_Categoria}
                                                             >
                                                                 <option value="0">Selecionar categoria</option>
-                                                                <option value="ADULTO_HOMBRE">Adulto Hombre</option>
-                                                                <option value="ADULTO_MUJER">Adulto Mujer</option>
+                                                                {JSON.parse(localStorage.getItem("nvaAltaBautizado")) === true &&
+                                                                    <React.Fragment>
+                                                                        <option value="ADULTO_HOMBRE">Adulto Hombre</option>
+                                                                        <option value="ADULTO_MUJER">Adulto Mujer</option>
+                                                                    </React.Fragment>
+                                                                }
                                                                 <option value="JOVEN_HOMBRE">Joven hombre</option>
                                                                 <option value="JOVEN_MUJER">Joven mujer</option>
                                                                 {JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false &&

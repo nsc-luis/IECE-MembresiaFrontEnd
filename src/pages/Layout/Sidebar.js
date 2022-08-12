@@ -8,7 +8,7 @@ import helpers from '../../components/Helpers';
 import './style.css'
 
 class Sidebar extends Component {
-    // infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     constructor(props) {
         super(props);
         this.state = {
@@ -24,8 +24,12 @@ class Sidebar extends Component {
             formBajaBautizadoDefuncion: {},
             modalBajaNoBautizadoDefuncion: false,
             modalBajaNoBautizadoAlejamiento: false,
+            modalBajaBautizadoCambioDomicilio: false,
+            modalBajaNoBautizadoCambioDomicilio: false,
             formBajaNoBautizadoDefuncion: {},
-            formBajaNoBautizadoAlejamiento: {}
+            formBajaNoBautizadoAlejamiento: {},
+            formBajaBautizadoCambioDomicilio: {},
+            formBajaNoBautizadoCambioDomicilio: {}
         }
     }
 
@@ -48,6 +52,18 @@ class Sidebar extends Component {
                 ...this.state.formBajaNoBautizadoAlejamiento,
                 personaSeleccionada: '0',
                 codigoTransaccion: '0',
+                fechaTransaccion: '01/01/1900'
+            },
+            formBajaBautizadoCambioDomicilio: {
+                ...this.state.formBajaBautizadoCambioDomicilio,
+                idPersona: '0',
+                tipoDestino: true,
+                fechaTransaccion: '01/01/1900'
+            },
+            formBajaNoBautizadoCambioDomicilio: {
+                ...this.state.formBajaNoBautizadoCambioDomicilio,
+                idPersona: '0',
+                tipoDestino: true,
                 fechaTransaccion: '01/01/1900'
             }
         });
@@ -84,6 +100,24 @@ class Sidebar extends Component {
         this.setState({
             formBajaNoBautizadoAlejamiento: {
                 ...this.state.formBajaNoBautizadoAlejamiento,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
+        })
+    }
+
+    onChangeBajaBautizadoCambioDomicilio = (e) => {
+        this.setState({
+            formBajaBautizadoCambioDomicilio: {
+                ...this.state.formBajaBautizadoCambioDomicilio,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
+        })
+    }
+
+    onChangeBajaNoBautizadoCambioDomicilio = (e) => {
+        this.setState({
+            formBajaNoBautizadoCambioDomicilio: {
+                ...this.state.formBajaNoBautizadoCambioDomicilio,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
@@ -163,6 +197,22 @@ class Sidebar extends Component {
                 this.setState({ personas: res.data.personas });
             });
         this.setState({ modalBajaNoBautizadoAlejamiento: !this.state.modalBajaNoBautizadoAlejamiento })
+    }
+
+    openModalBajaBautizadoCambioDomicilio = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalBajaBautizadoCambioDomicilio: !this.state.modalBajaBautizadoCambioDomicilio })
+    }
+
+    openModalBajaNoBautizadoCambioDomicilio = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.setState({ personas: res.data.personas });
+            });
+        this.setState({ modalBajaNoBautizadoCambioDomicilio: !this.state.modalBajaNoBautizadoCambioDomicilio })
     }
 
     // METODO PARA INVOCAR UN FORMULARIO DE PERSONA NUEVO
@@ -561,7 +611,11 @@ class Sidebar extends Component {
                                             to="#"
                                             onClick={this.openModalBajaBautizadoExcomunion}
                                         >Excomunión</Link>
-                                        <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
+                                        <Link 
+                                            className="collapse-item" 
+                                            to="#"
+                                            onClick={this.openModalBajaBautizadoCambioDomicilio}
+                                        >Cambio de Domicilio</Link>
                                     </div>
                                 </div>
                                 <Link className="collapse-item" to="#" data-toggle="collapse" data-target="#collapseBajaNoBautizado" aria-expanded="true" aria-controls="collapseNoBautizado">
@@ -583,7 +637,11 @@ class Sidebar extends Component {
                                         >
                                             Alejamiento
                                         </Link>
-                                        <Link className="collapse-item" to="#">Cambio de Domicilio</Link>
+                                        <Link
+                                            className="collapse-item" 
+                                            to="#"
+                                            onClick={this.openModalBajaNoBautizadoCambioDomicilio}
+                                        >Cambio de Domicilio</Link>
                                     </div>
                                 </div>
                             </div>
@@ -594,7 +652,7 @@ class Sidebar extends Component {
                     {/* Nav Item - Actualización Collapse Menu */}
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPAct" aria-expanded="true" aria-controls="collapsepages">
-                            <i className="fas fa-fw fa-user-times"></i>
+                            <i className="fas fa-fw fa-user-edit"></i>
                             <span>Actualizacion de personal</span>
                         </Link>
                         <div id="collapseMPAct" className="collapse" aria-labelledby="headingMPAct" data-parent="#accordionSidebar">
@@ -1240,6 +1298,206 @@ class Sidebar extends Component {
                                 <Button
                                     type="button"
                                     onClick={this.openModalBajaNoBautizadoAlejamiento}
+                                    color="secondary"
+                                    className="entreBotones"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    color="success"
+                                >
+                                    <span className="fa fa-pencil"></span>Proceder
+                                </Button>
+                            </CardFooter>
+                        </Form>
+                    </Card>
+                </Modal>
+
+                {/* MODAL BAJA/BAUTIZADO/CAMBIODOMICILIO */}
+                <Modal isOpen={this.state.modalBajaBautizadoCambioDomicilio} size="lg">
+                    <Card>
+                        <Form onSubmit={this.bajaBautizadoCambioDomicilio}>
+                            <CardHeader>
+                                <CardTitle><h3>Baja de persona Bautizada por cambio de domicilio.</h3></CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="12">
+                                            <Alert color="warning">
+                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                            </Alert>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * PERSONA:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                value={this.state.formBajaBautizadoCambioDomicilio.idPersona}
+                                                name="personaSeleccionada"
+                                                onChange={this.onChangeBajaBautizadoCambioDomicilio}
+                                            >
+                                                <option value="0">Selecciona una persona</option>
+                                                {this.state.personas.map(persona => {
+                                                    return (
+                                                        <React.Fragment key={persona.per_Id_Persona}>
+                                                            <option value={persona.per_Id_Persona} >
+                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            </option>
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Tipo destino:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                name="tipoDestino"
+                                                value={this.state.formBajaBautizadoCambioDomicilio.tipoDestino}
+                                                onChange={this.onChangeBajaBautizadoCambioDomicilio}
+                                            >
+                                                <option value="0">Selecciona una opción</option>
+                                                <option value="interno">INTERNO</option>
+                                                <option value="externo">EXTERNO</option>
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Fecha de transacción:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="date"
+                                                name="fechaTransaccion"
+                                                placeholder='DD/MM/AAAA'
+                                                value={this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion}
+                                                onChange={this.onChangeBajaBautizadoCambioDomicilio}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+
+                            </CardBody>
+                            <CardFooter>
+                                <Button
+                                    type="button"
+                                    onClick={this.openModalBajaBautizadoCambioDomicilio}
+                                    color="secondary"
+                                    className="entreBotones"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    color="success"
+                                >
+                                    <span className="fa fa-pencil"></span>Proceder
+                                </Button>
+                            </CardFooter>
+                        </Form>
+                    </Card>
+                </Modal>
+
+                {/* MODAL BAJA/NO BAUTIZADO/CAMBIODOMICILIO */}
+                <Modal isOpen={this.state.modalBajaNoBautizadoCambioDomicilio} size="lg">
+                    <Card>
+                        <Form onSubmit={this.bajaNoBautizadoCambioDomicilio}>
+                            <CardHeader>
+                                <CardTitle><h3>Baja de persona NO Bautizada por Cambio de Domicilio.</h3></CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="12">
+                                            <Alert color="warning">
+                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                            </Alert>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * PERSONA:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                value={this.state.formBajaNoBautizadoCambioDomicilio.idPersona}
+                                                name="personaSeleccionada"
+                                                onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
+                                            >
+                                                <option value="0">Selecciona una persona</option>
+                                                {this.state.personas.map(persona => {
+                                                    return (
+                                                        <React.Fragment key={persona.per_Id_Persona}>
+                                                            <option value={persona.per_Id_Persona} >
+                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            </option>
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Tipo destino:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                name="tipoDestino"
+                                                value={this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino}
+                                                onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
+                                            >
+                                                <option value="0">Selecciona una opción</option>
+                                                <option value="interno">INTERNO</option>
+                                                <option value="externo">EXTERNO</option>
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Fecha de transacción:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="date"
+                                                name="fechaTransaccion"
+                                                placeholder='DD/MM/AAAA'
+                                                value={this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion}
+                                                onChange={this.onChangeNoBajaBautizadoCambioDomicilio}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+
+                            </CardBody>
+                            <CardFooter>
+                                <Button
+                                    type="button"
+                                    onClick={this.openModalBajaNoBautizadoCambioDomicilio}
                                     color="secondary"
                                     className="entreBotones"
                                 >

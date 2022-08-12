@@ -23,8 +23,8 @@ import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
-import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
-import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
+import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
+import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -32,10 +32,13 @@ class Router extends Component {
     constructor(props) {
         super(props)
         this.state = {}
-        /* if(!localStorage.getItem("infoSesion")) {
-            return <Signin />;
-        } */
-        // localStorage.clear();
+    }
+
+    componentDidMount() {
+        if (localStorage.getItem('infoSesion')) {
+            //console.log(localStorage.getItem('infoSesion'));
+            //document.location.href = '/';
+        }
     }
 
     render() {
@@ -43,7 +46,7 @@ class Router extends Component {
             <BrowserRouter /* basename='/webapp' */>
                 <Switch>
                     {/* <Route exact path="/Main" component={Main}/> */}
-                    <Route exact path="/Main" component={ResumenMembresia}/>
+                    <Route exact path="/Main" component={ListaDePersonal}/>
                     <Route exact path="/" component={Signin} />
                     <Route exact path="/Signup" component={Signup} />
                     <Route exact path="/Hogar" component={Hogar} />
@@ -65,6 +68,8 @@ class Router extends Component {
                     <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                     <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                     <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
+                    <Route exact path="/SolicitudDeRestablecimiento" component={SolicitudDeRestablecimiento} />
+                    <Route exact path="/ValidaCambioDeContrasena" component={ValidaCambioDeContrasena} />
                     <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                     <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     <Route component={PaginaNoEncontrada} />

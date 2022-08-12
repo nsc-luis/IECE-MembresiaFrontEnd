@@ -126,9 +126,9 @@ class ListaDePersonal extends Component {
     }
 
     InfoStatus = (persona) => {
-        let bautizado = persona.per_Bautizado === true ? "Bautizado" : "No bautizado";
-        let activo = persona.per_Activo === true ? "Activo" : "No activo";
-        let vivo = persona.per_Vivo === true ? "Vivo" : "Finado";
+        let bautizado = persona.per_Bautizado === true ? "BAUTIZADO" : "NO BAUTIZADO";
+        let activo = persona.per_Activo === true ? "ACTIVO" : "NO ACTIVO";
+        let vivo = persona.per_Vivo === true ? "VIVO" : "FINADO";
 
         let infoStatus = {
             bautizado,
@@ -616,8 +616,8 @@ class ListaDePersonal extends Component {
                                 disabled={this.state.habilitaFiltroGrupo}
                             >
                                 <option value="0">TODOS</option>
-                                <option value="bautizado">Bautizado</option>
-                                <option value="noBautizado">No bautizado</option>
+                                <option value="bautizado">BAUTIZADO</option>
+                                <option value="noBautizado">NO BAUTIZADO</option>
                             </Input>
                             <Label>Filtro por grupo</Label>
                         </Col>
@@ -629,12 +629,12 @@ class ListaDePersonal extends Component {
                                 disabled={this.state.habilitaFiltroCategoria}
                             >
                                 <option value="0">TODOS</option>
-                                <option value="ADULTO_HOMBRE">Adulto hombre</option>
-                                <option value="ADULTO_MUJER">Adulto mujer</option>
-                                <option value="JOVEN_HOMBRE">Jóven hombre</option>
-                                <option value="JOVEN_MUJER">Jóven mujer</option>
-                                <option value="NIÑO">Niños</option>
-                                <option value="NIÑA">Niñas</option>
+                                <option value="ADULTO_HOMBRE">ADULTO HOMBRE</option>
+                                <option value="ADULTO_MUJER">ADULTO MUJER</option>
+                                <option value="JOVEN_HOMBRE">JOVEN HOMBRE</option>
+                                <option value="JOVEN_MUJER">JOVEN MUJER</option>
+                                <option value="NIÑO">NIÑO</option>
+                                <option value="NIÑA">NIÑA</option>
                             </Input>
                             <Label>Filtro por categoria</Label>
                         </Col>
@@ -668,10 +668,10 @@ class ListaDePersonal extends Component {
                                 onChange={this.handle_filtroActivoComunionVivo}
                                 disabled={this.state.habilitaFiltroActivoComunionVivo}
                             >
-                                <option value="todos" defaultChecked>Todos</option>
-                                <option value="activo" >Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                                <option value="sinComunion">Sin comunion</option>
+                                <option value="todos" defaultChecked>TODOS</option>
+                                <option value="activo" >ACTIVO</option>
+                                <option value="inactivo">INACTIVO</option>
+                                {/* <option value="sinComunion">SIN COMUNION</option> */}
                             </Input>
                             <Label>Filtro por estatus de la persona</Label>
                         </Col>
