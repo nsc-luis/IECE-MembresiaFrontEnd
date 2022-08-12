@@ -58,7 +58,8 @@ const helpers = {
         // baseURL: "http://localhost:59239/webapi/api",
         baseURL: "http://iece-tpr.ddns.net/webapi/api",
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Access-Control-Allow-Origin': '*'
         }
     }),
 

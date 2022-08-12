@@ -138,7 +138,7 @@ function AltaRestitucion() {
     const postData = () => {
         let formattedData = {}
 
-        if(mostrarHogar){
+        if(!mostrarHogar){
             formattedData = {
                 id: 0,
                 per_Id_Persona: data.per_Id_Persona,

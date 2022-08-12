@@ -24,6 +24,7 @@ import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
 import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
+import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -65,6 +66,7 @@ class Router extends Component {
                     <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                     <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                     <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
+                    <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>

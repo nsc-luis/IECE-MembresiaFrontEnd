@@ -209,11 +209,11 @@ class RptListaDeHogares extends Component {
                                                                 hogar.miembros.map(miembro => (
 
                                                                         <tr>
-                                                                            <td style={{"background-color": bgcolor}}>AGREGAR GRUPO</td>
+                                                                            <td style={{"background-color": bgcolor}}>{miembro.per_Bautizado ? "B" : "NB"}</td>
                                                                             <td style={{"background-color": bgcolor}}>{miembro.per_Nombre + ' ' + miembro.per_Apellido_Paterno + ' '+ miembro.per_Apellido_Materno}</td>   
-                                                                            <td style={{"background-color": bgcolor}}>AGREGAR FECHA NACIMIENTO</td>
-                                                                            <td style={{"background-color": bgcolor}}>AGREGAR FECHA NACIMIENTO</td>
-                                                                            <td style={{"background-color": bgcolor}}>AGREGAR CELULAR</td>
+                                                                            <td style={{"background-color": bgcolor}}>{moment(miembro.per_Fecha_Nacimiento).format("DD/MM/YYYY")}</td>
+                                                                            <td style={{"background-color": bgcolor}}>{moment().diff(miembro.per_Fecha_Nacimiento, "years")}</td>
+                                                                            <td style={{"background-color": bgcolor}}>{miembro.per_Telefono_Movil}</td>
                                                                         </tr>
                                                                
                                                                 ))

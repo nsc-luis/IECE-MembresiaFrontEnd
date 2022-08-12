@@ -145,7 +145,7 @@ class SidebarObispo extends Component {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="#">
+                        <Link className="nav-link" to="/ReporteMovimientoEstadistico">
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Reporte de Movimiento Estadístico</span>
                         </Link>

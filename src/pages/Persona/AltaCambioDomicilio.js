@@ -1,6 +1,6 @@
 import Layout from '../Layout';
 import helpers from '../../components/Helpers'
-
+import moment from 'moment';
 import { Link, Redirect } from 'react-router-dom';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button,
@@ -14,15 +14,17 @@ function AltaCambioDomicilio() {
     const [opcionesPersonas, setOpcionesPersonas] = useState([])
     const [opcionesHogares, setOpcionesHogares] = useState([])
     const [data, setData] = useState({})
-    const [transaccion, setTransaccion] = useState({})
     const [hogar, setHogar] = useState(null)
     const [jerarquia, setJerarquia] = useState(null)
     const [miembrosHogar, setMiembrosHogar] = useState([])
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
+    const [alert, setAlert] = useState(false)
 
     const user = JSON.parse(localStorage.getItem('infoSesion'))
+    const dto = JSON.parse(localStorage.getItem("dto"))
+    const sector = JSON.parse(localStorage.getItem("sector"))
 
     //LLamadas en renderizado
     useEffect(() => {
@@ -56,16 +58,27 @@ function AltaCambioDomicilio() {
                 setData(res.data)
             })
             .then(() => {
-                setData( prevState => ({
-                    ...prevState,
-                    per_Activo: true,
-                    per_En_Comunion: true,
-                    per_Visibilidad_Abierta: false
-                }))
+                if(data.dis_Id_Distrito == dto){
+                    setData( prevState => ({
+                        ...prevState,
+                        per_Activo: true,
+                        per_En_Comunion: true,
+                        per_Visibilidad_Abierta: false,
+                        ct_Codigo_Transaccion: 11003
+                    }))
+                }else{
+                    setData( prevState => ({
+                        ...prevState,
+                        per_Activo: true,
+                        per_En_Comunion: true,
+                        per_Visibilidad_Abierta: false,
+                        ct_Codigo_Transaccion: 11004
+                    }))
+                }
             })
     };
     const handleProcedencia = (value) => {
-        setTransaccion( prevState => ({
+        setData( prevState => ({
             ...prevState,
             procedencia: value
         }))
@@ -74,7 +87,7 @@ function AltaCambioDomicilio() {
         console.log(value)
         if(value == "") setMostrarHogar(false)
     
-        setTransaccion( prevState => ({
+        setData( prevState => ({
             ...prevState,
             fecha_transaccion: value
         }))
@@ -102,14 +115,23 @@ function AltaCambioDomicilio() {
     };
     const handlePais = (value) => {
         if (value === "151" || value === "66" || value === "40"){
+            setData( prevState => ({
+                ...prevState,
+                pais_Id_Pais: value
+            }))
             helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
                 .then(res => {
                     setEstados(res.data.estados)
                 });
             }
     };
-    const handleEstado = (value) => {
-    };
+
+    const handleAdress = (e) => {
+        setData(prevState => {
+            prevState[`${e.name}`] = e.value
+            return prevState
+        })
+    }
     
     //Validaciones
     const validarDatosPersona = () => {
@@ -117,7 +139,7 @@ function AltaCambioDomicilio() {
             alert('Seleccione una persona')
             return
         };
-        if(transaccion.fecha_transaccion == null || !transaccion.fecha_transaccion ){
+        if(data.fecha_transaccion == null || !data.fecha_transaccion ){
             alert('Seleccione una fecha para la transacción')
             return
         }
@@ -125,18 +147,70 @@ function AltaCambioDomicilio() {
     };
     //Pruebas
     const postData = () => {
-        helpers.authAxios.post(`/Persona/Post/${data.per_Id_Persona}`, data)
+        let formattedData = {}
+
+        if(hogar){
+            formattedData = {
+                // id: 0,
+                per_Id_Persona: data.per_Id_Persona,
+                sec_Id_Sector: user.sec_Id_Sector,
+                ct_Codigo_Transaccion: data.ct_Codigo_Transaccion, 
+                Usu_Usuario_Id: user.pem_Id_Ministro,
+                hte_Fecha_Transaccion: data.fecha_transaccion,
+                hte_Comentario: data.procedencia,
+                jerarquia: jerarquia,
+                hp_Id_Hogar_Persona: hogar.hd_Id_Hogar,
+            }
+            console.log(formattedData)
+            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
             .then(res => {
                 console.log(res)
+                setAlert(true)
             });
-        helpers.authAxios.post(`/Persona/AddPersonaHogar/${jerarquia}/${hogar.hd_Id_Hogar}`, data)
-            .then(res => {
-                console.log(res)
-            });
+        }else{
+            formattedData = {
+                // id: 0,
+                per_Id_Persona: data.per_Id_Persona,
+                sec_Id_Sector: user.sec_Id_Sector,
+                ct_Codigo_Transaccion: data.ct_Codigo_Transaccion, 
+                Usu_Usuario_Id: user.pem_Id_Ministro,
+                hte_Fecha_Transaccion: data.fecha_transaccion,
+                hte_Comentario: data.procedencia,
+                HD: {
+                    hd_Calle: data.hd_Calle,
+                    hd_Numero_Exterior: data.hd_Numero_Exterior,
+                    hd_Numero_Interior: data.hd_Numero_Interior,
+                    hd_Tipo_Subdivision: data.hd_Tipo_Subdivision,
+                    hd_Subdivision: data.hd_Subdivision,
+                    hd_Localidad: data.hd_Localidad,
+                    hd_Municipio_Ciudad: data.hd_Municipio_Ciudad,
+                    pais_Id_Pais: data.pais_Id_Pais,
+                    est_Id_Estado: data.est_Id_Estado,
+                    hd_Telefono: data.hd_Telefono,
+                    dis_Id_Distrito: user.dis_Id_Distrito,
+                    sec_Id_Sector: user.sec_Id_Sector,
+                    usu_Id_Usuario: user.pem_Id_Ministro,
+                    Fecha_Registro: moment().format("YYYY-MM-DD"),
+                }
+            }
+            console.log(formattedData)
+            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, formattedData)
+                .then(res => {
+                    console.log(res)
+                    setAlert(true)
+                });
+        }
     };
     return(
         <Layout>
             <Container>
+            {alert&&
+                <div>
+                    <Alert>
+                        Alta de persona creada correctamente
+                    </Alert>
+                </div>
+            }
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Cambio de Domicilio
@@ -287,7 +361,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Calle
                                     </Label>
-                                    <Input id='calle' name='calle' placeholder='Nombre de la calle' type='text'></Input>
+                                    <Input id='calle' name='hd_Calle' placeholder='Nombre de la calle' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -295,7 +369,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Numero Exterior
                                     </Label>
-                                    <Input id='extNumber' name='extNumber' placeholder='0000' type='text'></Input>
+                                    <Input id='extNumber' name='hd_Numero_Exterior' placeholder='0000' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -303,7 +377,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Numero Interior
                                     </Label>
-                                    <Input id='intNumber' name='intNumber' placeholder='0000' type='text'></Input>
+                                    <Input id='intNumber' name='hd_Numero_Interior' placeholder='0000' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -313,7 +387,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Tipo subdivisión
                                     </Label>
-                                    <Input id='subDivType' name='subDivType' placeholder='Tipo subdivisión' type='select'>
+                                    <Input id='subDivType' name='hd_Tipo_Subdivision' placeholder='Tipo subdivisión' type='select' onChange={(e) => handleAdress( e.target )}>
                                         <option value="COL">COLONIA</option>
                                         <option value="FRACC">FRACC</option>
                                         <option value="EJ">EJIDO</option>
@@ -335,7 +409,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Subdivisión
                                     </Label>
-                                    <Input id='subDiv' name='subDiv' placeholder='Subdivisión' type='text'></Input>
+                                    <Input id='subDiv' name='hd_Subdivision' placeholder='Subdivisión' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -343,7 +417,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Localidad
                                     </Label>
-                                    <Input id='localidad' name='localidad' placeholder='Localidad' type='text'></Input>
+                                    <Input id='localidad' name='hd_Localidad' placeholder='Localidad' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -353,7 +427,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Municipio / Ciudad
                                     </Label>
-                                    <Input id='municipioCiudad' name='municipioCiudad' placeholder='Nombre de Municipio / Ciudad' type='text'></Input>
+                                    <Input id='municipioCiudad' name='hd_Municipio_Ciudad' placeholder='Nombre de Municipio / Ciudad' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
                             </Col>
                             <Col sm={4}>
@@ -361,7 +435,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         País
                                     </Label>
-                                    <Input id='pais' name='pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
+                                    <Input id='pais' name='pais_Id_Pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
                                         <option value="0" selected disabled >Selecciona un país</option>
                                         {paises.map(pais => (
                                             <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}>{pais.pais_Nombre}</option>
@@ -374,7 +448,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Estado
                                     </Label>
-                                    <Input id='estado' name='estado' placeholder='Selecciona un estado' type='select' onChange={(e) => handleEstado( e.target.value )}>
+                                    <Input id='estado' name='est_Id_Estado' placeholder='Selecciona un estado' type='select' onChange={(e) => handleAdress( e.target )}>
                                         <option value="0" selected disabled >Selecciona un estado</option>
                                         {estados.map(estado => (
                                             <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}>{estado.est_Nombre}</option>
@@ -389,7 +463,7 @@ function AltaCambioDomicilio() {
                                     <Label>
                                         Telefono
                                     </Label>
-                                    <Input id='tel' name='tel' placeholder='555 555 5555' type='tel'></Input>
+                                    <Input id='tel' name='hd_Telefono' placeholder='555 555 5555' type='tel' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
                             </Col>
                         </Row>
