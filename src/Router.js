@@ -25,6 +25,7 @@ import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautiza
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
 import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
+import EdicionDeDireccion from './pages/EdicionDeDireccion';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -70,6 +71,7 @@ class Router extends Component {
                     <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                     <Route exact path="/SolicitudDeRestablecimiento" component={SolicitudDeRestablecimiento} />
                     <Route exact path="/ValidaCambioDeContrasena" component={ValidaCambioDeContrasena} />
+                    <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>

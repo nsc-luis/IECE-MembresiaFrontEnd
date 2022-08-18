@@ -729,9 +729,12 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Hogares  */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="/Hogar">
-                            <i className="fas fa-fw fa-baby"></i>
-                            <span>Edicion de dirección</span>
+                        <Link 
+                            className="nav-link" 
+                            to="/EdicionDeDireccion"
+                            onClick={()=>this.handle_LinkEncabezado('Otros movimientos', 'Edición de dirección.')}>
+                            <i className="fas fa-address-book"></i>
+                            <span>Edición de dirección</span>
                         </Link>
                     </li>
                     <li className="nav-item">
