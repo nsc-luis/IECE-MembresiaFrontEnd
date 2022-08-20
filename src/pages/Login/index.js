@@ -173,7 +173,7 @@ class Login extends Component {
     }
 
     iniciarSesion = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         if (this.state.distritoSeleccionado === "0") {
             alert("Error: Debe seleccionar un distrito para continuar.");
             return false;

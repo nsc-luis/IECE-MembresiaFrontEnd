@@ -732,7 +732,7 @@ class Sidebar extends Component {
                         <Link 
                             className="nav-link" 
                             to="/EdicionDeDireccion"
-                            onClick={()=>this.handle_LinkEncabezado('Otros movimientos', 'Edición de dirección.')}>
+                            onClick={()=>this.handle_LinkEncabezado('Hogares', 'Edición de dirección.')}>
                             <i className="fas fa-address-book"></i>
                             <span>Edición de dirección</span>
                         </Link>

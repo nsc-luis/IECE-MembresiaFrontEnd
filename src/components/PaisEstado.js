@@ -24,7 +24,6 @@ class PaisEstado extends React.Component {
     }
 
     componentDidMount() {
-        console.log(localStorage.getItem('token'));
         this.getPaises();
     }
 

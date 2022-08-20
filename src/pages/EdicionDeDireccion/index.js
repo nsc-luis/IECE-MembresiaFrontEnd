@@ -13,13 +13,16 @@ import { ThemeConsumer } from 'styled-components';
 
 class EdicionDeDireccion extends Component {
 
+    infoSesion = JSON.parse(localStorage.getItem("infoSesion"))
     constructor(props) {
         super(props);
         this.state = {
             domicilio: {},
             listaDomicilios: [],
             hogarSeleccionado: "0",
-            boolHabilitaEdicion: true
+            boolHabilitaEdicion: true,
+            modalShow: false,
+            mensajeDelProceso: "",
         }
     }
 
@@ -27,6 +30,7 @@ class EdicionDeDireccion extends Component {
         this.setState({
             ...this.state.domicilio,
             domicilio: {
+                hd_Id_Hogar: 0,
                 hd_Calle: "",
                 hd_Numero_Exterior: "",
                 hd_Numero_Interior: "",
@@ -39,11 +43,11 @@ class EdicionDeDireccion extends Component {
                 hd_Telefono: ""
             }
         })
-        this.getListaHogares();
+        this.getListaHogares()
     }
 
     getListaHogares = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetByDistrito/42")
+        await helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetByDistrito/" + localStorage.getItem("dto"))
             .then(res => {
                 this.setState({ listaDomicilios: res.data.data })
             })
@@ -57,12 +61,15 @@ class EdicionDeDireccion extends Component {
             let seleccion = this.state.listaDomicilios.filter((obj) => {
                 return obj.hd_Id_Hogar === parseInt(e.target.value)
             })
+            seleccion[0].usu_Id_Usuario = this.infoSesion.pem_Id_Ministro
             this.setState({ domicilio: seleccion[0] })
+
         }
         else {
             this.setState({
                 ...this.state.domicilio,
                 domicilio: {
+                    hd_Id_Hogar: 0,
                     hd_Calle: "",
                     hd_Numero_Exterior: "",
                     hd_Numero_Interior: "",
@@ -96,6 +103,7 @@ class EdicionDeDireccion extends Component {
         this.setState({
             ...this.state.domicilio,
             domicilio: {
+                hd_Id_Hogar: 0,
                 hd_Calle: "",
                 hd_Numero_Exterior: "",
                 hd_Numero_Interior: "",
@@ -112,17 +120,58 @@ class EdicionDeDireccion extends Component {
         })
     }
 
+    guardarEdicion = async (e) => {
+        e.preventDefault()
+        try {
+            await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+            .then(res => {
+                if (res.data.status === "success") {
+                    // alert(res.data.mensaje);
+                    setTimeout(() => { document.location.href = '/EdicionDeDireccion'; }, 3000);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                        });
+                    }, 1500);
+                    setTimeout(() => {
+                        document.location.href = '/EdicionDeDireccion'
+                    }, 3500);
+                } else {
+                    // alert(res.data.mensaje);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: res.data.mensaje,
+                            modalShow: false
+                        });
+                    }, 1500);
+                }
+            })
+        }
+        catch {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+    }
+
     render() {
         return (
             <Layout>
                 <Container>
                     <Row>
                         <Col xs="12">
-                            <Form>
+                            <Form onSubmit={this.guardarEdicion}>
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>
-                                            <h3>Selecciona un hogar</h3>
+                                            <h3>Selecciona un hogar/domicilio para editar </h3>
                                         </CardTitle>
                                     </CardHeader>
                                     <CardBody>
@@ -138,7 +187,7 @@ class EdicionDeDireccion extends Component {
                                                         value={this.state.hogarSeleccionado}
                                                         onChange={this.handle_HogarSeleccionado}
                                                     >
-                                                        <option value="0">Selecciona el titular del hogar</option>
+                                                        <option value="0">Selecciona el titular del hogar/domicilio</option>
                                                         {this.state.listaDomicilios.map((domicilio) => {
                                                             return (
                                                                 <option key={domicilio.hd_Id_Hogar} value={domicilio.hd_Id_Hogar}>
@@ -266,6 +315,15 @@ class EdicionDeDireccion extends Component {
                                                             />
                                                             <Label>Telefono</Label>
                                                         </Col>
+                                                        <Col xs="4">
+                                                            <Input
+                                                                type="text"
+                                                                name="hd_Activo"
+                                                                value={this.state.domicilio.hd_Activo ? "SI" : "NO"}
+                                                                readOnly={true}
+                                                            />
+                                                            <Label>Activo</Label>
+                                                        </Col>
                                                     </Row>
                                                 </FormGroup>
                                             </React.Fragment>
@@ -311,6 +369,11 @@ class EdicionDeDireccion extends Component {
                             </Form>
                         </Col>
                     </Row>
+                    <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
                 </Container>
             </Layout>
         )

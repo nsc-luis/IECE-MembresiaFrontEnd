@@ -43,7 +43,7 @@ class PresentacionDeNino extends Component {
                 per_Id_Persona: "0",
                 pdn_Ministro_Oficiante: "0",
                 pdn_Fecha_Presentacion: "01/01/1900",
-                sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: "1"
             }
         });
@@ -53,7 +53,7 @@ class PresentacionDeNino extends Component {
     }
 
     getListaDePresentaciones = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/Presentacion_Nino/GetBySector/" + this.infoSesion.sec_Id_Sector)
+        await helpers.authAxios.get(helpers.url_api + "/Presentacion_Nino/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     listaDePresentaciones: res.data.presentaciones,
@@ -63,14 +63,13 @@ class PresentacionDeNino extends Component {
     }
 
     getListaDeNinos = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetListaNinosBySector/" + this.infoSesion.sec_Id_Sector)
+        await helpers.authAxios.get(helpers.url_api + "/Persona/GetListaNinosBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     listaDeNinos: res.data.listaDeNinos,
                     status: res.data.status
                 })
             })
-        console.log(this.infoSesion);
     }
 
     getMinistrosAncianoActivo = async () => {
@@ -101,7 +100,7 @@ class PresentacionDeNino extends Component {
                 per_Id_Persona: "0",
                 pdn_Ministro_Oficiante: "0",
                 pdn_Fecha_Presentacion: "1900-01-01",
-                sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: "1"
             },
             modalFrmPresentacion: true,
@@ -118,7 +117,7 @@ class PresentacionDeNino extends Component {
                 per_Id_Persona: info.per_Id_Persona,
                 pdn_Ministro_Oficiante: info.pdn_Ministro_Oficiante.toUpperCase(),
                 pdn_Fecha_Presentacion: helpers.reFormatoFecha(info.pdn_Fecha_Presentacion),
-                sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: "1"
             },
             modalFrmPresentacion: true,
@@ -215,7 +214,7 @@ class PresentacionDeNino extends Component {
 
             var info = this.state.currentPresentacion;
             try {
-                helpers.authAxios.post(helpers.url_api + `/Presentacion_Nino/${this.infoSesion.sec_Id_Sector}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
+                helpers.authAxios.post(helpers.url_api + `/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
