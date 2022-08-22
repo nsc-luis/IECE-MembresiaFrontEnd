@@ -47,9 +47,9 @@ class EdicionDeDireccion extends Component {
     }
 
     getListaHogares = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetByDistrito/" + localStorage.getItem("dto"))
+        await helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
-                this.setState({ listaDomicilios: res.data.data })
+                this.setState({ listaDomicilios: res.data.domicilios })
             })
     }
 

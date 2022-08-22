@@ -5,6 +5,7 @@ import helpers from '../../components/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Layout from '../Layout';
 import { Modal, ModalBody, /* ModalFooter, ModalHeader, Button */ } from 'reactstrap';
+import { LocaleUtils } from 'react-day-picker';
 
 class RegistroDePersonal extends Component {
 
@@ -83,17 +84,20 @@ class RegistroDePersonal extends Component {
                     per_Cargos_Desempenados: "",
                     per_Cantidad_Hijos: "0",
                     per_Nombre_Hijos: "",
-                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
+                    sec_Id_Sector: localStorage.getItem("sector"),
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro
                 },
                 domicilio: {
                     ...this.state.domicilio,
                     hd_Tipo_Subdivision: "COL",
-                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector,
-                    dis_Id_Distrito: JSON.parse(localStorage.getItem('infoSesion')).dis_Id_Distrito,
+                    sec_Id_Sector: localStorage.getItem("sector"),
+                    dis_Id_Distrito: localStorage.getItem("dto"),
                     pais_Id_Pais: "0",
                     hd_Calle: "",
                     hd_Localidad: "",
-                    hd_Numero_Exterior: ""
+                    hd_Numero_Exterior: "",
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
+                    hd_Activo: true
                 },
                 habilitaPerBautizado: true
                 /* hogar: {
@@ -137,7 +141,8 @@ class RegistroDePersonal extends Component {
                     per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
                     per_Categoria: localStorage.getItem("categoria"), */
                     per_Id_Persona: localStorage.getItem("idPersona"),
-                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
+                    sec_Id_Sector: localStorage.getItem("sector"),
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro
                 }
             });
         }

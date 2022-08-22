@@ -29,7 +29,7 @@ class Sidebar extends Component {
             formBajaNoBautizadoDefuncion: {},
             formBajaNoBautizadoAlejamiento: {},
             formBajaBautizadoCambioDomicilio: {},
-            formBajaNoBautizadoCambioDomicilio: {}
+            formBajaNoBautizadoCambioDomicilio: {},
         }
     }
 
@@ -57,14 +57,16 @@ class Sidebar extends Component {
             formBajaBautizadoCambioDomicilio: {
                 ...this.state.formBajaBautizadoCambioDomicilio,
                 idPersona: '0',
-                tipoDestino: true,
-                fechaTransaccion: '01/01/1900'
+                tipoDestino: '0',
+                fechaTransaccion: '01/01/1900',
+                idUsuario: this.infoSesion.pem_Id_Ministro
             },
             formBajaNoBautizadoCambioDomicilio: {
                 ...this.state.formBajaNoBautizadoCambioDomicilio,
                 idPersona: '0',
-                tipoDestino: true,
-                fechaTransaccion: '01/01/1900'
+                tipoDestino: '0',
+                fechaTransaccion: '01/01/1900',
+                idUsuario: this.infoSesion.pem_Id_Ministro
             }
         });
     }
@@ -200,7 +202,7 @@ class Sidebar extends Component {
     }
 
     openModalBajaBautizadoCambioDomicilio = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
+        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas });
             });
@@ -449,6 +451,47 @@ class Sidebar extends Component {
                     }
                 });
         } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+    }
+
+    bajaBautizadoCambioDomicilio = async(e) => {
+        e.preventDefault();
+        try {
+            await helpers.authAxios.post(`${helpers.url_api}/Persona`, this.state.formBajaBautizadoCambioDomicilio)
+            .then(res => {
+                if (res.data.status === "success") {
+                    // alert(res.data.mensaje);
+                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                        });
+                    }, 1500);
+                    setTimeout(() => {
+                        document.location.href = '/ListaDePersonal'
+                    }, 3500);
+                } else {
+                    // alert(res.data.mensaje);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: res.data.mensaje,
+                            modalShow: false
+                        });
+                    }, 1500);
+                }
+            })
+        }
+        catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
@@ -1343,7 +1386,7 @@ class Sidebar extends Component {
                                             <Input
                                                 type="select"
                                                 value={this.state.formBajaBautizadoCambioDomicilio.idPersona}
-                                                name="personaSeleccionada"
+                                                name="idPersona"
                                                 onChange={this.onChangeBajaBautizadoCambioDomicilio}
                                             >
                                                 <option value="0">Selecciona una persona</option>
@@ -1373,8 +1416,8 @@ class Sidebar extends Component {
                                                 onChange={this.onChangeBajaBautizadoCambioDomicilio}
                                             >
                                                 <option value="0">Selecciona una opción</option>
-                                                <option value="interno">INTERNO</option>
-                                                <option value="externo">EXTERNO</option>
+                                                <option value="INTERNO">INTERNO</option>
+                                                <option value="EXTERNO">EXTERNO</option>
                                             </Input>
                                         </Col>
                                     </Row>

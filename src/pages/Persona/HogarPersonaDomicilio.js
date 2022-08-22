@@ -28,10 +28,10 @@ class Domicilio extends React.Component {
     } */
 
     getListaHogares = () => {
-        helpers.authAxios.get(this.url + "/HogarDomicilio/GetByDistrito/" + this.infoSesion.dis_Id_Distrito)
+        helpers.authAxios.get(this.url + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
-                    ListaHogares: res.data.data
+                    ListaHogares: res.data.domicilios
                 });
             });
     }
