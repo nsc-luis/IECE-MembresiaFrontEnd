@@ -248,7 +248,9 @@ class PersonaForm extends Component {
             boolComentarioEdicion,
             handle_ComentarioHistorialTransacciones,
             ComentarioHistorialTransacciones,
-            fnEditaPersona
+            fnEditaPersona,
+            solicitudNvaProf1,
+            solicitudNvaProf2
         } = this.props
 
         /* const [CasadoDivorciadoViudo, setCasadoDivorciadoViudo] = useState()
@@ -882,6 +884,37 @@ class PersonaForm extends Component {
                                                                     </FormGroup>
                                                                 </div>
                                                             </div>
+
+                                                            <div className="row">
+                                                                {solicitudNvaProf1 &&
+                                                                    <div className="col-sm-4">
+                                                                        <FormGroup>
+                                                                            <Input type="text"
+                                                                                name="nva_Profesion1"
+                                                                                className="form-control"
+                                                                            /* onChange={onChange}
+                                                                            value={form.pro_Id_Profesion_Oficio1} */
+                                                                            />
+                                                                            <label>Descripcion de la profesión</label>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                }
+                                                                {solicitudNvaProf2 &&
+                                                                    <div className="col-sm-4">
+                                                                        <FormGroup>
+                                                                            <Input type="text"
+                                                                                name="nva_Profesion2"
+                                                                                className="form-control"
+                                                                            /* onChange={onChange}
+                                                                            value={form.pro_Id_Profesion_Oficio1} */
+                                                                            />
+                                                                            <label>Descripcion de la profesión</label>
+                                                                        </FormGroup>
+                                                                    </div>
+
+                                                                }
+                                                            </div>
+
                                                             <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-4">

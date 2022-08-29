@@ -39,7 +39,9 @@ class RegistroDePersonal extends Component {
             tituloAgregarEditar: "Agregar nuevo miembro",
             boolAgregarNvaPersona: true,
             boolComentarioEdicion: false,
-            ComentarioHistorialTransacciones: ""
+            ComentarioHistorialTransacciones: "",
+            solicitudNvaProf1: true,
+            solicitudNvaProf2: true
         }
     }
 
@@ -255,6 +257,23 @@ class RegistroDePersonal extends Component {
                         }
                     });
                     break;
+            }
+            if (e.target.name === 'pro_Id_Profesion_Oficio1') {
+                if (e.target.value === '1') {
+                    this.setState({ solicitudNvaProf1: true })
+                }
+                else {
+                    this.setState({ solicitudNvaProf1: false })
+                }
+            }
+
+            if (e.target.name === 'pro_Id_Profesion_Oficio2') {
+                if (e.target.value === '1') {
+                    this.setState({ solicitudNvaProf2: true })
+                }
+                else {
+                    this.setState({ solicitudNvaProf2: false })
+                }
             }
         }
         if (e.target.name === "per_Bautizado") {
@@ -490,6 +509,8 @@ class RegistroDePersonal extends Component {
                     handle_ComentarioHistorialTransacciones={this.handle_ComentarioHistorialTransacciones}
                     ComentarioHistorialTransacciones={this.state.ComentarioHistorialTransacciones}
                     fnEditaPersona={this.fnEditaPersona}
+                    solicitudNvaProf1={this.state.solicitudNvaProf1}
+                    solicitudNvaProf2={this.state.solicitudNvaProf2}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

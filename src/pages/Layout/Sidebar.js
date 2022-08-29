@@ -781,11 +781,32 @@ class Sidebar extends Component {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link text-wrap" to="#">
-                            <i className="fas fa-fw fa-baby"></i>
+                        <Link 
+                            className="nav-link text-wrap" 
+                            to="/RevinculaDomicilio"
+                            onClick={()=>this.handle_LinkEncabezado('Hogares', 'Revinculación persona-hogar.')}
+                        >
+                            <i className="fas fa-house-user"></i>
                             <span>Revinculación persona-hogar</span>
                         </Link>
                     </li>
+
+                    {/* Heading */}
+                    <div className="sidebar-heading">
+                        Transacciones especiales
+                    </div>
+
+                    {/* Nav Item - Hogares  */}
+                    <li className="nav-item">
+                        <Link 
+                            className="nav-link" 
+                            to="#"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>HAbilitar visibilidad abierta</span>
+                        </Link>
+                    </li>
+                    
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
