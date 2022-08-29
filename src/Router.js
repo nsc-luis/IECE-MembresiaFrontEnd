@@ -23,6 +23,8 @@ import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
+import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
+import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
 import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
 // import App from './App';

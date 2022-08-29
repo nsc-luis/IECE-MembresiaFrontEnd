@@ -23,11 +23,22 @@ export default function ReporteMovimientoEstadistico(){
     const [excomunionesTemp, setExcomunionesTemp] = useState(null)
     const [excomuniones, setExcomuniones] = useState(null)
     const [bajasCambioDom, setBajasCambiosDom] = useState(null)
+    const [actualizacionB, setActualizacionB] = useState(null)
+    const [nuevoIngreso, setNuevoIngreso] = useState(null)
+    const [altasCambioDomNB, setAltasCambioDomNB] = useState(null)
+    const [reactivaciones, setReactivaciones] = useState(null)
+    const [defuncionesNB, setDefuncionesNB] = useState(null)
+    const [alejamiientos, setAlejamientos] = useState(null)
+    const [bajasCambioDomNB, setBajasCambioDomNB] = useState(null)
+    const [cambiosABautizado, setCambiosABautizado] = useState(null)
+    const [bajasPorPadres, setBajasPorPadres] = useState(null)
+    const [actualizacionNB, setActualizacionNB] = useState(null)
     const [matrimonios, setMatrimonios] = useState(null)
     const [legalizaciones, setLegalizaciones] = useState(null)
     const [presentacionesNiños, setPresentacionesNiños] = useState(null)
     const [altasHogares, setAltasHogares] = useState(null)
     const [bajasHogares, setBajasHogares] = useState(null)
+    const [actualizacionHogar, setActualizacionHogar] = useState(null)
     
     const [loading, setLoading] = useState(true)
     
@@ -42,85 +53,102 @@ export default function ReporteMovimientoEstadistico(){
     }, [])
     
     const loadData = async () => {
-        const codes = [11001, 11002, 11004, 11101, 11102,11103,11105,21001, 21102,23203,31001,31102]
+        // const codes = [11001, 11002, 11004, 11101, 11102,11103,11105,21001, 21102,23203,31001,31102]
         const params = {
             fechaInicial: startDate,
             fechaFinal: endDate,
         }
         if(sector == null){
             params.idSectorDistrito = dto
-            const datosTransaccion = await Promise.all(codes.map(async (code) => {
-                params.codigo = code
-                const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistritoCodigo", params);
-                orderData(code, res.data.datos)
-                return res.data.status == "success" ? {code, data: res.data}  : null
-            }))
-            setLoading(false)
+            const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
+            orderData(res.data.datos)
         }else{
             params.idSectorDistrito = sector
-            const datosTransaccion = await Promise.all(codes.map(async (code) => {
-                params.codigo = code
-                const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistritoCodigo", params);
-                orderData(code, res.data.datos)
-                return res.data.status == "success" ? {code, data: res.data}  : null
-            }))
-            setLoading(false)
+            const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
+            console.log(res.data)
+            orderData(res.data.datos)
         }
     }
 
-    const orderData = (code, data) => {
-        switch (code) {
-            case 11001:
-                setBautismos(data)
-                break;
-        
-            case 11002:
-                setRestituciones(data)
-                break;
-        
-            case 11004:
-                setAltasCambioDom(data)
-                break;
-        
-            case 11101:
-                setDefunciones(data)
-                break;
-        
-            case 11102:
-                setExcomunionesTemp(data)
-                break;
-        
-            case 11103:
-                setExcomuniones(data)
-                break;
-        
-            case 11105:
-                setBajasCambiosDom(data)
-                break;
-        
-            case 21001:
-                setMatrimonios(data)
-                break;
-        
-            case 21102:
-                setLegalizaciones(data)
-                break;
-        
-            case 23203:
-                setPresentacionesNiños(data)
-                break;
+    const orderData = (trans) => {
+        setBautismos(trans.filter(t => t.ct_Codigo_Transaccion == 11001))
+        setRestituciones(trans.filter(t => t.ct_Codigo_Transaccion == 11002))
+        setAltasCambioDom(trans.filter(t => t.ct_Codigo_Transaccion == 11003 || t.ct_Codigo_Transaccion == 11004))
+        setDefunciones(trans.filter(t => t.ct_Codigo_Transaccion == 11101))
+        setExcomunionesTemp(trans.filter(t => t.ct_Codigo_Transaccion == 11102))
+        setExcomuniones(trans.filter(t => t.ct_Codigo_Transaccion == 11103))
+        setBajasCambiosDom(trans.filter(t => t.ct_Codigo_Transaccion == 11104 || t.ct_Codigo_Transaccion == 11105))
+        setActualizacionB(trans.filter(t => t.ct_Codigo_Transaccion == 11201))
+        setNuevoIngreso(trans.filter(t => t.ct_Codigo_Transaccion == 12001))
+        setAltasCambioDomNB(trans.filter(t => t.ct_Codigo_Transaccion == 12002 || t.ct_Codigo_Transaccion == 12003))
+        setReactivaciones(trans.filter(t => t.ct_Codigo_Transaccion == 12004))
+        setDefuncionesNB(trans.filter(t => t.ct_Codigo_Transaccion == 12101))
+        setAlejamientos(trans.filter(t => t.ct_Codigo_Transaccion == 12102))
+        setBajasCambioDomNB(trans.filter(t => t.ct_Codigo_Transaccion == 12103 || t.ct_Codigo_Transaccion == 12104))
+        setCambiosABautizado(trans.filter(t => t.ct_Codigo_Transaccion == 12105))
+        setBajasPorPadres(trans.filter(t => t.ct_Codigo_Transaccion == 12106))
+        setActualizacionNB(trans.filter(t => t.ct_Codigo_Transaccion == 12201))
+        setMatrimonios(trans.filter(t => t.ct_Codigo_Transaccion == 21001))
+        setLegalizaciones(trans.filter(t => t.ct_Codigo_Transaccion == 21102))
+        setPresentacionesNiños(trans.filter(t => t.ct_Codigo_Transaccion == 23203))
+        setAltasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31001))
+        setBajasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31102))
+        setActualizacionHogar(trans.filter(t => t.ct_Codigo_Transaccion == 31203))
 
-            case 31001:
-                setAltasHogares(data)
-                break;
+        setLoading(false)
         
-            case 31102:
-                setBajasHogares(data)
-                break;
+        // switch (code) {
+        //     case 11001:
+        //         setBautismos(data)
+        //         break;
         
-            default:
-                break;
-        }
+        //     case 11002:
+        //         setRestituciones(data)
+        //         break;
+        
+        //     case 11004:
+        //         setAltasCambioDom(data)
+        //         break;
+        
+        //     case 11101:
+        //         setDefunciones(data)
+        //         break;
+        
+        //     case 11102:
+        //         setExcomunionesTemp(data)
+        //         break;
+        
+        //     case 11103:
+        //         setExcomuniones(data)
+        //         break;
+        
+        //     case 11105:
+        //         setBajasCambiosDom(data)
+        //         break;
+        
+        //     case 21001:
+        //         setMatrimonios(data)
+        //         break;
+        
+        //     case 21102:
+        //         setLegalizaciones(data)
+        //         break;
+        
+        //     case 23203:
+        //         setPresentacionesNiños(data)
+        //         break;
+
+        //     case 31001:
+        //         setAltasHogares(data)
+        //         break;
+        
+        //     case 31102:
+        //         setBajasHogares(data)
+        //         break;
+        
+        //     default:
+        //         break;
+        // }
     }
 
     const downloadTable = () =>{
@@ -246,23 +274,30 @@ export default function ReporteMovimientoEstadistico(){
                             </Col>
                     </Row>
          
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="altas">Altas</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#altas">
+                        {/* <Button color="primary" size="lg" className="text-left mb-2" block id="altas">Altas</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#altas"> */}
                             <Card>
                                 <CardBody>
                                     <Table borderless>
                                         <tr>
-                                            <th>Nombre</th>
-                                            <th>Movimiento</th>
-                                            <th>Comentario</th>
-                                            <th>Fecha</th>
+                                            <th><h4>Nombre</h4></th>
+                                            <th><h4>Movimiento</h4></th>
+                                            <th><h4>Comentario</h4></th>
+                                            <th><h4>Fecha</h4></th>
                                         </tr>
-                                        <tr>
-                                            <th>Bautismo</th>
+                                        <tr className="bg-info">
+                                            <td colSpan="4">
+                                                <h4><strong>MEMBRESIA BAUTIZADA</strong></h4>
+                                            </td>
+                                        </tr>
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ACTUALIZACIONES</h5>
+                                            </td>
                                         </tr>
 
                                         {
-                                           bautismos ? bautismos.detalles.map((persona, index) => (
+                                           actualizacionB ? actualizacionB.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -275,13 +310,38 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Bautismo: {bautismos ? bautismos.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total de Actualizaciones: {actualizacionB ? actualizacionB.length : 0} </th>
+                                        </tr>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ALTAS</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Bautismo</th>
+                                        </tr>
+                                        {
+                                           bautismos ? bautismos.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por Bautismo: {bautismos ? bautismos.length : 0} </th>
                                         </tr>
                                         <tr>
                                             <th>Restitución</th>
                                         </tr>
                                         {
-                                            restituciones ? restituciones.detalles.map((persona, index) => (
+                                            restituciones ? restituciones.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -294,13 +354,13 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Restitución: {restituciones ? restituciones.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Restitución: {restituciones ? restituciones.length : 0} </th>
                                         </tr>
                                         <tr>
                                             <th>Cambio de Domicilio</th>
                                         </tr>
                                         {
-                                            altasCambioDom ? altasCambioDom.detalles.map((persona, index) => (
+                                            altasCambioDom ? altasCambioDom.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -313,29 +373,21 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Cambio de Domicilio: {altasCambioDom ? altasCambioDom.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Cambio de Domicilio: {altasCambioDom ? altasCambioDom.length : 0} </th>
                                         </tr>
-                                    </Table>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="bajas">Bajas</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#bajas">
-                        <Card>
-                                <CardBody>
-                                    <Table borderless>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Movimiento</th>
-                                            <th>Comentario</th>
-                                            <th>Fecha</th>
+                                        
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>BAJAS</h5>
+                                            </td>
                                         </tr>
+
                                         <tr>
                                             <th>Excomunión</th>
                                         </tr>
 
                                         {
-                                           excomuniones ? excomuniones.detalles.map((persona, index) => (
+                                           excomuniones ? excomuniones.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -348,14 +400,14 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Excomunión: {excomuniones ? excomuniones.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Excomunión: {excomuniones ? excomuniones.length : 0} </th>
                                         </tr>
                                         <tr>
                                             <th>Excomunión Temporal</th>
                                         </tr>
 
                                         {
-                                           excomunionesTemp ? excomunionesTemp.detalles.map((persona, index) => (
+                                           excomunionesTemp ? excomunionesTemp.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -368,14 +420,14 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Excomunión Temporal: {excomunionesTemp ? excomunionesTemp.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Excomunión Temporal: {excomunionesTemp ? excomunionesTemp.length : 0} </th>
                                         </tr>
                                         <tr>
                                             <th>Baja Cambio Domicilio</th>
                                         </tr>
 
                                         {
-                                           bajasCambioDom ? bajasCambioDom.detalles.map((persona, index) => (
+                                           bajasCambioDom ? bajasCambioDom.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -388,13 +440,13 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Baja Cambio de Domicilio: {bajasCambioDom ? bajasCambioDom.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Baja Cambio de Domicilio: {bajasCambioDom ? bajasCambioDom.length : 0} </th>
                                         </tr>
                                         <tr>
                                             <th>Defunción</th>
                                         </tr>
                                         {
-                                            defunciones ? defunciones.detalles.map((persona, index) => (
+                                            defunciones ? defunciones.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -407,29 +459,23 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Defunción: {defunciones ? defunciones.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Defunción: {defunciones ? defunciones.length : 0} </th>
                                         </tr>
-                                    </Table>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="matrimonios">Matrimonios</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#matrimonios">
-                        <Card>
-                                <CardBody>
-                                    <Table borderless>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Movimiento</th>
-                                            <th>Comentario</th>
-                                            <th>Fecha</th>
+
+                                        <tr className="bg-info">
+                                            <td colSpan="4">
+                                                <h4><strong>HOGARES</strong></h4>
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <th>Matrimonio</th>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ACTUALIZACIONES</h5>
+                                            </td>
                                         </tr>
 
                                         {
-                                           matrimonios ? matrimonios.detalles.map((persona, index) => (
+                                           actualizacionHogar ? actualizacionHogar.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -442,13 +488,39 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Matrimonio: {matrimonios ? matrimonios.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total de Actualizaciones: {actualizacionHogar ? actualizacionHogar.length : 0} </th>
                                         </tr>
-                                        <tr>
-                                            <th>Legalización</th>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ALTAS</h5>
+                                            </td>
                                         </tr>
                                         {
-                                            legalizaciones ? legalizaciones.detalles.map((persona, index) => (
+                                           altasHogares ? altasHogares.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por Alta de Hogar: {altasHogares ? altasHogares.length : 0} </th>
+                                        </tr>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>BAJAS</h5>
+                                            </td>
+                                        </tr>
+
+                                        {
+                                            bajasHogares ? bajasHogares.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -461,29 +533,24 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Legalización: {legalizaciones ? legalizaciones.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Baja de Hogares: {bajasHogares ? bajasHogares.length : 0} </th>
                                         </tr>
-                                    </Table>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="hogares">Hogares</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#hogares">
-                        <Card>
-                                <CardBody>
-                                    <Table borderless>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Movimiento</th>
-                                            <th>Comentario</th>
-                                            <th>Fecha</th>
+
+                                        
+                                        <tr className="bg-info">
+                                            <td colSpan="4">
+                                                <h4><strong>MEMBRESIA NO BAUTIZADA</strong></h4>
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <th>Alta Hogar</th>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ACTUALIZACIONES</h5>
+                                            </td>
                                         </tr>
 
                                         {
-                                           altasHogares ? altasHogares.detalles.map((persona, index) => (
+                                           actualizacionNB ? actualizacionNB.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -496,48 +563,20 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Alta de Hogar: {altasHogares ? altasHogares.contador : 0} </th>
-                                        </tr>
-                                        <tr>
-                                            <th>Baja Hogar</th>
-                                        </tr>
-                                        {
-                                            bajasHogares ? bajasHogares.detalles.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )):
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Baja de Hogares: {bajasHogares ? bajasHogares.contador : 0} </th>
-                                        </tr>
-                                    </Table>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="presentacionesNiños">Presentaciones Niños</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#presentacionesNiños">
-                        <Card>
-                                <CardBody>
-                                    <Table borderless>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Movimiento</th>
-                                            <th>Comentario</th>
-                                            <th>Fecha</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Presentación de niños</th>
+                                            <th className="text-right" colSpan="4">Total de Actualizaciones: {actualizacionNB ? actualizacionNB.length : 0} </th>
                                         </tr>
 
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ALTAS</h5>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Nuevo Ingreso</th>
+                                        </tr>
                                         {
-                                           presentacionesNiños ? presentacionesNiños.detalles.map((persona, index) => (
+                                           nuevoIngreso ? nuevoIngreso.map((persona, index) => (
                                                 <tr>
                                                     <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.ct_Tipo}</td>
@@ -550,12 +589,232 @@ export default function ReporteMovimientoEstadistico(){
                                             </tr> 
                                         }
                                         <tr>
-                                            <th className="text-right" colSpan="4">Total por Presentación de niños: {presentacionesNiños ? presentacionesNiños.contador : 0} </th>
+                                            <th className="text-right" colSpan="4">Total por Nuevo Ingreso: {nuevoIngreso ? nuevoIngreso.length : 0} </th>
                                         </tr>
+                                        
+                                        <tr>
+                                            <th>Cambio de Domicilio</th>
+                                        </tr>
+                                        {
+                                           altasCambioDomNB ? altasCambioDomNB.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por Cambio Domicilio: {altasCambioDomNB ? altasCambioDomNB.length : 0} </th>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th>Reactivación</th>
+                                        </tr>
+                                        {
+                                           reactivaciones ? reactivaciones.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por Reactivación: {reactivaciones ? reactivaciones.length : 0} </th>
+                                        </tr>
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>BAJAS</h5>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Defunción</th>
+                                        </tr>
+                                        {
+                                           defuncionesNB ? defuncionesNB.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por Defunción: {defuncionesNB ? defuncionesNB.length : 0} </th>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th>Cambio de Domicilio</th>
+                                        </tr>
+                                        {
+                                           bajasCambioDomNB ? bajasCambioDomNB.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por Cambio Domicilio: {bajasCambioDomNB ? bajasCambioDomNB.length : 0} </th>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th>Alejamiento</th>
+                                        </tr>
+                                        {
+                                           alejamiientos ? alejamiientos.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por Alejamiento: {alejamiientos ? alejamiientos.length : 0} </th>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th>Pasa a personal bautizado</th>
+                                        </tr>
+                                        {
+                                           cambiosABautizado ? cambiosABautizado.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por cambio a bautizado: {cambiosABautizado ? cambiosABautizado.length : 0} </th>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th>Por baja de padres</th>
+                                        </tr>
+                                        {
+                                           bajasPorPadres ? bajasPorPadres.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total por baja de padres: {bajasPorPadres ? bajasPorPadres.length : 0} </th>
+                                        </tr>
+
+                                        <tr className="bg-info">
+                                            <td colSpan="4">
+                                                <h4><strong>SUCESOS</strong></h4>
+                                            </td>
+                                        </tr>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>Matrimonios</h5>
+                                            </td>
+                                        </tr>
+
+                                        {
+                                           matrimonios ? matrimonios.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total de matrimonios: {matrimonios ? matrimonios.length / 2 : 0} </th>
+                                        </tr>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>Legalizaciones</h5>
+                                            </td>
+                                        </tr>
+
+                                        {
+                                           legalizaciones ? legalizaciones.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total de legalizaciones: {legalizaciones ? legalizaciones.length / 2: 0} </th>
+                                        </tr>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>Presentaciones de niños</h5>
+                                            </td>
+                                        </tr>
+
+                                        {
+                                           presentacionesNiños ? presentacionesNiños.map((persona, index) => (
+                                                <tr>
+                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.ct_Tipo}</td>
+                                                    <td>{persona.hte_Comentario}</td>
+                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                </tr>
+                                            )) :
+                                            <tr>
+                                                <td colSpan="4">No hay registros</td>
+                                            </tr> 
+                                        }
+                                        <tr>
+                                            <th className="text-right" colSpan="4">Total de presentaciones de niños: {presentacionesNiños ? presentacionesNiños.length : 0} </th>
+                                        </tr>
+
                                     </Table>
                                 </CardBody>
                             </Card>
-                        </UncontrolledCollapse>
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
                         {sector ?
                             <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias} a <Moment locale="es" format="LL"></Moment></h4> :
