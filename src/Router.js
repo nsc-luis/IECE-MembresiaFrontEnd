@@ -74,13 +74,10 @@ class Router extends Component {
                     <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                     <Route exact path="/SolicitudDeRestablecimiento" component={SolicitudDeRestablecimiento} />
                     <Route exact path="/ValidaCambioDeContrasena" component={ValidaCambioDeContrasena} />
-<<<<<<< HEAD
                     <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                     <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
-=======
                     <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                     <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
->>>>>>> origin/feature/bautizado-rest-cambioDomicilio
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>

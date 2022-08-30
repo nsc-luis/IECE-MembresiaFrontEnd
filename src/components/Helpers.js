@@ -41,15 +41,10 @@ const helpers = {
     },
 
     // URLs PARA PRUEBA
-<<<<<<< HEAD
+//<<<<<<< HEAD
     url_api: "http://" + window.location.hostname + ":59239/api",
     //url_api: "http://iece-tpr.ddns.net/webapi/api",
-    //url_api : "http://" + window.location.hostname + "/webapi/api",
-=======
-    // url_api: "http://" + window.location.hostname + ":59239/api",
-    url_api: "http://iece-tpr.ddns.net/webapi/api",
-    // url_api : "http://" + window.location.hostname + "/webapi/api",
->>>>>>> origin/feature/bautizado-rest-cambioDomicilio
+    //url_api: "http://" + window.location.hostname + "/webapi/api"
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
