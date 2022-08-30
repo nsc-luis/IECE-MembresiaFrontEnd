@@ -9,8 +9,8 @@ import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import Moment from "react-moment";
-import moment from "moment";
-import 'moment/locale/es'
+import moment from 'moment/min/moment-with-locales';
+import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
 

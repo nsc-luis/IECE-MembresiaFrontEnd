@@ -23,6 +23,8 @@ import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
+import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
+import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
 import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
 import EdicionDeDireccion from './pages/EdicionDeDireccion';
@@ -72,8 +74,13 @@ class Router extends Component {
                     <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                     <Route exact path="/SolicitudDeRestablecimiento" component={SolicitudDeRestablecimiento} />
                     <Route exact path="/ValidaCambioDeContrasena" component={ValidaCambioDeContrasena} />
+<<<<<<< HEAD
                     <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                     <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
+=======
+                    <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
+                    <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
+>>>>>>> origin/feature/bautizado-rest-cambioDomicilio
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>
