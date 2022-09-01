@@ -124,36 +124,36 @@ class EdicionDeDireccion extends Component {
         e.preventDefault()
         try {
             await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
-            .then(res => {
-                if (res.data.status === "success") {
-                    // alert(res.data.mensaje);
-                    setTimeout(() => { document.location.href = '/EdicionDeDireccion'; }, 3000);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/EdicionDeDireccion'; }, 3000);
                         this.setState({
-                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                    setTimeout(() => {
-                        document.location.href = '/EdicionDeDireccion'
-                    }, 3500);
-                } else {
-                    // alert(res.data.mensaje);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/EdicionDeDireccion'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
                         this.setState({
-                            mensajeDelProceso: res.data.mensaje,
-                            modalShow: false
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                }
-            })
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                })
         }
         catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -370,10 +370,10 @@ class EdicionDeDireccion extends Component {
                         </Col>
                     </Row>
                     <Modal isOpen={this.state.modalShow}>
-                    <ModalBody>
-                        {this.state.mensajeDelProceso}
-                    </ModalBody>
-                </Modal>
+                        <ModalBody>
+                            {this.state.mensajeDelProceso}
+                        </ModalBody>
+                    </Modal>
                 </Container>
             </Layout>
         )

@@ -25,7 +25,7 @@ function AltaRestitucion() {
 
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${user.sec_Id_Sector}/true`)
+        helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${localStorage.getItem("sector")}/true`)
             .then(res => {
                 setOpcionesPersonas(res.data.personas)
                 //console.log(opcionesPersonas)

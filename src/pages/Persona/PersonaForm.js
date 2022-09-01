@@ -168,11 +168,17 @@ class PersonaForm extends Component {
                 })
 
             let jerarquias = [];
-            for (let i = 1; i < this.state.MiembrosDelHogar.length + 1; i++) {
+            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
                 jerarquias.push(<option value={i}>{i}</option>)
             }
 
-            await this.setState({ JerarquiasDisponibles: jerarquias })
+            this.setState({ 
+                JerarquiasDisponibles: jerarquias,
+                hogar: {
+                    ...this.state.hogar,
+                    hp_Jerarquia: jerarquias.length
+                }
+            })
         } else {
             this.setState({
                 MiembrosDelHogar: [],
