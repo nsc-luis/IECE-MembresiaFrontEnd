@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import Layout from '../Layout';
-import Modal from 'react-modal';
 import {
-    Container, Row, Col, Form, FormGroup, Input, Button, ModalBody, 
+    Container, Row, Col, Form, FormGroup, Input, Button, ModalBody, Modal,
     FormFeedback, /* CardTitle, */ Card, CardBody, CardHeader, CardFooter
 } from 'reactstrap';
 import HogarPersonaDomicilio from '../Persona/HogarPersonaDomicilio';
@@ -42,7 +41,8 @@ class RevinculaDomicilio extends Component {
                 hd_Municipio_Ciudad: "",
                 hd_Numero_Exterior: "",
                 hd_Numero_Interior: "",
-                hd_Subdivision: "COL",
+                hd_Subdivision: "",
+                hd_Tipo_Subdivision: "COL",
                 hd_Telefono: "",
                 pais_Id_Pais: "0"
             }
@@ -146,41 +146,81 @@ class RevinculaDomicilio extends Component {
 
     GuardaCambioDomicilio = async (e) => {
         e.preventDefault();
-        try {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
+        if (this.state.hogar.hd_Id_Hogar === "0") {
+            try {
+                await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaNvoHogar/${this.state.personaSeleccionada}/${this.infoSesion.pem_Id_Ministro}`, this.state.domicilio)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                             this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
                             });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
-                        }, 3500);
-                    } else {
-                        // alert(res.data.mensaje);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1500);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 3500);
+                        } else {
+                            // alert(res.data.mensaje);
                             this.setState({
-                                mensajeDelProceso: res.data.mensaje,
-                                modalShow: false
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
                             });
-                        }, 1500);
-                    }
-                })
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: res.data.mensaje,
+                                    modalShow: false
+                                });
+                            }, 1500);
+                        }
+                    })
+            }
+            catch {
+                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+            }
         }
-        catch {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        else {
+            try {
+                await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1500);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 3500);
+                        } else {
+                            // alert(res.data.mensaje);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: res.data.mensaje,
+                                    modalShow: false
+                                });
+                            }, 1500);
+                        }
+                    })
+            }
+            catch {
+                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+            }
         }
     }
 
@@ -242,6 +282,7 @@ class RevinculaDomicilio extends Component {
                                         type="button"
                                         color="danger"
                                         className="buttonMarginRight"
+                                        onClick={() => window.location = "/ListaDePersonal"}
                                     >
                                         <span className='fa fa-sw fa-times buttonMarginRight'></span>
                                         Cancelar
@@ -257,12 +298,12 @@ class RevinculaDomicilio extends Component {
                             </Card>
                         </Form>
                     </Row>
-                    <Modal isOpen={this.state.modalShow}>
-                        <ModalBody>
-                            {this.state.mensajeDelProceso}
-                        </ModalBody>
-                    </Modal>
                 </Container>
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </Layout>
         )
     }
