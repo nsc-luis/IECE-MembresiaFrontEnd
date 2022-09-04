@@ -172,7 +172,7 @@ class PersonaForm extends Component {
                 jerarquias.push(<option value={i}>{i}</option>)
             }
 
-            this.setState({ 
+            this.setState({
                 JerarquiasDisponibles: jerarquias,
                 hogar: {
                     ...this.state.hogar,
@@ -255,8 +255,8 @@ class PersonaForm extends Component {
             handle_ComentarioHistorialTransacciones,
             ComentarioHistorialTransacciones,
             fnEditaPersona,
-            solicitudNvaProf1,
-            solicitudNvaProf2
+            descNvaProfesion,
+            handle_descNvaProfesion
         } = this.props
 
         /* const [CasadoDivorciadoViudo, setCasadoDivorciadoViudo] = useState()
@@ -892,29 +892,29 @@ class PersonaForm extends Component {
                                                             </div>
 
                                                             <div className="row">
-                                                                {solicitudNvaProf1 &&
+                                                                {form.pro_Id_Profesion_Oficio1 === "1" &&
                                                                     <div className="col-sm-4">
                                                                         <FormGroup>
                                                                             <Input type="text"
-                                                                                name="nva_Profesion1"
+                                                                                name="nvaProf1"
                                                                                 className="form-control"
-                                                                            /* onChange={onChange}
-                                                                            value={form.pro_Id_Profesion_Oficio1} */
+                                                                                onChange={handle_descNvaProfesion}
+                                                                                value={descNvaProfesion.nvaProf1}
                                                                             />
-                                                                            <label>Descripcion de la profesión</label>
+                                                                            <label>Descripcion de la profesión/oficio 1</label>
                                                                         </FormGroup>
                                                                     </div>
                                                                 }
-                                                                {solicitudNvaProf2 &&
+                                                                {form.pro_Id_Profesion_Oficio2 === "1" &&
                                                                     <div className="col-sm-4">
                                                                         <FormGroup>
                                                                             <Input type="text"
-                                                                                name="nva_Profesion2"
+                                                                                name="nvaProf2"
                                                                                 className="form-control"
-                                                                            /* onChange={onChange}
-                                                                            value={form.pro_Id_Profesion_Oficio1} */
+                                                                                onChange={handle_descNvaProfesion}
+                                                                                value={descNvaProfesion.nvaProf2}
                                                                             />
-                                                                            <label>Descripcion de la profesión</label>
+                                                                            <label>Descripcion de la profesión/oficio 2</label>
                                                                         </FormGroup>
                                                                     </div>
 

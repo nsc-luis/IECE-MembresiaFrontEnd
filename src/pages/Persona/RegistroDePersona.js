@@ -10,6 +10,7 @@ import { LocaleUtils } from 'react-day-picker';
 class RegistroDePersonal extends Component {
 
     url = helpers.url_api;
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     constructor(props) {
         super(props);
@@ -40,8 +41,7 @@ class RegistroDePersonal extends Component {
             boolAgregarNvaPersona: true,
             boolComentarioEdicion: false,
             ComentarioHistorialTransacciones: "",
-            solicitudNvaProf1: true,
-            solicitudNvaProf2: true
+            descNvaProfesion: {}
         }
     }
 
@@ -101,12 +101,12 @@ class RegistroDePersonal extends Component {
                     usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                     hd_Activo: true
                 },
-                habilitaPerBautizado: true
-                /* hogar: {
-                    ...this.state.hogar,
-                    hd_Id_Hogar: 0,
-                    hp_Jerarquia: 1
-                } */
+                habilitaPerBautizado: true,
+                descNvaProfesion: {
+                    ...this.state.descNvaProfesion,
+                    nvaProf1: "",
+                    nvaProf2: ""
+                }
             })
         } else {
 
@@ -317,16 +317,6 @@ class RegistroDePersonal extends Component {
                 });
             }
         }
-        /* if (e.target.name === "per_Fecha_Nacimiento") {
-            if (!this.const_regex.formatoFecha.test(e.target.value)) {
-                this.setState({ per_Fecha_Nacimiento_NoValido: true });
-            } else {
-                this.setState({
-                    per_Fecha_Nacimiento_NoValido: false
-                });
-
-            }
-        } */
         if (e.target.name === "per_Fecha_Nacimiento") {
             if (e.target.value === '') {
                 this.setState({ per_Fecha_Nacimiento_NoValido: true });
@@ -335,6 +325,26 @@ class RegistroDePersonal extends Component {
                 this.setState({
                     per_Fecha_Nacimiento_NoValido: false
                 });
+            }
+        }
+        if (e.target.name === "pro_Id_Profesion_Oficio1"){
+            if (e.target.value !== "1") {
+                this.setState({ 
+                    descNvaProfesion: {
+                        ...this.state.descNvaProfesion,
+                        nvaProf1: ""
+                    }
+                })
+            }
+        }
+        if (e.target.name === "pro_Id_Profesion_Oficio2"){
+            if (e.target.value !== "1") {
+                this.setState({ 
+                    descNvaProfesion: {
+                        ...this.state.descNvaProfesion,
+                        nvaProf2: ""
+                    }
+                })
             }
         }
     }
@@ -358,6 +368,7 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
+        this.fnSolicitudNvaProfesion();
         try {
             await helpers.authAxios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
                 .then(res => {
@@ -401,6 +412,7 @@ class RegistroDePersonal extends Component {
             PersonaEntity: datos,
             ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
         };
+        this.fnSolicitudNvaProfesion();
         try {
             await helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                 .then(res => {
@@ -479,6 +491,24 @@ class RegistroDePersonal extends Component {
         this.setState({ ComentarioHistorialTransacciones: e.target.value })
     }
 
+    handle_descNvaProfesion = (e) => {
+        this.setState({
+            descNvaProfesion: {
+                ...this.state.descNvaProfesion,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    fnSolicitudNvaProfesion = async() => {
+        if (this.state.descNvaProfesion.nvaProf1 !== ""){
+            await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf1}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+        if (this.state.descNvaProfesion.nvaProf2 !== ""){
+            await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf2}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+    }
+
     render() {
 
         return (
@@ -509,8 +539,8 @@ class RegistroDePersonal extends Component {
                     handle_ComentarioHistorialTransacciones={this.handle_ComentarioHistorialTransacciones}
                     ComentarioHistorialTransacciones={this.state.ComentarioHistorialTransacciones}
                     fnEditaPersona={this.fnEditaPersona}
-                    solicitudNvaProf1={this.state.solicitudNvaProf1}
-                    solicitudNvaProf2={this.state.solicitudNvaProf2}
+                    handle_descNvaProfesion={this.handle_descNvaProfesion}
+                    descNvaProfesion={this.state.descNvaProfesion}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

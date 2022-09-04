@@ -459,7 +459,48 @@ class Sidebar extends Component {
     bajaBautizadoCambioDomicilio = async(e) => {
         e.preventDefault();
         try {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona`, this.state.formBajaBautizadoCambioDomicilio)
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
+            .then(res => {
+                if (res.data.status === "success") {
+                    // alert(res.data.mensaje);
+                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                        });
+                    }, 1500);
+                    setTimeout(() => {
+                        document.location.href = '/ListaDePersonal'
+                    }, 3500);
+                } else {
+                    // alert(res.data.mensaje);
+                    this.setState({
+                        mensajeDelProceso: "Procesando...",
+                        modalShow: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            mensajeDelProceso: res.data.mensaje,
+                            modalShow: false
+                        });
+                    }, 1500);
+                }
+            })
+        }
+        catch {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+    }
+
+    bajaNoBautizadoCambioDomicilio = async(e) => {
+        e.preventDefault();
+        try {
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
             .then(res => {
                 if (res.data.status === "success") {
                     // alert(res.data.mensaje);
@@ -1507,7 +1548,7 @@ class Sidebar extends Component {
                                             <Input
                                                 type="select"
                                                 value={this.state.formBajaNoBautizadoCambioDomicilio.idPersona}
-                                                name="personaSeleccionada"
+                                                name="idPersona"
                                                 onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
                                             >
                                                 <option value="0">Selecciona una persona</option>
@@ -1537,8 +1578,8 @@ class Sidebar extends Component {
                                                 onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
                                             >
                                                 <option value="0">Selecciona una opción</option>
-                                                <option value="interno">INTERNO</option>
-                                                <option value="externo">EXTERNO</option>
+                                                <option value="INTERNO">INTERNO</option>
+                                                <option value="EXTERNO">EXTERNO</option>
                                             </Input>
                                         </Col>
                                     </Row>
@@ -1554,7 +1595,7 @@ class Sidebar extends Component {
                                                 name="fechaTransaccion"
                                                 placeholder='DD/MM/AAAA'
                                                 value={this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion}
-                                                onChange={this.onChangeNoBajaBautizadoCambioDomicilio}
+                                                onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
                                             />
                                         </Col>
                                     </Row>
