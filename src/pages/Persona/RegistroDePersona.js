@@ -368,6 +368,7 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
+        
         this.fnSolicitudNvaProfesion();
         try {
             await helpers.authAxios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
