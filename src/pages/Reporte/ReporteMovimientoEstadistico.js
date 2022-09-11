@@ -8,6 +8,7 @@ import {
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
+import html2canvas from "html2canvas";
 import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
@@ -39,6 +40,9 @@ export default function ReporteMovimientoEstadistico(){
     const [altasHogares, setAltasHogares] = useState(null)
     const [bajasHogares, setBajasHogares] = useState(null)
     const [actualizacionHogar, setActualizacionHogar] = useState(null)
+
+    const [infoDis, setInfoDis] = useState(null)
+    const [infoSec, setInfoSec] = useState(null)
     
     const [loading, setLoading] = useState(true)
     
@@ -47,6 +51,9 @@ export default function ReporteMovimientoEstadistico(){
     
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
+
+
+
     //Llamadas en render
     useEffect(async () => {
         await loadData()
@@ -62,29 +69,35 @@ export default function ReporteMovimientoEstadistico(){
             params.idSectorDistrito = dto
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
             orderData(res.data.datos)
+            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
+            setInfoDis(resDto.data.dis_Alias)
         }else{
             params.idSectorDistrito = sector
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
             console.log(res.data)
             orderData(res.data.datos)
+            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
+            setInfoDis(resDto.data.dis_Alias)
+            const resSec = await helpers.authAxios.get("/Sector/" + sector)
+            setInfoSec(resSec.data.sector[0].sec_Alias)
         }
     }
 
     const orderData = (trans) => {
         setBautismos(trans.filter(t => t.ct_Codigo_Transaccion == 11001))
         setRestituciones(trans.filter(t => t.ct_Codigo_Transaccion == 11002))
-        setAltasCambioDom(trans.filter(t => t.ct_Codigo_Transaccion == 11003 || t.ct_Codigo_Transaccion == 11004))
+        setAltasCambioDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 11003 || t.ct_Codigo_Transaccion == 11004 : t.ct_Codigo_Transaccion == 11004 ))
         setDefunciones(trans.filter(t => t.ct_Codigo_Transaccion == 11101))
         setExcomunionesTemp(trans.filter(t => t.ct_Codigo_Transaccion == 11102))
         setExcomuniones(trans.filter(t => t.ct_Codigo_Transaccion == 11103))
-        setBajasCambiosDom(trans.filter(t => t.ct_Codigo_Transaccion == 11104 || t.ct_Codigo_Transaccion == 11105))
+        setBajasCambiosDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 11104 || t.ct_Codigo_Transaccion == 11105 : t.ct_Codigo_Transaccion == 11105))
         setActualizacionB(trans.filter(t => t.ct_Codigo_Transaccion == 11201))
         setNuevoIngreso(trans.filter(t => t.ct_Codigo_Transaccion == 12001))
-        setAltasCambioDomNB(trans.filter(t => t.ct_Codigo_Transaccion == 12002 || t.ct_Codigo_Transaccion == 12003))
+        setAltasCambioDomNB(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 12002 || t.ct_Codigo_Transaccion == 12003 : t.ct_Codigo_Transaccion == 12003))
         setReactivaciones(trans.filter(t => t.ct_Codigo_Transaccion == 12004))
         setDefuncionesNB(trans.filter(t => t.ct_Codigo_Transaccion == 12101))
         setAlejamientos(trans.filter(t => t.ct_Codigo_Transaccion == 12102))
-        setBajasCambioDomNB(trans.filter(t => t.ct_Codigo_Transaccion == 12103 || t.ct_Codigo_Transaccion == 12104))
+        setBajasCambioDomNB(trans.filter(t => sector ?  t.ct_Codigo_Transaccion == 12103 || t.ct_Codigo_Transaccion == 12104 : t.ct_Codigo_Transaccion == 12104))
         setCambiosABautizado(trans.filter(t => t.ct_Codigo_Transaccion == 12105))
         setBajasPorPadres(trans.filter(t => t.ct_Codigo_Transaccion == 12106))
         setActualizacionNB(trans.filter(t => t.ct_Codigo_Transaccion == 12201))
@@ -94,6 +107,7 @@ export default function ReporteMovimientoEstadistico(){
         setAltasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31001))
         setBajasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31102))
         setActualizacionHogar(trans.filter(t => t.ct_Codigo_Transaccion == 31203))
+
 
         setLoading(false)
         
@@ -151,14 +165,14 @@ export default function ReporteMovimientoEstadistico(){
         // }
     }
 
-    const downloadTable = () =>{
-        TableToExcel.convert(document.getElementById("table1"), {
-            name: "Cumpleaños_membresia.xlsx",
-            sheet: {
-              name: "Hoja 1"
-            }
-          });
-    }
+    // const downloadTable = () =>{
+    //     TableToExcel.convert(document.getElementById("table1"), {
+    //         name: "Cumpleaños_membresia.xlsx",
+    //         sheet: {
+    //           name: "Hoja 1"
+    //         }
+    //       });
+    // }
 
     const handleStartDate = (e) =>{
         setStartDate(moment(e.value).format("YYYY-MM-DD"))
@@ -178,81 +192,41 @@ export default function ReporteMovimientoEstadistico(){
     //     totalCount += count;
     //     return count
     // }
-    // const reportePersonalBautizadoPDF = () =>{
-    //     totalCount = 0
-    //     let index = 1
-    //     // INSTANCIA NUEVO OBJETO PARA CREAR PDF
-    //     const doc = new jsPDF("p", "mm", "letter");
 
-    //     doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-    //     doc.text("REPORTE CUMPLEAÑOS", 85, 10);
-    //     doc.setFontSize(8);
-    //     doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 15)
-        
-    //     if (sector) {
-    //         doc.text(`SECTOR: ${JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}`, 85, 20);
-    //         doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 25);
-    //     }
-    //     else {
-    //         doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
-    //     }
-        
-        
-    //     const headers = [
-    //         'Indice',
-    //         'Nombre',
-    //         'Grupo',
-    //         'Fecha_Nacimiento',
-    //         'Edad_Actual',
-    //     ]
-    //     const data = personas.map((persona,index) => ({
-    //         Indice: String(index+1),
-    //         Nombre: persona.persona ? persona.persona.per_Nombre : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Paterno : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Materno : " ",
-    //         Grupo: persona.persona.per_Bautizado ? "Bautizado" : "No Bautizado",
-    //         Fecha_Nacimiento: String(moment(persona.persona.per_Fecha_Nacimiento).format("DD/MM/YYYY")),
-    //         Edad_Actual: String(moment().diff(persona.persona.per_Fecha_Nacimiento, "years")),
-    //     }))
-    //     doc.table(10, 35, data, headers, {autoSize:true, fontSize: 8, padding:1})
-
-    //     let yAxis = 160
-    //     doc.setFontSize(8);
-
-    //     yAxis += 20;
-    //     doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
-    //     yAxis += 5;
-    //     doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, yAxis);
-
-    //     yAxis += 35;
-    //     doc.line(30, yAxis, 90, yAxis);
-    //     doc.line(120, yAxis, 180, yAxis);
-    //     yAxis += 3;
-    //     doc.text("SECRETARIO", 51, yAxis);
-    //     doc.text("PASTOR", 145, yAxis);
-    //     yAxis -= 5;
-    //     doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
-
-
-    //     doc.save("ReporteMovimientoEstadistico.pdf");
-    // }
+    const printRef = React.useRef();
+    const handleDownloadPDF = async () =>{
+        const input = document.getElementById('pdf');
+        html2canvas(input)
+          .then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF();
+            pdf.addImage(imgData, 'JPEG', 0, 0);
+            // pdf.output('dataurlnewwindow');
+            pdf.save("download.pdf");
+          })
+        ;
+    }
     return(
         <Layout>
             <Container fluid>
-                {/* <Button className="btn-success m-3 " onClick={() => downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
-                <Button className="btn-danger m-3 " onClick={() => reportePersonalBautizadoPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button> */}
 
+                <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
                 {/* TABLA */}
-                <Card body>
+                <Card body id="pdf">
                 <CardTitle className="text-center" tag="h3">
+                {!loading ?
                 <Row>
                     <Col lg="3">
                         <img src={logo} width="100%"></img> 
                     </Col>
                     <Col>
                         REPORTE DE MOVIMIENTO ESTADISTICO PERIODICO
-                        <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
-                        {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
+                        <h5>Distrito: {infoDis}</h5>
+                        {sector ? <h5>Sector: {infoSec}</h5> : null}
                     </Col>
                 </Row>
+                : ""
+                }
                 </CardTitle>
                 {!loading ? 
                     <CardBody>

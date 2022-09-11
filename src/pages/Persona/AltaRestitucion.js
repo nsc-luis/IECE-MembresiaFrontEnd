@@ -20,12 +20,14 @@ function AltaRestitucion() {
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
+    const [alert, setAlert] = useState(false)
 
     const user = JSON.parse(localStorage.getItem('infoSesion'))
+    const sector = JSON.parse(localStorage.getItem("sector"))
 
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${user.sec_Id_Sector}/true`)
+        helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${sector}/true`)
             .then(res => {
                 setOpcionesPersonas(res.data.personas)
                 //console.log(opcionesPersonas)
@@ -33,10 +35,10 @@ function AltaRestitucion() {
     }, [opcionesPersonas.length]);
 
     useEffect(() => {
-        helpers.authAxios.get("/Hogar_Persona/GetListaHogares")
+        helpers.authAxios.get("/HogarDomicilio/GetBySector/" + sector)
             .then(res => {
-                setOpcionesHogares(res.data)
-                //console.log(opcionesHogares)
+                setOpcionesHogares(res.data.domicilios)
+                console.log(opcionesHogares)
             });
     }, [opcionesHogares.length]);
 
@@ -106,7 +108,7 @@ function AltaRestitucion() {
                 setMiembrosHogar(res.data)
             });
             //console.log(hogar)
-            //console.log(miembrosHogar)
+            console.log(miembrosHogar)
 
     };
     const handleJerarquia = (value) => {
@@ -136,6 +138,11 @@ function AltaRestitucion() {
     };
     //Pruebas
     const postData = () => {
+
+        if(jerarquia == null ){
+            alert('Seleccione una jerarquia en el hogar')
+            return
+        }
         let formattedData = {}
 
         if(!mostrarHogar){
@@ -158,6 +165,8 @@ function AltaRestitucion() {
                 } 
                 else {
                     console.log(res.data)
+                    setAlert(true)
+                    document.location.href = '/Main';
                 }
             });
         }else{
@@ -194,6 +203,8 @@ function AltaRestitucion() {
                     } 
                     else {
                         console.log(res.data)
+                        setAlert(true)
+                        document.location.href = '/Main';
                     }
                 });
         }
@@ -202,6 +213,13 @@ function AltaRestitucion() {
     return(
         <Layout>
             <Container>
+            {alert&&
+                <div>
+                    <Alert>
+                        Alta de persona creada correctamente
+                    </Alert>
+                </div>
+            }
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Restitución
@@ -360,7 +378,7 @@ function AltaRestitucion() {
                                 {miembrosHogar.map((miembro, index) => (
                                     <option key={miembro.hd_Id_Hogar} value={index + 1}>{index + 1}</option>
                                 ))}
-                                {/* <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option> */}
+                                <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option>
                                 </Input>
                             </Col>
                         </FormGroup>

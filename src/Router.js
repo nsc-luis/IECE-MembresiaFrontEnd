@@ -63,7 +63,7 @@ class Router extends Component {
                     <Route exact path="/ResumenMembresia" component={ResumenMembresia} />
                     <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
                     <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
-                    <Route exact path="/AltaNuevoIngreso" component={AltaNuevoIngreso} />
+                    {/* <Route exact path="/AltaNuevoIngreso" component={AltaNuevoIngreso} /> */}
                     <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
                     <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
                     <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />

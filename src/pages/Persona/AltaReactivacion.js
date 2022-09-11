@@ -1,6 +1,6 @@
 import Layout from '../Layout';
 import helpers from '../../components/Helpers'
-
+import moment from 'moment';
 import { Link, Redirect } from 'react-router-dom';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button,
@@ -21,20 +21,24 @@ function AltaReactivacion() {
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
+    const [alert, setAlert] = useState(false)
+
+    const user = JSON.parse(localStorage.getItem('infoSesion'))
+    const sector = JSON.parse(localStorage.getItem("sector"))
 
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get("/Persona")
+        helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${sector}/false`)
             .then(res => {
-                setOpcionesPersonas(res.data)
+                setOpcionesPersonas(res.data.personas)
                 console.log(opcionesPersonas)
             });
-    }, [opcionesPersonas]);
+    }, [opcionesPersonas.length]);
 
     useEffect(() => {
-        helpers.authAxios.get("/Hogar_Persona/GetListaHogares")
+        helpers.authAxios.get("/HogarDomicilio/GetBySector/" + sector)
             .then(res => {
-                setOpcionesHogares(res.data)
+                setOpcionesHogares(res.data.domicilios)
                 console.log(opcionesHogares)
             });
     }, [opcionesHogares.length]);
@@ -129,18 +133,88 @@ function AltaReactivacion() {
     };
     //Pruebas
     const postData = () => {
-        helpers.authAxios.post(`/Persona/Post/${data.per_Id_Persona}`, data)
+
+        if(jerarquia == null ){
+            alert('Seleccione una jerarquia en el hogar')
+            return
+        }
+        let formattedData = {}
+
+        if(!mostrarHogar){
+            formattedData = {
+                id: 0,
+                per_Id_Persona: data.per_Id_Persona,
+                sec_Id_Sector: data.sec_Id_Sector,
+                ct_Codigo_Transaccion: 12004, 
+                Usu_Usuario_Id: user.pem_Id_Ministro,
+                hte_Fecha_Transaccion: data.fecha_transaccion,
+                hte_Comentario: data.hte_Comentario,
+                jerarquia: jerarquia,
+                hp_Id_Hogar_Persona: hogar.hd_Id_Hogar,
+            }
+            console.log(formattedData)
+            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
             .then(res => {
-                console.log(res)
+                if(res.data.status === 'error') {
+                    console.log(res.data.mensaje)
+                } 
+                else {
+                    console.log(res.data)
+                    setAlert(true)
+                    document.location.href = '/Main';
+                }
             });
-        helpers.authAxios.post(`/Persona/AddPersonaHogar/${jerarquia}/${hogar.hd_Id_Hogar}`, data)
-            .then(res => {
-                console.log(res)
-            });
+        }else{
+            formattedData = {
+                id: 0,
+                per_Id_Persona: data.per_Id_Persona,
+                sec_Id_Sector: data.sec_Id_Sector,
+                ct_Codigo_Transaccion: 12004, 
+                Usu_Usuario_Id: user.pem_Id_Ministro,
+                hte_Fecha_Transaccion: data.fecha_transaccion,
+                hte_Comentario: data.hte_Comentario,
+                HD: {
+                    hd_Id_Hogar: 0,
+                    hd_Calle: data.hd_Calle,
+                    hd_Numero_Exterior: data.hd_Numero_Exterior,
+                    hd_Numero_Interior: data.hd_Numero_Interior,
+                    hd_Tipo_Subdivision: data.hd_Tipo_Subdivision,
+                    hd_Subdivision: data.hd_Subdivision,
+                    hd_Localidad: data.hd_Localidad,
+                    hd_Municipio_Ciudad: data.hd_Municipio_Ciudad,
+                    pais_Id_Pais: data.pais_Id_Pais,
+                    est_Id_Estado: data.est_Id_Estado,
+                    hd_Telefono: data.hd_Telefono,
+                    dis_Id_Distrito: user.dis_Id_Distrito,
+                    sec_Id_Sector: user.sec_Id_Sector,
+                    usu_Id_Usuario: user.pem_Id_Ministro,
+                    Fecha_Registro: moment(),
+                }
+            }
+            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, formattedData)
+                .then(res => {
+                    if(res.data.status === 'error') {
+                        console.log(res.data.mensaje)
+                    } 
+                    else {
+                        console.log(res.data)
+                        setAlert(true)
+                        document.location.href = '/Main';
+                    }
+                });
+        }
+        //console.log(formattedData)
     };
     return(
         <Layout>
             <Container>
+            {alert&&
+                <div>
+                    <Alert>
+                        Alta de persona creada correctamente
+                    </Alert>
+                </div>
+            }
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Reactivación
