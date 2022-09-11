@@ -61,7 +61,7 @@ function AltaReactivacion() {
                 setData( prevState => ({
                     ...prevState,
                     per_Activo: true,
-                    per_En_Comunion: true,
+                    per_En_Comunion: false,
                     per_Visibilidad_Abierta: false
                 }))
             })
