@@ -5,7 +5,7 @@ import {
      CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
 } from 'reactstrap';
 
-import React, { useEffect, useState, } from 'react';
+import React, { Fragment, useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import html2canvas from "html2canvas";
@@ -29,7 +29,7 @@ export default function ReporteMovimientoEstadistico(){
     const [altasCambioDomNB, setAltasCambioDomNB] = useState(null)
     const [reactivaciones, setReactivaciones] = useState(null)
     const [defuncionesNB, setDefuncionesNB] = useState(null)
-    const [alejamiientos, setAlejamientos] = useState(null)
+    const [alejamientos, setAlejamientos] = useState(null)
     const [bajasCambioDomNB, setBajasCambioDomNB] = useState(null)
     const [cambiosABautizado, setCambiosABautizado] = useState(null)
     const [bajasPorPadres, setBajasPorPadres] = useState(null)
@@ -55,8 +55,8 @@ export default function ReporteMovimientoEstadistico(){
 
 
     //Llamadas en render
-    useEffect(async () => {
-        await loadData()
+    useEffect( () => {
+        loadData()
     }, [])
     
     const loadData = async () => {
@@ -111,58 +111,6 @@ export default function ReporteMovimientoEstadistico(){
 
         setLoading(false)
         
-        // switch (code) {
-        //     case 11001:
-        //         setBautismos(data)
-        //         break;
-        
-        //     case 11002:
-        //         setRestituciones(data)
-        //         break;
-        
-        //     case 11004:
-        //         setAltasCambioDom(data)
-        //         break;
-        
-        //     case 11101:
-        //         setDefunciones(data)
-        //         break;
-        
-        //     case 11102:
-        //         setExcomunionesTemp(data)
-        //         break;
-        
-        //     case 11103:
-        //         setExcomuniones(data)
-        //         break;
-        
-        //     case 11105:
-        //         setBajasCambiosDom(data)
-        //         break;
-        
-        //     case 21001:
-        //         setMatrimonios(data)
-        //         break;
-        
-        //     case 21102:
-        //         setLegalizaciones(data)
-        //         break;
-        
-        //     case 23203:
-        //         setPresentacionesNiños(data)
-        //         break;
-
-        //     case 31001:
-        //         setAltasHogares(data)
-        //         break;
-        
-        //     case 31102:
-        //         setBajasHogares(data)
-        //         break;
-        
-        //     default:
-        //         break;
-        // }
     }
 
     // const downloadTable = () =>{
@@ -205,6 +153,36 @@ export default function ReporteMovimientoEstadistico(){
             pdf.save("download.pdf");
           })
         ;
+    }
+
+    const TableRow = (props) => {
+        const data = props.data
+        const label = props.label
+        const total = props.total
+
+        if(data.length > 0){
+            return(
+                <Fragment>
+                    <tr>
+                        <th>{label}</th>
+                    </tr>
+                    {data.map((persona, index) => (
+                        <tr>
+                            <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                            <td>{persona.ct_Tipo}</td>
+                            <td>{persona.hte_Comentario}</td>
+                            <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                        </tr>
+                    )) }
+                    <tr>
+                        <th className="text-right" colSpan="4">Total por {label}: {total} </th>
+                    </tr>
+                </Fragment>
+            )
+        }else{
+            return ""
+        }
+        
     }
     return(
         <Layout>
@@ -269,172 +247,30 @@ export default function ReporteMovimientoEstadistico(){
                                                 <h5>ACTUALIZACIONES</h5>
                                             </td>
                                         </tr>
-
-                                        {
-                                           actualizacionB ? actualizacionB.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total de Actualizaciones: {actualizacionB ? actualizacionB.length : 0} </th>
-                                        </tr>
-
+                                        
+                                        <TableRow label={'Actualizacion Bautizado'} data= {actualizacionB} total={actualizacionB ? actualizacionB.length : 0}/>
+                                       
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>ALTAS</h5>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th>Bautismo</th>
-                                        </tr>
-                                        {
-                                           bautismos ? bautismos.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Bautismo: {bautismos ? bautismos.length : 0} </th>
-                                        </tr>
-                                        <tr>
-                                            <th>Restitución</th>
-                                        </tr>
-                                        {
-                                            restituciones ? restituciones.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )):
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Restitución: {restituciones ? restituciones.length : 0} </th>
-                                        </tr>
-                                        <tr>
-                                            <th>Cambio de Domicilio</th>
-                                        </tr>
-                                        {
-                                            altasCambioDom ? altasCambioDom.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )):
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Cambio de Domicilio: {altasCambioDom ? altasCambioDom.length : 0} </th>
-                                        </tr>
-                                        
+
+                                        <TableRow label={'Bautismo'} data= {bautismos} total={bautismos ? bautismos.length : 0}/>
+                                        <TableRow label={'Restitución'} data= {restituciones} total={restituciones ? restituciones.length : 0}/>
+                                        <TableRow label={'Cambio de Domicilio'} data= {altasCambioDom} total={altasCambioDom ? altasCambioDom.length : 0}/>
+
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>BAJAS</h5>
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <th>Excomunión</th>
-                                        </tr>
-
-                                        {
-                                           excomuniones ? excomuniones.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Excomunión: {excomuniones ? excomuniones.length : 0} </th>
-                                        </tr>
-                                        <tr>
-                                            <th>Excomunión Temporal</th>
-                                        </tr>
-
-                                        {
-                                           excomunionesTemp ? excomunionesTemp.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Excomunión Temporal: {excomunionesTemp ? excomunionesTemp.length : 0} </th>
-                                        </tr>
-                                        <tr>
-                                            <th>Baja Cambio Domicilio</th>
-                                        </tr>
-
-                                        {
-                                           bajasCambioDom ? bajasCambioDom.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Baja Cambio de Domicilio: {bajasCambioDom ? bajasCambioDom.length : 0} </th>
-                                        </tr>
-                                        <tr>
-                                            <th>Defunción</th>
-                                        </tr>
-                                        {
-                                            defunciones ? defunciones.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )):
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Defunción: {defunciones ? defunciones.length : 0} </th>
-                                        </tr>
+                                        <TableRow label={'Excomunión'} data= {excomuniones} total={excomuniones ? excomuniones.length : 0}/>
+                                        <TableRow label={'Excomunión Temporal'} data= {excomunionesTemp} total={excomunionesTemp ? excomunionesTemp.length : 0}/>
+                                        <TableRow label={'Baja Cambio Domicilio'} data= {bajasCambioDom} total={bajasCambioDom ? bajasCambioDom.length : 0}/>
+                                        <TableRow label={'Defunción'} data= {defunciones} total={defunciones ? defunciones.length : 0}/>
+                                        
 
                                         <tr className="bg-info">
                                             <td colSpan="4">
@@ -448,69 +284,23 @@ export default function ReporteMovimientoEstadistico(){
                                             </td>
                                         </tr>
 
-                                        {
-                                           actualizacionHogar ? actualizacionHogar.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total de Actualizaciones: {actualizacionHogar ? actualizacionHogar.length : 0} </th>
-                                        </tr>
+                                        <TableRow label={'Actualizaciones'} data= {actualizacionHogar} total={actualizacionHogar ? actualizacionHogar.length : 0}/>
 
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>ALTAS</h5>
                                             </td>
                                         </tr>
-                                        {
-                                           altasHogares ? altasHogares.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Alta de Hogar: {altasHogares ? altasHogares.length : 0} </th>
-                                        </tr>
+
+                                        <TableRow label={'Alta Hogares'} data= {altasHogares} total={altasHogares ? altasHogares.length : 0}/>
 
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>BAJAS</h5>
                                             </td>
                                         </tr>
-
-                                        {
-                                            bajasHogares ? bajasHogares.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )):
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Baja de Hogares: {bajasHogares ? bajasHogares.length : 0} </th>
-                                        </tr>
-
-                                        
+                                        <TableRow label={'Baja Hogares'} data= {bajasHogares} total={bajasHogares ? bajasHogares.length : 0}/>
+                                       
                                         <tr className="bg-info">
                                             <td colSpan="4">
                                                 <h4><strong>MEMBRESIA NO BAUTIZADA</strong></h4>
@@ -523,194 +313,30 @@ export default function ReporteMovimientoEstadistico(){
                                             </td>
                                         </tr>
 
-                                        {
-                                           actualizacionNB ? actualizacionNB.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total de Actualizaciones: {actualizacionNB ? actualizacionNB.length : 0} </th>
-                                        </tr>
-
+                                        <TableRow label={'Actualizacion No Bautizado'} data= {actualizacionNB} total={actualizacionNB ? actualizacionNB.length : 0}/>
+                                        
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>ALTAS</h5>
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <th>Nuevo Ingreso</th>
-                                        </tr>
-                                        {
-                                           nuevoIngreso ? nuevoIngreso.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Nuevo Ingreso: {nuevoIngreso ? nuevoIngreso.length : 0} </th>
-                                        </tr>
+                                        <TableRow label={'Nuevo Ingreso'} data= {nuevoIngreso} total={nuevoIngreso ? nuevoIngreso.length : 0}/>
+                                        <TableRow label={'Cambio de Domicilio'} data= {altasCambioDomNB} total={altasCambioDomNB ? altasCambioDomNB.length : 0}/>
+                                        <TableRow label={'Reactivación'} data= {reactivaciones} total={reactivaciones ? reactivaciones.length : 0}/>
                                         
-                                        <tr>
-                                            <th>Cambio de Domicilio</th>
-                                        </tr>
-                                        {
-                                           altasCambioDomNB ? altasCambioDomNB.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Cambio Domicilio: {altasCambioDomNB ? altasCambioDomNB.length : 0} </th>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <th>Reactivación</th>
-                                        </tr>
-                                        {
-                                           reactivaciones ? reactivaciones.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Reactivación: {reactivaciones ? reactivaciones.length : 0} </th>
-                                        </tr>
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>BAJAS</h5>
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <th>Defunción</th>
-                                        </tr>
-                                        {
-                                           defuncionesNB ? defuncionesNB.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Defunción: {defuncionesNB ? defuncionesNB.length : 0} </th>
-                                        </tr>
+                                        <TableRow label={'Defunción'} data= {defuncionesNB} total={defuncionesNB ? defuncionesNB.length : 0}/>
+                                        <TableRow label={'Cambio de Domicilio'} data= {bajasCambioDomNB} total={bajasCambioDomNB ? bajasCambioDomNB.length : 0}/>
+                                        <TableRow label={'Alejamiento'} data= {alejamientos} total={alejamientos ? alejamientos.length : 0}/>
+                                        <TableRow label={'Pasa a Personal Bautizado'} data= {cambiosABautizado} total={cambiosABautizado ? cambiosABautizado.length : 0}/>
+                                        <TableRow label={'Baja de Padres'} data= {bajasPorPadres} total={bajasPorPadres ? bajasPorPadres.length : 0}/>
                                         
-                                        <tr>
-                                            <th>Cambio de Domicilio</th>
-                                        </tr>
-                                        {
-                                           bajasCambioDomNB ? bajasCambioDomNB.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Cambio Domicilio: {bajasCambioDomNB ? bajasCambioDomNB.length : 0} </th>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <th>Alejamiento</th>
-                                        </tr>
-                                        {
-                                           alejamiientos ? alejamiientos.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por Alejamiento: {alejamiientos ? alejamiientos.length : 0} </th>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <th>Pasa a personal bautizado</th>
-                                        </tr>
-                                        {
-                                           cambiosABautizado ? cambiosABautizado.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por cambio a bautizado: {cambiosABautizado ? cambiosABautizado.length : 0} </th>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <th>Por baja de padres</th>
-                                        </tr>
-                                        {
-                                           bajasPorPadres ? bajasPorPadres.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total por baja de padres: {bajasPorPadres ? bajasPorPadres.length : 0} </th>
-                                        </tr>
-
                                         <tr className="bg-info">
                                             <td colSpan="4">
                                                 <h4><strong>SUCESOS</strong></h4>
@@ -723,69 +349,24 @@ export default function ReporteMovimientoEstadistico(){
                                             </td>
                                         </tr>
 
-                                        {
-                                           matrimonios ? matrimonios.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total de matrimonios: {matrimonios ? matrimonios.length / 2 : 0} </th>
-                                        </tr>
-
+                                        <TableRow label={'Matrimonios'} data= {matrimonios} total={matrimonios ? matrimonios.length / 2 : 0}/>
+                                       
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>Legalizaciones</h5>
                                             </td>
                                         </tr>
 
-                                        {
-                                           legalizaciones ? legalizaciones.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total de legalizaciones: {legalizaciones ? legalizaciones.length / 2: 0} </th>
-                                        </tr>
-
+                                        <TableRow label={'Legalizaciones'} data= {legalizaciones} total={legalizaciones ? legalizaciones.length / 2 : 0}/>
+                                        
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>Presentaciones de niños</h5>
                                             </td>
                                         </tr>
 
-                                        {
-                                           presentacionesNiños ? presentacionesNiños.map((persona, index) => (
-                                                <tr>
-                                                    <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                                    <td>{persona.ct_Tipo}</td>
-                                                    <td>{persona.hte_Comentario}</td>
-                                                    <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-                                                </tr>
-                                            )) :
-                                            <tr>
-                                                <td colSpan="4">No hay registros</td>
-                                            </tr> 
-                                        }
-                                        <tr>
-                                            <th className="text-right" colSpan="4">Total de presentaciones de niños: {presentacionesNiños ? presentacionesNiños.length : 0} </th>
-                                        </tr>
-
+                                        <TableRow label={'Presentaciones de Niños'} data= {presentacionesNiños} total={presentacionesNiños ? presentacionesNiños.length : 0}/>
+                                    
                                     </Table>
                                 </CardBody>
                             </Card>
