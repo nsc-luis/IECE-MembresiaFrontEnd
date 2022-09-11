@@ -66,16 +66,25 @@ class Login extends Component {
             });
     } */
 
-    getListaDistritosPorMinistro = async () => {
+    /* getListaDistritosPorMinistro = async () => {
         await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
             .then(res => {
                 this.setState({
                     listaDistritosPorMinistro: res.data.sectores
                 })
             });
+    } */
+
+    getListaDistritosPorMinistro = async () => {
+        await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetDistritosByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
+            .then(res => {
+                this.setState({
+                    listaDistritosPorMinistro: res.data.distritos
+                })
+            });
     }
 
-    getListaSectoresPorMinistro = async (idDistrito, idMinistro) => {
+    /* getListaSectoresPorMinistro = async (idDistrito, idMinistro) => {
         if (this.state.obispo) {
             await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
                 .then(res => {
@@ -88,9 +97,9 @@ class Login extends Component {
                     this.setState({ listaSectoresPorMinistro: res.data.sectores });
                 });
         }
-    }
+    } */
 
-    getListaSectoresPorDistrito = async (idDistritoSector, obispo) => {
+    /* getListaSectoresPorDistrito = async (idDistritoSector, obispo) => {
         if (obispo) {
             await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistritoSector)
                 .then(res => {
@@ -104,19 +113,36 @@ class Login extends Component {
                 });
         }
 
+    } */
+
+    getListaSectoresPorDistritoMinistro = async (idDistrito, idMinistro) => {
+        await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
+        .then(res => {
+            this.setState({ 
+                listaSectoresPorDistrito: res.data.sectores,
+                obispo: res.data.obispo
+            });
+        })
     }
 
     onChangeDistrito = (e) => {
         this.setState({ distritoSeleccionado: e.target.value });
+        this.setState({ sectorSeleccionado: "0" });
+        localStorage.removeItem('sector');
 
         // Almacenar Distrito en LocalStorage
         localStorage.setItem('dto', e.target.value)
         if (e.target.value === "0") {
-            this.setState({ listaSectoresPorDistrito: [] })
+            this.setState({ 
+                listaSectoresPorDistrito: [],
+                obispo: false
+            })
             return false
         }
-
-        this.state.listaDistritosPorMinistro.forEach(distrito => {
+        else {
+            this.getListaSectoresPorDistritoMinistro(e.target.value, this.infoSesion.mu_pem_Id_Pastor);
+        }
+        /* this.state.listaDistritosPorMinistro.forEach(distrito => {
             if (distrito.dis_Id_Distrito === parseInt(e.target.value)) {
                 if (distrito.pem_Id_Obispo === this.infoSesion.mu_pem_Id_Pastor) {
                     this.setState({ obispo: true })
@@ -127,14 +153,18 @@ class Login extends Component {
                     this.getListaSectoresPorDistrito(distrito.sec_Id_Sector, false)
                 }
             }
-        });
-
+        }); */
     }
 
     onChangeSector = (e) => {
         this.setState({ sectorSeleccionado: e.target.value });
-        // Almacenar Sector en LocalStorage
-        localStorage.setItem('sector', e.target.value)
+        if (e.target.value !== "0") {
+            // Almacenar Sector en LocalStorage
+            localStorage.setItem('sector', e.target.value)
+        }
+        else {
+            localStorage.removeItem('sector')
+        }
     }
 
     handleLogoff = () => {
@@ -143,18 +173,26 @@ class Login extends Component {
     }
 
     iniciarSesion = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         if (this.state.distritoSeleccionado === "0") {
             alert("Error: Debe seleccionar un distrito para continuar.");
+            return false;
         }
-        else if (this.state.obispo) {
+        if (!this.state.obispo && this.state.sectorSeleccionado !== "0") {
+            localStorage.setItem('sector', this.state.sectorSeleccionado)
             document.location.href = '/Main';
         }
-        else if (this.state.sectorSeleccionado !== "0") {
+
+        if (this.state.obispo && this.state.sectorSeleccionado === "0") {
             document.location.href = '/Main';
         }
-        else {
+        if (!this.state.obispo && this.state.sectorSeleccionado === "0") {
             alert("Error: Debe seleccionar un sector para continuar.");
+            return false;
+        }
+        if (this.state.sectorSeleccionado !== "0") {
+            localStorage.setItem('sector', this.state.sectorSeleccionado)
+            document.location.href = '/Main';
         }
     }
 

@@ -20,7 +20,8 @@ class Matrimonio extends Component {
             modalEliminaMatrimonio: false,
             modalShow: false,
             mensajeDelProceso: "",
-            mat_Id_MatrimonioLegalizacion: "0"
+            mat_Id_MatrimonioLegalizacion: "0",
+            sector: {}
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     }
@@ -30,7 +31,7 @@ class Matrimonio extends Component {
     }
 
     getListaMatrimoniosLegalizacionesPorSector = async () => {
-        await helpers.authAxios.get(helpers.url_api + '/Matrimonio_Legalizacion/GetBySector/' + this.infoSesion.sec_Id_Sector)
+        await helpers.authAxios.get(helpers.url_api + '/Matrimonio_Legalizacion/GetBySector/' + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     listaMatrimoniosLegalizaciones: res.data.matrimoniosLegalizaciones

@@ -161,7 +161,6 @@ class PersonaForm extends Component {
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
-                    console.log(res.data)
                 })
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
@@ -169,11 +168,17 @@ class PersonaForm extends Component {
                 })
 
             let jerarquias = [];
-            for (let i = 1; i < this.state.MiembrosDelHogar.length + 1; i++) {
+            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
                 jerarquias.push(<option value={i}>{i}</option>)
             }
 
-            await this.setState({ JerarquiasDisponibles: jerarquias })
+            this.setState({
+                JerarquiasDisponibles: jerarquias,
+                hogar: {
+                    ...this.state.hogar,
+                    hp_Jerarquia: jerarquias.length
+                }
+            })
         } else {
             this.setState({
                 MiembrosDelHogar: [],
@@ -249,7 +254,9 @@ class PersonaForm extends Component {
             boolComentarioEdicion,
             handle_ComentarioHistorialTransacciones,
             ComentarioHistorialTransacciones,
-            fnEditaPersona
+            fnEditaPersona,
+            descNvaProfesion,
+            handle_descNvaProfesion
         } = this.props
 
         /* const [CasadoDivorciadoViudo, setCasadoDivorciadoViudo] = useState()
@@ -426,13 +433,14 @@ class PersonaForm extends Component {
                 !this.state.fechaBodaCivilInvalida && !this.state.fechaEspitiruSantoInvalida &&
                 !this.state.fechaBodaEclesiasticaInvalida) {
 
-                console.log("Success: Campos validados")
+                /* console.log("Success: Campos validados") */
 
                 if (boolAgregarNvaPersona) {
-                    // FUNCION PARA FORMATO DE FECHAS PARA BD
-                    /* helpers.fechas.forEach(fecha => {
-                        objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
-                    }) */
+                    /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
+                    if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
+                        alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un nuevo hogar/domicilio.");
+                        return false;
+                    }
 
                     if (this.state.hogar.hd_Id_Hogar === "0") {
                         let PersonaDomicilioHogar = {
@@ -673,7 +681,7 @@ class PersonaForm extends Component {
                                                                             className="fa fa-times fa-sm"
                                                                             style={{ paddingRight: "5px" }}>
                                                                         </span>
-                                                                        <i>Ignorar y duplicar registro</i>
+                                                                        <i>Continuar con la edición de la persona</i>
                                                                     </Button>
                                                                 </div>
                                                             </>
@@ -883,6 +891,37 @@ class PersonaForm extends Component {
                                                                     </FormGroup>
                                                                 </div>
                                                             </div>
+
+                                                            <div className="row">
+                                                                {form.pro_Id_Profesion_Oficio1 === "1" &&
+                                                                    <div className="col-sm-4">
+                                                                        <FormGroup>
+                                                                            <Input type="text"
+                                                                                name="nvaProf1"
+                                                                                className="form-control"
+                                                                                onChange={handle_descNvaProfesion}
+                                                                                value={descNvaProfesion.nvaProf1}
+                                                                            />
+                                                                            <label>Descripcion de la profesión/oficio 1</label>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                }
+                                                                {form.pro_Id_Profesion_Oficio2 === "1" &&
+                                                                    <div className="col-sm-4">
+                                                                        <FormGroup>
+                                                                            <Input type="text"
+                                                                                name="nvaProf2"
+                                                                                className="form-control"
+                                                                                onChange={handle_descNvaProfesion}
+                                                                                value={descNvaProfesion.nvaProf2}
+                                                                            />
+                                                                            <label>Descripcion de la profesión/oficio 2</label>
+                                                                        </FormGroup>
+                                                                    </div>
+
+                                                                }
+                                                            </div>
+
                                                             <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-4">
@@ -1351,27 +1390,30 @@ class PersonaForm extends Component {
                                             }
 
                                             {/* Hogar */}
-                                            <div className="row mx-auto mt-3">
-                                                <div className="col-sm-12">
-                                                    <div className="card border-info acceso-directo">
-                                                        <div className="card-header">
-                                                            <h5><strong>Hogar / Domicilio</strong></h5>
-                                                        </div>
-                                                        <div className="card-body">
-                                                            <HogarPersonaDomicilio
-                                                                domicilio={domicilio}
-                                                                onChangeDomicilio={onChangeDomicilio}
-                                                                handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
-                                                                handle_hp_Jerarquia={this.handle_hp_Jerarquia}
-                                                                hogar={this.state.hogar}
-                                                                DatosHogarDomicilio={this.state.DatosHogarDomicilio}
-                                                                MiembrosDelHogar={this.state.MiembrosDelHogar}
-                                                                JerarquiasDisponibles={this.state.JerarquiasDisponibles}
-                                                            />
+                                            {/* NO MUESTRA SECCION DEL HOGAR SI ES UNA EDICION */}
+                                            {isNaN(form.per_Id_Persona) &&
+                                                <div className="row mx-auto mt-3">
+                                                    <div className="col-sm-12">
+                                                        <div className="card border-info acceso-directo">
+                                                            <div className="card-header">
+                                                                <h5><strong>Hogar / Domicilio</strong></h5>
+                                                            </div>
+                                                            <div className="card-body">
+                                                                <HogarPersonaDomicilio
+                                                                    domicilio={domicilio}
+                                                                    onChangeDomicilio={onChangeDomicilio}
+                                                                    handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
+                                                                    handle_hp_Jerarquia={this.handle_hp_Jerarquia}
+                                                                    hogar={this.state.hogar}
+                                                                    DatosHogarDomicilio={this.state.DatosHogarDomicilio}
+                                                                    MiembrosDelHogar={this.state.MiembrosDelHogar}
+                                                                    JerarquiasDisponibles={this.state.JerarquiasDisponibles}
+                                                                />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            }
 
                                             {/* Botones al final de formulario */}
                                             <FormGroup>
@@ -1400,7 +1442,6 @@ class PersonaForm extends Component {
                                     }
                                 </React.Fragment>
                             }
-
                         </Container>
                         {/* </div> */}
                     </Form>
@@ -1419,7 +1460,7 @@ class PersonaForm extends Component {
                         <Button className="btn btn-sm btn-secondary" onClick={this.closeModalAltaPersona}>Cerrar</Button>
                     </div>
                 </Modal>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }

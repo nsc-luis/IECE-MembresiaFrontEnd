@@ -46,8 +46,8 @@ class FrmMatrimonioLegalizacion extends Component {
                 mat_Fecha_Boda_Eclesiastica: "1900-01-01",
                 mat_Cantidad_Hijos: "",
                 mat_Nombre_Hijos: "",
-                dis_Id_Distrito: this.infoSesion.dis_Id_Distrito,
-                sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                dis_Id_Distrito: localStorage.getItem("dto"),
+                sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
             }
         })
@@ -68,8 +68,8 @@ class FrmMatrimonioLegalizacion extends Component {
                     mat_Fecha_Boda_Eclesiastica: "1900-01-01",
                     mat_Cantidad_Hijos: "",
                     mat_Nombre_Hijos: "",
-                    dis_Id_Distrito: this.infoSesion.dis_Id_Distrito,
-                    sec_Id_Sector: this.infoSesion.sec_Id_Sector,
+                    dis_Id_Distrito: localStorage.getItem("dto"),
+                    sec_Id_Sector: localStorage.getItem("sector"),
                     usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
                 }
             })
@@ -92,7 +92,7 @@ class FrmMatrimonioLegalizacion extends Component {
 
     getHombres = async (str) => {
         if (str === "MATRIMONIO") {
-            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaMatrimonio/" + this.infoSesion.sec_Id_Sector)
+            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaMatrimonio/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         hombres: res.data.hombresParaMatrimonio
@@ -100,7 +100,7 @@ class FrmMatrimonioLegalizacion extends Component {
                 })
         }
         else {
-            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaLegalizacion/" + this.infoSesion.sec_Id_Sector)
+            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaLegalizacion/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         hombres: res.data.hombresParaLegalizacion
@@ -111,7 +111,7 @@ class FrmMatrimonioLegalizacion extends Component {
 
     getMujeres = async (str) => {
         if (str === "MATRIMONIO") {
-            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaMatrimonio/" + this.infoSesion.sec_Id_Sector)
+            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaMatrimonio/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         mujeres: res.data.mujeresParaMatrimonio
@@ -119,7 +119,7 @@ class FrmMatrimonioLegalizacion extends Component {
                 })
         }
         else {
-            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaLegalizacion/" + this.infoSesion.sec_Id_Sector)
+            await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaLegalizacion/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         mujeres: res.data.mujeresParaLegalizacion

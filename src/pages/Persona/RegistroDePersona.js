@@ -5,10 +5,12 @@ import helpers from '../../components/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Layout from '../Layout';
 import { Modal, ModalBody, /* ModalFooter, ModalHeader, Button */ } from 'reactstrap';
+import { LocaleUtils } from 'react-day-picker';
 
 class RegistroDePersonal extends Component {
 
     url = helpers.url_api;
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     constructor(props) {
         super(props);
@@ -38,7 +40,8 @@ class RegistroDePersonal extends Component {
             tituloAgregarEditar: "Agregar nuevo miembro",
             boolAgregarNvaPersona: true,
             boolComentarioEdicion: false,
-            ComentarioHistorialTransacciones: ""
+            ComentarioHistorialTransacciones: "",
+            descNvaProfesion: {}
         }
     }
 
@@ -83,24 +86,27 @@ class RegistroDePersonal extends Component {
                     per_Cargos_Desempenados: "",
                     per_Cantidad_Hijos: "0",
                     per_Nombre_Hijos: "",
-                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
+                    sec_Id_Sector: localStorage.getItem("sector"),
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro
                 },
                 domicilio: {
                     ...this.state.domicilio,
                     hd_Tipo_Subdivision: "COL",
-                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector,
-                    dis_Id_Distrito: JSON.parse(localStorage.getItem('infoSesion')).dis_Id_Distrito,
+                    sec_Id_Sector: localStorage.getItem("sector"),
+                    dis_Id_Distrito: localStorage.getItem("dto"),
                     pais_Id_Pais: "0",
                     hd_Calle: "",
                     hd_Localidad: "",
-                    hd_Numero_Exterior: ""
+                    hd_Numero_Exterior: "",
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
+                    hd_Activo: true
                 },
-                habilitaPerBautizado: true
-                /* hogar: {
-                    ...this.state.hogar,
-                    hd_Id_Hogar: 0,
-                    hp_Jerarquia: 1
-                } */
+                habilitaPerBautizado: true,
+                descNvaProfesion: {
+                    ...this.state.descNvaProfesion,
+                    nvaProf1: "",
+                    nvaProf2: ""
+                }
             })
         } else {
 
@@ -137,7 +143,8 @@ class RegistroDePersonal extends Component {
                     per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
                     per_Categoria: localStorage.getItem("categoria"), */
                     per_Id_Persona: localStorage.getItem("idPersona"),
-                    sec_Id_Sector: JSON.parse(localStorage.getItem('infoSesion')).sec_Id_Sector
+                    sec_Id_Sector: localStorage.getItem("sector"),
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro
                 }
             });
         }
@@ -251,6 +258,23 @@ class RegistroDePersonal extends Component {
                     });
                     break;
             }
+            if (e.target.name === 'pro_Id_Profesion_Oficio1') {
+                if (e.target.value === '1') {
+                    this.setState({ solicitudNvaProf1: true })
+                }
+                else {
+                    this.setState({ solicitudNvaProf1: false })
+                }
+            }
+
+            if (e.target.name === 'pro_Id_Profesion_Oficio2') {
+                if (e.target.value === '1') {
+                    this.setState({ solicitudNvaProf2: true })
+                }
+                else {
+                    this.setState({ solicitudNvaProf2: false })
+                }
+            }
         }
         if (e.target.name === "per_Bautizado") {
             if (e.target.checked) {
@@ -293,16 +317,6 @@ class RegistroDePersonal extends Component {
                 });
             }
         }
-        /* if (e.target.name === "per_Fecha_Nacimiento") {
-            if (!this.const_regex.formatoFecha.test(e.target.value)) {
-                this.setState({ per_Fecha_Nacimiento_NoValido: true });
-            } else {
-                this.setState({
-                    per_Fecha_Nacimiento_NoValido: false
-                });
-
-            }
-        } */
         if (e.target.name === "per_Fecha_Nacimiento") {
             if (e.target.value === '') {
                 this.setState({ per_Fecha_Nacimiento_NoValido: true });
@@ -311,6 +325,26 @@ class RegistroDePersonal extends Component {
                 this.setState({
                     per_Fecha_Nacimiento_NoValido: false
                 });
+            }
+        }
+        if (e.target.name === "pro_Id_Profesion_Oficio1"){
+            if (e.target.value !== "1") {
+                this.setState({ 
+                    descNvaProfesion: {
+                        ...this.state.descNvaProfesion,
+                        nvaProf1: ""
+                    }
+                })
+            }
+        }
+        if (e.target.name === "pro_Id_Profesion_Oficio2"){
+            if (e.target.value !== "1") {
+                this.setState({ 
+                    descNvaProfesion: {
+                        ...this.state.descNvaProfesion,
+                        nvaProf2: ""
+                    }
+                })
             }
         }
     }
@@ -334,6 +368,8 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
+        
+        this.fnSolicitudNvaProfesion();
         try {
             await helpers.authAxios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
                 .then(res => {
@@ -377,6 +413,7 @@ class RegistroDePersonal extends Component {
             PersonaEntity: datos,
             ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
         };
+        this.fnSolicitudNvaProfesion();
         try {
             await helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                 .then(res => {
@@ -455,6 +492,24 @@ class RegistroDePersonal extends Component {
         this.setState({ ComentarioHistorialTransacciones: e.target.value })
     }
 
+    handle_descNvaProfesion = (e) => {
+        this.setState({
+            descNvaProfesion: {
+                ...this.state.descNvaProfesion,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    fnSolicitudNvaProfesion = async() => {
+        if (this.state.descNvaProfesion.nvaProf1 !== ""){
+            await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf1}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+        if (this.state.descNvaProfesion.nvaProf2 !== ""){
+            await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf2}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+    }
+
     render() {
 
         return (
@@ -485,6 +540,8 @@ class RegistroDePersonal extends Component {
                     handle_ComentarioHistorialTransacciones={this.handle_ComentarioHistorialTransacciones}
                     ComentarioHistorialTransacciones={this.state.ComentarioHistorialTransacciones}
                     fnEditaPersona={this.fnEditaPersona}
+                    handle_descNvaProfesion={this.handle_descNvaProfesion}
+                    descNvaProfesion={this.state.descNvaProfesion}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

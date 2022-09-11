@@ -27,6 +27,8 @@ import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
 import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
+import EdicionDeDireccion from './pages/EdicionDeDireccion';
+import RevinculaDomicilio from './pages/RevincularDomicilio';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -72,6 +74,8 @@ class Router extends Component {
                     <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                     <Route exact path="/SolicitudDeRestablecimiento" component={SolicitudDeRestablecimiento} />
                     <Route exact path="/ValidaCambioDeContrasena" component={ValidaCambioDeContrasena} />
+                    <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
+                    <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
                     <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                     <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     <Route component={PaginaNoEncontrada} />

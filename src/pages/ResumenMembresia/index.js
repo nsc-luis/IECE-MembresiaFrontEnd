@@ -38,12 +38,23 @@ class ResumenMembresia extends Component {
             resumenDeMembresia: {},
             infoSector: {},
             infoMinistro: {},
-            infoSecretario: {}
+            infoSecretario: {},
+            distrito: {}
         }
     }
 
     componentDidMount() {
         this.getSectoresPorDistrito();
+        this.getDistrito();
+    }
+
+    getDistrito = async () => {
+        await helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
+            .then(res => {
+                this.setState({
+                    distrito: res.data
+                })
+            });
     }
 
     getSectoresPorDistrito = async () => {
@@ -102,9 +113,9 @@ class ResumenMembresia extends Component {
                         this.setState({ infoMinistro: res.data.ministros[0] });
                     })
                 await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
-                .then(res => {
-                    this.setState({ infoSecretario: res.data.infoSecretario[0] });
-                })
+                    .then(res => {
+                        this.setState({ infoSecretario: res.data.infoSecretario[0] });
+                    })
             }
             else {
                 this.setState({
@@ -133,11 +144,11 @@ class ResumenMembresia extends Component {
                 /* doc.text(fechaTexto, 85, 25); */
             }
             else {
-                doc.text(`${this.infoSesion.dis_Tipo_Distrito}: ${this.infoSesion.dis_Alias}`, 85, 15);
+                doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 85, 15);
                 doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 20);
                 /* doc.text(fechaTexto, 85, 20); */
             }
-            
+
             doc.line(10, 32, 200, 32);
 
             doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
@@ -196,7 +207,7 @@ class ResumenMembresia extends Component {
                                     type="select"
                                     name="idDistrito"
                                 >
-                                    <option value="1">{this.infoSesion.dis_Tipo_Distrito}: {this.infoSesion.dis_Alias}</option>
+                                    <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
                                 </Input>
                             </Col>
                         </Row>

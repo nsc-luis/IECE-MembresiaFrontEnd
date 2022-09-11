@@ -90,8 +90,8 @@ class ListaDePersonal extends Component {
     }
 
     getPersonas = () => {
-        if (localStorage.getItem('sector') !== null) {
-            helpers.authAxios.get(this.url + "/persona/GetBySector/" + localStorage.getItem('sector'))
+        if (localStorage.getItem("sector") !== null) {
+            helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         personas: res.data,
