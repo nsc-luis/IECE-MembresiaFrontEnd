@@ -28,7 +28,7 @@ function AltaCambioDomicilio() {
 
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get(`/Persona/GetPersonaCambioDomicilio/${user.sec_Id_Sector}/true`)
+        helpers.authAxios.get(`/Persona/GetPersonaCambioDomicilio/${sector}/true`)
             .then(res => {
                 setOpcionesPersonas(res.data.personas)
                 console.log(opcionesPersonas)
