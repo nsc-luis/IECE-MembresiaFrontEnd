@@ -653,35 +653,36 @@ class PersonaForm extends Component {
                                                                 onClick={handle_verificarDuplicados}
                                                                 color="primary"
                                                             >
-                                                                <i>Continuar</i>
+                                                                <i>Verifica duplicados</i>
                                                             </Button>
                                                         </div>
                                                         {bolPersonaEncontrada === true &&
                                                             <>
-                                                                {/* <div className="col-sm-2">
-                                                                    <Button
-                                                                        type="button"
-                                                                        color="success"
-                                                                        onClick={invocaFormularioDePersonaNB}
-                                                                    >
-                                                                        <span
-                                                                            className="fa fa-pen fa-sm"
-                                                                            style={{ paddingRight: "5px" }}>
-                                                                        </span>
-                                                                        <i>Editar</i>
-                                                                    </Button>
-                                                                </div> */}
                                                                 <div className="col-sm-4">
                                                                     <Button
                                                                         type="button"
                                                                         onClick={handleIgnorarDuplicados}
+                                                                        color="success"
+                                                                    >
+                                                                        <span
+                                                                            className="fa fa-check fa-sm"
+                                                                            style={{ paddingRight: "5px" }}>
+                                                                        </span>
+                                                                        <i>Continuar captura</i>
+                                                                    </Button>
+                                                                </div>
+
+                                                                <div className="col-sm-4">
+                                                                    <Button
+                                                                        type="button"
+                                                                        onClick={() => window.location = "/ListaDePersonal"}
                                                                         color="danger"
                                                                     >
                                                                         <span
                                                                             className="fa fa-times fa-sm"
                                                                             style={{ paddingRight: "5px" }}>
                                                                         </span>
-                                                                        <i>Continuar con la edición de la persona</i>
+                                                                        <i>Cancelar</i>
                                                                     </Button>
                                                                 </div>
                                                             </>

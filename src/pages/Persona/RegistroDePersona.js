@@ -502,10 +502,12 @@ class RegistroDePersonal extends Component {
     }
 
     fnSolicitudNvaProfesion = async() => {
-        if (this.state.descNvaProfesion.nvaProf1 !== ""){
+        if (this.state.descNvaProfesion.nvaProf1 !== ""
+        || this.state.descNvaProfesion.nvaProf1 !== undefined){
             await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf1}/${this.infoSesion.pem_Id_Ministro}`)
         }
-        if (this.state.descNvaProfesion.nvaProf2 !== ""){
+        if (this.state.descNvaProfesion.nvaProf2 !== ""
+        || this.state.descNvaProfesion.nvaProf2 !== undefined){
             await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf2}/${this.infoSesion.pem_Id_Ministro}`)
         }
     }
