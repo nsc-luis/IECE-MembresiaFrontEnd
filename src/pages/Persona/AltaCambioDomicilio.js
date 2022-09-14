@@ -28,7 +28,7 @@ function AltaCambioDomicilio() {
 
     //LLamadas en renderizado
     useEffect(() => {
-        helpers.authAxios.get(`/Persona/GetPersonaCambioDomicilio/${user.sec_Id_Sector}/true`)
+        helpers.authAxios.get(`/Persona/GetPersonaCambioDomicilio/${sector}/true`)
             .then(res => {
                 setOpcionesPersonas(res.data.personas)
                 console.log(opcionesPersonas)
@@ -36,7 +36,7 @@ function AltaCambioDomicilio() {
     }, [opcionesPersonas.length]);
 
     useEffect(() => {
-        helpers.authAxios.get("/Hogar_Persona/GetListaHogares")
+        helpers.authAxios.get("/HogarDomicilio/GetBySector/" + sector)
             .then(res => {
                 setOpcionesHogares(res.data)
                 console.log(opcionesHogares)
@@ -147,6 +147,11 @@ function AltaCambioDomicilio() {
     };
     //Pruebas
     const postData = () => {
+
+        if(jerarquia == null ){
+            alert('Seleccione una jerarquia en el hogar')
+            return
+        }
         let formattedData = {}
 
         if(hogar){
@@ -166,6 +171,7 @@ function AltaCambioDomicilio() {
             .then(res => {
                 console.log(res)
                 setAlert(true)
+                document.location.href = '/Main';
             });
         }else{
             formattedData = {
@@ -198,6 +204,7 @@ function AltaCambioDomicilio() {
                 .then(res => {
                     console.log(res)
                     setAlert(true)
+                    document.location.href = '/Main';
                 });
         }
     };
