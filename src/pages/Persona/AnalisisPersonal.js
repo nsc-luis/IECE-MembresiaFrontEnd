@@ -14,11 +14,21 @@ class AnalisisPersonal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            historial: []
+            historial: [],
+            domicilioLocalizado: false
         }
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
         this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No bautizado';
         this.getHistorial(this.objPersona.persona.per_Id_Persona);
+    }
+
+    componentDidMount() {
+        if (this.objPersona.domicilio.length > 0) {
+            this.setState({ domicilioLocalizado: true })
+        }
+        else {
+            this.setState({ domicilioLocalizado: false })
+        }
     }
 
     getHistorial = async (id) => {
@@ -33,6 +43,19 @@ class AnalisisPersonal extends Component {
             <Layout>
                 <Container>
                     <FormGroup>
+                        <Row>
+                            <Col xs="12">
+                                {!this.state.domicilioLocalizado > 0 &&
+                                    <>
+                                        <Alert
+                                            color="warning">
+                                            No se encontro el domicilio debido a que el pais seleccionado no tiene estado. <br />
+                                            Comuniquese con el personal de soporte.
+                                        </Alert>
+                                    </>
+                                }
+                            </Col>
+                        </Row>
                         <Row>
                             <Col className="negrita" xs="2">Nombre:</Col>
                             <Col xs="6" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
@@ -88,8 +111,15 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col className="negrita" xs="2">Direccion:</Col>
                             <Col xs="6" className="border border-dark">
-                                {this.objPersona.domicilio[0].hd_Calle} {this.objPersona.domicilio[0].hd_Numero_Exterior}, Interior: {this.objPersona.domicilio[0].hd_Numero_Interior},
-                                {this.objPersona.domicilio[0].hd_Tipo_Subdivision} {this.objPersona.domicilio[0].hd_Subdivision}
+                                {this.state.domicilioLocalizado &&
+                                    <>
+                                        {this.objPersona.domicilio[0].hd_Calle} {this.objPersona.domicilio[0].hd_Numero_Exterior}, Interior: {this.objPersona.domicilio[0].hd_Numero_Interior},
+                                        {this.objPersona.domicilio[0].hd_Tipo_Subdivision} {this.objPersona.domicilio[0].hd_Subdivision}
+                                    </>
+                                }
+                                {!this.state.domicilioLocalizado &&
+                                    <>Sin información para mostrar.</>
+                                }
                             </Col>
                             <Col xs="2"></Col>
                             <Col xs="2"></Col>
@@ -99,7 +129,14 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col xs="2"></Col>
                             <Col xs="6" className="border border-dark">
-                                {this.objPersona.domicilio[0].hd_Municipio_Ciudad}, {this.objPersona.domicilio[0].est_Nombre}, {this.objPersona.domicilio[0].pais_Nombre_Corto}
+                                {this.state.domicilioLocalizado &&
+                                    <>
+                                        {this.objPersona.domicilio[0].hd_Municipio_Ciudad}, {this.objPersona.domicilio[0].est_Nombre}, {this.objPersona.domicilio[0].pais_Nombre_Corto}
+                                    </>
+                                }
+                                {!this.state.domicilioLocalizado &&
+                                    <>Sin información para mostrar.</>
+                                }
                             </Col>
                             <Col xs="2"></Col>
                             <Col xs="2"></Col>
@@ -108,7 +145,10 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Celular:</Col>
-                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Telefono_Movil} , {this.objPersona.domicilio[0].hd_Telefono} </Col>
+                            <Col xs="2" className="border border-dark">
+                                {this.objPersona.persona.per_Telefono_Movil} ,
+                                {this.state.domicilioLocalizado && <>{this.objPersona.domicilio[0].hd_Telefono}</>}
+                            </Col>
                             <Col className="negrita" xs="2">Email:</Col>
                             <Col xs="3" className="border border-dark"> {this.objPersona.persona.per_Email_Personal} </Col>
                             <Col xs="7"> </Col>

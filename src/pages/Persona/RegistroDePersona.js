@@ -99,7 +99,8 @@ class RegistroDePersonal extends Component {
                     hd_Localidad: "",
                     hd_Numero_Exterior: "",
                     usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
-                    hd_Activo: true
+                    hd_Activo: true,
+                    nvoEstado: ""
                 },
                 habilitaPerBautizado: true,
                 descNvaProfesion: {
@@ -327,9 +328,9 @@ class RegistroDePersonal extends Component {
                 });
             }
         }
-        if (e.target.name === "pro_Id_Profesion_Oficio1"){
+        if (e.target.name === "pro_Id_Profesion_Oficio1") {
             if (e.target.value !== "1") {
-                this.setState({ 
+                this.setState({
                     descNvaProfesion: {
                         ...this.state.descNvaProfesion,
                         nvaProf1: ""
@@ -337,9 +338,9 @@ class RegistroDePersonal extends Component {
                 })
             }
         }
-        if (e.target.name === "pro_Id_Profesion_Oficio2"){
+        if (e.target.name === "pro_Id_Profesion_Oficio2") {
             if (e.target.value !== "1") {
-                this.setState({ 
+                this.setState({
                     descNvaProfesion: {
                         ...this.state.descNvaProfesion,
                         nvaProf2: ""
@@ -368,7 +369,7 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
-        
+        this.fnSolicitudNvoEstado(datos.HogarDomicilioEntity.pais_Id_Pais)
         this.fnSolicitudNvaProfesion();
         try {
             await helpers.authAxios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
@@ -501,14 +502,35 @@ class RegistroDePersonal extends Component {
         })
     }
 
-    fnSolicitudNvaProfesion = async() => {
+    fnSolicitudNvaProfesion = async () => {
         if (this.state.descNvaProfesion.nvaProf1 !== ""
-        || this.state.descNvaProfesion.nvaProf1 !== undefined){
+            || this.state.descNvaProfesion.nvaProf1 !== undefined) {
             await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf1}/${this.infoSesion.pem_Id_Ministro}`)
         }
         if (this.state.descNvaProfesion.nvaProf2 !== ""
-        || this.state.descNvaProfesion.nvaProf2 !== undefined){
+            || this.state.descNvaProfesion.nvaProf2 !== undefined) {
             await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf2}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+    }
+
+    fnSolicitudNvoEstado = async (idPais) => {
+        let contador = 0;
+        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
+            .then(res => {
+                res.data.estados.forEach(estado => {
+                    contador = contador + 1;
+                });
+            })
+        if (contador > 0) {
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: ""
+                }
+            })
+        }
+        else if (this.state.domicilio.nvoEstado !== "") {
+            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
         }
     }
 

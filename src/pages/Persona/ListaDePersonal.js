@@ -316,7 +316,7 @@ class ListaDePersonal extends Component {
             fCategoria: '0',
             /* fNombre: '', */
             fGrupo: '0',
-            fSector: '0',   
+            fSector: '0',
             /* fProfesionOficio: '', */
             fActivoComunionVivo: 'todos',
             habilitaFiltroCategoria: '',
@@ -395,9 +395,27 @@ class ListaDePersonal extends Component {
         Object.keys(info.persona).forEach((key) => {
             info.persona[key] = info.persona[key] === null ? '' : info.persona[key];
         });
-        Object.keys(info.domicilio[0]).forEach((key) => {
-            info.domicilio[0][key] = info.domicilio[0][key] === null ? '' : info.domicilio[0][key];
-        });
+
+
+        if (info.domicilio.length > 0) {
+            Object.keys(info.domicilio[0]).forEach((key) => {
+                info.domicilio[0][key] = info.domicilio[0][key] === null ? '' : info.domicilio[0][key];
+            });
+        }
+        else {
+            info.domicilio.push({
+                est_Nombre: "",
+                hd_Calle: "Sin info para mostrar. Reviselo con soporte tecnico.",
+                hd_Localidad: "",
+                hd_Municipio_Ciudad: "",
+                hd_Numero_Exterior: "",
+                hd_Numero_Interior: "",
+                hd_Subdivision: "",
+                hd_Telefono: "Sin info para mostrar. Reviselo con soporte tecnico.",
+                hd_Tipo_Subdivision: "",
+                pais_Nombre_Corto: ""
+            })
+        }
 
         // FORMATEA FECHA PARA PDF
         helpers.fechas.forEach(fecha => {

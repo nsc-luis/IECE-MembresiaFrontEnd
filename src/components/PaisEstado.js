@@ -4,16 +4,6 @@ import helpers from './Helpers'
 
 class PaisEstado extends React.Component {
 
-    url = helpers.url_api;
-    accessToken = localStorage.getItem('token');
-
-    authAxios = axios.create({
-        baseURL: this.url,
-        headers: {
-            Authorization: `Bearer ${this.accessToken}`
-        }
-    });
-
     constructor(props) {
         super(props);
         this.state = {
@@ -28,22 +18,28 @@ class PaisEstado extends React.Component {
     }
 
     getEstados = async (pais_Id_Pais) => {
-        if (pais_Id_Pais === "151"
-            || pais_Id_Pais === "66"
-            || pais_Id_Pais === "40") {
-            await axios.get(this.url + "/Estado/GetEstadoByIdPais/" + pais_Id_Pais)
-                .then(res => {
-                    this.setState({
-                        estados: res.data.estados
+        await helpers.authAxios.get(helpers.url_api + "/Estado/GetEstadoByIdPais/" + pais_Id_Pais)
+            .then(res => {
+                if (res.data.status === true) {
+                    let contador = 0;
+                    res.data.estados.forEach(estado => {
+                        contador = contador + 1;
                     });
-                });
-            this.setState({ mostrarEstados: true });
-        } else
-            this.setState({ mostrarEstados: false });
-    };
+                    if (contador > 0) {
+                        this.setState({
+                            estados: res.data.estados,
+                            mostrarEstados: true
+                        });
+                    }
+                    else {
+                        this.setState({ mostrarEstados: false });
+                    }
+                }
+            });
+    }
 
     getPaises = async () => {
-        await this.authAxios.get("/pais")
+        await helpers.authAxios.get(helpers.url_api + "/pais")
             .then(res => {
                 this.setState({
                     paises: res.data
@@ -96,6 +92,18 @@ class PaisEstado extends React.Component {
                                 })
                             }
                         </select>
+                        <label>Estado</label>
+                    </div>
+                }
+                {!this.state.mostrarEstados &&
+                    <div className="col-sm-4">
+                        <input
+                            type="text"
+                            name="nvoEstado"
+                            className="form-control"
+                            value={domicilio.nvoEstado}
+                            onChange={onChangeDomicilio}
+                        />
                         <label>Estado</label>
                     </div>
                 }

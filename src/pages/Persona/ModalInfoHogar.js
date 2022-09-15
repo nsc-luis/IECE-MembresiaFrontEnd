@@ -12,9 +12,10 @@ class ModalInfoHogar extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            domicilioLocalizado: false
         }
     }
-    
+
     render() {
         const { objPersona } = this.props
         return (
@@ -24,17 +25,30 @@ class ModalInfoHogar extends Component {
                         <p>
                             <h5><strong>Titular: </strong>{objPersona.persona.per_Nombre} {objPersona.persona.per_Apellido_Paterno} {objPersona.persona.per_Apellido_Materno}</h5>
                             <br />
-                            <strong>Calle: </strong>{objPersona.domicilio[0].hd_Calle}, <strong>No.: </strong>{objPersona.domicilio[0].hd_Numero_Exterior}, <strong>Interior: </strong>{objPersona.domicilio[0].hd_Numero_Interior},
-                            <br />
-                            {/* <strong>Tipo subdivision: </strong> */}{objPersona.domicilio[0].hd_Tipo_Subdivision}, {/* <strong>Subdivision: </strong> */}{objPersona.domicilio[0].hd_Subdivision}
-                            <br />
-                            {/* <strong>Localidad: </strong>{objPersona.domicilio[0].hd_Localidad}, 
+                            {objPersona.domicilio.length > 0 &&
+                                <>
+                                    <strong>Calle: </strong>{objPersona.domicilio[0].hd_Calle}, <strong>No.: </strong>{objPersona.domicilio[0].hd_Numero_Exterior}, <strong>Interior: </strong>{objPersona.domicilio[0].hd_Numero_Interior},
+                                    <br />
+                                    {/* <strong>Tipo subdivision: </strong> */}{objPersona.domicilio[0].hd_Tipo_Subdivision}, {/* <strong>Subdivision: </strong> */}{objPersona.domicilio[0].hd_Subdivision}
+                                    <br />
+                                    {/* <strong>Localidad: </strong>{objPersona.domicilio[0].hd_Localidad}, 
                             <br /> */}
-                            <strong>Municipio/cuidad: </strong>{objPersona.domicilio[0].hd_Municipio_Ciudad},
-                            <br />
-                            <strong>Pais: </strong>{objPersona.domicilio[0].pais_Nombre_Corto}, <strong>Estado: </strong>{objPersona.domicilio[0].est_Nombre}
-                            <br />
-                            <strong>Telefono: </strong>{objPersona.domicilio[0].hd_Telefono}
+                                    <strong>Municipio/cuidad: </strong>{objPersona.domicilio[0].hd_Municipio_Ciudad},
+                                    <br />
+                                    <strong>Pais: </strong>{objPersona.domicilio[0].pais_Nombre_Corto}, <strong>Estado: </strong>{objPersona.domicilio[0].est_Nombre}
+                                    <br />
+                                    <strong>Telefono: </strong>{objPersona.domicilio[0].hd_Telefono}
+                                </>
+                            }
+                            {!objPersona.domicilio.length > 0 &&
+                                <>
+                                    <Alert
+                                        color="warning">
+                                        No se encontro el domicilio debido a que el pais seleccionado no tiene estado. <br />
+                                        Comuniquese con el personal de soporte.
+                                    </Alert>
+                                </>
+                            }
                         </p>
                     </Col>
                 </Row>
