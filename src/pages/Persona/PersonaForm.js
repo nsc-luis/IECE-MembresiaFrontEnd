@@ -491,13 +491,13 @@ class PersonaForm extends Component {
                                             </CardHeader>
                                             <CardBody>
                                                 <div className="alert alert-warning mt-3" role="alert">
-                                                    <h5><strong>Ignorar</strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
+                                                    <h5><strong>Nota: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
                                                 </div>
 
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <label><strong>*</strong>Categoria</label>
+                                                            <label><strong>* </strong>Categoría</label>
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input type="select"
@@ -506,7 +506,7 @@ class PersonaForm extends Component {
                                                                 className="form-control"
                                                                 value={form.per_Categoria}
                                                             >
-                                                                <option value="0">Selecionar categoria</option>
+                                                                <option value="0">Selecionar categoría</option>
                                                                 {JSON.parse(localStorage.getItem("nvaAltaBautizado")) === true &&
                                                                     <React.Fragment>
                                                                         <option value="ADULTO_HOMBRE">Adulto Hombre</option>
@@ -579,7 +579,7 @@ class PersonaForm extends Component {
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <label><strong>*</strong> Apellido paterno</label>
+                                                            <label><strong>*</strong> Apellido Paterno</label>
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input
@@ -592,7 +592,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {per_Apellido_Paterno_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo requerido, solo acepta letras, numeros y espacios.
+                                                                Campo requerido, sólo acepta letras, números y espacios.
                                                             </span>
                                                         }
                                                     </div>
@@ -601,7 +601,7 @@ class PersonaForm extends Component {
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <label>Apellido materno</label>
+                                                            <label>Apellido Materno</label>
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input
@@ -652,8 +652,9 @@ class PersonaForm extends Component {
                                                                 type="button"
                                                                 onClick={handle_verificarDuplicados}
                                                                 color="primary"
+                                                                
                                                             >
-                                                                <i>Verifica duplicados</i>
+                                                                <i>Verificar duplicados</i>
                                                             </Button>
                                                         </div>
                                                         {bolPersonaEncontrada === true &&
@@ -720,7 +721,7 @@ class PersonaForm extends Component {
                                                                             value={form.per_Nombre}
                                                                             disabled
                                                                         />
-                                                                        <label>Nombre</label>
+                                                                        <label>Nombre(s)</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
@@ -751,7 +752,7 @@ class PersonaForm extends Component {
                                                                             value={form.per_Categoria}
                                                                             disabled
                                                                         />
-                                                                        <label>Categoria</label>
+                                                                        <label>Categoría</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
@@ -852,7 +853,7 @@ class PersonaForm extends Component {
                                                                                 })
                                                                             }
                                                                         </Input>
-                                                                        <label>Profesion oficio1</label>
+                                                                        <label>Profesión/Oficio No. 1</label>
                                                                     </FormGroup>
                                                                 </div>
                                                                 <div className="col-sm-4">
@@ -875,7 +876,7 @@ class PersonaForm extends Component {
                                                                                 })
                                                                             }
                                                                         </Input>
-                                                                        <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesion oficio2</label>
+                                                                        <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesión/Oficio No. 2</label>
                                                                     </FormGroup>
                                                                 </div>
                                                                 <div className="col-sm-4">
@@ -887,7 +888,7 @@ class PersonaForm extends Component {
                                                                             invalid={this.state.telMovilInvalido}
                                                                             value={form.per_Telefono_Movil}
                                                                         />
-                                                                        <label>Telefono movil</label>
+                                                                        <label>Telefono móvil</label>
                                                                         <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
                                                                     </FormGroup>
                                                                 </div>
@@ -903,7 +904,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf1}
                                                                             />
-                                                                            <label>Descripcion de la profesión/oficio 1</label>
+                                                                            <label>Nueva profesión u oficio No.1</label>
                                                                         </FormGroup>
                                                                     </div>
                                                                 }
@@ -916,7 +917,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf2}
                                                                             />
-                                                                            <label>Descripcion de la profesión/oficio 2</label>
+                                                                            <label>Nueva profesión u oficio No. 2</label>
                                                                         </FormGroup>
                                                                     </div>
 
@@ -948,7 +949,7 @@ class PersonaForm extends Component {
                                                         <div className="col-sm-12">
                                                             <div className="card border-info acceso-directo">
                                                                 <div className="card-header">
-                                                                    <h5><strong>Familia Asendente</strong></h5>
+                                                                    <h5><strong>Datos de Familia Ascendente</strong></h5>
                                                                 </div>
                                                                 <div className="card-body">
                                                                     <FormGroup>
@@ -1035,7 +1036,7 @@ class PersonaForm extends Component {
                                                         <div className="col-sm-12">
                                                             <div className="card border-info acceso-directo">
                                                                 <div className="card-header">
-                                                                    <h5><strong>Estado Civil</strong></h5>
+                                                                    <h5><strong> Datos del Estado Civil</strong></h5>
                                                                 </div>
                                                                 <div className="card-body">
                                                                     <FormGroup>
@@ -1098,7 +1099,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Num_Acta_Boda_Civil}
                                                                                         />
-                                                                                        <label>Num acta boda civil</label>
+                                                                                        <label>Num. de acta boda civil</label>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
@@ -1108,7 +1109,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Libro_Acta_Boda_Civil}
                                                                                         />
-                                                                                        <label>Libro acta boda civil</label>
+                                                                                        <label>Libro de acta de boda civil</label>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
@@ -1118,7 +1119,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Oficialia_Boda_Civil}
                                                                                         />
-                                                                                        <label>Oficialia boda civil</label>
+                                                                                        <label>Oficialia de boda civil</label>
                                                                                     </div>
                                                                                 </div>
                                                                             </FormGroup>
@@ -1146,7 +1147,7 @@ class PersonaForm extends Component {
                                                                                                     placeholder="DD/MM/AAAA"
                                                                                                     invalid={this.state.fechaBodaEclesiasticaInvalida}
                                                                                                 />
-                                                                                                <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiastica</label>
+                                                                                                <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiástica</label>
                                                                                                 <FormFeedback>{this.state.mensajes.fechaBodaEclesiasticaInvalida}</FormFeedback>
                                                                                             </FormGroup>
                                                                                         </div>
@@ -1159,7 +1160,7 @@ class PersonaForm extends Component {
                                                                                                     className="form-control"
                                                                                                     value={form.per_Lugar_Boda_Eclesiastica}
                                                                                                 />
-                                                                                                <label>Lugar boda eclesiastica</label>
+                                                                                                <label>Lugar boda eclesiástica</label>
                                                                                             </FormGroup>
                                                                                         </div>
                                                                                     </React.Fragment>
@@ -1181,7 +1182,7 @@ class PersonaForm extends Component {
                                                                                                 className="form-control"
                                                                                                 value={form.per_Cantidad_Hijos}
                                                                                             />
-                                                                                            <label>Cantidad hijos</label>
+                                                                                            <label>Número de hijos</label>
                                                                                         </div>
                                                                                     </div>
                                                                                 </FormGroup>
@@ -1221,7 +1222,7 @@ class PersonaForm extends Component {
                                                         <div className="col-sm-12">
                                                             <div className="card border-info acceso-directo">
                                                                 <div className="card-header">
-                                                                    <h5><strong>Eclesiasticos</strong></h5>
+                                                                    <h5><strong>Datos Eclesiásticos</strong></h5>
                                                                 </div>
                                                                 <div className="card-body">
                                                                     {/* Bautismo */}
@@ -1238,7 +1239,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Lugar_Bautismo}
                                                                                             className="form-control"
                                                                                         />
-                                                                                        <label>Lugar bautismo</label>
+                                                                                        <label>Lugar de bautismo</label>
                                                                                     </FormGroup>
                                                                                 </div>
                                                                                 <div className="col-sm-4">
@@ -1250,7 +1251,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Ministro_Que_Bautizo}
                                                                                             className="form-control"
                                                                                         />
-                                                                                        <label>Ministro que bautizo</label>
+                                                                                        <label>Ministro que le bautizó</label>
                                                                                     </FormGroup>
                                                                                 </div>
                                                                                 <div className="col-sm-4">
@@ -1263,7 +1264,7 @@ class PersonaForm extends Component {
                                                                                             placeholder="DD/MM/AAAA"
                                                                                             invalid={this.state.fechaBautismoInvalida}
                                                                                         />
-                                                                                        <label>Fecha bautismo</label>
+                                                                                        <label>Fecha de bautismo</label>
                                                                                         <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
                                                                                     </FormGroup>
                                                                                 </div>
@@ -1284,7 +1285,7 @@ class PersonaForm extends Component {
                                                                                     placeholder="DD/MM/AAAA"
                                                                                     invalid={this.state.fechaEspitiruSantoInvalida}
                                                                                 />
-                                                                                <label>Fecha recibio Espiritu Santo</label>
+                                                                                <label>Fecha en que recibió Espíritu Santo</label>
                                                                                 <FormFeedback>{this.state.mensajes.fechaEspitiruSantoInvalida}</FormFeedback>
                                                                             </FormGroup>
                                                                         </div>
@@ -1297,7 +1298,7 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Bajo_Imposicion_De_Manos}
                                                                                     className="form-control"
                                                                                 />
-                                                                                <label>Bajo imposicion de manos</label>
+                                                                                <label>Bajo imposición de manos de</label>
                                                                             </FormGroup>
                                                                         </div>
                                                                         {/* <div className="col-sm-4">
@@ -1326,7 +1327,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     value={form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"></textarea>
-                                                                                <label>Cambios de domicilio</label>
+                                                                                <label>Cambios de domicilio en la IECE</label>
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>
@@ -1339,7 +1340,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Cargos_Desempenados}
                                                                                 ></textarea>
-                                                                                <label>Cargos desempeñados</label>
+                                                                                <label>Cargos desempeñados en la IECE</label>
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>
@@ -1397,7 +1398,7 @@ class PersonaForm extends Component {
                                                     <div className="col-sm-12">
                                                         <div className="card border-info acceso-directo">
                                                             <div className="card-header">
-                                                                <h5><strong>Hogar / Domicilio</strong></h5>
+                                                                <h5><strong>Datos del Hogar y su Domicilio</strong></h5>
                                                             </div>
                                                             <div className="card-body">
                                                                 <HogarPersonaDomicilio
@@ -1422,7 +1423,7 @@ class PersonaForm extends Component {
                                                     <div className="col-sm-2 offset-sm-2">
                                                         <Link
                                                             to="/ListaDePersonal"
-                                                            className="btn btn-success form-control"
+                                                            className="btn btn-secondary form-control"
                                                         >
                                                             <span className="fa fa-backspace" style={{ paddingRight: "10px" }}></span>
                                                             Volver
@@ -1431,7 +1432,7 @@ class PersonaForm extends Component {
                                                     <div className="col-sm-2 offset-sm-2">
                                                         <Button
                                                             type="submit"
-                                                            className="btn btn-primary form-control"
+                                                            className="btn btn-success form-control"
                                                         >
                                                             <span className="fa fa-save" style={{ paddingRight: "10px" }}></span>
                                                             Guardar
