@@ -557,7 +557,7 @@ class PersonaForm extends Component {
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <label><strong>*</strong> Nombre</label>
+                                                            <label><strong>*</strong> Nombre(s)</label>
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input
@@ -570,7 +570,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {per_Nombre_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo requerido, solo acepta letras, numeros y espacios.
+                                                                Campo requerido, sólo acepta letras, números y espacios.
                                                             </span>
                                                         }
                                                     </div>
