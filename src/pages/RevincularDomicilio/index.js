@@ -44,7 +44,8 @@ class RevinculaDomicilio extends Component {
                 hd_Subdivision: "",
                 hd_Tipo_Subdivision: "COL",
                 hd_Telefono: "",
-                pais_Id_Pais: "0"
+                pais_Id_Pais: "0",
+                nvoEstado: ""
             }
         })
         this.getPersonasParaCambioDomicilio();
@@ -144,11 +145,33 @@ class RevinculaDomicilio extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
 
+    fnSolicitudNvoEstado = async (idPais) => {
+        let contador = 0;
+        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
+            .then(res => {
+                res.data.estados.forEach(estado => {
+                    contador = contador + 1;
+                });
+            })
+        if (contador > 0) {
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: ""
+                }
+            })
+        }
+        else if (this.state.domicilio.nvoEstado !== "") {
+            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+    }
+
     GuardaCambioDomicilio = async (e) => {
         e.preventDefault();
         if (this.state.hogar.hd_Id_Hogar === "0") {
+            this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais);
             try {
-                await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaNvoHogar/${this.state.personaSeleccionada}/${this.infoSesion.pem_Id_Ministro}`, this.state.domicilio)
+                await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaNvoHogar/${this.state.personaSeleccionada}/${this.infoSesion.pem_Id_Ministro}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                     .then(res => {
                         if (res.data.status === "success") {
                             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);

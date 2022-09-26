@@ -40,7 +40,8 @@ class EdicionDeDireccion extends Component {
                 hd_Municipio_Ciudad: "",
                 est_Id_Estado: "0",
                 pais_Id_Pais: "0",
-                hd_Telefono: ""
+                hd_Telefono: "",
+                nvoEstado: ""
             }
         })
         this.getListaHogares()
@@ -120,10 +121,32 @@ class EdicionDeDireccion extends Component {
         })
     }
 
+    fnSolicitudNvoEstado = async (idPais) => {
+        let contador = 0;
+        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
+            .then(res => {
+                res.data.estados.forEach(estado => {
+                    contador = contador + 1;
+                });
+            })
+        if (contador > 0) {
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: ""
+                }
+            })
+        }
+        else if (this.state.domicilio.nvoEstado !== "") {
+            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+    }
+
     guardarEdicion = async (e) => {
         e.preventDefault()
+        this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais);
         try {
-            await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+            await helpers.authAxios.post(`${helpers.url_api}/HogarDomicilio/EditaDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);

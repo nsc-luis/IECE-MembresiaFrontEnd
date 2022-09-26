@@ -26,7 +26,8 @@ class FrmMatrimonioLegalizacion extends Component {
             mensajeDelProceso: "",
             rSelected: false,
             hogar: {},
-            domicilio: {}
+            domicilio: {},
+            habilitaComponenteDomicilio: false
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     }
@@ -86,7 +87,8 @@ class FrmMatrimonioLegalizacion extends Component {
                     dis_Id_Distrito: localStorage.getItem("dto"),
                     sec_Id_Sector: localStorage.getItem("sector"),
                     usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
-                }
+                },
+                habilitaComponenteDomicilio: true
             })
         }
         else {
@@ -97,7 +99,8 @@ class FrmMatrimonioLegalizacion extends Component {
                     this.setState({
                         matLegal: res.data.matrimonioLegalizacion,
                         bolForaneoHombre: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Hombre_Foraneo !== "" ? true : false,
-                        bolForaneoMujer: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Mujer_Foraneo !== "" ? true : false
+                        bolForaneoMujer: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Mujer_Foraneo !== "" ? true : false,
+                        habilitaComponenteDomicilio: false
                     })
                     this.getHombres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
                     this.getMujeres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
@@ -304,6 +307,27 @@ class FrmMatrimonioLegalizacion extends Component {
         })
     }
 
+    fnSolicitudNvoEstado = async (idPais) => {
+        let contador = 0;
+        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
+            .then(res => {
+                res.data.estados.forEach(estado => {
+                    contador = contador + 1;
+                });
+            })
+        if (contador > 0) {
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: ""
+                }
+            })
+        }
+        else if (this.state.domicilio.nvoEstado !== "") {
+            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+    }
+
     render() {
         const {
             handle_CancelaCaptura,
@@ -317,6 +341,7 @@ class FrmMatrimonioLegalizacion extends Component {
                     matLegalEntity: this.state.matLegal,
                     HogarDomicilioEntity: this.state.domicilio
                 }
+                this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais)
                 try {
                     await helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatriminioLegalizacion/${this.state.rSelected}/${this.state.domicilio.nvoEstado}`, matLegalDom)
                         .then(res => {
@@ -666,23 +691,25 @@ class FrmMatrimonioLegalizacion extends Component {
                                         </Col>
                                     </Row>
                                     <hr />
+                                    {this.state.habilitaComponenteDomicilio &&
+                                        <Row>
+                                            <Col xs="2">
+                                                <FormGroup>
+                                                    <Label><strong>¿Crear nuevo hogar? </strong></Label>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col xs="10">
+                                                <FormGroup>
+                                                    <ButtonGroup>
+                                                        <Button color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === true}>Si</Button>
+                                                        <Button color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === false}>No</Button>
+                                                    </ButtonGroup>
+                                                    <FormFeedback></FormFeedback>
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                    }
 
-                                    <Row>
-                                        <Col xs="2">
-                                            <FormGroup>
-                                                <Label><strong>¿Crear nuevo hogar? </strong></Label>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col xs="10">
-                                            <FormGroup>
-                                                <ButtonGroup>
-                                                    <Button color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === true}>Si</Button>
-                                                    <Button color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === false}>No</Button>
-                                                </ButtonGroup>
-                                                <FormFeedback></FormFeedback>
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
                                     {this.state.rSelected &&
                                         <HogarPersonaDomicilio
                                             domicilio={this.state.domicilio}
