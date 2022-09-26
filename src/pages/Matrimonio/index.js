@@ -169,13 +169,13 @@ class Matrimonio extends Component {
                                                                         >
                                                                             <span className="fas fa-pencil-alt icon-btn-p"></span>Editar
                                                                         </Button>
-                                                                        {/* <Button
+                                                                        <Button
                                                                             color="danger"
                                                                             size="sm"
                                                                             onClick={() => this.modalEliminaMatrimonio(matLeg)}
                                                                         >
                                                                             <span className="fas fa-trash-alt icon-btn-p"></span>Eliminar
-                                                                        </Button> */}
+                                                                        </Button>
                                                                     </td>
                                                                 </tr>
                                                             </React.Fragment>
