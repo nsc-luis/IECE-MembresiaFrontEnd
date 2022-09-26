@@ -52,11 +52,11 @@ class Domicilio extends React.Component {
             <React.Fragment>
                 <div className="form-group">
                     <div className="alert alert-info mt-3" role="alert">
-                        <h5><strong>AVISO: </strong>Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
+                        <h5><strong>AVISO: </strong>Si es un "Nuevo hogar / domicilio", llene los datos del domicilio.</h5>
                     </div>
                     <div className="row">
                         <div className="col-sm-2">
-                            <label>Asignar a hogar</label>
+                            <label>Asignar a hogar: </label>
                         </div>
                         <div className="col-sm-4">
                             <select
@@ -108,7 +108,7 @@ class Domicilio extends React.Component {
                             <thead>
                                 <tr>
                                     <th scope="col">Miembros del hogar</th>
-                                    <th scope="col">Jerarquia</th>
+                                    <th scope="col">Jerarquía</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,7 +128,7 @@ class Domicilio extends React.Component {
                         <div className="form-group">
                             <div className="row">
                                 <div className="col-sm-2">
-                                    <label>Jerarquia por asignar</label>
+                                    <label>Jerarquía por asignar</label>
                                 </div>
                                 <div className="col-sm-4">
                                     <select
@@ -168,7 +168,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Exterior}
                                         onChange={onChangeDomicilio}
                                     />
-                                    <label>Numero exterior *</label>
+                                    <label>Número exterior *</label>
                                 </div>
                                 <div className="col-sm-4">
                                     <input
@@ -178,7 +178,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Interior}
                                         onChange={onChangeDomicilio}
                                     />
-                                    <label>Numero interior</label>
+                                    <label>Número interior</label>
                                 </div>
                             </div>
                             <div className="form-group">
@@ -190,10 +190,10 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Tipo_Subdivision}
                                             onChange={onChangeDomicilio}
                                         >
-                                            <option value="COL">COLONIA</option>
-                                            <option value="FRACC">FRACC</option>
-                                            <option value="EJ">EJIDO</option>
-                                            <option value="SUBDIV">SUBDIV</option>
+                                            <option value="COL.">COLONIA</option>
+                                            <option value="FRACC.">FRACCIONAMIENTO</option>
+                                            <option value="EJ.">EJIDO</option>
+                                            <option value="SUBDIV.">SUBDIVICIÓN</option>
                                             <option value="BRGY">BRGY</option>
                                             <option value="RANCHO">RANCHO</option>
                                             <option value="MANZANA">MANZANA</option>
@@ -204,7 +204,7 @@ class Domicilio extends React.Component {
                                             <option value="BARRIO">BARRIO</option>
                                             <option value="ZONA">ZONA</option>
                                         </select>
-                                        <label>Tipo subdivision</label>
+                                        <label>Tipo Subdivisión</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -214,7 +214,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Subdivision}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Subdivision</label>
+                                        <label>Nombre de Subdivisión</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -224,7 +224,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Localidad}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Localidad *</label>
+                                        <label>Localidad/Poblado *</label>
                                     </div>
 
                                 </div>
@@ -239,7 +239,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Municipio_Ciudad}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Municipio/Cuidad</label>
+                                        <label>Municipio/Ciudad</label>
                                     </div>
                                     <PaisEstado
                                         domicilio={domicilio}
@@ -259,7 +259,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Telefono}
                                         onChange={onChangeDomicilio}
                                     />
-                                    <label>Telefono</label>
+                                    <label>Teléfono de Casa</label>
                                 </div>
                             </div>
                         </div>
