@@ -369,22 +369,36 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
-        this.fnSolicitudNvoEstado(datos.HogarDomicilioEntity.pais_Id_Pais)
         this.fnSolicitudNvaProfesion();
-        try {
-            await helpers.authAxios.post(this.url + "/persona/AddPersonaDomicilioHogar", datos)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        alert("Datos guardados satisfactoriamente");
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                    } else {
-                        alert("Error: No se pudo guardar. Revise los datos ingresados");
+        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
+            .then(res => {
+                if (res.data.status === true) {
+                    let contador = 0
+                    res.data.estados.forEach(element => {
+                        contador = contador + 1
+                    })
+                    if (contador < 1 && this.state.domicilio.nvoEstado == "") {
+                        alert("Error: \nEl pais seleccionado no tiene Estados para mostrar, por lo tanto, debe ingresar un nombre de Estado.")
+                        return false
                     }
-                });
-        } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-        }
+                    else {
+                        try {
+                            helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
+                                .then(res => {
+                                    if (res.data.status === "success") {
+                                        alert("Datos guardados satisfactoriamente");
+                                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                                    } else {
+                                        alert("Error: No se pudo guardar. Revise los datos ingresados");
+                                    }
+                                });
+                        } catch (error) {
+                            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        }
+                    }
+                }
+            });
     }
 
     fnEditaPersona = async (datos) => {
@@ -503,34 +517,11 @@ class RegistroDePersonal extends Component {
     }
 
     fnSolicitudNvaProfesion = async () => {
-        if (this.state.descNvaProfesion.nvaProf1 !== ""
-            || this.state.descNvaProfesion.nvaProf1 !== undefined) {
+        if (this.state.descNvaProfesion.nvaProf1 !== "") {
             await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf1}/${this.infoSesion.pem_Id_Ministro}`)
         }
-        if (this.state.descNvaProfesion.nvaProf2 !== ""
-            || this.state.descNvaProfesion.nvaProf2 !== undefined) {
+        if (this.state.descNvaProfesion.nvaProf2 !== "") {
             await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf2}/${this.infoSesion.pem_Id_Ministro}`)
-        }
-    }
-
-    fnSolicitudNvoEstado = async (idPais) => {
-        let contador = 0;
-        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
-            .then(res => {
-                res.data.estados.forEach(estado => {
-                    contador = contador + 1;
-                });
-            })
-        if (contador > 0) {
-            this.setState({
-                domicilio: {
-                    ...this.state.domicilio,
-                    nvoEstado: ""
-                }
-            })
-        }
-        else if (this.state.domicilio.nvoEstado !== "") {
-            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
         }
     }
 
