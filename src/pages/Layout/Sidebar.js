@@ -637,7 +637,7 @@ class Sidebar extends Component {
                             onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                         >
                             <i className="fas fa-fw fa-home"></i>
-                            <span>Anális de Membresia</span>
+                            <span>Anális de Membresía</span>
                         </Link>
                     </li>
 
@@ -678,7 +678,7 @@ class Sidebar extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Movimientos Estadisticos
+                        Movimientos Estadísticos
                     </div>
 
                     {/* Nav Item - Altas Collapse Menu */}
@@ -790,7 +790,7 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMPAct" aria-expanded="true" aria-controls="collapsepages">
                             <i className="fas fa-fw fa-user-edit"></i>
-                            <span>Actualizacion de personal</span>
+                            <span>Actualización de personal</span>
                         </Link>
                         <div id="collapseMPAct" className="collapse" aria-labelledby="headingMPAct" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
@@ -831,7 +831,7 @@ class Sidebar extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Sucesos Estadisticos
+                        Sucesos Estadísticos
                     </div>
 
                     {/* Nav Item - Matrimonios */}
@@ -852,7 +852,7 @@ class Sidebar extends Component {
                             onClick={()=>this.handle_LinkEncabezado('Sucesos Estádisticos', 'Presentación de niños')}
                         >
                             <i className="fas fa-fw fa-baby"></i>
-                            <span>Presentación de niños</span>
+                            <span>Presentación de Niños</span>
                         </Link>
                     </li>
 
@@ -871,7 +871,7 @@ class Sidebar extends Component {
                             to="/EdicionDeDireccion"
                             onClick={()=>this.handle_LinkEncabezado('Hogares', 'Edición de dirección.')}>
                             <i className="fas fa-address-book"></i>
-                            <span>Edición de dirección</span>
+                            <span>Edición de Dirección</span>
                         </Link>
                     </li>
                     <li className="nav-item">
@@ -881,13 +881,13 @@ class Sidebar extends Component {
                             onClick={()=>this.handle_LinkEncabezado('Hogares', 'Revinculación persona-hogar.')}
                         >
                             <i className="fas fa-house-user"></i>
-                            <span>Revinculación persona-hogar</span>
+                            <span>Revinculación Persona-Hogar</span>
                         </Link>
                     </li>
 
                     {/* Heading */}
                     <div className="sidebar-heading">
-                        Transacciones especiales
+                        Transacciones Especiales
                     </div>
 
                     {/* Nav Item - Hogares  */}
@@ -898,7 +898,7 @@ class Sidebar extends Component {
                             onClick={this.openModalVisibilidadAbierta}
                         >
                             <i className="fas fa-address-book"></i>
-                            <span>Habilitar visibilidad abierta</span>
+                            <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li>
                     
@@ -920,12 +920,12 @@ class Sidebar extends Component {
                         <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item text-wrap" to="/ResumenMembresia">Reporte de Membresia Actual</Link>
+                                <Link className="collapse-item text-wrap" to="/ResumenMembresia">Reporte de Membresía Actual</Link>
                                 <Link className="collapse-item text-wrap" to="/ReportePersonalBautizado">Lista de Personal Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="/ReportePersonalNoBautizado">Lista de Personal No Bautizado</Link>
                                 <Link className="collapse-item text-wrap" to="/RptListaDeHogares">Lista de hogares</Link>
                                 <Link className="collapse-item text-wrap" to="/ReporteOficiosProfesiones">Lista por Profesiones/Oficios</Link>
-                                <Link className="collapse-item text-wrap" to="/ReporteCumpleaños">Lista por fecha de cumpleaños</Link>
+                                <Link className="collapse-item text-wrap" to="/ReporteCumpleaños">Lista por Fecha de Cumpleaños</Link>
                                 <Link className="collapse-item text-wrap" to="/ReporteMovimientoEstadistico">Reporte de Movimiento Estadístico</Link>
                             </div>
                         </div>
@@ -942,7 +942,7 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-baby"></i>
-                            <span>Membresia a Excel</span>
+                            <span>Membresía a Excel</span>
                         </Link>
                     </li>
                     <li className="nav-item">
@@ -967,7 +967,7 @@ class Sidebar extends Component {
                 <Modal isOpen={this.state.modalEditaPersona}>
                     <Card>
                         <CardHeader>
-                            <CardTitle><h3>Seleccione la persona a editar.</h3></CardTitle>
+                            <CardTitle><h3>Seleccione la Persona a Editar.</h3></CardTitle>
                         </CardHeader>
                         <CardBody>
                             <FormGroup>
@@ -1021,7 +1021,7 @@ class Sidebar extends Component {
                 <Modal isOpen={this.state.modalEditaPersonaNB}>
                     <Card>
                         <CardHeader>
-                            <CardTitle><h3>Seleccione una persona a editar.</h3></CardTitle>
+                            <CardTitle><h3>Seleccione una Persona a Editar.</h3></CardTitle>
                         </CardHeader>
                         <CardBody>
                             <FormGroup>
@@ -1076,7 +1076,7 @@ class Sidebar extends Component {
                     <Card>
                         <Form onSubmit={this.bajaBautizadoExcomunion}>
                             <CardHeader>
-                                <CardTitle><h3>Seleccione una persona.</h3></CardTitle>
+                                <CardTitle><h3>Seleccione una Persona.</h3></CardTitle>
                             </CardHeader>
                             <CardBody>
 
@@ -1101,7 +1101,7 @@ class Sidebar extends Component {
                                                 name="personaSeleccionada"
                                                 onChange={this.onChangeBajaBautizadoExcomunion}
                                             >
-                                                <option value="0">Selecciona una persona</option>
+                                                <option value="0">Seleccione una Persona</option>
                                                 {this.state.personas.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
@@ -1127,8 +1127,8 @@ class Sidebar extends Component {
                                                 value={this.state.formBajaBautizadoExcomunion.tipoExcomunion}
                                                 onChange={this.onChangeBajaBautizadoExcomunion}
                                             >
-                                                <option value="0">Selecciona una opcion</option>
-                                                <option value="11102">Excomunión temporal</option>
+                                                <option value="0">Seleccione una Opción</option>
+                                                <option value="11102">Excomunión Temporal</option>
                                                 <option value="11103">Excomunión</option>
                                             </Input>
                                         </Col>
@@ -1217,7 +1217,7 @@ class Sidebar extends Component {
                                                 name="personaSeleccionada"
                                                 onChange={this.onChangeBajaBautizadoDefuncion}
                                             >
-                                                <option value="0">Selecciona una persona</option>
+                                                <option value="0">Seleccione una persona</option>
                                                 {this.state.personas.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
@@ -1313,7 +1313,7 @@ class Sidebar extends Component {
                                                 name="personaSeleccionada"
                                                 onChange={this.onChangeBajaNoBautizadoDefuncion}
                                             >
-                                                <option value="0">Selecciona una persona</option>
+                                                <option value="0">Seleccione una persona</option>
                                                 {this.state.personas.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
@@ -1409,7 +1409,7 @@ class Sidebar extends Component {
                                                 name="personaSeleccionada"
                                                 onChange={this.onChangeBajaNoBautizadoAlejamiento}
                                             >
-                                                <option value="0">Selecciona una persona</option>
+                                                <option value="0">Seleccione una persona</option>
                                                 {this.state.personas.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
@@ -1505,7 +1505,7 @@ class Sidebar extends Component {
                                                 name="idPersona"
                                                 onChange={this.onChangeBajaBautizadoCambioDomicilio}
                                             >
-                                                <option value="0">Selecciona una persona</option>
+                                                <option value="0">Seleccione una persona</option>
                                                 {this.state.personas.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
@@ -1531,7 +1531,7 @@ class Sidebar extends Component {
                                                 value={this.state.formBajaBautizadoCambioDomicilio.tipoDestino}
                                                 onChange={this.onChangeBajaBautizadoCambioDomicilio}
                                             >
-                                                <option value="0">Selecciona una opción</option>
+                                                <option value="0">Seleccione una opción</option>
                                                 <option value="INTERNO">INTERNO</option>
                                                 <option value="EXTERNO">EXTERNO</option>
                                             </Input>
@@ -1605,7 +1605,7 @@ class Sidebar extends Component {
                                                 name="idPersona"
                                                 onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
                                             >
-                                                <option value="0">Selecciona una persona</option>
+                                                <option value="0">Seleccione una persona</option>
                                                 {this.state.personas.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
@@ -1631,7 +1631,7 @@ class Sidebar extends Component {
                                                 value={this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino}
                                                 onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
                                             >
-                                                <option value="0">Selecciona una opción</option>
+                                                <option value="0">Seleccione una opción</option>
                                                 <option value="INTERNO">INTERNO</option>
                                                 <option value="EXTERNO">EXTERNO</option>
                                             </Input>
@@ -1681,7 +1681,7 @@ class Sidebar extends Component {
                     <Card>
                         <Form onSubmit={this.estableceVisibilidadAbierta}>
                             <CardHeader>
-                                <CardTitle><h3>Cambia estatus de la persona a visibilidad abierta.</h3></CardTitle>
+                                <CardTitle><h3>Cambia estatus de la persona a Visibilidad Abierta.</h3></CardTitle>
                             </CardHeader>
                             <CardBody>
                                 <FormGroup>
@@ -1705,7 +1705,7 @@ class Sidebar extends Component {
                                                 name="idPersona"
                                                 onChange={this.onChangeEstableceVisibilidadAbierta}
                                             >
-                                                <option value="0">Selecciona una persona</option>
+                                                <option value="0">Seleccione una persona</option>
                                                 {this.state.personas.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>

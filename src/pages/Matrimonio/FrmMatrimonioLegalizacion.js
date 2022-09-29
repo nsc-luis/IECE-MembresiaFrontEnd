@@ -3,12 +3,11 @@ import {
     Container, Row, Col, Card, CardHeader,
     CardBody, CardFooter, Form, Input, Label,
     Button, FormFeedback, Table, FormGroup,
-    Modal, ModalFooter, ModalBody, ModalHeader
+    Modal, ModalFooter, ModalBody, ModalHeader, ButtonGroup
 } from 'reactstrap';
-import axios from 'axios';
 import helpers from '../../components/Helpers';
-import Layout from '../Layout';
 import './style.css';
+import HogarPersonaDomicilio from './HogarPersonaDomicilio';
 
 class FrmMatrimonioLegalizacion extends Component {
 
@@ -25,6 +24,10 @@ class FrmMatrimonioLegalizacion extends Component {
             mujeres: [],
             modalShow: false,
             mensajeDelProceso: "",
+            rSelected: false,
+            hogar: {},
+            domicilio: {},
+            habilitaComponenteDomicilio: false
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     }
@@ -49,6 +52,19 @@ class FrmMatrimonioLegalizacion extends Component {
                 dis_Id_Distrito: localStorage.getItem("dto"),
                 sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
+            },
+            domicilio: {
+                ...this.state.domicilio,
+                hd_Tipo_Subdivision: "COL",
+                sec_Id_Sector: localStorage.getItem("sector"),
+                dis_Id_Distrito: localStorage.getItem("dto"),
+                pais_Id_Pais: "0",
+                hd_Calle: "",
+                hd_Localidad: "",
+                hd_Numero_Exterior: "",
+                usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
+                hd_Activo: true,
+                nvoEstado: ""
             }
         })
         if (localStorage.getItem("mat_Id_MatrimonioLegalizacion") === "0") {
@@ -71,22 +87,24 @@ class FrmMatrimonioLegalizacion extends Component {
                     dis_Id_Distrito: localStorage.getItem("dto"),
                     sec_Id_Sector: localStorage.getItem("sector"),
                     usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
-                }
+                },
+                habilitaComponenteDomicilio: true
             })
         }
         else {
             helpers.authAxios.get(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"))
-            .then(res => {
-                res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil);
-                res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica)
-                this.setState({ 
-                    matLegal: res.data.matrimonioLegalizacion,
-                    bolForaneoHombre: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Hombre_Foraneo !== "" ? true : false,
-                    bolForaneoMujer: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Mujer_Foraneo !== "" ? true : false
-                })
-                this.getHombres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
-                this.getMujeres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
-            });
+                .then(res => {
+                    res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil);
+                    res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica)
+                    this.setState({
+                        matLegal: res.data.matrimonioLegalizacion,
+                        bolForaneoHombre: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Hombre_Foraneo !== "" ? true : false,
+                        bolForaneoMujer: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Mujer_Foraneo !== "" ? true : false,
+                        habilitaComponenteDomicilio: false
+                    })
+                    this.getHombres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
+                    this.getMujeres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
+                });
         }
     }
 
@@ -211,6 +229,105 @@ class FrmMatrimonioLegalizacion extends Component {
         localStorage.removeItem("mat_Id_MatrimonioLegalizacion");
     }
 
+    onRadioBtnClick(rSelected) {
+        this.setState({ rSelected });
+    }
+
+    /// METODOS PARA HOGAR - DOMICILIO ///
+    fnGetDatosDelHogar = async (id) => {
+        if (id !== "0") {
+            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
+                .then(res => {
+                    this.setState({ MiembrosDelHogar: res.data })
+                })
+            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+                .then(res => {
+                    this.setState({ DatosHogarDomicilio: res.data })
+                })
+
+            let jerarquias = [];
+            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
+                jerarquias.push(<option value={i}>{i}</option>)
+            }
+
+            this.setState({
+                JerarquiasDisponibles: jerarquias,
+                hogar: {
+                    ...this.state.hogar,
+                    hp_Jerarquia: jerarquias.length
+                }
+            })
+        } else {
+            this.setState({
+                MiembrosDelHogar: [],
+                DatosHogarDomicilio: [],
+                JerarquiasDisponibles: []
+            })
+        }
+    }
+
+    handle_hd_Id_Hogar = async (e) => {
+        let idHogar = e.target.value;
+        if (idHogar !== "0") {
+            await helpers.authAxios.get(this.url + '/Hogar_Persona/GetMiembros/' + idHogar)
+                .then(res => {
+                    this.setState({
+                        hogar: {
+                            ...this.state.hogar,
+                            hp_Jerarquia: res.data.length
+                        }
+                    })
+                });
+            this.setState({
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: idHogar
+                }
+            })
+        }
+        else {
+            this.setState({
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: idHogar,
+                    hp_Jerarquia: "1"
+                }
+            })
+        }
+
+        this.fnGetDatosDelHogar(idHogar);
+    }
+
+    handleChangeDomicilio = (e) => {
+        this.setState({
+            domicilio: {
+                ...this.state.domicilio,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
+        })
+    }
+
+    fnSolicitudNvoEstado = async (idPais) => {
+        let contador = 0;
+        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
+            .then(res => {
+                res.data.estados.forEach(estado => {
+                    contador = contador + 1;
+                });
+            })
+        if (contador > 0) {
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: ""
+                }
+            })
+        }
+        else if (this.state.domicilio.nvoEstado !== "") {
+            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
+        }
+    }
+
     render() {
         const {
             handle_CancelaCaptura,
@@ -220,8 +337,13 @@ class FrmMatrimonioLegalizacion extends Component {
         const handle_Submit = async (e) => {
             e.preventDefault();
             if (localStorage.getItem("mat_Id_MatrimonioLegalizacion") === "0") {
+                let matLegalDom = {
+                    matLegalEntity: this.state.matLegal,
+                    HogarDomicilioEntity: this.state.domicilio
+                }
+                this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais)
                 try {
-                    await helpers.authAxios.post(helpers.url_api + "/Matrimonio_Legalizacion/", this.state.matLegal)
+                    await helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatriminioLegalizacion/${this.state.rSelected}/${this.state.domicilio.nvoEstado}`, matLegalDom)
                         .then(res => {
                             if (res.data.status === "success") {
                                 // alert(res.data.mensaje);
@@ -295,7 +417,7 @@ class FrmMatrimonioLegalizacion extends Component {
                     // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                 }
             }
-            
+
         }
 
         return (
@@ -553,6 +675,7 @@ class FrmMatrimonioLegalizacion extends Component {
                                             </FormGroup>
                                         </Col>
                                     </Row>
+
                                     <Row>
                                         <Col xs="4">
                                             <FormGroup>
@@ -567,6 +690,34 @@ class FrmMatrimonioLegalizacion extends Component {
                                             </FormGroup>
                                         </Col>
                                     </Row>
+                                    <hr />
+                                    {this.state.habilitaComponenteDomicilio &&
+                                        <Row>
+                                            <Col xs="2">
+                                                <FormGroup>
+                                                    <Label><strong>¿Crear nuevo hogar? </strong></Label>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col xs="10">
+                                                <FormGroup>
+                                                    <ButtonGroup>
+                                                        <Button color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === true}>Si</Button>
+                                                        <Button color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === false}>No</Button>
+                                                    </ButtonGroup>
+                                                    <FormFeedback></FormFeedback>
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                    }
+
+                                    {this.state.rSelected &&
+                                        <HogarPersonaDomicilio
+                                            domicilio={this.state.domicilio}
+                                            onChangeDomicilio={this.handleChangeDomicilio}
+                                            handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
+                                            hogar={this.state.hogar}
+                                        />
+                                    }
                                 </CardBody>
                                 <CardFooter>
                                     <Button

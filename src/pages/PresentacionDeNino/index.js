@@ -30,7 +30,9 @@ class PresentacionDeNino extends Component {
             ministroOficianteInvalido: false,
             modalShow: false,
             mensajeDelProceso: "",
-            ministros: []
+            ministros: [],
+            habilitaOtroMinistro: false,
+            otroMinistro: ""
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
         this.msjNinoSelectInvalido = "Debe seleccionar niño(a) para continuar.";
@@ -44,7 +46,7 @@ class PresentacionDeNino extends Component {
                 pdn_Ministro_Oficiante: "0",
                 pdn_Fecha_Presentacion: "01/01/1900",
                 sec_Id_Sector: localStorage.getItem("sector"),
-                usu_Id_Usuario: "1"
+                usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
             }
         });
         this.getListaDePresentaciones();
@@ -101,7 +103,7 @@ class PresentacionDeNino extends Component {
                 pdn_Ministro_Oficiante: "0",
                 pdn_Fecha_Presentacion: "1900-01-01",
                 sec_Id_Sector: localStorage.getItem("sector"),
-                usu_Id_Usuario: "1"
+                usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
             },
             modalFrmPresentacion: true,
             tituloModalFrmPresentacion: "Registrar nueva presentacion de niño(a)",
@@ -110,15 +112,26 @@ class PresentacionDeNino extends Component {
     }
 
     handle_modalEditaPresentacion = (info) => {
+        var result = this.state.ministros.filter((obj) => {
+            return obj.pem_Nombre.includes(info.pdn_Ministro_Oficiante)
+        })
+        if (result.length === 0) {
+            this.setState({
+                habilitaOtroMinistro: true,
+                otroMinistro: info.pdn_Ministro_Oficiante,
+                pdn_Ministro_Oficiante: "OTRO MINISTRO"
+            })
+        }
+
         this.setState({
             currentPresentacion: {
                 ...this.state.currentPresentacion,
                 pdn_Id_Presentacion: info.pdn_Id_Presentacion,
                 per_Id_Persona: info.per_Id_Persona,
-                pdn_Ministro_Oficiante: info.pdn_Ministro_Oficiante.toUpperCase(),
+                pdn_Ministro_Oficiante: result.length === 0 ? "OTRO MINISTRO" : info.pdn_Ministro_Oficiante.toUpperCase(),
                 pdn_Fecha_Presentacion: helpers.reFormatoFecha(info.pdn_Fecha_Presentacion),
                 sec_Id_Sector: localStorage.getItem("sector"),
-                usu_Id_Usuario: "1"
+                usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
             },
             modalFrmPresentacion: true,
             tituloModalFrmPresentacion: "Editar registro de presentacion de niño(a)",
@@ -144,6 +157,18 @@ class PresentacionDeNino extends Component {
                 [e.target.name]: e.target.value
             }
         });
+        if (e.target.name === "pdn_Ministro_Oficiante") {
+            if (e.target.value === "OTRO MINISTRO") {
+                this.setState({ habilitaOtroMinistro: true })
+            }
+            else {
+                this.setState({ otroMinistro: "", habilitaOtroMinistro: false })
+            }
+        }
+    }
+
+    handle_OtroMinistro = (e) => {
+        this.setState({ otroMinistro: e.target.value.toUpperCase() });
     }
 
     validaFormatos = (formato, campo, estado) => {
@@ -211,10 +236,12 @@ class PresentacionDeNino extends Component {
             if (this.state.currentPresentacion.per_Id_Persona === "0") return false;
             if (this.state.currentPresentacion.pdn_Fecha_Presentacion === "1900-01-01" || this.state.currentPresentacion.pdn_Fecha_Presentacion === null) return false;
             if (this.state.currentPresentacion.pdn_Ministro_Oficiante === "0") return false;
+            if (this.state.otroMinistro === "" && this.state.currentPresentacion.pdn_Ministro_Oficiante === "-1") return false;
 
             var info = this.state.currentPresentacion;
+            info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante === "-1" ? this.state.otroMinistro : this.state.currentPresentacion.pdn_Ministro_Oficiante;
             try {
-                helpers.authAxios.post(helpers.url_api + `/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
+                helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -450,11 +477,31 @@ class PresentacionDeNino extends Component {
                                                             )
                                                         })
                                                     }
+                                                    <option value="OTRO MINISTRO">OTRO MINISTRO</option>
                                                 </Input>
                                                 <FormFeedback>{helpers.msjRegexInvalido.alphaSpaceRequired}</FormFeedback>
                                             </Col>
                                         </Row>
                                     </FormGroup>
+
+                                    {this.state.habilitaOtroMinistro &&
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Nombre del ministro:</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        type="text"
+                                                        name="otroMinistro"
+                                                        value={this.state.otroMinistro}
+                                                        onChange={this.handle_OtroMinistro}
+                                                    />
+                                                    <FormFeedback>{ }</FormFeedback>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    }
 
                                     <FormGroup>
                                         <Row>
@@ -590,11 +637,31 @@ class PresentacionDeNino extends Component {
                                                             )
                                                         })
                                                     }
+                                                    <option value="OTRO MINISTRO">OTRO MINISTRO</option>
                                                 </Input>
                                                 <FormFeedback>{helpers.msjRegexInvalido.alphaSpaceRequired}</FormFeedback>
                                             </Col>
                                         </Row>
                                     </FormGroup>
+
+                                    {this.state.habilitaOtroMinistro &&
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Nombre del ministro:</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        type="text"
+                                                        name="otroMinistro"
+                                                        value={this.state.otroMinistro}
+                                                        onChange={this.handle_OtroMinistro}
+                                                    />
+                                                    <FormFeedback>{ }</FormFeedback>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    }
 
                                     <FormGroup>
                                         <Row>
