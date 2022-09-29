@@ -652,7 +652,7 @@ class PersonaForm extends Component {
                                                                 type="button"
                                                                 onClick={handle_verificarDuplicados}
                                                                 color="primary"
-                                                                
+
                                                             >
                                                                 <i>Verificar duplicados</i>
                                                             </Button>
@@ -1174,6 +1174,16 @@ class PersonaForm extends Component {
                                                                             <div id="hijos">
                                                                                 <FormGroup>
                                                                                     <div className="row">
+                                                                                        <div className="col-sm-4">
+                                                                                            <Input
+                                                                                                type="text"
+                                                                                                name="per_Nombre_Conyuge"
+                                                                                                onChange={onChange}
+                                                                                                className="form-control"
+                                                                                                value={form.per_Nombre_Conyuge}
+                                                                                            />
+                                                                                            <label>Nombre de la pareja</label>
+                                                                                        </div>
                                                                                         <div className="col-sm-2">
                                                                                             <Input
                                                                                                 type="number"
