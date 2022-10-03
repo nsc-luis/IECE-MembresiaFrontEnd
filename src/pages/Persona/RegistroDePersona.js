@@ -172,6 +172,14 @@ class RegistroDePersonal extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+        if (e.target.name === "per_Email") {
+            this.setState({
+                form: {
+                    ...this.state.form,
+                    [e.target.name]: e.target.value.toLowerCase()
+                }
+            })
+        }
         if (e.target.name === "per_Categoria") {
             switch (e.target.value) {
                 default:
@@ -386,10 +394,32 @@ class RegistroDePersonal extends Component {
                             helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
                                 .then(res => {
                                     if (res.data.status === "success") {
-                                        alert("Datos guardados satisfactoriamente");
-                                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                                    } else {
-                                        alert("Error: No se pudo guardar. Revise los datos ingresados");
+                                        //alert("Datos guardados satisfactoriamente");
+                                        this.setState({
+                                            mensajeDelProceso: "Procesando...",
+                                            modalShow: true
+                                        });
+                                        setTimeout(() => {
+                                            this.setState({
+                                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                            });
+                                        }, 1500);
+                                        setTimeout(() => {
+                                            document.location.href = '/ListaDePersonal'
+                                        }, 3500);
+                                    }
+                                    else {
+                                        this.setState({
+                                            mensajeDelProceso: "Procesando...",
+                                            modalShow: true
+                                        });
+                                        setTimeout(() => {
+                                            this.setState({
+                                                mensajeDelProceso: res.data.mensaje,
+                                                modalShow: false
+                                            });
+                                        }, 1500);
+                                        alert(`Error: \n${res.data.mensaje}`);
                                     }
                                 });
                         } catch (error) {
@@ -446,7 +476,6 @@ class RegistroDePersonal extends Component {
                             document.location.href = '/ListaDePersonal'
                         }, 3500);
                     } else {
-                        // alert(res.data.mensaje);
                         this.setState({
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
@@ -457,6 +486,7 @@ class RegistroDePersonal extends Component {
                                 modalShow: false
                             });
                         }, 1500);
+                        alert(`Error: \n${res.data.mensaje}`);
                     }
                 });
         } catch (error) {

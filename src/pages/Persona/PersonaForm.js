@@ -19,7 +19,7 @@ class PersonaForm extends Component {
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
-        alphaSpaceRequired: /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/,
+        alphaSpaceRequired: /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
         formatoEmail: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         formatoTelefono: /^(\+\d{1,3})*(\(\d{2,3}\))*\d{7,25}$/
@@ -259,18 +259,8 @@ class PersonaForm extends Component {
             handle_descNvaProfesion
         } = this.props
 
-        /* const [CasadoDivorciadoViudo, setCasadoDivorciadoViudo] = useState()
-        const [ConcubinatoSolteroConHijos, setConcubinatoSolteroConHijos] = useState()
-        const [soltero, setSoltero] = useState()
-
-        useEffect(()=>{
-            setCasadoDivorciadoViudo(this.CasadoDivorciadoViudo)
-            setConcubinatoSolteroConHijos(this.ConcubinatoSolteroConHijos)
-            setSoltero(this.soltero)
-        }, []); */
-
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
-        const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
+        const alphaSpaceRequired = /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/
 
         // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
         const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
@@ -364,7 +354,7 @@ class PersonaForm extends Component {
                 || e.target.value === 'VIUDO(A)') {
                 this.setState({
                     CasadoDivorciadoViudo: true,
-                    ConcubinatoSolteroConHijos: true,
+                    ConcubinatoSolteroConHijos: false,
                     soltero: false
                 })
             }
@@ -450,8 +440,8 @@ class PersonaForm extends Component {
                         }
                         if (domicilio.pais_Id_Pais === "0"
                             || domicilio.hd_Calle === ""
-                            || domicilio.hd_Localidad === "" ||
-                            domicilio.hd_Numero_Exterior === "") {
+                            // || domicilio.hd_Localidad === ""
+                            || domicilio.hd_Numero_Exterior === "") {
                             alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
                             return false;
                         }
@@ -821,6 +811,7 @@ class PersonaForm extends Component {
                                                                         <Input
                                                                             type="email"
                                                                             name="per_Email_Personal"
+                                                                            className="email"
                                                                             onChange={onChange}
                                                                             invalid={this.state.emailInvalido}
                                                                             value={form.per_Email_Personal}
@@ -1163,9 +1154,31 @@ class PersonaForm extends Component {
                                                                                                 <label>Lugar boda eclesiástica</label>
                                                                                             </FormGroup>
                                                                                         </div>
+                                                                                        <div className="col-sm-2">
+                                                                                            <Input
+                                                                                                type="number"
+                                                                                                name="per_Cantidad_Hijos"
+                                                                                                onChange={onChange}
+                                                                                                className="form-control"
+                                                                                                value={form.per_Cantidad_Hijos}
+                                                                                            />
+                                                                                            <label>Número de hijos</label>
+                                                                                        </div>
                                                                                     </React.Fragment>
                                                                                 }
                                                                             </div>
+                                                                            <FormGroup>
+                                                                                <div className="row">
+                                                                                    <div className="col-sm-12">
+                                                                                        <textarea
+                                                                                            name="per_Nombre_Hijos"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Nombre_Hijos}
+                                                                                            className="form-control" ></textarea>
+                                                                                        <label>Nombre de los hijos</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </FormGroup>
                                                                         </React.Fragment>
                                                                     }
 

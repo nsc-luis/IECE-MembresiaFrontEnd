@@ -4,3 +4,6 @@
 .faIconMarginRight {
     margin-right: 5px;
 }
+.email {
+    text-transform: lowercase !important;
+}

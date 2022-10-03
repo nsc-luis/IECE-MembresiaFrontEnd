@@ -224,7 +224,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Localidad}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Localidad/Poblado *</label>
+                                        <label>Localidad/Poblado</label>
                                     </div>
 
                                 </div>
