@@ -42,7 +42,12 @@ class RptListaDeHogares extends Component {
     getPersonas = () => {
         helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
-                this.setState({ data: res.data });
+                
+                const key = 'hd_Id_Hogar';
+
+                const arrayUniqueByKey = [...new Map(res.data.map(item =>
+                  [item.domicilio[key], item])).values()];
+                this.setState({ data: arrayUniqueByKey});
                 console.log(this.state.data)
             })
     }

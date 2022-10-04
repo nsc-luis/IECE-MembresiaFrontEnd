@@ -6,6 +6,7 @@ import {
 } from 'reactstrap';
 
 import React, { Fragment, useEffect, useState, } from 'react';
+import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
@@ -39,6 +40,8 @@ export default function ReporteMovimientoEstadistico(){
     const [bajasHogares, setBajasHogares] = useState(null)
     const [actualizacionHogar, setActualizacionHogar] = useState(null)
 
+    const [excelData, setExcelData] = useState([])
+
     const [infoDis, setInfoDis] = useState(null)
     const [infoSec, setInfoSec] = useState(null)
 
@@ -67,6 +70,7 @@ export default function ReporteMovimientoEstadistico(){
             params.idSectorDistrito = dto
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
             orderData(res.data.datos)
+            setExcelData(res.data.datos)
             const resDto = await helpers.authAxios.get("/Distrito/" + dto)
             setInfoDis(resDto.data.dis_Alias)
         }else{
@@ -74,6 +78,7 @@ export default function ReporteMovimientoEstadistico(){
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
             console.log(res.data)
             orderData(res.data.datos)
+            setExcelData(res.data.datos)
             const resDto = await helpers.authAxios.get("/Distrito/" + dto)
             setInfoDis(resDto.data.dis_Alias)
             const resSec = await helpers.authAxios.get("/Sector/" + sector)
@@ -111,14 +116,14 @@ export default function ReporteMovimientoEstadistico(){
 
     }
 
-    // const downloadTable = () =>{
-    //     TableToExcel.convert(document.getElementById("table1"), {
-    //         name: "Cumpleaños_membresia.xlsx",
-    //         sheet: {
-    //           name: "Hoja 1"
-    //         }
-    //       });
-    // }
+    const downloadTable = () =>{
+        TableToExcel.convert(document.getElementById("table1"), {
+            name: "Reporte_Movimiento_Estadistico.xlsx",
+            sheet: {
+              name: "Hoja 1"
+            }
+          });
+    }
 
     const handleStartDate = (e) =>{
         setStartDate(moment(e.value).format("YYYY-MM-DD"))
@@ -312,7 +317,7 @@ export default function ReporteMovimientoEstadistico(){
     return(
         <Layout>
             <Container fluid>
-
+                <Button className="btn-success m-3 " onClick={downloadTable}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
                 {/* TABLA */}
                 <Card body id="pdf">
@@ -516,6 +521,38 @@ export default function ReporteMovimientoEstadistico(){
                 </CardBody> : ""
                 }
                 </Card>
+                <div hidden>
+                            <Row>
+                                <Table id='table1' data-cols-width="10,60,40,60,40">
+                                    <thead>
+                                        <tr>
+                                            <th>Indice</th>
+                                            <th>Nombre</th>
+                                            <th>Movimiento</th>
+                                            <th>Comentario</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            excelData.map((persona, index) => {
+                                                return (
+                                                    <React.Fragment key={index}>
+                                                        <tr>
+                                                            <td>{index + 1}</td>
+                                                            <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                            <td>{persona.ct_Tipo}</td>
+                                                            <td>{persona.hte_Comentario}</td>
+                                                            <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                        </tr>
+                                                    </React.Fragment>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                            </Row>
+                        </div>
             </Container>
         </Layout>
     )
