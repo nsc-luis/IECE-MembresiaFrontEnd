@@ -492,8 +492,8 @@ class ListaDePersonal extends Component {
         doc.text(`12.- Por quien fue bautizado: ${info.persona.per_Ministro_Que_Bautizo}`, 13, 124);
         drawUnderlineTotext('12.- Por quien fue bautizado: ', 13, `${info.persona.per_Ministro_Que_Bautizo}`, 124);
 
-        doc.text(`13.- Fecha en la que recibio la Promesa del Espiritu Santo: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 13, 130);
-        drawUnderlineTotext('13.- Fecha en la que recibio la Promesa del Espiritu Santo: ', 13, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 130);
+        doc.text(`13.- Fecha en la que recibio la Promesa del Espiritu Santo: ${info.persona.per_Fecha_Recibio_Espiritu_Santo}`, 13, 130);
+        drawUnderlineTotext('13.- Fecha en la que recibio la Promesa del Espiritu Santo: ', 13, `${info.persona.per_Fecha_Recibio_Espiritu_Santo}`, 130);
 
         doc.text(`Bajo la imposicion de manos del presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 20, 136);
         drawUnderlineTotext('Bajo la imposicion de manos del presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 136);
