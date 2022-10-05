@@ -8,7 +8,6 @@ import {
 import React, { Fragment, useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
-import html2canvas from "html2canvas";
 import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
@@ -41,14 +40,16 @@ export default function ReporteMovimientoEstadistico(){
     const [bajasHogares, setBajasHogares] = useState(null)
     const [actualizacionHogar, setActualizacionHogar] = useState(null)
 
+    const [excelData, setExcelData] = useState([])
+
     const [infoDis, setInfoDis] = useState(null)
     const [infoSec, setInfoSec] = useState(null)
-    
+
     const [loading, setLoading] = useState(true)
-    
+
     const[startDate, setStartDate] = useState(moment().startOf('month').format("YYYY-MM-DD"))
     const[endDate, setEndDate] = useState(moment().endOf('month').format("YYYY-MM-DD"))
-    
+
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
 
@@ -58,7 +59,7 @@ export default function ReporteMovimientoEstadistico(){
     useEffect( () => {
         loadData()
     }, [])
-    
+
     const loadData = async () => {
         // const codes = [11001, 11002, 11004, 11101, 11102,11103,11105,21001, 21102,23203,31001,31102]
         const params = {
@@ -69,6 +70,7 @@ export default function ReporteMovimientoEstadistico(){
             params.idSectorDistrito = dto
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
             orderData(res.data.datos)
+            setExcelData(res.data.datos)
             const resDto = await helpers.authAxios.get("/Distrito/" + dto)
             setInfoDis(resDto.data.dis_Alias)
         }else{
@@ -76,6 +78,7 @@ export default function ReporteMovimientoEstadistico(){
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
             console.log(res.data)
             orderData(res.data.datos)
+            setExcelData(res.data.datos)
             const resDto = await helpers.authAxios.get("/Distrito/" + dto)
             setInfoDis(resDto.data.dis_Alias)
             const resSec = await helpers.authAxios.get("/Sector/" + sector)
@@ -110,17 +113,17 @@ export default function ReporteMovimientoEstadistico(){
 
 
         setLoading(false)
-        
+
     }
 
-    // const downloadTable = () =>{
-    //     TableToExcel.convert(document.getElementById("table1"), {
-    //         name: "Cumpleaños_membresia.xlsx",
-    //         sheet: {
-    //           name: "Hoja 1"
-    //         }
-    //       });
-    // }
+    const downloadTable = () =>{
+        TableToExcel.convert(document.getElementById("table1"), {
+            name: "Reporte_Movimiento_Estadistico.xlsx",
+            sheet: {
+              name: "Hoja 1"
+            }
+          });
+    }
 
     const handleStartDate = (e) =>{
         setStartDate(moment(e.value).format("YYYY-MM-DD"))
@@ -134,26 +137,153 @@ export default function ReporteMovimientoEstadistico(){
     //     let count = 0
     //     personas.map(persona => {
     //         if(persona.persona.per_Categoria === type){
-    //             count+=1 
+    //             count+=1
     //         }
     //     })
     //     totalCount += count;
     //     return count
     // }
 
-    const printRef = React.useRef();
-    const handleDownloadPDF = async () =>{
-        const input = document.getElementById('pdf');
-        html2canvas(input)
-          .then((canvas) => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF();
-            pdf.addImage(imgData, 'JPEG', 0, 0);
-            // pdf.output('dataurlnewwindow');
-            pdf.save("download.pdf");
-          })
-        ;
+    const handleDownloadPDF = () =>{
+        // INSTANCIA NUEVO OBJETO PARA CREAR PDF
+        const doc = new jsPDF("p", "mm", "letter");
+        let yAxis = 35;
+        const headers = [
+            'Indice',
+            'Nombre',
+            'Movimiento',
+            'Comentario',
+            'Fecha'
+        ]
+        const customTable = (data, label) =>{
+            if(yAxis > 240){
+                doc.addPage()
+                yAxis = 5
+            }
+            if(data.length > 0){
+                yAxis += 3;
+                doc.setFillColor(245, 247, 121) // Codigos de color RGB (red, green, blue)
+                doc.rect(10, yAxis, 190, 4, "F");
+                doc.setFont("", "", "bold");
+                yAxis += 3;
+                doc.text(label, 15, yAxis);
+
+                yAxis += 3;
+                data = data.map((persona,index) => ({
+                    Indice: (index+1).toString(),
+                    Nombre: persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno,
+                    Movimiento: persona.ct_Tipo,
+                    Comentario: persona.hte_Comentario.trim() === "" ? "N/A" : persona.hte_Comentario.trim(),
+                    Fecha: (moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")).toString(),
+                }))
+                doc.table(10, yAxis, data, headers, {autoSize: true, fontSize: 8, padding: 1})
+                yAxis+= data.length * 12
+                console.log(yAxis);
+            }
+        }
+
+        doc.addImage(logo, 'PNG', 10, 5, 70, 20);
+        doc.text("REPORTE DE MOVIMIENTO ESTADISTICO", 85, 10);
+        doc.setFontSize(8);
+        doc.text(`DISTRITO: ${infoDis}`, 85, 15)
+
+        if (sector) {
+            doc.text(`SECTOR: ${infoSec}`, 85, 20);
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 25);
+        }
+        else {
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
+        }
+
+        if(actualizacionB.length > 0 || bautismos.length > 0 || restituciones.length > 0 || altasCambioDom.length > 0
+        || bajasCambioDom.length > 0 ||  defunciones.length > 0 || excomunionesTemp.length > 0 || excomuniones.length > 0){
+            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.rect(10, yAxis, 190, 4, "F");
+            doc.setFont("", "", "bold");
+            yAxis += 3;
+            doc.text("MEMBRESIA BAUTIZADA", 15, yAxis);
+        }
+
+        customTable(actualizacionB, "Actualizaciones")
+        customTable(bautismos, "Bautismos")
+        customTable(restituciones, "Restituciones")
+        customTable(altasCambioDom, "Altas Cambio de Domicilio")
+        customTable(bajasCambioDom, "Bajas Cambio de Domicilio")
+        customTable(defunciones, "Defunciones")
+        customTable(excomunionesTemp, "Excomuniones Temporales")
+        customTable(excomuniones, "Excomuniones")
+
+        if(altasHogares.length > 0 || bajasHogares.length > 0 || actualizacionHogar.length > 0){
+            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.rect(10, yAxis, 190, 4, "F");
+            doc.setFont("", "", "bold");
+            yAxis += 3;
+            doc.text("HOGARES", 15, yAxis);
+        }
+
+        customTable(altasHogares, "Altas de Hogares")
+        customTable(bajasHogares, "Bajas de Hogares")
+        customTable(actualizacionHogar, "Actualización de Hogares")
+
+        if(actualizacionNB.length > 0 || nuevoIngreso.length > 0 || altasCambioDomNB.length > 0 || reactivaciones.length > 0
+        || bajasCambioDomNB.length > 0 ||  defuncionesNB.length > 0 || alejamientos.length > 0 || cambiosABautizado.length > 0
+        || bajasPorPadres.length > 0){
+            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.rect(10, yAxis, 190, 4, "F");
+            doc.setFont("", "", "bold");
+            yAxis += 3;
+            console.log(yAxis);
+            doc.text("MEMBRESIA NO BAUTIZADA", 15, yAxis);
+        }
+
+        customTable(actualizacionNB, "Actualización No Bautizado")
+        customTable(nuevoIngreso, "Nuevo Ingreso")
+        customTable(altasCambioDomNB, "Altas Cambio de Domicilio No Bautizado")
+        customTable(reactivaciones, "Reactivaciones")
+        customTable(bajasCambioDomNB, "Bajas Cambio de Domicilio No Bautizado")
+        customTable(defuncionesNB, "Defunciones No Bautizado")
+        customTable(alejamientos, "Alejamientos")
+        customTable(cambiosABautizado, "Cambios a Bautizado")
+        customTable(bajasPorPadres, "Baja por Padres")
+
+        if(matrimonios.length > 0 || legalizaciones.length > 0 || presentacionesNiños.length > 0){
+            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.rect(10, yAxis, 190, 4, "F");
+            doc.setFont("", "", "bold");
+            yAxis += 3;
+            doc.text("SUCESOS", 15, yAxis);
+        }
+
+        customTable(matrimonios, "Matrimonios")
+        customTable(legalizaciones, "Legalizaciones")
+        customTable(presentacionesNiños, "Presentaciones de Niños")
+
+
+        if(yAxis > 240){
+            doc.addPage()
+            yAxis = 5
+        }
+
+        doc.setFontSize(8);
+        yAxis += 20;
+        doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
+        yAxis += 5;
+        doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, yAxis);
+
+        yAxis += 35;
+        doc.line(30, yAxis, 90, yAxis);
+        doc.line(120, yAxis, 180, yAxis);
+        yAxis += 3;
+        doc.text("SECRETARIO", 51, yAxis);
+        doc.text("PASTOR", 145, yAxis);
+        yAxis -= 5;
+        doc.setFont("", "", "bold");
+        doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
+
+
+        doc.save("ReporteMovimientoEstadistico.pdf");
     }
+
 
     const TableRow = (props) => {
         const data = props.data
@@ -182,12 +312,12 @@ export default function ReporteMovimientoEstadistico(){
         }else{
             return ""
         }
-        
+
     }
     return(
         <Layout>
             <Container fluid>
-
+                <Button className="btn-success m-3 " onClick={downloadTable}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
                 {/* TABLA */}
                 <Card body id="pdf">
@@ -195,7 +325,7 @@ export default function ReporteMovimientoEstadistico(){
                 {!loading ?
                 <Row>
                     <Col lg="3">
-                        <img src={logo} width="100%"></img> 
+                        <img src={logo} width="100%"></img>
                     </Col>
                     <Col>
                         REPORTE DE MOVIMIENTO ESTADISTICO PERIODICO
@@ -206,7 +336,7 @@ export default function ReporteMovimientoEstadistico(){
                 : ""
                 }
                 </CardTitle>
-                {!loading ? 
+                {!loading ?
                     <CardBody>
                     <Row className="m-3 justify-content-center">
                             <Col lg="1" className="text-center">
@@ -225,7 +355,7 @@ export default function ReporteMovimientoEstadistico(){
                                 <Button color="info" onClick={() => loadData()}>Buscar...</Button>
                             </Col>
                     </Row>
-         
+
                         {/* <Button color="primary" size="lg" className="text-left mb-2" block id="altas">Altas</Button>
                         <UncontrolledCollapse defaultOpen toggler="#altas"> */}
                             <Card>
@@ -247,9 +377,9 @@ export default function ReporteMovimientoEstadistico(){
                                                 <h5>ACTUALIZACIONES</h5>
                                             </td>
                                         </tr>
-                                        
+
                                         <TableRow label={'Actualizacion Bautizado'} data= {actualizacionB} total={actualizacionB ? actualizacionB.length : 0}/>
-                                       
+
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>ALTAS</h5>
@@ -270,7 +400,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Excomunión Temporal'} data= {excomunionesTemp} total={excomunionesTemp ? excomunionesTemp.length : 0}/>
                                         <TableRow label={'Baja Cambio Domicilio'} data= {bajasCambioDom} total={bajasCambioDom ? bajasCambioDom.length : 0}/>
                                         <TableRow label={'Defunción'} data= {defunciones} total={defunciones ? defunciones.length : 0}/>
-                                        
+
 
                                         <tr className="bg-info">
                                             <td colSpan="4">
@@ -300,7 +430,7 @@ export default function ReporteMovimientoEstadistico(){
                                             </td>
                                         </tr>
                                         <TableRow label={'Baja Hogares'} data= {bajasHogares} total={bajasHogares ? bajasHogares.length : 0}/>
-                                       
+
                                         <tr className="bg-info">
                                             <td colSpan="4">
                                                 <h4><strong>MEMBRESIA NO BAUTIZADA</strong></h4>
@@ -314,7 +444,7 @@ export default function ReporteMovimientoEstadistico(){
                                         </tr>
 
                                         <TableRow label={'Actualizacion No Bautizado'} data= {actualizacionNB} total={actualizacionNB ? actualizacionNB.length : 0}/>
-                                        
+
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>ALTAS</h5>
@@ -324,7 +454,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Nuevo Ingreso'} data= {nuevoIngreso} total={nuevoIngreso ? nuevoIngreso.length : 0}/>
                                         <TableRow label={'Cambio de Domicilio'} data= {altasCambioDomNB} total={altasCambioDomNB ? altasCambioDomNB.length : 0}/>
                                         <TableRow label={'Reactivación'} data= {reactivaciones} total={reactivaciones ? reactivaciones.length : 0}/>
-                                        
+
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>BAJAS</h5>
@@ -336,7 +466,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Alejamiento'} data= {alejamientos} total={alejamientos ? alejamientos.length : 0}/>
                                         <TableRow label={'Pasa a Personal Bautizado'} data= {cambiosABautizado} total={cambiosABautizado ? cambiosABautizado.length : 0}/>
                                         <TableRow label={'Baja de Padres'} data= {bajasPorPadres} total={bajasPorPadres ? bajasPorPadres.length : 0}/>
-                                        
+
                                         <tr className="bg-info">
                                             <td colSpan="4">
                                                 <h4><strong>SUCESOS</strong></h4>
@@ -350,7 +480,7 @@ export default function ReporteMovimientoEstadistico(){
                                         </tr>
 
                                         <TableRow label={'Matrimonios'} data= {matrimonios} total={matrimonios ? matrimonios.length / 2 : 0}/>
-                                       
+
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>Legalizaciones</h5>
@@ -358,7 +488,7 @@ export default function ReporteMovimientoEstadistico(){
                                         </tr>
 
                                         <TableRow label={'Legalizaciones'} data= {legalizaciones} total={legalizaciones ? legalizaciones.length / 2 : 0}/>
-                                        
+
                                         <tr className="bg-light">
                                             <td colSpan="4">
                                                 <h5>Presentaciones de niños</h5>
@@ -366,7 +496,7 @@ export default function ReporteMovimientoEstadistico(){
                                         </tr>
 
                                         <TableRow label={'Presentaciones de Niños'} data= {presentacionesNiños} total={presentacionesNiños ? presentacionesNiños.length : 0}/>
-                                    
+
                                     </Table>
                                 </CardBody>
                             </Card>
@@ -391,6 +521,38 @@ export default function ReporteMovimientoEstadistico(){
                 </CardBody> : ""
                 }
                 </Card>
+                <div hidden>
+                            <Row>
+                                <Table id='table1' data-cols-width="10,60,40,60,40">
+                                    <thead>
+                                        <tr>
+                                            <th>Indice</th>
+                                            <th>Nombre</th>
+                                            <th>Movimiento</th>
+                                            <th>Comentario</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            excelData.map((persona, index) => {
+                                                return (
+                                                    <React.Fragment key={index}>
+                                                        <tr>
+                                                            <td>{index + 1}</td>
+                                                            <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                            <td>{persona.ct_Tipo}</td>
+                                                            <td>{persona.hte_Comentario}</td>
+                                                            <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
+                                                        </tr>
+                                                    </React.Fragment>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                            </Row>
+                        </div>
             </Container>
         </Layout>
     )
