@@ -74,15 +74,15 @@ class RegistroDePersonal extends Component {
                     per_Nombre_Abuela_Paterna: "",
                     per_Nombre_Abuelo_Materno: "",
                     per_Nombre_Abuela_Materna: "",
-                    per_Fecha_Boda_Civil: "1900-01-01",
-                    per_Fecha_Boda_Eclesiastica: "1900-01-01",
+                    per_Fecha_Boda_Civil: "",
+                    per_Fecha_Boda_Eclesiastica: "",
                     per_Num_Acta_Boda_Civil: "",
                     per_Oficialia_Boda_Civil: "",
                     per_Registro_Civil: "",
                     per_Nombre_Conyuge: "",
                     per_Libro_Acta_Boda_Civil: "",
-                    per_Fecha_Bautismo: "1900-01-01",
-                    per_Fecha_Recibio_Espiritu_Santo: "1900-01-01",
+                    per_Fecha_Bautismo: "",
+                    per_Fecha_Recibio_Espiritu_Santo: "",
                     per_Cargos_Desempenados: "",
                     per_Cantidad_Hijos: "0",
                     per_Nombre_Hijos: "",
@@ -113,11 +113,11 @@ class RegistroDePersonal extends Component {
 
             helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
-                    res.data.per_Fecha_Nacimiento = helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento);
-                    res.data.per_Fecha_Bautismo = helpers.reFormatoFecha(res.data.per_Fecha_Bautismo);
-                    res.data.per_Fecha_Boda_Civil = helpers.reFormatoFecha(res.data.per_Fecha_Boda_Civil);
-                    res.data.per_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(res.data.per_Fecha_Boda_Eclesiastica);
-                    res.data.per_Fecha_Recibio_Espiritu_Santo = helpers.reFormatoFecha(res.data.per_Fecha_Recibio_Espiritu_Santo);
+                    res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : null;
+                    res.data.per_Fecha_Bautismo = res.data.per_Fecha_Bautismo != null ? helpers.reFormatoFecha(res.data.per_Fecha_Bautismo) : null;
+                    res.data.per_Fecha_Boda_Civil = res.data.per_Fecha_Boda_Civil != null ? helpers.reFormatoFecha(res.data.per_Fecha_Boda_Civil) : null;
+                    res.data.per_Fecha_Boda_Eclesiastica = res.data.per_Fecha_Boda_Eclesiastica != null ? helpers.reFormatoFecha(res.data.per_Fecha_Boda_Eclesiastica) : null;
+                    res.data.per_Fecha_Recibio_Espiritu_Santo = res.data.per_Fecha_Recibio_Espiritu_Santo != null ? helpers.reFormatoFecha(res.data.per_Fecha_Recibio_Espiritu_Santo) : null;
                     res.data.per_Bautizado = JSON.parse(localStorage.getItem("nvaAltaBautizado"));
                     res.data.per_En_Comunion = JSON.parse(localStorage.getItem("nvaAltaComunion"));
                     res.data.per_Categoria = localStorage.getItem("categoria") ? localStorage.getItem("categoria") : res.data.per_Categoria;
@@ -368,6 +368,7 @@ class RegistroDePersonal extends Component {
     }
 
     changeEstadoCivil = (str) => {
+        localStorage.setItem('estadoCivil', str)
         this.setState({
             form: {
                 ...this.state.form,
@@ -434,8 +435,8 @@ class RegistroDePersonal extends Component {
     fnEditaPersona = async (datos) => {
         if (datos.per_Estado_Civil === "SOLTERO(A) CON HIJOS"
             || datos.per_Estado_Civil === "CONCUBINATO") {
-            datos.per_Fecha_Boda_Civil = "01/01/1900";
-            datos.per_Fecha_Boda_Eclesiastica = "01/01/1900";
+            datos.per_Fecha_Boda_Civil = "";
+            datos.per_Fecha_Boda_Eclesiastica = "";
             datos.per_Num_Acta_Boda_Civil = "";
             datos.per_Oficialia_Boda_Civil = "";
             datos.per_Registro_Civil = "";
@@ -443,8 +444,8 @@ class RegistroDePersonal extends Component {
             datos.per_Libro_Acta_Boda_Civil = "";
         }
         if (datos.per_Estado_Civil === "SOLTERO(A)") {
-            datos.per_Fecha_Boda_Civil = "01/01/1900";
-            datos.per_Fecha_Boda_Eclesiastica = "01/01/1900";
+            datos.per_Fecha_Boda_Civil = "";
+            datos.per_Fecha_Boda_Eclesiastica = "";
             datos.per_Num_Acta_Boda_Civil = "";
             datos.per_Oficialia_Boda_Civil = "";
             datos.per_Registro_Civil = "";

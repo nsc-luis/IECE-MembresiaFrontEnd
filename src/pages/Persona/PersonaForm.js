@@ -78,7 +78,7 @@ class PersonaForm extends Component {
             || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
             || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
             cdv = true
-            csh = true
+            csh = false
             s = false
         }
         if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
@@ -112,7 +112,7 @@ class PersonaForm extends Component {
             mensajes: {
                 ...this.state.mensajes,
                 emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
-                fechaBautismoInvalida: 'Formato admintido: dd/mm/aaaa.',
+                fechaBautismoInvalida: 'Debe ingresar la fecha de bautismo, formato admintido: dd/mm/aaaa.',
                 fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
                 fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
                 fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
@@ -405,6 +405,18 @@ class PersonaForm extends Component {
             e.preventDefault();
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
+
+            if (objPersona.per_Bautizado === true &&
+                (objPersona.per_Fecha_Bautismo === null
+                    || objPersona.per_Fecha_Bautismo === undefined
+                    || objPersona.per_Fecha_Bautismo === "")) {
+                alert("Error: \nNo se pueden guardar datos de una persona bautizda sin fecha de bautismo.");
+                this.setState({ fechaBautismoInvalida: true })
+                return false;
+            }
+            else {
+                this.setState({ fechaBautismoInvalida: false })
+            }
 
             // VALIDA CAMPOS DE PERSONA
             var camposPersonaAValidar = [
