@@ -15,7 +15,8 @@ class AnalisisPersonal extends Component {
         super(props);
         this.state = {
             historial: [],
-            domicilioLocalizado: false
+            domicilioLocalizado: false,
+            foto: ""
         }
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
         this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No bautizado';
@@ -29,6 +30,9 @@ class AnalisisPersonal extends Component {
         else {
             this.setState({ domicilioLocalizado: false })
         }
+        this.setState({
+            foto: `${helpers.url_api}/Foto/${this.objPersona.persona.per_Id_Persona}`
+        })
     }
 
     getHistorial = async (id) => {
@@ -59,7 +63,7 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col className="negrita" xs="2">Nombre:</Col>
                             <Col xs="6" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
-                            <Col className="negrita" xs="2">
+                            <Col className="negrita campoVivo" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
                                 }
@@ -68,7 +72,7 @@ class AnalisisPersonal extends Component {
                                 }
                                 Vivo
                             </Col>
-                            <Col xs="2">  </Col>
+                            <img className="fotoPersona" src={this.state.foto} width="170" height="140" />
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -86,7 +90,6 @@ class AnalisisPersonal extends Component {
                                 }
                                 En comunion
                             </Col>
-                            <Col xs="2">  </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -104,7 +107,6 @@ class AnalisisPersonal extends Component {
                                 }
                                 Activo
                             </Col>
-                            <Col xs="2">  </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -121,8 +123,6 @@ class AnalisisPersonal extends Component {
                                     <>Sin información para mostrar.</>
                                 }
                             </Col>
-                            <Col xs="2"></Col>
-                            <Col xs="2"></Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -138,8 +138,6 @@ class AnalisisPersonal extends Component {
                                     <>Sin información para mostrar.</>
                                 }
                             </Col>
-                            <Col xs="2"></Col>
-                            <Col xs="2"></Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>

@@ -5,7 +5,6 @@ import helpers from '../../components/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Layout from '../Layout';
 import { Modal, ModalBody, /* ModalFooter, ModalHeader, Button */ } from 'reactstrap';
-import { LocaleUtils } from 'react-day-picker';
 
 class RegistroDePersonal extends Component {
 
@@ -41,7 +40,10 @@ class RegistroDePersonal extends Component {
             boolAgregarNvaPersona: true,
             boolComentarioEdicion: false,
             ComentarioHistorialTransacciones: "",
-            descNvaProfesion: {}
+            descNvaProfesion: {},
+            foto: "",
+            formDataFoto: null,
+            nuevaFoto: false
         }
     }
 
@@ -54,6 +56,9 @@ class RegistroDePersonal extends Component {
     }
 
     componentDidMount() {
+        this.setState({
+            foto: `${helpers.url_api}/Foto/${localStorage.getItem("idPersona")}`
+        })
         if (localStorage.getItem("idPersona") === "0") {
             this.setState({
                 form: {
@@ -62,7 +67,7 @@ class RegistroDePersonal extends Component {
                     per_Bautizado: JSON.parse(localStorage.getItem("nvaAltaBautizado")),
                     per_RFC_Sin_Homo: "XAXX010101XXX",
                     per_Estado_Civil: "SOLTERO(A)",
-                    per_foto: uuidv4(),
+                    idFoto: 0,
                     per_Activo: 1,
                     per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
                     per_Vivo: 1,
@@ -87,7 +92,7 @@ class RegistroDePersonal extends Component {
                     per_Cantidad_Hijos: "0",
                     per_Nombre_Hijos: "",
                     sec_Id_Sector: localStorage.getItem("sector"),
-                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                 },
                 domicilio: {
                     ...this.state.domicilio,
@@ -110,7 +115,6 @@ class RegistroDePersonal extends Component {
                 }
             })
         } else {
-
             helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : null;
@@ -356,6 +360,31 @@ class RegistroDePersonal extends Component {
                 })
             }
         }
+        if (e.target.name === "idFoto") {
+            let mimeTypeValidos = ["image/png", "image/jpeg"]
+            if (e.target.files[0].size / 1024 / 1024 > 3
+                || !mimeTypeValidos.includes(e.target.files[0].type)) {
+                alert("Error: \nSolo se admiten archivos menores o iguales a 3MB. \nO el archivo NO es una imagen del tipo 'png' o 'jpg'.")
+                
+                this.setState({
+                    form: {
+                        ...this.state.form,
+                        [e.target.name]: ""
+                    },
+                    foto: `${helpers.url_api}/Foto/${localStorage.getItem("idPersona")}`,
+                    nuevaFoto: false
+                })
+            }
+            else {
+                let formData = new FormData();
+                formData.append('image', e.target.files[0]);
+                this.setState({
+                    formDataFoto: formData,
+                    foto: URL.createObjectURL(e.target.files[0]),
+                    nuevaFoto: true
+                })
+            }
+        }
     }
 
     changeRFCSinHomo = (str) => {
@@ -433,6 +462,14 @@ class RegistroDePersonal extends Component {
     }
 
     fnEditaPersona = async (datos) => {
+        if (this.state.nuevaFoto) {
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
+            .then(res => {
+                if (res.data.status === "success"){
+                    datos.idFoto = res.data.foto.idFoto
+                }
+            })
+        }
         if (datos.per_Estado_Civil === "SOLTERO(A) CON HIJOS"
             || datos.per_Estado_Civil === "CONCUBINATO") {
             datos.per_Fecha_Boda_Civil = "";
@@ -588,6 +625,7 @@ class RegistroDePersonal extends Component {
                     fnEditaPersona={this.fnEditaPersona}
                     handle_descNvaProfesion={this.handle_descNvaProfesion}
                     descNvaProfesion={this.state.descNvaProfesion}
+                    foto={this.state.foto}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

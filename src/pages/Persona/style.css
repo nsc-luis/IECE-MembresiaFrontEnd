@@ -7,3 +7,10 @@
 .email {
     text-transform: lowercase !important;
 }
+.campoVivo {
+    position: relative;
+}
+.fotoPersona {
+    position: absolute;
+    right: 5%;
+}

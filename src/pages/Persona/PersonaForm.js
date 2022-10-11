@@ -53,7 +53,8 @@ class PersonaForm extends Component {
             mensajes: {},
             DatosHogarDomicilio: [],
             MiembrosDelHogar: [],
-            JerarquiasDisponibles: []
+            JerarquiasDisponibles: [],
+            foto: null
         };
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
@@ -256,7 +257,8 @@ class PersonaForm extends Component {
             ComentarioHistorialTransacciones,
             fnEditaPersona,
             descNvaProfesion,
-            handle_descNvaProfesion
+            handle_descNvaProfesion,
+            foto
         } = this.props
 
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
@@ -932,11 +934,19 @@ class PersonaForm extends Component {
                                                                     <div className="col-sm-4">
                                                                         <Input
                                                                             type="file"
-                                                                            name="per_foto"
+                                                                            name="idFoto"
                                                                             onChange={onChange}
                                                                             className="form-control"
                                                                         />
                                                                         <label>Foto</label>
+                                                                    </div>
+                                                                </div>
+                                                            </FormGroup>
+
+                                                            <FormGroup>
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                       <img src={foto} width="100" height="80" />
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>
