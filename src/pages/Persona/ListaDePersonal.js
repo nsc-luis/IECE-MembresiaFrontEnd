@@ -430,6 +430,9 @@ class ListaDePersonal extends Component {
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
 
+        // FOTO DE LA PERSONA
+        doc.addImage(`${helpers.url_api}/Foto/${info.persona.per_Id_Persona}`, 'PNG', 160, 35, 30, 25);
+
         doc.setFontSize(9)
         doc.text(`1.- Nombre(s): ${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`, 13, 40);
         drawUnderlineTotext('1.- Nombre(s): ', 13, `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`, 40);
