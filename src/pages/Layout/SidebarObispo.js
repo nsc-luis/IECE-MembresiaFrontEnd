@@ -150,6 +150,12 @@ class SidebarObispo extends Component {
                             <span>Reporte de Movimiento Estadístico</span>
                         </Link>
                     </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/ReporteTransacciones">
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Reporte de Transacciones</span>
+                        </Link>
+                    </li>
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />

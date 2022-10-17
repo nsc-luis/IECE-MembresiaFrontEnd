@@ -20,10 +20,10 @@ function AltaRestitucion() {
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
-    const [alert, setAlert] = useState(false)
 
     const user = JSON.parse(localStorage.getItem('infoSesion'))
     const sector = JSON.parse(localStorage.getItem("sector"))
+    const dto = JSON.parse(localStorage.getItem("dto"))
 
     //LLamadas en renderizado
     useEffect(() => {
@@ -149,7 +149,7 @@ function AltaRestitucion() {
             formattedData = {
                 id: 0,
                 per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: data.sec_Id_Sector,
+                sec_Id_Sector: sector,
                 ct_Codigo_Transaccion: 11002, 
                 Usu_Usuario_Id: user.pem_Id_Ministro,
                 hte_Fecha_Transaccion: data.fecha_transaccion,
@@ -165,7 +165,6 @@ function AltaRestitucion() {
                 } 
                 else {
                     console.log(res.data)
-                    setAlert(true)
                     document.location.href = '/Main';
                 }
             });
@@ -173,7 +172,7 @@ function AltaRestitucion() {
             formattedData = {
                 id: 0,
                 per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: data.sec_Id_Sector,
+                sec_Id_Sector: sector,
                 ct_Codigo_Transaccion: 11002, 
                 Usu_Usuario_Id: user.pem_Id_Ministro,
                 hte_Fecha_Transaccion: data.fecha_transaccion,
@@ -190,8 +189,8 @@ function AltaRestitucion() {
                     pais_Id_Pais: data.pais_Id_Pais,
                     est_Id_Estado: data.est_Id_Estado,
                     hd_Telefono: data.hd_Telefono,
-                    dis_Id_Distrito: user.dis_Id_Distrito,
-                    sec_Id_Sector: user.sec_Id_Sector,
+                    dis_Id_Distrito: dto,
+                    sec_Id_Sector: sector,
                     usu_Id_Usuario: user.pem_Id_Ministro,
                     Fecha_Registro: moment(),
                 }
@@ -203,7 +202,6 @@ function AltaRestitucion() {
                     } 
                     else {
                         console.log(res.data)
-                        setAlert(true)
                         document.location.href = '/Main';
                     }
                 });

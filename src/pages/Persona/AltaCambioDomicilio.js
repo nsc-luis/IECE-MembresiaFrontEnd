@@ -20,7 +20,6 @@ function AltaCambioDomicilio() {
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
-    const [alert, setAlert] = useState(false)
 
     const user = JSON.parse(localStorage.getItem('infoSesion'))
     const dto = JSON.parse(localStorage.getItem("dto"))
@@ -158,7 +157,7 @@ function AltaCambioDomicilio() {
             formattedData = {
                 // id: 0,
                 per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: user.sec_Id_Sector,
+                sec_Id_Sector: sector,
                 ct_Codigo_Transaccion: data.ct_Codigo_Transaccion, 
                 Usu_Usuario_Id: user.pem_Id_Ministro,
                 hte_Fecha_Transaccion: data.fecha_transaccion,
@@ -170,14 +169,13 @@ function AltaCambioDomicilio() {
             helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
             .then(res => {
                 console.log(res)
-                setAlert(true)
                 document.location.href = '/Main';
             });
         }else{
             formattedData = {
                 // id: 0,
                 per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: user.sec_Id_Sector,
+                sec_Id_Sector: sector,
                 ct_Codigo_Transaccion: data.ct_Codigo_Transaccion, 
                 Usu_Usuario_Id: user.pem_Id_Ministro,
                 hte_Fecha_Transaccion: data.fecha_transaccion,
@@ -193,8 +191,8 @@ function AltaCambioDomicilio() {
                     pais_Id_Pais: data.pais_Id_Pais,
                     est_Id_Estado: data.est_Id_Estado,
                     hd_Telefono: data.hd_Telefono,
-                    dis_Id_Distrito: user.dis_Id_Distrito,
-                    sec_Id_Sector: user.sec_Id_Sector,
+                    dis_Id_Distrito: dto,
+                    sec_Id_Sector: sector,
                     usu_Id_Usuario: user.pem_Id_Ministro,
                     Fecha_Registro: moment().format("YYYY-MM-DD"),
                 }
@@ -203,7 +201,6 @@ function AltaCambioDomicilio() {
             helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, formattedData)
                 .then(res => {
                     console.log(res)
-                    setAlert(true)
                     document.location.href = '/Main';
                 });
         }

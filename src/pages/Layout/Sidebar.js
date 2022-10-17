@@ -927,6 +927,7 @@ class Sidebar extends Component {
                                 <Link className="collapse-item text-wrap" to="/ReporteOficiosProfesiones">Lista por Profesiones/Oficios</Link>
                                 <Link className="collapse-item text-wrap" to="/ReporteCumpleaños">Lista por Fecha de Cumpleaños</Link>
                                 <Link className="collapse-item text-wrap" to="/ReporteMovimientoEstadistico">Reporte de Movimiento Estadístico</Link>
+                                <Link className="collapse-item text-wrap" to="/ReporteTransacciones">Reporte de Transacciones</Link>
                             </div>
                         </div>
                     </li>
