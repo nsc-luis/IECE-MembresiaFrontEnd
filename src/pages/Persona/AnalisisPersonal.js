@@ -72,7 +72,7 @@ class AnalisisPersonal extends Component {
                                 }
                                 Vivo
                             </Col>
-                            <img className="fotoPersona" src={this.state.foto} width="170" height="140" />
+                            <img className="fotoPersona fotoAnalisis" src={this.state.foto} />
                         </Row>
                     </FormGroup>
                     <FormGroup>

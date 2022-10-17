@@ -56,18 +56,16 @@ class RegistroDePersonal extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            foto: `${helpers.url_api}/Foto/${localStorage.getItem("idPersona")}`
-        })
         if (localStorage.getItem("idPersona") === "0") {
             this.setState({
+                foto: `${helpers.url_api}/Foto/1`,
                 form: {
                     ...this.state.form,
                     per_Categoria: "0",
                     per_Bautizado: JSON.parse(localStorage.getItem("nvaAltaBautizado")),
                     per_RFC_Sin_Homo: "XAXX010101XXX",
                     per_Estado_Civil: "SOLTERO(A)",
-                    idFoto: 0,
+                    idFoto: 1,
                     per_Activo: 1,
                     per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
                     per_Vivo: 1,
@@ -127,6 +125,7 @@ class RegistroDePersonal extends Component {
                     res.data.per_Categoria = localStorage.getItem("categoria") ? localStorage.getItem("categoria") : res.data.per_Categoria;
 
                     this.setState({
+                        foto: `${helpers.url_api}/Foto/${localStorage.getItem("idPersona")}`,
                         form: res.data
                     })
                     localStorage.setItem('estadoCivil', res.data.per_Estado_Civil);

@@ -1,16 +1,32 @@
 .negrita {
     font-weight: bold;
 }
+
 .faIconMarginRight {
     margin-right: 5px;
 }
+
 .email {
     text-transform: lowercase !important;
 }
+
 .campoVivo {
     position: relative;
 }
+
 .fotoPersona {
     position: absolute;
     right: 5%;
+}
+
+.fotoFormulario {
+    width: 80px;
+    height: 100px;
+    object-fit: scale-down;
+}
+
+.fotoAnalisis {
+    width: 136px;
+    height: 170px;
+    object-fit: scale-down;
 }

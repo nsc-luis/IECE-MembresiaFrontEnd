@@ -242,7 +242,6 @@ class PersonaForm extends Component {
             onChangeDomicilio,
             categoriaSeleccionada,
             msjCategoriaSeleccionada,
-            habilitaPerBautizado,
             per_Nombre_NoValido,
             per_Apellido_Paterno_NoValido,
             per_Fecha_Nacimiento_NoValido,
@@ -250,7 +249,6 @@ class PersonaForm extends Component {
             changeEstadoCivil,
             fnGuardaPersona,
             fnGuardaPersonaEnHogar,
-            tituloAgregarEditar,
             boolAgregarNvaPersona,
             boolComentarioEdicion,
             handle_ComentarioHistorialTransacciones,
@@ -390,28 +388,13 @@ class PersonaForm extends Component {
             }
         }
 
-        const invocaFormularioDePersonaNB = () => {
-            if (this.state.datosPersonaEncontrada.per_Bautizado) {
-                helpers.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
-            }
-            else {
-                helpers.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
-            }
-            localStorage.setItem("idPersona", this.state.datosPersonaEncontrada.per_Id_Persona);
-            localStorage.setItem("nvaAltaBautizado", this.state.datosPersonaEncontrada.per_Bautizado);
-            localStorage.setItem("nvaAltaComunion", this.state.datosPersonaEncontrada.per_En_Comunion);
-            document.location.href = '/RegistroDePersona';
-        }
-
         const enviarInfo = (e) => {
             e.preventDefault();
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
 
-            if (objPersona.per_Bautizado === true &&
-                (objPersona.per_Fecha_Bautismo === null
-                    || objPersona.per_Fecha_Bautismo === undefined
-                    || objPersona.per_Fecha_Bautismo === "")) {
+            if (objPersona.per_Bautizado === true
+                && objPersona.per_Fecha_Bautismo === "") {
                 alert("Error: \nNo se pueden guardar datos de una persona bautizda sin fecha de bautismo.");
                 this.setState({ fechaBautismoInvalida: true })
                 return false;
@@ -433,47 +416,34 @@ class PersonaForm extends Component {
                 validaFormatos(element.formato, objPersona[element.campo], element.estado)
             });
 
-            if (!this.state.emailInvalido && !this.state.fechaBautismoInvalida &&
-                !this.state.fechaBodaCivilInvalida && !this.state.fechaEspitiruSantoInvalida &&
-                !this.state.fechaBodaEclesiasticaInvalida) {
+            /* console.log("Success: Campos validados") */
+            if (boolAgregarNvaPersona) {
+                /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
+                if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
+                    alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un nuevo hogar/domicilio.");
+                    return false;
+                }
 
-                /* console.log("Success: Campos validados") */
-
-                if (boolAgregarNvaPersona) {
-                    /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
-                    if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
-                        alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un nuevo hogar/domicilio.");
+                if (this.state.hogar.hd_Id_Hogar === "0") {
+                    let PersonaDomicilioHogar = {
+                        id: 1,
+                        PersonaEntity: objPersona,
+                        HogarDomicilioEntity: objDomicilio
+                    }
+                    if (domicilio.pais_Id_Pais === "0"
+                        || domicilio.hd_Calle === ""
+                        // || domicilio.hd_Localidad === ""
+                        || domicilio.hd_Numero_Exterior === "") {
+                        alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
                         return false;
                     }
-
-                    if (this.state.hogar.hd_Id_Hogar === "0") {
-                        let PersonaDomicilioHogar = {
-                            id: 1,
-                            PersonaEntity: objPersona,
-                            HogarDomicilioEntity: objDomicilio
-                        }
-                        if (domicilio.pais_Id_Pais === "0"
-                            || domicilio.hd_Calle === ""
-                            // || domicilio.hd_Localidad === ""
-                            || domicilio.hd_Numero_Exterior === "") {
-                            alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
-                            return false;
-                        }
-                        fnGuardaPersona(PersonaDomicilioHogar)
-                    } else {
-                        fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
-                    }
+                    fnGuardaPersona(PersonaDomicilioHogar)
+                } else {
+                    fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
                 }
-                else {
-                    // FUNCION PARA FORMATO DE FECHAS PARA BD
-                    /* helpers.fechas.forEach(fecha => {
-                        objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
-                    }) */
-
-                    fnEditaPersona(objPersona)
-                }
-            } else {
-                console.log("Error: Campos invalidos")
+            }
+            else {
+                fnEditaPersona(objPersona)
             }
         }
 
@@ -946,7 +916,7 @@ class PersonaForm extends Component {
                                                             <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-4">
-                                                                       <img src={foto} width="100" height="80" />
+                                                                        <img src={foto} className="fotoFormulario" />
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>
