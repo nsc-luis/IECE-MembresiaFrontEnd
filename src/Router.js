@@ -25,6 +25,7 @@ import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautiza
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
 import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
+import ReporteTransacciones from './pages/Reporte/ReporteTransacciones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
 import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
 import EdicionDeDireccion from './pages/EdicionDeDireccion';
@@ -78,6 +79,7 @@ class Router extends Component {
                     <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
                     <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                     <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
+                    <Route exact path="/ReporteTransacciones" component={ReporteTransacciones} />
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
             </BrowserRouter>
