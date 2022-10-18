@@ -5,6 +5,7 @@ import helpers from '../../components/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Layout from '../Layout';
 import { Modal, ModalBody, /* ModalFooter, ModalHeader, Button */ } from 'reactstrap';
+import { fotoDefault } from '../../assets/images/a53d4671-5d0f-491f-b95e-95f5cfbc2d8d.png';
 
 class RegistroDePersonal extends Component {
 
@@ -58,7 +59,7 @@ class RegistroDePersonal extends Component {
     componentDidMount() {
         if (localStorage.getItem("idPersona") === "0") {
             this.setState({
-                foto: `${helpers.url_api}/Foto/1`,
+                foto: `${helpers.url_api}/Foto/FotoDefault`,
                 form: {
                     ...this.state.form,
                     per_Categoria: "0",
@@ -66,6 +67,7 @@ class RegistroDePersonal extends Component {
                     per_RFC_Sin_Homo: "XAXX010101XXX",
                     per_Estado_Civil: "SOLTERO(A)",
                     idFoto: 1,
+                    per_Foto: "",
                     per_Activo: 1,
                     per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
                     per_Vivo: 1,
@@ -364,13 +366,13 @@ class RegistroDePersonal extends Component {
             if (e.target.files[0].size / 1024 / 1024 > 3
                 || !mimeTypeValidos.includes(e.target.files[0].type)) {
                 alert("Error: \nSolo se admiten archivos menores o iguales a 3MB. \nO el archivo NO es una imagen del tipo 'png' o 'jpg'.")
-                
+
                 this.setState({
                     form: {
                         ...this.state.form,
-                        [e.target.name]: ""
+                        [e.target.name]: 1
                     },
-                    foto: `${helpers.url_api}/Foto/${localStorage.getItem("idPersona")}`,
+                    foto: `${helpers.url_api}/Foto/FotoDefault`,
                     nuevaFoto: false
                 })
             }
@@ -420,38 +422,81 @@ class RegistroDePersonal extends Component {
                     }
                     else {
                         try {
-                            helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
-                                .then(res => {
-                                    if (res.data.status === "success") {
-                                        //alert("Datos guardados satisfactoriamente");
-                                        this.setState({
-                                            mensajeDelProceso: "Procesando...",
-                                            modalShow: true
-                                        });
-                                        setTimeout(() => {
-                                            this.setState({
-                                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            if (this.state.nuevaFoto) {
+                                helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
+                                    .then(resFoto => {
+                                        if (resFoto.data.status === "success") {
+                                            datos.PersonaEntity.idFoto = resFoto.data.foto.idFoto
+                                        }
+
+                                        helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
+                                            .then(res => {
+                                                if (res.data.status === "success") {
+                                                    //alert("Datos guardados satisfactoriamente");
+                                                    this.setState({
+                                                        mensajeDelProceso: "Procesando...",
+                                                        modalShow: true
+                                                    });
+                                                    setTimeout(() => {
+                                                        this.setState({
+                                                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                                        });
+                                                    }, 1500);
+                                                    setTimeout(() => {
+                                                        document.location.href = '/ListaDePersonal'
+                                                    }, 3500);
+                                                }
+                                                else {
+                                                    this.setState({
+                                                        mensajeDelProceso: "Procesando...",
+                                                        modalShow: true
+                                                    });
+                                                    setTimeout(() => {
+                                                        this.setState({
+                                                            mensajeDelProceso: res.data.mensaje,
+                                                            modalShow: false
+                                                        });
+                                                    }, 1500);
+                                                    alert(`Error: \n${res.data.mensaje}`);
+                                                }
                                             });
-                                        }, 1500);
-                                        setTimeout(() => {
-                                            document.location.href = '/ListaDePersonal'
-                                        }, 3500);
-                                    }
-                                    else {
-                                        this.setState({
-                                            mensajeDelProceso: "Procesando...",
-                                            modalShow: true
-                                        });
-                                        setTimeout(() => {
+                                    })
+                            }
+                            else {
+                                helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
+                                    .then(res => {
+                                        if (res.data.status === "success") {
+                                            //alert("Datos guardados satisfactoriamente");
                                             this.setState({
-                                                mensajeDelProceso: res.data.mensaje,
-                                                modalShow: false
+                                                mensajeDelProceso: "Procesando...",
+                                                modalShow: true
                                             });
-                                        }, 1500);
-                                        alert(`Error: \n${res.data.mensaje}`);
-                                    }
-                                });
-                        } catch (error) {
+                                            setTimeout(() => {
+                                                this.setState({
+                                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                                });
+                                            }, 1500);
+                                            setTimeout(() => {
+                                                document.location.href = '/ListaDePersonal'
+                                            }, 3500);
+                                        }
+                                        else {
+                                            this.setState({
+                                                mensajeDelProceso: "Procesando...",
+                                                modalShow: true
+                                            });
+                                            setTimeout(() => {
+                                                this.setState({
+                                                    mensajeDelProceso: res.data.mensaje,
+                                                    modalShow: false
+                                                });
+                                            }, 1500);
+                                            alert(`Error: \n${res.data.mensaje}`);
+                                        }
+                                    });
+                            }
+                        }
+                        catch (error) {
                             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
                             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                         }
@@ -461,14 +506,6 @@ class RegistroDePersonal extends Component {
     }
 
     fnEditaPersona = async (datos) => {
-        if (this.state.nuevaFoto) {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
-            .then(res => {
-                if (res.data.status === "success"){
-                    datos.idFoto = res.data.foto.idFoto
-                }
-            })
-        }
         if (datos.per_Estado_Civil === "SOLTERO(A) CON HIJOS"
             || datos.per_Estado_Civil === "CONCUBINATO") {
             datos.per_Fecha_Boda_Civil = "";
@@ -490,45 +527,97 @@ class RegistroDePersonal extends Component {
             datos.per_Nombre_Hijos = "";
             datos.per_Cantidad_Hijos = "0";
         }
-        let info = {
-            id: 0,
-            PersonaEntity: datos,
-            ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
-        };
         this.fnSolicitudNvaProfesion();
-        try {
-            await helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+        if (this.state.nuevaFoto) {
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                 .then(res => {
                     if (res.data.status === "success") {
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                            });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
-                        }, 3500);
-                    } else {
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: res.data.mensaje,
-                                modalShow: false
-                            });
-                        }, 1500);
-                        alert(`Error: \n${res.data.mensaje}`);
+                        datos.idFoto = res.data.foto.idFoto
                     }
-                });
-        } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+
+                    let info = {
+                        id: 0,
+                        PersonaEntity: datos,
+                        ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
+                    };
+
+                    try {
+                        helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                            .then(res => {
+                                if (res.data.status === "success") {
+                                    this.setState({
+                                        mensajeDelProceso: "Procesando...",
+                                        modalShow: true
+                                    });
+                                    setTimeout(() => {
+                                        this.setState({
+                                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                        });
+                                    }, 1500);
+                                    setTimeout(() => {
+                                        document.location.href = '/ListaDePersonal'
+                                    }, 3500);
+                                } else {
+                                    this.setState({
+                                        mensajeDelProceso: "Procesando...",
+                                        modalShow: true
+                                    });
+                                    setTimeout(() => {
+                                        this.setState({
+                                            mensajeDelProceso: res.data.mensaje,
+                                            modalShow: false
+                                        });
+                                    }, 1500);
+                                    alert(`Error: \n${res.data.mensaje}`);
+                                }
+                            });
+                    } catch (error) {
+                        alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                        // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                    }
+                })
+        }
+        else {
+            let info = {
+                id: 0,
+                PersonaEntity: datos,
+                ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
+            };
+
+            try {
+                helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1500);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 3500);
+                        } else {
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: res.data.mensaje,
+                                    modalShow: false
+                                });
+                            }, 1500);
+                            alert(`Error: \n${res.data.mensaje}`);
+                        }
+                    });
+            } catch (error) {
+                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+            }
         }
     }
 
@@ -584,12 +673,8 @@ class RegistroDePersonal extends Component {
     }
 
     fnSolicitudNvaProfesion = async () => {
-        if (this.state.descNvaProfesion.nvaProf1 !== "") {
-            await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf1}/${this.infoSesion.pem_Id_Ministro}`)
-        }
-        if (this.state.descNvaProfesion.nvaProf2 !== "") {
-            await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.state.descNvaProfesion.nvaProf2}/${this.infoSesion.pem_Id_Ministro}`)
-        }
+        await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.infoSesion.pem_Id_Ministro}/${this.state.descNvaProfesion.nvaProf1}`)
+        await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.infoSesion.pem_Id_Ministro}/${this.state.descNvaProfesion.nvaProf2}`)
     }
 
     render() {
