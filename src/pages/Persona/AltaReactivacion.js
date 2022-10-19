@@ -109,12 +109,10 @@ function AltaReactivacion() {
         setJerarquia(value)
     };
     const handlePais = (value) => {
-        if (value === "151" || value === "66" || value === "40"){
-            helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
-                .then(res => {
-                    setEstados(res.data.estados)
-                });
-            }
+        helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
+            .then(res => {
+                setEstados(res.data.estados)
+            });
     };
     const handleEstado = (value) => {
     };

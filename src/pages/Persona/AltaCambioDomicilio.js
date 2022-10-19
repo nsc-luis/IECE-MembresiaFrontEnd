@@ -113,16 +113,14 @@ function AltaCambioDomicilio() {
         setJerarquia(value)
     };
     const handlePais = (value) => {
-        if (value === "151" || value === "66" || value === "40"){
-            setData( prevState => ({
-                ...prevState,
-                pais_Id_Pais: value
-            }))
-            helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
-                .then(res => {
-                    setEstados(res.data.estados)
-                });
-            }
+        setData( prevState => ({
+            ...prevState,
+            pais_Id_Pais: value
+        }))
+        helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
+            .then(res => {
+                setEstados(res.data.estados)
+            });
     };
 
     const handleAdress = (e) => {
