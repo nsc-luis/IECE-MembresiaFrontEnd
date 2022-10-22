@@ -39,7 +39,8 @@ class ResumenMembresia extends Component {
             infoSector: {},
             infoMinistro: {},
             infoSecretario: {},
-            distrito: {}
+            distrito: {},
+            gradoMinistro: ""
         }
     }
 
@@ -106,27 +107,44 @@ class ResumenMembresia extends Component {
                 await helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
                     .then(res => {
                         this.setState({ infoSector: res.data.sector[0] })
-                        // console.log(res.data.sector);
                     });
                 await helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
                     .then(res => {
-                        this.setState({ infoMinistro: res.data.ministros[0] });
+                        this.setState({
+                            infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                            gradoMinistro: "PASTOR"
+                        });
                     })
                 await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
                     .then(res => {
-                        this.setState({ infoSecretario: res.data.infoSecretario[0] });
+                        this.setState({
+                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                        });
                     })
             }
             else {
+                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
+                    .then(res => {
+                        this.setState({
+                            infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                            gradoMinistro: "OBISPO"
+                        });
+                    })
+                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
+                    .then(res => {
+                        this.setState({ 
+                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                        });
+                    })
                 this.setState({
                     infoSector: {
                         ...this.state.infoSector,
                         sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
-                    },
+                    }/* ,
                     infoMinistro: {
                         ...this.state.infoMinistro,
                         pem_Nombre: "OBISPO DEL DISTRITO"
-                    }
+                    } */
                 });
             }
             const doc = new jsPDF("p", "mm", "letter");
@@ -187,10 +205,10 @@ class ResumenMembresia extends Component {
 
             doc.line(30, 160, 90, 160);
             doc.text("SECRETARIO", 51, 163);
-            doc.text(`${this.state.infoSecretario.pem_Nombre}`, 38, 158);
+            doc.text(`${this.state.infoSecretario}`, 38, 158);
             doc.line(120, 160, 180, 160);
-            doc.text("PASTOR", 145, 163);
-            doc.text(`${this.state.infoMinistro.pem_Nombre}`, 130, 158);
+            doc.text(this.state.gradoMinistro, 145, 163);
+            doc.text(`${this.state.infoMinistro}`, 130, 158);
             doc.save("ResumenEnPDF.pdf");
         }
     }

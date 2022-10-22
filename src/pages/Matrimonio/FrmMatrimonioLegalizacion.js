@@ -332,7 +332,6 @@ class FrmMatrimonioLegalizacion extends Component {
                                 return false
                             }
                             else {
-                                console.log("entro al 1re else")
                                 try {
                                     helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatriminioLegalizacion/${this.state.rSelected}/${this.state.domicilio.nvoEstado}`, matLegalDom)
                                         .then(res => {

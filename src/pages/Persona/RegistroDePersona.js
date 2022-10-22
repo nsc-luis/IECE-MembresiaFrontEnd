@@ -427,16 +427,15 @@ class RegistroDePersonal extends Component {
                                     .then(resFoto => {
                                         if (resFoto.data.status === "success") {
                                             datos.PersonaEntity.idFoto = resFoto.data.foto.idFoto
+                                            this.setState({
+                                                mensajeDelProceso: "Procesando...",
+                                                modalShow: true
+                                            });
                                         }
 
                                         helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
                                             .then(res => {
                                                 if (res.data.status === "success") {
-                                                    //alert("Datos guardados satisfactoriamente");
-                                                    this.setState({
-                                                        mensajeDelProceso: "Procesando...",
-                                                        modalShow: true
-                                                    });
                                                     setTimeout(() => {
                                                         this.setState({
                                                             mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
@@ -444,7 +443,7 @@ class RegistroDePersonal extends Component {
                                                     }, 1500);
                                                     setTimeout(() => {
                                                         document.location.href = '/ListaDePersonal'
-                                                    }, 3500);
+                                                    }, 2000);
                                                 }
                                                 else {
                                                     this.setState({
@@ -533,6 +532,10 @@ class RegistroDePersonal extends Component {
                 .then(res => {
                     if (res.data.status === "success") {
                         datos.idFoto = res.data.foto.idFoto
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
                     }
 
                     let info = {
@@ -545,10 +548,6 @@ class RegistroDePersonal extends Component {
                         helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                             .then(res => {
                                 if (res.data.status === "success") {
-                                    this.setState({
-                                        mensajeDelProceso: "Procesando...",
-                                        modalShow: true
-                                    });
                                     setTimeout(() => {
                                         this.setState({
                                             mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
@@ -556,7 +555,7 @@ class RegistroDePersonal extends Component {
                                     }, 1500);
                                     setTimeout(() => {
                                         document.location.href = '/ListaDePersonal'
-                                    }, 3500);
+                                    }, 2000);
                                 } else {
                                     this.setState({
                                         mensajeDelProceso: "Procesando...",
@@ -622,26 +621,57 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => {
+        this.fnSolicitudNvaProfesion();
         try {
-            await helpers.authAxios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
+            if (this.state.nuevaFoto) {
+                helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
+                    .then(resFoto => {
+                        if (resFoto.data.status === "success") {
                             this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
                             });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
-                        }, 3500);
-                    } else {
-                        alert("Error: No se pudo guardar. Revise los datos ingresados");
-                    }
-                })
+                            datos.idFoto = resFoto.data.foto.idFoto
+                        }
+                        helpers.authAxios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
+                            .then(res => {
+                                if (res.data.status === "success") {
+                                    setTimeout(() => {
+                                        this.setState({
+                                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                        });
+                                    }, 1000);
+                                    setTimeout(() => {
+                                        document.location.href = '/ListaDePersonal'
+                                    }, 2000);
+                                } else {
+                                    alert("Error: No se pudo guardar. Revise los datos ingresados");
+                                }
+                            })
+                    })
+            }
+            else {
+                helpers.authAxios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1500);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 3500);
+                        } else {
+                            alert("Error: No se pudo guardar. Revise los datos ingresados");
+                        }
+                    })
+            }
+
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);

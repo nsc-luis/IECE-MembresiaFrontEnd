@@ -23,7 +23,7 @@ class ModalInfoHogar extends Component {
                 <Row>
                     <Col xs="12">
                         <p>
-                            <h5><strong>Titular: </strong>{objPersona.persona.per_Nombre} {objPersona.persona.per_Apellido_Paterno} {objPersona.persona.per_Apellido_Materno}</h5>
+                            <h5><strong>Titular: </strong>{objPersona.miembros[0].per_Nombre} {objPersona.miembros[0].per_Apellido_Paterno} {objPersona.miembros[0].per_Apellido_Materno}</h5>
                             <br />
                             {objPersona.domicilio.length > 0 &&
                                 <>

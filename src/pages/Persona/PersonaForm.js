@@ -388,7 +388,7 @@ class PersonaForm extends Component {
             }
         }
 
-        const enviarInfo = (e) => {
+        const enviarInfo = async (e) => {
             e.preventDefault();
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
@@ -432,18 +432,17 @@ class PersonaForm extends Component {
                     }
                     if (domicilio.pais_Id_Pais === "0"
                         || domicilio.hd_Calle === ""
-                        // || domicilio.hd_Localidad === ""
-                        || domicilio.hd_Numero_Exterior === "") {
-                        alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
+                        || domicilio.hd_Municipio_Ciudad === "") {
+                        alert("Error!. Debe ingresar al menos calle, cuidad y pais y estado para un nuevo domicilio.")
                         return false;
                     }
-                    fnGuardaPersona(PersonaDomicilioHogar)
+                    await fnGuardaPersona(PersonaDomicilioHogar)
                 } else {
-                    fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
+                    await fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
                 }
             }
             else {
-                fnEditaPersona(objPersona)
+                await fnEditaPersona(objPersona)
             }
         }
 

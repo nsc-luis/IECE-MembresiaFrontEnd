@@ -22,6 +22,12 @@ class Login extends Component {
             obispo: false,
             idSector: 0
         }
+        if(!localStorage.getItem("infoSesion")) {
+            return document.location.href = "/";
+        }
+        if(!helpers.isLoggedIn()) {
+            return document.location.href = "/";
+        }
     }
 
     componentDidMount() {
@@ -46,35 +52,6 @@ class Login extends Component {
         }
     }
 
-    /* getListaDistritosPorMinistro = async () => {
-        await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetAlcancePastoralByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
-            .then(res => {
-                if (res.data.obispo === true) {
-                    this.setState({
-                        obispo: true,
-                        listaDistritosPorMinistro: res.data.datos
-                    })
-                } else {
-                    this.setState({
-                        obispo: false,
-                        idSector: res.data.datos[0].sec_Id_Sector,
-                        listaDistritosPorMinistro: res.data.datos[0]
-                    })
-                }
-                // console.log(res.data.datos);
-                // this.setState({ listaDistritosPorMinistro: res.data.datos });
-            });
-    } */
-
-    /* getListaDistritosPorMinistro = async () => {
-        await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
-            .then(res => {
-                this.setState({
-                    listaDistritosPorMinistro: res.data.sectores
-                })
-            });
-    } */
-
     getListaDistritosPorMinistro = async () => {
         await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetDistritosByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
             .then(res => {
@@ -83,37 +60,6 @@ class Login extends Component {
                 })
             });
     }
-
-    /* getListaSectoresPorMinistro = async (idDistrito, idMinistro) => {
-        if (this.state.obispo) {
-            await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
-                .then(res => {
-                    this.setState({ listaSectoresPorMinistro: res.data.sectores });
-                });
-        }
-        else {
-            await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByMinistro/' + idMinistro)
-                .then(res => {
-                    this.setState({ listaSectoresPorMinistro: res.data.sectores });
-                });
-        }
-    } */
-
-    /* getListaSectoresPorDistrito = async (idDistritoSector, obispo) => {
-        if (obispo) {
-            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistritoSector)
-                .then(res => {
-                    this.setState({ listaSectoresPorDistrito: res.data.sectores });
-                });
-        }
-        else {
-            await helpers.authAxios.get(this.url + '/Sector/' + idDistritoSector)
-                .then(res => {
-                    this.setState({ listaSectoresPorDistrito: res.data.sector });
-                });
-        }
-
-    } */
 
     getListaSectoresPorDistritoMinistro = async (idDistrito, idMinistro) => {
         await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
@@ -142,18 +88,6 @@ class Login extends Component {
         else {
             this.getListaSectoresPorDistritoMinistro(e.target.value, this.infoSesion.mu_pem_Id_Pastor);
         }
-        /* this.state.listaDistritosPorMinistro.forEach(distrito => {
-            if (distrito.dis_Id_Distrito === parseInt(e.target.value)) {
-                if (distrito.pem_Id_Obispo === this.infoSesion.mu_pem_Id_Pastor) {
-                    this.setState({ obispo: true })
-                    this.getListaSectoresPorDistrito(e.target.value, true)
-                }
-                else {
-                    this.setState({ obispo: false })
-                    this.getListaSectoresPorDistrito(distrito.sec_Id_Sector, false)
-                }
-            }
-        }); */
     }
 
     onChangeSector = (e) => {
@@ -243,22 +177,6 @@ class Login extends Component {
                                                             }
                                                         </Input>
                                                     </React.Fragment>
-                                                    {/* {this.state.obispo &&
-                                                        
-                                                    } */}
-                                                    {/* {!this.state.obispo &&
-                                                        <React.Fragment>
-                                                            <Input
-                                                                type="select"
-                                                                name="listaDistritos"
-                                                                value={this.state.distritoSeleccionado}
-                                                                onChange={this.onChangeDistrito}
-                                                            >
-                                                                <option value="0">Selecciona un distrito</option>
-                                                                <option value={this.state.listaDistritosPorMinistro.dis_Id_Distrito}>{this.state.listaDistritosPorMinistro.dis_Tipo_Distrito} {this.state.listaDistritosPorMinistro.dis_Numero}: {this.state.listaDistritosPorMinistro.dis_Alias}</option>
-                                                            </Input>
-                                                        </React.Fragment>
-                                                    } */}
                                                 </Col>
                                             </Row>
                                         </FormGroup>
@@ -287,15 +205,6 @@ class Login extends Component {
                                                                 )
                                                             })
                                                         }
-                                                        {/* {
-                                                            this.state.listaSectoresPorMinistro.map(sector => {
-                                                                return (
-                                                                    <React.Fragment key={sector.sec_Id_Sector}>
-                                                                        <option value={sector.sec_Id_Sector}>{sector.sec_Alias}</option>
-                                                                    </React.Fragment>
-                                                                )
-                                                            })
-                                                        } */}
                                                     </Input>
                                                 </Col>
                                             </Row>

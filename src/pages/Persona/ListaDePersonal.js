@@ -19,6 +19,10 @@ class ListaDePersonal extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
     constructor(props) {
+        if (!localStorage.getItem("token")) {
+            document.location.href = '/';
+        }
+
         super(props);
         this.state = {
             personas: [],
@@ -59,9 +63,6 @@ class ListaDePersonal extends Component {
             modalInfoHogar: false,
             objPersona: {},
         };
-        if (!localStorage.getItem("token")) {
-            document.location.href = '/';
-        }
     }
 
     componentDidMount() {
@@ -89,9 +90,9 @@ class ListaDePersonal extends Component {
         }
     }
 
-    getPersonas = () => {
+    getPersonas = async () => {
         if (localStorage.getItem("sector") !== null) {
-            helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
+            await helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         personas: res.data,
@@ -101,7 +102,7 @@ class ListaDePersonal extends Component {
                 });
         }
         else {
-            helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
+            await helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         personas: res.data,

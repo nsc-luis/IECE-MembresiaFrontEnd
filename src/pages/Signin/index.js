@@ -120,7 +120,8 @@ class Login extends Component {
                                 localStorage.setItem('seccion', '');
                                 localStorage.setItem('componente', '');
 
-                                setTimeout(() => { document.location.href = '/Login'; }, 3000);
+                                document.location.href = '/Login';
+                                // setTimeout(() => { document.location.href = '/Login'; }, 3000);
                             }
                         }
                         else {
@@ -196,7 +197,7 @@ class Login extends Component {
                                                         Validar credenciales
                                                     </Button>
                                                     <br />
-                                                    <Link to="/Signup">Registrar nuevo usuario.</Link> | <Link to="/SolicitudDeRestablecimiento">¿Olvidaste la contraseña?.</Link>
+                                                    <Link to="/Signup">Registrar nuevo usuario.</Link> | <Link to="/SolicitudDeRestablecimiento">Olvidé mi contraseña.</Link>
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Input

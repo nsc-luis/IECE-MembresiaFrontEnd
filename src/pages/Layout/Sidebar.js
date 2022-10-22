@@ -42,32 +42,33 @@ class Sidebar extends Component {
                 personaSeleccionada: '0',
                 tipoExcomunion: '0',
                 excomunionDelito: '',
-                fechaExcomunion: '01/01/1900'
+                fechaExcomunion: ''
             },
             formBajaNoBautizadoDefuncion: {
                 ...this.state.formBajaNoBautizadoDefuncion,
                 personaSeleccionada: '0',
                 comentario: '',
-                fechaTransaccion: '01/01/1900'
+                fechaTransaccion: ''
             },
             formBajaNoBautizadoAlejamiento: {
                 ...this.state.formBajaNoBautizadoAlejamiento,
                 personaSeleccionada: '0',
+                comentario: "",
                 codigoTransaccion: '0',
-                fechaTransaccion: '01/01/1900'
+                fechaTransaccion: ''
             },
             formBajaBautizadoCambioDomicilio: {
                 ...this.state.formBajaBautizadoCambioDomicilio,
                 idPersona: '0',
                 tipoDestino: '0',
-                fechaTransaccion: '01/01/1900',
+                fechaTransaccion: '',
                 idUsuario: this.infoSesion.pem_Id_Ministro
             },
             formBajaNoBautizadoCambioDomicilio: {
                 ...this.state.formBajaNoBautizadoCambioDomicilio,
                 idPersona: '0',
                 tipoDestino: '0',
-                fechaTransaccion: '01/01/1900',
+                fechaTransaccion: '',
                 idUsuario: this.infoSesion.pem_Id_Ministro
             },
             formEstableceVisibilidadAbierta: {
@@ -265,8 +266,7 @@ class Sidebar extends Component {
         if (datos.personaSeleccionada === '0'
             || datos.tipoExcomunion === '0'
             || datos.excomunionDelito === ''
-            || datos.fechaExcomunion === ''
-            || datos.fechaExcomunion === '01/01/1900') {
+            || datos.fechaExcomunion === '') {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
@@ -318,9 +318,7 @@ class Sidebar extends Component {
         var datos = this.state.formBajaBautizadoDefuncion;
 
         if (datos.personaSeleccionada === '0'
-            || datos.comentarioDefuncion === ''
-            || datos.fechaDefuncion === ''
-            || datos.fechaDefuncion === '01/01/1900') {
+            || datos.fechaDefuncion === '') {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
@@ -371,8 +369,7 @@ class Sidebar extends Component {
         var datos = this.state.formBajaNoBautizadoDefuncion;
 
         if (datos.personaSeleccionada === '0'
-            || datos.fechaTransaccion === ''
-            || datos.fechaTransaccion === '01/01/1900') {
+            || datos.fechaTransaccion === '') {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
@@ -470,6 +467,11 @@ class Sidebar extends Component {
 
     bajaBautizadoCambioDomicilio = async(e) => {
         e.preventDefault();
+        if (this.state.formBajaBautizadoCambioDomicilio.per_Id_Persona === "0"
+            || this.state.formBajaBautizadoCambioDomicilio.tipoDestino === "0"
+            || this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion === "") {
+                alert ("Error:\nDebe ingresar todos los datos requeridos.")
+            }
         try {
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
             .then(res => {
@@ -511,6 +513,11 @@ class Sidebar extends Component {
 
     bajaNoBautizadoCambioDomicilio = async(e) => {
         e.preventDefault();
+        if (this.state.formBajaNoBautizadoCambioDomicilio.per_Id_Persona === "0"
+            || this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino === "0"
+            || this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion === "") {
+                alert ("Error:\nDebe ingresar todos los datos requeridos.")
+            }
         try {
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
             .then(res => {
