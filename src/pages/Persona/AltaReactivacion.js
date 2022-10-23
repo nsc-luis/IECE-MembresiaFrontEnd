@@ -204,13 +204,6 @@ function AltaReactivacion() {
     return(
         <Layout>
             <Container>
-            {alert&&
-                <div>
-                    <Alert>
-                        Alta de persona creada correctamente
-                    </Alert>
-                </div>
-            }
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Reactivación

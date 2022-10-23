@@ -37,7 +37,7 @@ function AltaCambioDomicilio() {
     useEffect(() => {
         helpers.authAxios.get("/HogarDomicilio/GetBySector/" + sector)
             .then(res => {
-                setOpcionesHogares(res.data)
+                setOpcionesHogares(res.data.domicilios)
                 console.log(opcionesHogares)
             });
     }, [opcionesHogares.length]);
@@ -206,13 +206,6 @@ function AltaCambioDomicilio() {
     return(
         <Layout>
             <Container>
-            {alert&&
-                <div>
-                    <Alert>
-                        Alta de persona creada correctamente
-                    </Alert>
-                </div>
-            }
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Cambio de Domicilio

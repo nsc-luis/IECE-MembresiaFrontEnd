@@ -17,6 +17,8 @@ import logo from '../../assets/images/IECE_LogoOficial.jpg'
 export default function ReporteCumpleaños(){
     //Estados
     const [personas, setPersonas] = useState([])
+    const [infoDis, setInfoDis] = useState(null)
+    const [infoSec, setInfoSec] = useState(null)
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     //Llamadas en render
@@ -29,6 +31,10 @@ export default function ReporteCumpleaños(){
                     })
                     setPersonas(sortedData)
                 });
+                helpers.authAxios.get("/Distrito/" + dto)
+                .then(res => {
+                    setInfoDis(res.data.dis_Alias)
+                })
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
@@ -36,6 +42,14 @@ export default function ReporteCumpleaños(){
                     return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
                 })
                 setPersonas(sortedData)
+            helpers.authAxios.get("/Distrito/" + dto)
+            .then(res => {
+                setInfoDis(res.data.dis_Alias)
+            })
+            helpers.authAxios.get("/Sector/" + sector)
+            .then(res => {
+                setInfoSec(res.data.sector[0].sec_Alias)
+            })
             });
         }
     }, [personas.length])
@@ -91,7 +105,7 @@ export default function ReporteCumpleaños(){
         const data = personas.map((persona,index) => ({
             Indice: String(index+1),
             Nombre: persona.persona ? persona.persona.per_Nombre : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Paterno : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Materno : " ",
-            Grupo: persona.persona.per_Bautizado ? "Bautizado" : "No Bautizado",
+            Grupo: persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
             Fecha_Nacimiento: String(moment(persona.persona.per_Fecha_Nacimiento).format("DD/MM/YYYY")),
             Edad_Actual: String(moment().diff(persona.persona.per_Fecha_Nacimiento, "years")),
         }))
@@ -132,8 +146,8 @@ export default function ReporteCumpleaños(){
                     </Col>
                     <Col>
                         REPORTE DE CUMPLEAÑOS
-                        <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
-                        {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
+                        <h5>Distrito: {infoDis}</h5>
+                        {sector ? <h5>Sector: {infoSec}</h5> : null}
                     </Col>
                 </Row>
                 </CardTitle>
@@ -153,7 +167,7 @@ export default function ReporteCumpleaños(){
                                 <tr key={persona.per_Id_Persona}>
                                     <td>{index + 1}</td>
                                     <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                                    <td>{persona.per_Bautizado ? "Bautizado" : "No Bautizado"}</td>
+                                    <td>{persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase()}</td>
                                     <td>{moment(persona.per_Fecha_Nacimiento).format("LL")}</td>
                                     <td>{moment().diff(persona.per_Fecha_Nacimiento, "years")}</td>
                                 </tr>

@@ -250,12 +250,32 @@ class Sidebar extends Component {
         document.location.href = "/RegistroDePersona";
     }
 
+    handle_AltaRestitucion = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Restitución");
+        document.location.href = "/AltaRestitucion";
+    }
+
+    handle_AltaCambioDomicilio = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
+        document.location.href = "/AltaCambioDomicilio";
+    }
+
     handle_AltaPersonaNoBautizada = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada");
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
         document.location.href = "/RegistroDePersona";
+    }
+
+    handle_Reactivacion = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Reactivación");
+        document.location.href = "/AltaReactivacion";
+    }
+
+    handle_AltaCambioDomicilioNB = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
+        document.location.href = "/AltaCambioDomicilioNB";
     }
 
     bajaBautizadoExcomunion = async (e) => {
@@ -696,8 +716,8 @@ class Sidebar extends Component {
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaBautizada}>Bautismo</Link>
-                                        <Link className="collapse-item" to="/AltaRestitucion">Restitución</Link>
-                                        <Link className="collapse-item" to="/AltaCambioDomicilio">Cambio de Domicilio</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucion}>Restitución</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>
 
@@ -708,8 +728,8 @@ class Sidebar extends Component {
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaNoBautizada}>Nuevo Ingreso</Link>
-                                        <Link className="collapse-item" to="/AltaReactivacion">Reativación</Link>
-                                        <Link className="collapse-item" to="/AltaCambioDomicilioNB">Cambio de Domicilio</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_Reactivacion}>Reativación</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>
                                 {/* <h6 className="collapse-header">Personal no bautizado:</h6>

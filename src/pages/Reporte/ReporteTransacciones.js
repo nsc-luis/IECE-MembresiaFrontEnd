@@ -521,6 +521,7 @@ export default function ReporteMovimientoEstadistico(){
                             <hr color="black"></hr>
                             <h5>Secretario</h5>
                         </Col>
+                        <Col cols="2"></Col>
                         <Col>
                             <h5>{JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}</h5>
                             <hr color="black"></hr>
