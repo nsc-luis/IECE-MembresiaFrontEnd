@@ -198,11 +198,11 @@ class Sidebar extends Component {
         document.location.href = "/RegistroDePersona";
     }
 
-<<<<<<< HEAD
     handle_BajaBautizadoExcomunion = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja por excomunion");
         document.location.href = "/BajaBautizadoExcomunion";
-=======
+    }
+
     handle_Reactivacion = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Reactivación");
         document.location.href = "/AltaReactivacion";
@@ -266,7 +266,6 @@ class Sidebar extends Component {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
->>>>>>> origin/feature/bautizado-rest-cambioDomicilio
     }
 
     handle_BajaBautizadoCambioDomicilio = () => {
