@@ -40,15 +40,19 @@ class RptListaDeHogares extends Component {
     }
 
     getPersonas = () => {
-        helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+        helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
-                
-                const key = 'hd_Id_Hogar';
+                //Filtro de hogares 
+                const knownElements = []
+                const filteredElements = []
+                res.data.map( element => {
+                    if(!knownElements.includes(element.hogar.hd_Id_Hogar)){
+                        knownElements.push(element.hogar.hd_Id_Hogar)
+                        filteredElements.push(element)
+                    }
+                })
+                this.setState({data: filteredElements})
 
-                const arrayUniqueByKey = [...new Map(res.data.map(item =>
-                  [item.domicilio[key], item])).values()];
-                this.setState({ data: arrayUniqueByKey});
-                console.log(this.state.data)
             })
     }
 

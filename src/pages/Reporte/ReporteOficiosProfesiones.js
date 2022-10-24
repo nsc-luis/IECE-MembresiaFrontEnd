@@ -17,6 +17,8 @@ import logo from '../../assets/images/IECE_LogoOficial.jpg'
 export default function ReporteOficiosProfesiones(){
     //Estados
     const [personas, setPersonas] = useState([])
+    const [infoDis, setInfoDis] = useState(null)
+    const [infoSec, setInfoSec] = useState(null)
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     //Llamadas en render
@@ -26,12 +28,24 @@ export default function ReporteOficiosProfesiones(){
                 .then(res => {
                     setPersonas(res.data)
                 });
+                helpers.authAxios.get("/Distrito/" + dto)
+                .then(res => {
+                    setInfoDis(res.data.dis_Alias)
+                })
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
                 console.log(res.data)
                 setPersonas(res.data)
             });
+            helpers.authAxios.get("/Distrito/" + dto)
+            .then(res => {
+                setInfoDis(res.data.dis_Alias)
+            })
+            helpers.authAxios.get("/Sector/" + sector)
+            .then(res => {
+                setInfoSec(res.data.sector[0].sec_Alias)
+            })
         }
     }, [personas.length])
 
@@ -88,7 +102,7 @@ export default function ReporteOficiosProfesiones(){
         const data = personas.map((persona,index) => ({
             Indice: String(index+1),
             Nombre: persona.persona.per_Nombre + ' ' + persona.persona.per_Apellido_Paterno + ' ' + persona.persona.per_Apellido_Materno,
-            Grupo: persona.persona.per_Bautizado ? "Bautizado" : "No Bautizado",
+            Grupo: persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
             Profesion_Oficio_1: String(persona.persona.profesionOficio1[0].pro_Sub_Categoria),
             Profesion_Oficio_2: String(persona.persona.profesionOficio2[0].pro_Sub_Categoria),
             Tel_Celular: String(persona.persona.per_Telefono_Movil ? persona.persona.per_Telefono_Movil : 'n/a'),
@@ -162,8 +176,8 @@ export default function ReporteOficiosProfesiones(){
                     </Col>
                     <Col>
                         REPORTE DE PROFESIONES Y OFICIOS
-                        <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
-                        {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
+                        <h5>Distrito: {infoDis}</h5>
+                        {sector ? <h5>Sector: {infoSec}</h5> : null}
                     </Col>
                 </Row>
                 </CardTitle>
@@ -185,7 +199,7 @@ export default function ReporteOficiosProfesiones(){
                                 <tr key={persona.persona.per_Id_Persona}>
                                     <td>{index + 1}</td>
                                     <td>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</td>
-                                    <td>{persona.persona.per_Bautizado ? "Bautizado" : "No Bautizado"}</td>
+                                    <td>{persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase()}</td>
                                     <td>{persona.persona.profesionOficio1[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
                                     <td>{persona.persona.profesionOficio2[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
                                     <td>{persona.persona.per_Telefono_Movil}</td>

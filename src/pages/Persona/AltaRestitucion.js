@@ -115,12 +115,10 @@ function AltaRestitucion() {
         setJerarquia(value)
     };
     const handlePais = (value) => {
-        if (value === "151" || value === "66" || value === "40"){
-            helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
-                .then(res => {
-                    setEstados(res.data.estados)
-                });
-            }
+        helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
+            .then(res => {
+                setEstados(res.data.estados)
+            });
     };
 
     
@@ -211,13 +209,6 @@ function AltaRestitucion() {
     return(
         <Layout>
             <Container>
-            {alert&&
-                <div>
-                    <Alert>
-                        Alta de persona creada correctamente
-                    </Alert>
-                </div>
-            }
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Restitución

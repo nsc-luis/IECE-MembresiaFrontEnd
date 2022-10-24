@@ -37,7 +37,7 @@ function AltaCambioDomicilio() {
     useEffect(() => {
         helpers.authAxios.get("/HogarDomicilio/GetBySector/" + sector)
             .then(res => {
-                setOpcionesHogares(res.data)
+                setOpcionesHogares(res.data.domicilios)
                 console.log(opcionesHogares)
             });
     }, [opcionesHogares.length]);
@@ -113,16 +113,14 @@ function AltaCambioDomicilio() {
         setJerarquia(value)
     };
     const handlePais = (value) => {
-        if (value === "151" || value === "66" || value === "40"){
-            setData( prevState => ({
-                ...prevState,
-                pais_Id_Pais: value
-            }))
-            helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
-                .then(res => {
-                    setEstados(res.data.estados)
-                });
-            }
+        setData( prevState => ({
+            ...prevState,
+            pais_Id_Pais: value
+        }))
+        helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
+            .then(res => {
+                setEstados(res.data.estados)
+            });
     };
 
     const handleAdress = (e) => {
@@ -208,13 +206,6 @@ function AltaCambioDomicilio() {
     return(
         <Layout>
             <Container>
-            {alert&&
-                <div>
-                    <Alert>
-                        Alta de persona creada correctamente
-                    </Alert>
-                </div>
-            }
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Cambio de Domicilio

@@ -329,8 +329,9 @@ export default function ReporteMovimientoEstadistico(){
                     </Col>
                     <Col>
                         REPORTE DE MOVIMIENTO ESTADISTICO PERIODICO
-                        <h5>Distrito: {infoDis}</h5>
-                        {sector ? <h5>Sector: {infoSec}</h5> : null}
+                        
+                        {sector ? <h5>Sector: {infoSec}</h5> :
+                        <h5>Distrito: {infoDis}</h5>}
                     </Col>
                 </Row>
                 : ""
@@ -401,36 +402,6 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Baja Cambio Domicilio'} data= {bajasCambioDom} total={bajasCambioDom ? bajasCambioDom.length : 0}/>
                                         <TableRow label={'Defunción'} data= {defunciones} total={defunciones ? defunciones.length : 0}/>
 
-
-                                        <tr className="bg-info">
-                                            <td colSpan="4">
-                                                <h4><strong>HOGARES</strong></h4>
-                                            </td>
-                                        </tr>
-
-                                        <tr className="bg-light">
-                                            <td colSpan="4">
-                                                <h5>ACTUALIZACIONES</h5>
-                                            </td>
-                                        </tr>
-
-                                        <TableRow label={'Actualizaciones'} data= {actualizacionHogar} total={actualizacionHogar ? actualizacionHogar.length : 0}/>
-
-                                        <tr className="bg-light">
-                                            <td colSpan="4">
-                                                <h5>ALTAS</h5>
-                                            </td>
-                                        </tr>
-
-                                        <TableRow label={'Alta Hogares'} data= {altasHogares} total={altasHogares ? altasHogares.length : 0}/>
-
-                                        <tr className="bg-light">
-                                            <td colSpan="4">
-                                                <h5>BAJAS</h5>
-                                            </td>
-                                        </tr>
-                                        <TableRow label={'Baja Hogares'} data= {bajasHogares} total={bajasHogares ? bajasHogares.length : 0}/>
-
                                         <tr className="bg-info">
                                             <td colSpan="4">
                                                 <h4><strong>MEMBRESIA NO BAUTIZADA</strong></h4>
@@ -466,6 +437,35 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Alejamiento'} data= {alejamientos} total={alejamientos ? alejamientos.length : 0}/>
                                         <TableRow label={'Pasa a Personal Bautizado'} data= {cambiosABautizado} total={cambiosABautizado ? cambiosABautizado.length : 0}/>
                                         <TableRow label={'Baja de Padres'} data= {bajasPorPadres} total={bajasPorPadres ? bajasPorPadres.length : 0}/>
+
+                                        <tr className="bg-info">
+                                            <td colSpan="4">
+                                                <h4><strong>HOGARES</strong></h4>
+                                            </td>
+                                        </tr>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ACTUALIZACIONES</h5>
+                                            </td>
+                                        </tr>
+
+                                        <TableRow label={'Actualizaciones'} data= {actualizacionHogar} total={actualizacionHogar ? actualizacionHogar.length : 0}/>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>ALTAS</h5>
+                                            </td>
+                                        </tr>
+
+                                        <TableRow label={'Alta Hogares'} data= {altasHogares} total={altasHogares ? altasHogares.length : 0}/>
+
+                                        <tr className="bg-light">
+                                            <td colSpan="4">
+                                                <h5>BAJAS</h5>
+                                            </td>
+                                        </tr>
+                                        <TableRow label={'Baja Hogares'} data= {bajasHogares} total={bajasHogares ? bajasHogares.length : 0}/>
 
                                         <tr className="bg-info">
                                             <td colSpan="4">
@@ -512,6 +512,7 @@ export default function ReporteMovimientoEstadistico(){
                                 <hr color="black"></hr>
                                 <h5>Secretario</h5>
                             </Col>
+                            <Col cols="2"></Col>
                             <Col>
                                 <h5>{JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}</h5>
                                 <hr color="black"></hr>

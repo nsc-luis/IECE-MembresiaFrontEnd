@@ -180,6 +180,16 @@ class Sidebar extends Component {
         document.location.href = "/RegistroDePersona";
     }
 
+    handle_AltaRestitucion = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Restitución");
+        document.location.href = "/AltaRestitucion";
+    }
+
+    handle_AltaCambioDomicilio = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
+        document.location.href = "/AltaCambioDomicilio";
+    }
+
     handle_AltaPersonaNoBautizada = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada");
         localStorage.setItem("idPersona", "0");
@@ -188,9 +198,75 @@ class Sidebar extends Component {
         document.location.href = "/RegistroDePersona";
     }
 
+<<<<<<< HEAD
     handle_BajaBautizadoExcomunion = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja por excomunion");
         document.location.href = "/BajaBautizadoExcomunion";
+=======
+    handle_Reactivacion = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Reactivación");
+        document.location.href = "/AltaReactivacion";
+    }
+
+    handle_AltaCambioDomicilioNB = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
+        document.location.href = "/AltaCambioDomicilioNB";
+    }
+
+    bajaBautizadoExcomunion = async (e) => {
+        e.preventDefault();
+        var datos = this.state.formBajaBautizadoExcomunion;
+
+        if (datos.personaSeleccionada === '0'
+            || datos.tipoExcomunion === '0'
+            || datos.excomunionDelito === ''
+            || datos.fechaExcomunion === ''
+            || datos.fechaExcomunion === '01/01/1900') {
+            alert('Error!\nDebe ingresar todos los datos requeridos.');
+            return false;
+        }
+        try {
+            await helpers.authAxios.post(
+                helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
+                "/" + datos.tipoExcomunion +
+                "/" + datos.excomunionDelito +
+                "/" + datos.fechaExcomunion +
+                "/" + this.infoSesion.pem_Id_Ministro)
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                });
+        } catch (error) {
+            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        }
+>>>>>>> origin/feature/bautizado-rest-cambioDomicilio
     }
 
     handle_BajaBautizadoCambioDomicilio = () => {
@@ -496,8 +572,8 @@ class Sidebar extends Component {
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaBautizada}>Bautismo</Link>
-                                        <Link className="collapse-item" to="/AltaRestitucion">Restitución</Link>
-                                        <Link className="collapse-item" to="/AltaCambioDomicilio">Cambio de Domicilio</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucion}>Restitución</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>
 
@@ -508,8 +584,8 @@ class Sidebar extends Component {
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaNoBautizada}>Nuevo Ingreso</Link>
-                                        <Link className="collapse-item" to="/AltaReactivacion">Reativación</Link>
-                                        <Link className="collapse-item" to="/AltaCambioDomicilioNB">Cambio de Domicilio</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_Reactivacion}>Reativación</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>
                                 {/* <h6 className="collapse-header">Personal no bautizado:</h6>
