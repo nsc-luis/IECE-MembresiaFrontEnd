@@ -44,7 +44,7 @@ class AnalisisPersonal extends Component {
 
     render() {
         return (
-            <Layout>
+            <>
                 <Container>
                     <FormGroup>
                         <Row>
@@ -200,7 +200,7 @@ class AnalisisPersonal extends Component {
                         </tbody>
                     </table>
                 </Container>
-            </Layout>
+            </>
         )
     }
 }

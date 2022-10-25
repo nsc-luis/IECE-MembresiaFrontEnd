@@ -202,7 +202,7 @@ function AltaReactivacion() {
         //console.log(formattedData)
     };
     return(
-        <Layout>
+        <>
             <Container>
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
@@ -496,7 +496,7 @@ function AltaReactivacion() {
                     </Row>
                 </Card>}
             </Container>
-        </Layout>
+        </>
 
     );
 }

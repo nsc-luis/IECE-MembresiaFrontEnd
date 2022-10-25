@@ -162,7 +162,7 @@ export default function ReporteOficiosProfesiones(){
         doc.save("ReporteOficiosProfesiones.pdf");
     }
     return(
-        <Layout>
+        <>
             <Container fluid>
                 <Button className="btn-success m-3 " onClick={() => downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={() => reportePersonalBautizadoPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
@@ -211,6 +211,6 @@ export default function ReporteOficiosProfesiones(){
                 </CardBody>
                 </Card>
             </Container>
-        </Layout>
+        </>
     )
 }

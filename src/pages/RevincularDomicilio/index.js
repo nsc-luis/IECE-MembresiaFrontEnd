@@ -249,7 +249,7 @@ class RevinculaDomicilio extends Component {
 
     render() {
         return (
-            <Layout>
+            <>
                 <Container>
                     <Row>
                         <Form onSubmit={this.GuardaCambioDomicilio}>
@@ -327,7 +327,7 @@ class RevinculaDomicilio extends Component {
                         {this.state.mensajeDelProceso}
                     </ModalBody>
                 </Modal>
-            </Layout>
+            </>
         )
     }
 }

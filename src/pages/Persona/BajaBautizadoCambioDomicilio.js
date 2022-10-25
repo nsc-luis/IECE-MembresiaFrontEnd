@@ -77,7 +77,7 @@ class BajaBautizadoDefuncion extends Component {
 
     render() {
         return (
-            <Layout>
+            <>
                 <Card>
                     <Form onSubmit={this.bajaBautizadoCambioDomicilio}>
                         <CardBody>
@@ -171,7 +171,7 @@ class BajaBautizadoDefuncion extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
-            </Layout>
+            </>
         )
     }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert, 
+    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
@@ -177,7 +177,6 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
-        document.location.href = "/RegistroDePersona";
     }
 
     handle_AltaRestitucion = () => {
@@ -195,12 +194,6 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
-        document.location.href = "/RegistroDePersona";
-    }
-
-    handle_BajaBautizadoExcomunion = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja por excomunion");
-        document.location.href = "/BajaBautizadoExcomunion";
     }
 
     handle_Reactivacion = () => {
@@ -266,16 +259,6 @@ class Sidebar extends Component {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
-    }
-
-    handle_BajaBautizadoCambioDomicilio = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por cambio de domicilio");
-        document.location.href = "/BajaBautizadoCambioDomicilio";
-    }
-
-    handle_BajaBautizadoDefuncion = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por excomunion");
-        document.location.href = "/BajaBautizadoDefuncion";
     }
 
     bajaNoBautizadoDefuncion = async (e) => {
@@ -379,45 +362,45 @@ class Sidebar extends Component {
         }
     }
 
-    bajaNoBautizadoCambioDomicilio = async(e) => {
+    bajaNoBautizadoCambioDomicilio = async (e) => {
         e.preventDefault();
         if (this.state.formBajaNoBautizadoCambioDomicilio.per_Id_Persona === "0"
             || this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino === "0"
             || this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion === "") {
-                alert ("Error:\nDebe ingresar todos los datos requeridos.")
-            }
+            alert("Error:\nDebe ingresar todos los datos requeridos.")
+        }
         try {
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
-            .then(res => {
-                if (res.data.status === "success") {
-                    // alert(res.data.mensaje);
-                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                         this.setState({
-                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                    setTimeout(() => {
-                        document.location.href = '/ListaDePersonal'
-                    }, 3500);
-                } else {
-                    // alert(res.data.mensaje);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
                         this.setState({
-                            mensajeDelProceso: res.data.mensaje,
-                            modalShow: false
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                }
-            })
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                })
         }
         catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -425,40 +408,40 @@ class Sidebar extends Component {
         }
     }
 
-    estableceVisibilidadAbierta = async(e) => {
+    estableceVisibilidadAbierta = async (e) => {
         e.preventDefault();
         try {
             await helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/CambiarVisibilidad/${this.state.formEstableceVisibilidadAbierta.idPersona}/${this.state.formEstableceVisibilidadAbierta.idUsuario}`)
-            .then(res => {
-                if (res.data.status === "success") {
-                    // alert(res.data.mensaje);
-                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                         this.setState({
-                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                    setTimeout(() => {
-                        document.location.href = '/ListaDePersonal'
-                    }, 3500);
-                } else {
-                    // alert(res.data.mensaje);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
                         this.setState({
-                            mensajeDelProceso: res.data.mensaje,
-                            modalShow: false
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                }
-            })
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                })
         }
         catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -570,7 +553,7 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaBautizada}>Bautismo</Link>
+                                        <Link className="collapse-item" onClick={this.handle_AltaPersonaBautizada} to="/RegistroDePersona">Bautismo</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucion}>Restitución</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
                                     </div>
@@ -582,15 +565,11 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaNoBautizada}>Nuevo Ingreso</Link>
+                                        <Link className="collapse-item" onClick={this.handle_AltaPersonaNoBautizada} to="/RegistroDePersona">Nuevo Ingreso</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_Reactivacion}>Reativación</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>
-                                {/* <h6 className="collapse-header">Personal no bautizado:</h6>
-                                    <Link className="collapse-item" to="#">Nuevo ingreso</Link>
-                                    <Link className="collapse-item" to="#">Cambio de domicilio</Link>
-                                    <Link className="collapse-item" to="#">Reactivación</Link> */}
                             </div>
                         </div>
                     </li>
@@ -615,18 +594,19 @@ class Sidebar extends Component {
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link
                                             className="collapse-item"
-                                            to="#"
-                                            onClick={this.handle_BajaBautizadoDefuncion}
-                                        >Defunción</Link>
+                                            to="/BajaBautizadoDefuncion"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por excomunion")}
+                                        >Defunción
+                                        </Link>
                                         <Link
                                             className="collapse-item"
-                                            to="#"
-                                            onClick={this.handle_BajaBautizadoExcomunion}
+                                            to="/BajaBautizadoExcomunion"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja por excomunion")}
                                         >Excomunión</Link>
-                                        <Link 
-                                            className="collapse-item" 
-                                            to="#"
-                                            onClick={this.handle_BajaBautizadoCambioDomicilio}
+                                        <Link
+                                            className="collapse-item"
+                                            to="/BajaBautizadoCambioDomicilio"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por cambio de domicilio")}
                                         >Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -635,22 +615,22 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseBajaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPBajas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link 
-                                            className="collapse-item" 
+                                        <Link
+                                            className="collapse-item"
                                             to="#"
                                             onClick={this.openModalBajaNoBautizadoDefuncion}
                                         >
                                             Defunción
                                         </Link>
-                                        <Link 
-                                            className="collapse-item" 
+                                        <Link
+                                            className="collapse-item"
                                             to="#"
                                             onClick={this.openModalBajaNoBautizadoAlejamiento}
                                         >
                                             Alejamiento
                                         </Link>
                                         <Link
-                                            className="collapse-item" 
+                                            className="collapse-item"
                                             to="#"
                                             onClick={this.openModalBajaNoBautizadoCambioDomicilio}
                                         >Cambio de Domicilio</Link>
@@ -711,9 +691,9 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Matrimonios */}
                     <li className="nav-item">
-                        <Link className="nav-link" 
+                        <Link className="nav-link"
                             to="/Matrimonio"
-                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
                         >
                             <i className="fas fa-fw fa-user-friends"></i>
                             <span>Matrimonio / Legalización</span>
@@ -722,9 +702,9 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Presentaciones  */}
                     <li className="nav-item">
-                        <Link className="nav-link" 
+                        <Link className="nav-link"
                             to="/PresentacionDeNino"
-                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estádisticos', 'Presentación de niños')}
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estádisticos', 'Presentación de niños')}
                         >
                             <i className="fas fa-fw fa-baby"></i>
                             <span>Presentación de Niños</span>
@@ -741,19 +721,19 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Hogares  */}
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link" 
+                        <Link
+                            className="nav-link"
                             to="/EdicionDeDireccion"
-                            onClick={()=>this.handle_LinkEncabezado('Hogares', 'Edición de dirección.')}>
+                            onClick={() => this.handle_LinkEncabezado('Hogares', 'Edición de dirección.')}>
                             <i className="fas fa-address-book"></i>
                             <span>Edición de Dirección</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link text-wrap" 
+                        <Link
+                            className="nav-link text-wrap"
                             to="/RevinculaDomicilio"
-                            onClick={()=>this.handle_LinkEncabezado('Hogares', 'Revinculación persona-hogar.')}
+                            onClick={() => this.handle_LinkEncabezado('Hogares', 'Revinculación persona-hogar.')}
                         >
                             <i className="fas fa-house-user"></i>
                             <span>Revinculación Persona-Hogar</span>
@@ -767,8 +747,8 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Hogares  */}
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link" 
+                        <Link
+                            className="nav-link"
                             to="#"
                             onClick={this.openModalVisibilidadAbierta}
                         >
@@ -776,7 +756,7 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li>
-                    
+
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />

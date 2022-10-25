@@ -572,7 +572,7 @@ class ListaDePersonal extends Component {
     render() {
         /*  if (this.state.personas.length >= 1) { */
         return (
-            <Layout>
+            <>
                 {/* <h1 className="text-info">Listado de personal</h1> */}
                 <Container>
                     <Row>
@@ -1012,7 +1012,7 @@ class ListaDePersonal extends Component {
                     }
 
                 </Container>
-            </Layout>
+            </>
         )
 
     };

@@ -5,7 +5,6 @@ import {
     Modal, ModalFooter, ModalBody, ModalHeader
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
-import Layout from '../Layout';
 import '../../assets/css/index.css';
 
 class PresentacionDeNino extends Component {
@@ -321,7 +320,7 @@ class PresentacionDeNino extends Component {
     render() {
         if (this.state.listaDePresentaciones.length >= 1) {
             return (
-                <Layout>
+                <>
                     <Container>
                         {/* <Row>
                             <h1 className="text-info">Presentaciones de niños</h1>
@@ -541,12 +540,12 @@ class PresentacionDeNino extends Component {
                             {this.state.mensajeDelProceso}
                         </ModalBody>
                     </Modal>
-                </Layout>
+                </>
             )
         }
         else if (this.state.listaDePresentaciones.length === 0 && this.state.status === 'success') {
             return (
-                <Layout>
+                <>
                     <Container>
                         {/* <Row>
                             <h1 className="text-info">Presentaciones de niños</h1>
@@ -696,17 +695,17 @@ class PresentacionDeNino extends Component {
                             </Form>
                         </Modal>
                     </Container>
-                </Layout >
+                </ >
             )
         }
         else {
             return (
-                <Layout>
+                <>
                     <React.Fragment>
                         <h3>Cargando información...</h3>
                         <p>Por favor espere.</p>
                     </React.Fragment>
-                </Layout>
+                </>
             )
         }
     }

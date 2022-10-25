@@ -207,7 +207,7 @@ function AltaRestitucion() {
         //console.log(formattedData)
     };
     return(
-        <Layout>
+        <>
             <Container>
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
@@ -502,7 +502,7 @@ function AltaRestitucion() {
                     </Row>
                 </Card>}
             </Container>
-        </Layout>
+        </>
 
     );
 }

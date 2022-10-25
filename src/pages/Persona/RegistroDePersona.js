@@ -710,7 +710,7 @@ class RegistroDePersonal extends Component {
     render() {
 
         return (
-            <Layout>
+            <>
                 <PersonaForm
                     onChange={this.handleChange}
                     FrmValidaPersona={this.state.FrmValidaPersona}
@@ -753,7 +753,7 @@ class RegistroDePersonal extends Component {
                         <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
                     </ModalFooter> */}
                 </Modal>
-            </Layout>
+            </>
         )
     }
 }

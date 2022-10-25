@@ -215,8 +215,7 @@ class ResumenMembresia extends Component {
 
     render() {
         return (
-            <Layout>
-                <Container>
+            <>                <Container>
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>
@@ -320,7 +319,7 @@ class ResumenMembresia extends Component {
                         </Row>
                     </FormGroup>
                 </Container>
-            </Layout >
+            </>
         )
     }
 }
