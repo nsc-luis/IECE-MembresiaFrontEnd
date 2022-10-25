@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container
@@ -7,7 +8,7 @@ import helpers from '../../components/Helpers';
 import './style.css'
 import Layout from '../Layout';
 
-class BajaBautizadoDefuncion extends Component {
+class BajaBautizadoCambioDomicilio extends Component {
 
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
@@ -48,27 +49,22 @@ class BajaBautizadoDefuncion extends Component {
         })
     }
 
-    cancelarFormulario = () => {
-        helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")
-        window.location = "/ListaDePersonal"
-    }
-
-    bajaBautizadoCambioDomicilio = async(e) => {
+    bajaBautizadoCambioDomicilio = async (e) => {
         e.preventDefault();
         if (this.state.formBajaBautizadoCambioDomicilio.per_Id_Persona === "0"
             || this.state.formBajaBautizadoCambioDomicilio.tipoDestino === "0"
             || this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion === "") {
-                alert ("Error:\nDebe ingresar todos los datos requeridos.")
-            }
+            alert("Error:\nDebe ingresar todos los datos requeridos.")
+        }
         try {
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
-            .then(res => {
-                if (res.data.status === "success") {
-                    document.location.href = '/ListaDePersonal'
-                } else {
-                    alert(res.data.mensaje);
-                }
-            })
+                .then(res => {
+                    if (res.data.status === "success") {
+                        document.location.href = '/ListaDePersonal'
+                    } else {
+                        alert(res.data.mensaje);
+                    }
+                })
         }
         catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -154,14 +150,14 @@ class BajaBautizadoDefuncion extends Component {
 
                         </CardBody>
                         <CardFooter>
-                            <Button
-                                type="button"
-                                onClick={this.cancelarFormulario}
-                                color="secondary"
-                                className="entreBotones"
+                            <Link
+                                to="/ListaDePersonal"
+                                onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                             >
-                                Cancelar
-                            </Button>
+                                <Button type="button" color="secondary" className="entreBotones">
+                                    Cancelar
+                                </Button>
+                            </Link>
                             <Button
                                 type="submit"
                                 color="success"
@@ -175,4 +171,4 @@ class BajaBautizadoDefuncion extends Component {
         )
     }
 }
-export default BajaBautizadoDefuncion
+export default BajaBautizadoCambioDomicilio

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container
@@ -46,11 +47,6 @@ class BajaBautizadoExcomunion extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
-    }
-
-    cancelarFormulario = () => {
-        helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")
-        window.location = "/ListaDePersonal"
     }
 
     bajaBautizadoExcomunion = async (e) => {
@@ -178,14 +174,14 @@ class BajaBautizadoExcomunion extends Component {
 
                         </CardBody>
                         <CardFooter>
-                            <Button
-                                type="button"
-                                onClick={this.cancelarFormulario}
-                                color="secondary"
-                                className="entreBotones"
+                        <Link
+                                to="/ListaDePersonal"
+                                onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                             >
-                                Cancelar
-                            </Button>
+                                <Button type="button" color="secondary" className="entreBotones">
+                                    Cancelar
+                                </Button>
+                            </Link>
                             <Button
                                 type="submit"
                                 color="success"

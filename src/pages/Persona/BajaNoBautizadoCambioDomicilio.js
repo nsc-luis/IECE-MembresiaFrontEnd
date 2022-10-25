@@ -6,9 +6,8 @@ import {
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
-import Layout from '../Layout';
 
-class BajaBautizadoDefuncion extends Component {
+class BajaBautizadoCambioDomicilio extends Component {
 
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
 
@@ -16,12 +15,12 @@ class BajaBautizadoDefuncion extends Component {
         super(props)
         this.state = {
             personas: [],
-            formBajaBautizadoDefuncion: {},
+            formBajaNoBautizadoCambioDomicilio: {},
         }
     }
 
-    getBajaBautizadoDefuncion = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosComunionVivoBySector/" + localStorage.getItem('sector'))
+    getBajaNoBautizadoCambioDomicilio = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas });
             });
@@ -29,49 +28,69 @@ class BajaBautizadoDefuncion extends Component {
 
     componentDidMount() {
         this.setState({
-            formBajaBautizadoDefuncion: {
-                ...this.state.formBajaBautizadoDefuncion,
-                personaSeleccionada: '0',
-                comentario: '',
-                fechaTransaccion: ''
+            formBajaNoBautizadoCambioDomicilio: {
+                ...this.state.formBajaNoBautizadoCambioDomicilio,
+                idPersona: '0',
+                tipoDestino: '0',
+                fechaTransaccion: '',
+                idUsuario: this.infoSesion.pem_Id_Ministro
             },
         })
-        this.getBajaBautizadoDefuncion()
+        this.getBajaNoBautizadoCambioDomicilio()
     }
 
-    onChangeBajaBautizadoDefuncion = (e) => {
+    onChangeBajaNoBautizadoCambioDomicilio = (e) => {
         this.setState({
-            formBajaBautizadoDefuncion: {
-                ...this.state.formBajaBautizadoDefuncion,
+            formBajaNoBautizadoCambioDomicilio: {
+                ...this.state.formBajaNoBautizadoCambioDomicilio,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
     }
 
-    bajaBautizadoDefuncion = async (e) => {
+    bajaNoBautizadoCambioDomicilio = async (e) => {
         e.preventDefault();
-        var datos = this.state.formBajaBautizadoDefuncion;
-
-        if (datos.personaSeleccionada === '0'
-            || datos.fechaDefuncion === '') {
-            alert('Error!\nDebe ingresar todos los datos requeridos.');
-            return false;
+        if (this.state.formBajaNoBautizadoCambioDomicilio.per_Id_Persona === "0"
+            || this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino === "0"
+            || this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion === "") {
+            alert("Error:\nDebe ingresar todos los datos requeridos.")
         }
         try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
-                "/" + datos.comentarioDefuncion +
-                "/" + datos.fechaDefuncion +
-                "/" + this.infoSesion.pem_Id_Ministro)
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
                 .then(res => {
                     if (res.data.status === "success") {
-                        document.location.href = '/ListaDePersonal'
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
                     } else {
-                        alert(res.data.mensaje);
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
                     }
-                });
-        } catch (error) {
+                })
+        }
+        catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
     }
 
@@ -79,7 +98,7 @@ class BajaBautizadoDefuncion extends Component {
         return (
             <>
                 <Card>
-                    <Form onSubmit={this.bajaBautizadoDefuncion}>
+                    <Form onSubmit={this.bajaNoBautizadoCambioDomicilio}>
                         <CardBody>
                             <FormGroup>
                                 <Row>
@@ -98,9 +117,9 @@ class BajaBautizadoDefuncion extends Component {
                                     <Col xs="9">
                                         <Input
                                             type="select"
-                                            value={this.state.formBajaBautizadoDefuncion.personaSeleccionada}
-                                            name="personaSeleccionada"
-                                            onChange={this.onChangeBajaBautizadoDefuncion}
+                                            value={this.state.formBajaNoBautizadoCambioDomicilio.idPersona}
+                                            name="idPersona"
+                                            onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
                                         >
                                             <option value="0">Seleccione una persona</option>
                                             {this.state.personas.map(persona => {
@@ -119,15 +138,19 @@ class BajaBautizadoDefuncion extends Component {
                             <FormGroup>
                                 <Row>
                                     <Col xs="3">
-                                        Comentario:
+                                        * Tipo destino:
                                     </Col>
                                     <Col xs="9">
                                         <Input
-                                            type="text"
-                                            name="comentarioDefuncion"
-                                            value={this.state.formBajaBautizadoDefuncion.comentarioDefuncion}
-                                            onChange={this.onChangeBajaBautizadoDefuncion}
-                                        />
+                                            type="select"
+                                            name="tipoDestino"
+                                            value={this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino}
+                                            onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
+                                        >
+                                            <option value="0">Seleccione una opción</option>
+                                            <option value="INTERNO">INTERNO</option>
+                                            <option value="EXTERNO">EXTERNO</option>
+                                        </Input>
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -139,10 +162,10 @@ class BajaBautizadoDefuncion extends Component {
                                     <Col xs="9">
                                         <Input
                                             type="date"
-                                            name="fechaDefuncion"
+                                            name="fechaTransaccion"
                                             placeholder='DD/MM/AAAA'
-                                            value={this.state.formBajaBautizadoDefuncion.fechaDefuncion}
-                                            onChange={this.onChangeBajaBautizadoDefuncion}
+                                            value={this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion}
+                                            onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
                                         />
                                     </Col>
                                 </Row>
@@ -171,4 +194,4 @@ class BajaBautizadoDefuncion extends Component {
         )
     }
 }
-export default BajaBautizadoDefuncion
+export default BajaBautizadoCambioDomicilio

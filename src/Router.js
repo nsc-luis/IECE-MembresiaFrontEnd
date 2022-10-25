@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch/* , withRouter */ } from 'react-router-dom';
-import Main from './pages/Main';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import PaginaNoEncontrada from './pages/PaginaNoEncontrada';
 import Signin from './pages/Signin';
 import ListaDePersonal from './pages/Persona/ListaDePersonal';
@@ -16,7 +15,6 @@ import Login from './pages/Login';
 import ResumenMembresia from './pages/ResumenMembresia';
 import AltaRestitucion from './pages/Persona/AltaRestitucion';
 import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio'
-import AltaNuevoIngreso from './pages/Persona/AltaNuevoIngreso'
 import AltaReactivacion from './pages/Persona/AltaReactivacion'
 import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB'
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
@@ -32,7 +30,10 @@ import EdicionDeDireccion from './pages/EdicionDeDireccion';
 import RevinculaDomicilio from './pages/RevincularDomicilio';
 import BajaBautizadoExcomunion from './pages/Persona/BajaBautizadoExcomunion';
 import BajaBautizadoDefuncion from './pages/Persona/BajaBautizadoDefuncion';
+import BajaNoBautizadoDefuncion from './pages/Persona/BajaNoBautizadoDefuncion';
 import BajaBautizadoCambioDomicilio from './pages/Persona/BajaBautizadoCambioDomicilio';
+import BajaNoBautizadoCambioDomicilio from './pages/Persona/BajaNoBautizadoCambioDomicilio';
+import BajaNoBautizadoAlejamiento from './pages/Persona/BajaNoBautizadoAlejamiento';
 import Layout from './pages/Layout';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -75,7 +76,10 @@ class Router extends Component {
                         <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
                         <Route exact path="/BajaBautizadoExcomunion" component={BajaBautizadoExcomunion} />
                         <Route exact path="/BajaBautizadoDefuncion" component={BajaBautizadoDefuncion} />
+                        <Route exact path="/BajaNoBautizadoDefuncion" component={BajaNoBautizadoDefuncion} />
                         <Route exact path="/BajaBautizadoCambioDomicilio" component={BajaBautizadoCambioDomicilio} />
+                        <Route exact path="/BajaNoBautizadoCambioDomicilio" component={BajaNoBautizadoCambioDomicilio} />
+                        <Route exact path="/BajaNoBautizadoAlejamiento" component={BajaNoBautizadoAlejamiento} />
                         {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
                         <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />

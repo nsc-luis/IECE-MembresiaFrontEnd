@@ -6,7 +6,6 @@ import {
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
-import Layout from '../Layout';
 
 class BajaBautizadoDefuncion extends Component {
 
@@ -16,12 +15,12 @@ class BajaBautizadoDefuncion extends Component {
         super(props)
         this.state = {
             personas: [],
-            formBajaBautizadoDefuncion: {},
+            formBajaNoBautizadoDefuncion: {},
         }
     }
 
-    getBajaBautizadoDefuncion = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosComunionVivoBySector/" + localStorage.getItem('sector'))
+    getBajaNoBautizadoDefuncion = async () => {
+        await helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosDefuncionBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas });
             });
@@ -29,49 +28,72 @@ class BajaBautizadoDefuncion extends Component {
 
     componentDidMount() {
         this.setState({
-            formBajaBautizadoDefuncion: {
-                ...this.state.formBajaBautizadoDefuncion,
+            formBajaNoBautizadoDefuncion: {
+                ...this.state.formBajaNoBautizadoDefuncion,
                 personaSeleccionada: '0',
                 comentario: '',
                 fechaTransaccion: ''
             },
         })
-        this.getBajaBautizadoDefuncion()
+        this.getBajaNoBautizadoDefuncion()
     }
 
-    onChangeBajaBautizadoDefuncion = (e) => {
+    onChangeBajaNoBautizadoDefuncion = (e) => {
         this.setState({
-            formBajaBautizadoDefuncion: {
-                ...this.state.formBajaBautizadoDefuncion,
+            formBajaNoBautizadoDefuncion: {
+                ...this.state.formBajaNoBautizadoDefuncion,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
     }
 
-    bajaBautizadoDefuncion = async (e) => {
+    bajaNoBautizadoDefuncion = async (e) => {
         e.preventDefault();
-        var datos = this.state.formBajaBautizadoDefuncion;
+        var datos = this.state.formBajaNoBautizadoDefuncion;
 
         if (datos.personaSeleccionada === '0'
-            || datos.fechaDefuncion === '') {
+            || datos.fechaTransaccion === '') {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
         try {
             await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
-                "/" + datos.comentarioDefuncion +
-                "/" + datos.fechaDefuncion +
-                "/" + this.infoSesion.pem_Id_Ministro)
+                helpers.url_api + "/Persona/BajaNoBautizadoDefuncion/" + datos.personaSeleccionada +
+                "/" + datos.comentario +
+                "/" + datos.fechaTransaccion)
                 .then(res => {
                     if (res.data.status === "success") {
-                        document.location.href = '/ListaDePersonal'
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
                     } else {
-                        alert(res.data.mensaje);
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
                     }
                 });
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
     }
 
@@ -79,7 +101,7 @@ class BajaBautizadoDefuncion extends Component {
         return (
             <>
                 <Card>
-                    <Form onSubmit={this.bajaBautizadoDefuncion}>
+                    <Form onSubmit={this.bajaNoBautizadoDefuncion}>
                         <CardBody>
                             <FormGroup>
                                 <Row>
@@ -98,9 +120,9 @@ class BajaBautizadoDefuncion extends Component {
                                     <Col xs="9">
                                         <Input
                                             type="select"
-                                            value={this.state.formBajaBautizadoDefuncion.personaSeleccionada}
+                                            value={this.state.formBajaNoBautizadoDefuncion.personaSeleccionada}
                                             name="personaSeleccionada"
-                                            onChange={this.onChangeBajaBautizadoDefuncion}
+                                            onChange={this.onChangeBajaNoBautizadoDefuncion}
                                         >
                                             <option value="0">Seleccione una persona</option>
                                             {this.state.personas.map(persona => {
@@ -124,9 +146,9 @@ class BajaBautizadoDefuncion extends Component {
                                     <Col xs="9">
                                         <Input
                                             type="text"
-                                            name="comentarioDefuncion"
-                                            value={this.state.formBajaBautizadoDefuncion.comentarioDefuncion}
-                                            onChange={this.onChangeBajaBautizadoDefuncion}
+                                            name="comentario"
+                                            value={this.state.formBajaNoBautizadoDefuncion.comentario}
+                                            onChange={this.onChangeBajaNoBautizadoDefuncion}
                                         />
                                     </Col>
                                 </Row>
@@ -139,10 +161,10 @@ class BajaBautizadoDefuncion extends Component {
                                     <Col xs="9">
                                         <Input
                                             type="date"
-                                            name="fechaDefuncion"
+                                            name="fechaTransaccion"
                                             placeholder='DD/MM/AAAA'
-                                            value={this.state.formBajaBautizadoDefuncion.fechaDefuncion}
-                                            onChange={this.onChangeBajaBautizadoDefuncion}
+                                            value={this.state.formBajaNoBautizadoDefuncion.fechaTransaccion}
+                                            onChange={this.onChangeBajaNoBautizadoDefuncion}
                                         />
                                     </Col>
                                 </Row>
@@ -150,7 +172,7 @@ class BajaBautizadoDefuncion extends Component {
 
                         </CardBody>
                         <CardFooter>
-                            <Link
+                        <Link
                                 to="/ListaDePersonal"
                                 onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                             >
