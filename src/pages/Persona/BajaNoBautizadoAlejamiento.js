@@ -16,6 +16,8 @@ class BajaBautizadoExcomunion extends Component {
         this.state = {
             personas: [],
             formBajaNoBautizadoAlejamiento: {},
+            mensajeDelProceso: "",
+            modalShow: false
         }
     }
 
@@ -33,8 +35,8 @@ class BajaBautizadoExcomunion extends Component {
                 ...this.state.formBajaNoBautizadoAlejamiento,
                 personaSeleccionada: '0',
                 comentario: "",
-                codigoTransaccion: '0',
-                fechaTransaccion: ''
+                fechaTransaccion: '',
+                idUsuario: this.infoSesion.pem_Id_Ministro
             },
         })
         this.getBajaNoBautizadoAlejamiento()
@@ -60,14 +62,11 @@ class BajaBautizadoExcomunion extends Component {
             return false;
         }
         try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaNoBautizadoAlejamiento/" + datos.personaSeleccionada +
-                "/" + datos.comentario +
-                "/" + datos.fechaTransaccion)
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoAlejamiento`, datos)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
                         this.setState({
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
@@ -76,10 +75,10 @@ class BajaBautizadoExcomunion extends Component {
                             this.setState({
                                 mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                             });
-                        }, 1500);
+                        }, 1000);
                         setTimeout(() => {
                             document.location.href = '/ListaDePersonal'
-                        }, 3500);
+                        }, 1000);
                     } else {
                         // alert(res.data.mensaje);
                         this.setState({
@@ -91,12 +90,11 @@ class BajaBautizadoExcomunion extends Component {
                                 mensajeDelProceso: res.data.mensaje,
                                 modalShow: false
                             });
-                        }, 1500);
+                        }, 1000);
                     }
                 });
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
     }
 
@@ -192,6 +190,12 @@ class BajaBautizadoExcomunion extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </>
         )
     }

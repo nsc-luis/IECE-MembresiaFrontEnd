@@ -17,6 +17,8 @@ class BajaBautizadoDefuncion extends Component {
         this.state = {
             personas: [],
             formBajaBautizadoDefuncion: {},
+            mensajeDelProceso: "",
+            modalShow: false
         }
     }
 
@@ -33,7 +35,8 @@ class BajaBautizadoDefuncion extends Component {
                 ...this.state.formBajaBautizadoDefuncion,
                 personaSeleccionada: '0',
                 comentario: '',
-                fechaTransaccion: ''
+                fechaTransaccion: '',
+                idUsuario: this.infoSesion.pem_Id_Ministro
             },
         })
         this.getBajaBautizadoDefuncion()
@@ -53,21 +56,40 @@ class BajaBautizadoDefuncion extends Component {
         var datos = this.state.formBajaBautizadoDefuncion;
 
         if (datos.personaSeleccionada === '0'
-            || datos.fechaDefuncion === '') {
+            || datos.fechaTransaccion === '') {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
         try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
-                "/" + datos.comentarioDefuncion +
-                "/" + datos.fechaDefuncion +
-                "/" + this.infoSesion.pem_Id_Ministro)
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaBautizadoDefuncion`, datos)
                 .then(res => {
                     if (res.data.status === "success") {
-                        document.location.href = '/ListaDePersonal'
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1000);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 1000);
                     } else {
-                        alert(res.data.mensaje);
+                        // alert(res.data.mensaje);
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        });
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1000);
                     }
                 });
         } catch (error) {
@@ -124,8 +146,8 @@ class BajaBautizadoDefuncion extends Component {
                                     <Col xs="9">
                                         <Input
                                             type="text"
-                                            name="comentarioDefuncion"
-                                            value={this.state.formBajaBautizadoDefuncion.comentarioDefuncion}
+                                            name="comentario"
+                                            value={this.state.formBajaBautizadoDefuncion.comentario}
                                             onChange={this.onChangeBajaBautizadoDefuncion}
                                         />
                                     </Col>
@@ -139,9 +161,9 @@ class BajaBautizadoDefuncion extends Component {
                                     <Col xs="9">
                                         <Input
                                             type="date"
-                                            name="fechaDefuncion"
+                                            name="fechaTransaccion"
                                             placeholder='DD/MM/AAAA'
-                                            value={this.state.formBajaBautizadoDefuncion.fechaDefuncion}
+                                            value={this.state.formBajaBautizadoDefuncion.fechaTransaccion}
                                             onChange={this.onChangeBajaBautizadoDefuncion}
                                         />
                                     </Col>
@@ -167,6 +189,12 @@ class BajaBautizadoDefuncion extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </>
         )
     }

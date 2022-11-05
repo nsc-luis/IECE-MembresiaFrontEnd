@@ -16,6 +16,8 @@ class BajaBautizadoDefuncion extends Component {
         this.state = {
             personas: [],
             formBajaNoBautizadoDefuncion: {},
+            mensajeDelProceso: "",
+            modalShow: false
         }
     }
 
@@ -32,7 +34,8 @@ class BajaBautizadoDefuncion extends Component {
                 ...this.state.formBajaNoBautizadoDefuncion,
                 personaSeleccionada: '0',
                 comentario: '',
-                fechaTransaccion: ''
+                fechaTransaccion: '',
+                idUsuario: this.infoSesion.pem_Id_Ministro
             },
         })
         this.getBajaNoBautizadoDefuncion()
@@ -57,14 +60,11 @@ class BajaBautizadoDefuncion extends Component {
             return false;
         }
         try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaNoBautizadoDefuncion/" + datos.personaSeleccionada +
-                "/" + datos.comentario +
-                "/" + datos.fechaTransaccion)
+            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoDefuncion`, datos)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
                         this.setState({
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
@@ -73,10 +73,10 @@ class BajaBautizadoDefuncion extends Component {
                             this.setState({
                                 mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                             });
-                        }, 1500);
+                        }, 1000);
                         setTimeout(() => {
                             document.location.href = '/ListaDePersonal'
-                        }, 3500);
+                        }, 1000);
                     } else {
                         // alert(res.data.mensaje);
                         this.setState({
@@ -88,7 +88,7 @@ class BajaBautizadoDefuncion extends Component {
                                 mensajeDelProceso: res.data.mensaje,
                                 modalShow: false
                             });
-                        }, 1500);
+                        }, 1000);
                     }
                 });
         } catch (error) {
@@ -189,6 +189,12 @@ class BajaBautizadoDefuncion extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </>
         )
     }

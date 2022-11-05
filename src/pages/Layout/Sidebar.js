@@ -5,6 +5,7 @@ import {
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
+import PersonaForm from '../Persona/PersonaForm';
 import './style.css'
 
 class Sidebar extends Component {
@@ -73,19 +74,17 @@ class Sidebar extends Component {
     invocaFormularioDePersona = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
-        // console.log(localStorage.getItem("idPersona"));
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
-        document.location.href = '/RegistroDePersona';
+        window.location = "/RegistroDePersona";
     }
 
     invocaFormularioDePersonaNB = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
-        // console.log(localStorage.getItem("idPersona"));
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
-        document.location.href = '/RegistroDePersona';
+        window.location = "/RegistroDePersona";
     }
 
     openModalVisibilidadAbierta = async () => {
@@ -640,8 +639,7 @@ class Sidebar extends Component {
                             <Button
                                 type="button"
                                 color="success"
-                                onClick={this.invocaFormularioDePersonaNB}
-                            >
+                                onClick={this.invocaFormularioDePersonaNB}>
                                 <span className="fa fa-pencil"></span>Editar
                             </Button>
                         </CardFooter>

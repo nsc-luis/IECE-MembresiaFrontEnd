@@ -30,3 +30,13 @@
     height: 170px;
     object-fit: scale-down;
 }
+
+.hogarActivo {
+    color: green;
+    font-weight: bold;
+}
+
+.hogarInactivo {
+    color: red;
+    font-weight: bold;
+}

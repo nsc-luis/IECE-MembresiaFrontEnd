@@ -16,6 +16,8 @@ class BajaBautizadoCambioDomicilio extends Component {
         this.state = {
             personas: [],
             formBajaNoBautizadoCambioDomicilio: {},
+            mensajeDelProceso: "",
+            modalShow: false
         }
     }
 
@@ -60,7 +62,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
                         this.setState({
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
@@ -69,10 +71,10 @@ class BajaBautizadoCambioDomicilio extends Component {
                             this.setState({
                                 mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                             });
-                        }, 1500);
+                        }, 1000);
                         setTimeout(() => {
                             document.location.href = '/ListaDePersonal'
-                        }, 3500);
+                        }, 1000);
                     } else {
                         // alert(res.data.mensaje);
                         this.setState({
@@ -84,7 +86,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                                 mensajeDelProceso: res.data.mensaje,
                                 modalShow: false
                             });
-                        }, 1500);
+                        }, 1000);
                     }
                 })
         }
@@ -190,6 +192,12 @@ class BajaBautizadoCambioDomicilio extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </>
         )
     }

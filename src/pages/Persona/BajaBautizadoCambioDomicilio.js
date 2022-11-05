@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
-    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container
+    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert, Label, ButtonGroup,
+    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container, FormFeedback
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
@@ -17,7 +17,18 @@ class BajaBautizadoCambioDomicilio extends Component {
         this.state = {
             personas: [],
             formBajaBautizadoCambioDomicilio: {},
+            rSelected: true
         }
+    }
+
+    onRadioBtnClick(rSelected) {
+        this.setState({
+            rSelected,
+            formBajaBautizadoCambioDomicilio: {
+                ...this.state.formBajaBautizadoCambioDomicilio,
+                bajaPorBajaDePadres: rSelected,
+            }
+        });
     }
 
     getBajaBautizadoCambioDomicilio = async () => {
@@ -34,19 +45,42 @@ class BajaBautizadoCambioDomicilio extends Component {
                 idPersona: '0',
                 tipoDestino: '0',
                 fechaTransaccion: '',
-                idUsuario: this.infoSesion.pem_Id_Ministro
+                idUsuario: this.infoSesion.pem_Id_Ministro,
+                bajaPorBajaDePadres: true,
+                ultimoBautizado: false
             }
         })
         this.getBajaBautizadoCambioDomicilio()
     }
 
-    onChangeBajaBautizadoCambioDomicilio = (e) => {
+    onChangeBajaBautizadoCambioDomicilio = async (e) => {
         this.setState({
             formBajaBautizadoCambioDomicilio: {
                 ...this.state.formBajaBautizadoCambioDomicilio,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+        if (e.target.name === "idPersona") {
+            await helpers.authAxios.get(`${helpers.url_api}/Hogar_Persona/GetHogarByPersona/${e.target.value}`)
+                .then(res => {
+                    if (res.data.status === "success" && res.data.datosDelHogarPorPersona.bautizadosVivos === 1) {
+                        this.setState({
+                            formBajaBautizadoCambioDomicilio: {
+                                ...this.state.formBajaBautizadoCambioDomicilio,
+                                ultimoBautizado: true
+                            }
+                        })
+                    }
+                    else {
+                        this.setState({
+                            formBajaBautizadoCambioDomicilio: {
+                                ...this.state.formBajaBautizadoCambioDomicilio,
+                                ultimoBautizado: false
+                            }
+                        })
+                    }
+                })
+        }
     }
 
     bajaBautizadoCambioDomicilio = async (e) => {
@@ -147,7 +181,44 @@ class BajaBautizadoCambioDomicilio extends Component {
                                     </Col>
                                 </Row>
                             </FormGroup>
-
+                            {this.state.formBajaBautizadoCambioDomicilio.ultimoBautizado &&
+                                <>
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="12">
+                                                <FormGroup>
+                                                    <Alert color="info">
+                                                        <strong>ADVERTENCIA. </strong>
+                                                        La persona seleccionada es la ultima persona BAUTIZADA en el domicilio y existen personas NO bautizadas en el mismo.
+                                                        Debe elegir uno de las siguientes opciones.
+                                                        <ul>
+                                                            <li><strong>Por cambio de domicilio.</strong> La baja de los miembros NO bautizados se realiza por concepto de "Baja por cambio de domicilio".</li>
+                                                            <li><strong>Por baja de padres.</strong> La baja de los miembros NO bautizados se realiza por concepto de "Baja por padres".</li>
+                                                        </ul>
+                                                    </Alert>
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="3">
+                                                <FormGroup>
+                                                    <Label><strong>Baja de miembros NO bautizados:</strong></Label>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col xs="9">
+                                                <FormGroup>
+                                                    <ButtonGroup>
+                                                        <Button size="sm" color="danger" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === false}>Por cambio de domicilio</Button>
+                                                        <Button size="sm" color="danger" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === true}>Por baja de padres</Button>
+                                                    </ButtonGroup>
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+                                </>
+                            }
                         </CardBody>
                         <CardFooter>
                             <Link

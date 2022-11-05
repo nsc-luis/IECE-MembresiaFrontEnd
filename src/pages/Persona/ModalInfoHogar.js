@@ -38,6 +38,8 @@ class ModalInfoHogar extends Component {
                                     <strong>Pais: </strong>{objPersona.domicilio[0].pais_Nombre_Corto}, <strong>Estado: </strong>{objPersona.domicilio[0].est_Nombre}
                                     <br />
                                     <strong>Telefono: </strong>{objPersona.domicilio[0].hd_Telefono}
+                                    <br />
+                                    <strong>Estado del hogar: </strong>{objPersona.domicilio[0].hd_Activo ? <span className="hogarActivo">ACTIVO</span> : <span className="hogarInactivo">INACTIVO</span>}
                                 </>
                             }
                             {!objPersona.domicilio.length > 0 &&
