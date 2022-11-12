@@ -99,7 +99,7 @@ class BajaBautizadoDefuncion extends Component {
 
     render() {
         return (
-            <>
+            <Container>
                 <Card>
                     <Form onSubmit={this.bajaBautizadoDefuncion}>
                         <CardBody>
@@ -195,7 +195,7 @@ class BajaBautizadoDefuncion extends Component {
                         {this.state.mensajeDelProceso}
                     </ModalBody>
                 </Modal>
-            </>
+            </Container>
         )
     }
 }

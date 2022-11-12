@@ -547,7 +547,7 @@ class ListaDePersonal extends Component {
 
         line = line + 6;
         doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: ${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
-        drawUnderlineTotext('16.- Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
+        drawUnderlineTotext('16. - Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
         drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: `, 13, `${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line);
 
         line = line + 6;

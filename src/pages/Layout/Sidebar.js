@@ -217,7 +217,7 @@ class Sidebar extends Component {
                             onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                         >
                             <i className="fas fa-fw fa-home"></i>
-                            <span>Anális de Membresía</span>
+                            <span>Análisis de Membresía</span>
                         </Link>
                     </li>
 

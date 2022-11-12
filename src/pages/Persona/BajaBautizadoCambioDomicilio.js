@@ -107,7 +107,7 @@ class BajaBautizadoCambioDomicilio extends Component {
 
     render() {
         return (
-            <>
+            <Container>
                 <Card>
                     <Form onSubmit={this.bajaBautizadoCambioDomicilio}>
                         <CardBody>
@@ -238,7 +238,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
-            </>
+            </Container>
         )
     }
 }

@@ -40,7 +40,7 @@ class PersonaEncontrada extends React.Component {
                     <tbody>
                         <tr>
                             <td>{datosPersonaEncontrada.per_Nombre} {datosPersonaEncontrada.per_Apellido_Paterno} {datosPersonaEncontrada.per_Apellido_Materno} </td>
-                            <td>{datosPersonaEncontrada.per_Fecha_Nacimiento} </td>
+                            <td>{datosPersonaEncontrada.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(datosPersonaEncontrada.per_Fecha_Nacimiento) : null} </td>
                             <td>{datosPersonaEncontrada.per_Bautizado === true ? "Si" : "No"} </td>
                             <td>{datosPersonaEncontrada.dis_Tipo_Distrito} {datosPersonaEncontrada.dis_Numero}</td>
                             <td>{datosPersonaEncontrada.sec_Alias}</td>

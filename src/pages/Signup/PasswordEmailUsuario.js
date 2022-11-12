@@ -28,7 +28,7 @@ class PasswordEmailUsuario extends Component {
             <React.Fragment>
                 <FormGroup>
                     <Row>
-                        <Col sm="3"></Col>
+                        <Col xs="3"></Col>
                         <Col xs="2" className="txtNegrita">Contraseña: *</Col>
                         <Col xs="4">
                             <Input
@@ -37,7 +37,7 @@ class PasswordEmailUsuario extends Component {
                                 value={passEmailRegistro}
                             />
                         </Col>
-                        <Col sm="3"></Col>
+                        <Col xs="3"></Col>
                     </Row>
                 </FormGroup>
                 {passwordInvalido &&
@@ -52,7 +52,7 @@ class PasswordEmailUsuario extends Component {
                                         <li> MAYUSCULAS [A-Z]. </li>
                                         <li> minusculas [a-z]. </li>
                                         <li> Número [0-9]. </li>
-                                        <li> Caracteres especiales: ~!@#$%^&*_-+=`|\(){ }[]:;"',.?/ </li>
+                                        <li> Caracteres especiales: $#@!%*?& </li>
                                         <li> Longitud de 6 a 20 caracteres. </li>
                                     </ul>
                                 </span>

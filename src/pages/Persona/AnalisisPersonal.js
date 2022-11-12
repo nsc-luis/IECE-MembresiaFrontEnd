@@ -63,16 +63,20 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col className="negrita" xs="2">Nombre:</Col>
                             <Col xs="6" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
-                            <Col className="negrita campoVivo" xs="2">
-                                {this.objPersona.persona.per_Vivo &&
-                                    <span className="fa fa-check faIconMarginRight"></span>
-                                }
-                                {!this.objPersona.persona.per_Vivo &&
-                                    <span className="fa fa-times faIconMarginRight"></span>
-                                }
-                                Vivo
-                            </Col>
-                            <img className="fotoPersona fotoAnalisis" src={this.state.foto} />
+                            
+                                <Col className="negrita campoVivo" xs="2">
+                                    {this.objPersona.persona.per_Vivo &&
+                                        <span className="fa fa-check faIconMarginRight"></span>
+                                    }
+                                    {!this.objPersona.persona.per_Vivo &&
+                                        <span className="fa fa-times faIconMarginRight"></span>
+                                    }
+                                    Vivo
+                                </Col>
+                                <Col>
+                                    <img className="fotoPersona fotoAnalisis" src={this.state.foto} />
+                                </Col>
+                            
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -122,6 +126,15 @@ class AnalisisPersonal extends Component {
                                 {!this.state.domicilioLocalizado &&
                                     <>Sin información para mostrar.</>
                                 }
+                            </Col>
+                            <Col className="negrita" xs="2">
+                                {this.objPersona.persona.per_Bautizado &&
+                                    <span className="fa fa-check faIconMarginRight"></span>
+                                }
+                                {!this.objPersona.persona.per_Bautizado &&
+                                    <span className="fa fa-times faIconMarginRight"></span>
+                                }
+                                Bautizado
                             </Col>
                         </Row>
                     </FormGroup>

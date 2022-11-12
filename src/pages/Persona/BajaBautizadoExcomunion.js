@@ -82,7 +82,7 @@ class BajaBautizadoExcomunion extends Component {
 
     render() {
         return (
-            <>
+            <Container>
                 <Card>
                     <Form onSubmit={this.bajaBautizadoExcomunion}>
                         <CardBody>
@@ -191,7 +191,7 @@ class BajaBautizadoExcomunion extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
-            </>
+            </Container>
         )
     }
 }

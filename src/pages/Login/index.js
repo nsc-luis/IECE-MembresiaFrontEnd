@@ -25,9 +25,6 @@ class Login extends Component {
         if(!localStorage.getItem("infoSesion")) {
             return document.location.href = "/";
         }
-        if(!helpers.isLoggedIn()) {
-            return document.location.href = "/";
-        }
     }
 
     componentDidMount() {
@@ -114,10 +111,14 @@ class Login extends Component {
         }
         if (!this.state.obispo && this.state.sectorSeleccionado !== "0") {
             localStorage.setItem('sector', this.state.sectorSeleccionado)
+            localStorage.setItem('LoginValido', true)
+            helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")
             document.location.href = '/Main';
         }
 
         if (this.state.obispo && this.state.sectorSeleccionado === "0") {
+            localStorage.setItem('LoginValido', true)
+            helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")
             document.location.href = '/Main';
         }
         if (!this.state.obispo && this.state.sectorSeleccionado === "0") {
@@ -126,6 +127,8 @@ class Login extends Component {
         }
         if (this.state.sectorSeleccionado !== "0") {
             localStorage.setItem('sector', this.state.sectorSeleccionado)
+            localStorage.setItem('LoginValido', true)
+            helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")
             document.location.href = '/Main';
         }
     }

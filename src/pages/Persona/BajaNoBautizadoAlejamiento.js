@@ -100,7 +100,7 @@ class BajaBautizadoExcomunion extends Component {
 
     render() {
         return (
-            <>
+            <Container>
                 <Card>
                     <Form onSubmit={this.bajaNoBautizadoAlejamiento}>
                         <CardBody>
@@ -196,7 +196,7 @@ class BajaBautizadoExcomunion extends Component {
                         {this.state.mensajeDelProceso}
                     </ModalBody>
                 </Modal>
-            </>
+            </Container>
         )
     }
 }

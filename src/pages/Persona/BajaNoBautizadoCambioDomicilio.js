@@ -98,7 +98,7 @@ class BajaBautizadoCambioDomicilio extends Component {
 
     render() {
         return (
-            <>
+            <Container>
                 <Card>
                     <Form onSubmit={this.bajaNoBautizadoCambioDomicilio}>
                         <CardBody>
@@ -198,7 +198,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                         {this.state.mensajeDelProceso}
                     </ModalBody>
                 </Modal>
-            </>
+            </Container>
         )
     }
 }

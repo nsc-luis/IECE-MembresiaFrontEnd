@@ -265,21 +265,43 @@ class PersonaForm extends Component {
         // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
         const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
             // Obtener primera letra del apellido paterno
-            var ap = per_Apellido_Paterno.split("")
-            // Obtener primera vocal del apellido paterno
-            var regex = /[^aeiou]/gi
-            var vowels = per_Apellido_Paterno.replace(regex, "")
-            var pv = vowels[0] === ap[0] ? vowels[1] : vowels[0]
-            // Obtener primera letra del apellido materno
-            var am = per_Apellido_Materno.split("");
-            // Obtener primera letra del primer nombre
-            var n = per_Nombre.split("")
-            // Reformateando fecha
-            var f = per_Fecha_Nacimiento.split("-")
-            var y = f[0].substr(2, 2)
-            var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[2]
+            var ap = per_Apellido_Paterno.split("");
 
-            changeRFCSinHomo(RFCSinHomo)
+            // Obtener primera vocal del apellido paterno
+            var regex = /[^aeiou]/gi;
+            var vowels = per_Apellido_Paterno.replace(regex, "");
+            var pv = vowels[0] === ap[0] ? vowels[1] : vowels[0];
+
+            // Obtener primera letra del apellido materno
+            // var am = per_Apellido_Materno.split("");
+            var am;
+            switch (form.per_Categoria) {
+                default:
+                    am = "M";
+                    break;
+                case "ADULTO_MUJER":
+                    am = "F";
+                    break;
+                case "JOVEN_MUJER":
+                    am = "F";
+                    break;
+                case "NIÑA":
+                    am = "F";
+                    break;
+            }
+
+            // Obtener primera letra del primer nombre
+            var n = per_Nombre.split("");
+
+            // Reformateando fecha
+            var f = per_Fecha_Nacimiento.split("-");
+            var y = f[0].substr(2, 2);
+
+            // Creando cadena de validacion de duplicados
+            //var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[2]
+            var RFCSinHomo = ap[0] + pv + am + n[0] + y + f[1] + f[2];
+
+            changeRFCSinHomo(RFCSinHomo);
             getPersonaByRFCSinHomo(RFCSinHomo);
         }
 
