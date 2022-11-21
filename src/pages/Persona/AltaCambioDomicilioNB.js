@@ -159,7 +159,7 @@ function AltaCambioDomicilio() {
             helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
             .then(res => {
                 console.log(res)
-                // document.location.href = '/Main';
+                document.location.href = '/Main';
             });
         }else{
             formattedData = {
@@ -192,7 +192,7 @@ function AltaCambioDomicilio() {
                 .then(res => {
                     console.log(res)
 
-                    // document.location.href = '/Main';
+                    document.location.href = '/Main';
                 });
         }
     };
@@ -280,14 +280,14 @@ function AltaCambioDomicilio() {
                             name='hogar'
                             type='select'
                             onChange={e => {handleHogar(e.target.value)}}>
-                            <option value="0" selected>Nuevo hogar / domicilio</option>
+                            <option value="0" selected>Seleccione un hogar a asignar</option>
                             {opcionesHogares.map(hogar => (
                                 <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
                             ))}
                             </Input>
                         </Col>
                     </FormGroup>
-                    {hogar ? 
+                    {hogar &&
                     <Form>
                         <Alert color="warning">
                             <h5><strong>ATENCION:</strong></h5>
@@ -340,9 +340,9 @@ function AltaCambioDomicilio() {
                                 </Input>
                             </Col>
                         </FormGroup>
-                    </Form>
-                    :
-                    <Form>
+                    </Form>}
+                    
+                    {/* <Form>
                         <Row>
                             <Col sm={4}>
                                 <FormGroup>
@@ -455,10 +455,10 @@ function AltaCambioDomicilio() {
                                 </FormGroup>
                             </Col>
                         </Row>
-                    </Form>}
+                    </Form> */}
                     <Row className="text-center">
                         <Col>
-                            <Button color="danger" size='lg'>
+                            <Button color="danger" size='lg' onClick={() => {setMostrarHogar(false)}}>
                                 Cancelar
                             </Button>
                         </Col>

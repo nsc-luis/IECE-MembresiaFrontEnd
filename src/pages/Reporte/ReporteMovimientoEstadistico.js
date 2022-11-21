@@ -152,6 +152,7 @@ export default function ReporteMovimientoEstadistico(){
             'Indice',
             'Nombre',
             'Movimiento',
+            'Subtipo',
             'Comentario',
             'Fecha'
         ]
@@ -173,10 +174,11 @@ export default function ReporteMovimientoEstadistico(){
                     Indice: (index+1).toString(),
                     Nombre: persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno,
                     Movimiento: persona.ct_Tipo,
+                    Subtipo: persona.ct_Subtipo,
                     Comentario: persona.hte_Comentario.trim() === "" ? "N/A" : persona.hte_Comentario.trim(),
                     Fecha: (moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")).toString(),
                 }))
-                doc.table(10, yAxis, data, headers, {autoSize: true, fontSize: 8, padding: 1})
+                doc.table(10, yAxis, data, headers, {fontSize: 8, padding: 1})
                 yAxis+= data.length * 12
                 console.log(yAxis);
             }
@@ -300,6 +302,7 @@ export default function ReporteMovimientoEstadistico(){
                         <tr>
                             <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                             <td>{persona.ct_Tipo}</td>
+                            <td>{persona.ct_Subtipo}</td>
                             <td>{persona.hte_Comentario}</td>
                             <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
                         </tr>
@@ -364,17 +367,18 @@ export default function ReporteMovimientoEstadistico(){
                                     <Table borderless>
                                         <tr>
                                             <th><h4>Nombre</h4></th>
-                                            <th><h4>Movimiento</h4></th>
+                                            <th><h4>Tipo Movimiento</h4></th>
+                                            <th><h4>Subtipo Movimiento</h4></th>
                                             <th><h4>Comentario</h4></th>
                                             <th><h4>Fecha</h4></th>
                                         </tr>
                                         <tr className="bg-info">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h4><strong>MEMBRESIA BAUTIZADA</strong></h4>
                                             </td>
                                         </tr>
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>ACTUALIZACIONES</h5>
                                             </td>
                                         </tr>
@@ -382,7 +386,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Actualizacion Bautizado'} data= {actualizacionB} total={actualizacionB ? actualizacionB.length : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>ALTAS</h5>
                                             </td>
                                         </tr>
@@ -392,7 +396,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Cambio de Domicilio'} data= {altasCambioDom} total={altasCambioDom ? altasCambioDom.length : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>BAJAS</h5>
                                             </td>
                                         </tr>
@@ -403,13 +407,13 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Defunción'} data= {defunciones} total={defunciones ? defunciones.length : 0}/>
 
                                         <tr className="bg-info">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h4><strong>MEMBRESIA NO BAUTIZADA</strong></h4>
                                             </td>
                                         </tr>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>ACTUALIZACIONES</h5>
                                             </td>
                                         </tr>
@@ -417,7 +421,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Actualizacion No Bautizado'} data= {actualizacionNB} total={actualizacionNB ? actualizacionNB.length : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>ALTAS</h5>
                                             </td>
                                         </tr>
@@ -427,7 +431,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Reactivación'} data= {reactivaciones} total={reactivaciones ? reactivaciones.length : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>BAJAS</h5>
                                             </td>
                                         </tr>
@@ -439,13 +443,13 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Baja de Padres'} data= {bajasPorPadres} total={bajasPorPadres ? bajasPorPadres.length : 0}/>
 
                                         <tr className="bg-info">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h4><strong>HOGARES</strong></h4>
                                             </td>
                                         </tr>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>ACTUALIZACIONES</h5>
                                             </td>
                                         </tr>
@@ -453,7 +457,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Actualizaciones'} data= {actualizacionHogar} total={actualizacionHogar ? actualizacionHogar.length : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>ALTAS</h5>
                                             </td>
                                         </tr>
@@ -461,20 +465,20 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Alta Hogares'} data= {altasHogares} total={altasHogares ? altasHogares.length : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>BAJAS</h5>
                                             </td>
                                         </tr>
                                         <TableRow label={'Baja Hogares'} data= {bajasHogares} total={bajasHogares ? bajasHogares.length : 0}/>
 
                                         <tr className="bg-info">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h4><strong>SUCESOS</strong></h4>
                                             </td>
                                         </tr>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>Matrimonios</h5>
                                             </td>
                                         </tr>
@@ -482,7 +486,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Matrimonios'} data= {matrimonios} total={matrimonios ? matrimonios.length / 2 : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>Legalizaciones</h5>
                                             </td>
                                         </tr>
@@ -490,7 +494,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Legalizaciones'} data= {legalizaciones} total={legalizaciones ? legalizaciones.length / 2 : 0}/>
 
                                         <tr className="bg-light">
-                                            <td colSpan="4">
+                                            <td colSpan="5">
                                                 <h5>Presentaciones de niños</h5>
                                             </td>
                                         </tr>

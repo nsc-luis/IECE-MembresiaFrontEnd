@@ -14,9 +14,12 @@ import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
 
+
 export default function ReportePersonalBautizado(){
     //Estados
     const [personas, setPersonas] = useState([])
+    const [infoDis, setInfoDis] = useState(null)
+    const [infoSec, setInfoSec] = useState(null)
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     //Llamadas en render
@@ -26,11 +29,24 @@ export default function ReportePersonalBautizado(){
                 .then(res => {
                     setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion))
                 });
+
+            helpers.authAxios.get("/Distrito/" + dto)
+            .then(res => {
+                setInfoDis(res.data.dis_Alias)
+            })
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
                 setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion))
             });
+            helpers.authAxios.get("/Distrito/" + dto)
+            .then(res => {
+                setInfoDis(res.data.dis_Alias)
+            })
+            helpers.authAxios.get("/Sector/" + sector)
+            .then(res => {
+                setInfoSec(res.data.sector[0].sec_Alias)
+            })
         }
     }, [personas.length])
 
@@ -178,8 +194,8 @@ export default function ReportePersonalBautizado(){
                         <Col lg="7">
                             <CardTitle className="text-left" tag="h3">
                                 REPORTE DE PERSONAL BAUTIZADO
-                                <h5 className="mt-3"><strong>Distrito: </strong>{JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
-                                {sector ? <h5 className="mt-3"><strong>Sector: </strong>{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
+                                <h5 className="mt-3"><strong>Distrito: </strong>{infoDis}</h5>
+                                {sector ? <h5 className="mt-3"><strong>Sector: </strong>{infoSec}</h5> : null}
                             </CardTitle>
                         </Col>
                     </Row>
