@@ -140,16 +140,13 @@ function AltaReactivacion() {
 
         if(!mostrarHogar){
             formattedData = {
-                id: 0,
-                per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: sector,
-                ct_Codigo_Transaccion: 12004, 
-                Usu_Usuario_Id: user.pem_Id_Ministro,
-                hte_Fecha_Transaccion: data.fecha_transaccion,
-                hte_Comentario: data.hte_Comentario,
-                jerarquia: jerarquia,
-                hp_Id_Hogar_Persona: hogar.hd_Id_Hogar,
-            }
+                idPersona: data.per_Id_Persona,
+                comentrario: data.procedencia,
+                fecha: data.fecha_transaccion,
+                idMinistro: user.pem_Id_Ministro,
+                idDomicilio: hogar.hd_Id_Hogar,
+                jerarquia: jerarquia
+              }
             console.log(formattedData)
             helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
             .then(res => {
@@ -239,10 +236,10 @@ function AltaReactivacion() {
                                 onChange={(e) => handleCategoria( e.target.value )}
                                >
                                 <option value="0" selected disabled >Selecionar categoria</option>
-                                <option value="ADULTO_HOMBRE">Adulto Hombre</option>
-                                <option value="ADULTO_MUJER">Adulto Mujer</option>
                                 <option value="JOVEN_HOMBRE">Joven hombre</option>
                                 <option value="JOVEN_MUJER">Joven mujer</option>
+                                <option value="NIÑO">Niño</option>
+                                <option value="NIÑA">Niña</option>
 
                                 </Input>
                             </Col>
@@ -484,7 +481,7 @@ function AltaReactivacion() {
                     </Form>}
                     <Row className="text-center">
                         <Col>
-                            <Button color="danger" size='lg'>
+                            <Button color="danger" size='lg' onClick={() => {setMostrarHogar(false)}}>
                                 Cancelar
                             </Button>
                         </Col>

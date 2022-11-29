@@ -52,9 +52,11 @@ function AltaCambioDomicilio() {
 
     //Manejo de eventos de datos generales
     const handlePersona = (value) => {
-        helpers.authAxios.get(`/Persona/${value}`)
+        value = JSON.parse(value)
+        helpers.authAxios.get(`/Persona/${value.per_Id_Persona}`)
             .then(res => {
                 setData(res.data)
+                console.log(value);
             })
             .then(() => {
                 if(data.dis_Id_Distrito == dto){
@@ -63,7 +65,8 @@ function AltaCambioDomicilio() {
                         per_Activo: true,
                         per_En_Comunion: true,
                         per_Visibilidad_Abierta: false,
-                        ct_Codigo_Transaccion: 11003
+                        ct_Codigo_Transaccion: 11003,
+                        procedencia: `${value.dis_Alias} - ${value.sec_Alias}`
                     }))
                 }else{
                     setData( prevState => ({
@@ -71,7 +74,8 @@ function AltaCambioDomicilio() {
                         per_Activo: true,
                         per_En_Comunion: true,
                         per_Visibilidad_Abierta: false,
-                        ct_Codigo_Transaccion: 11004
+                        ct_Codigo_Transaccion: 11004,
+                        procedencia: `${value.dis_Alias} - ${value.sec_Alias}`
                     }))
                 }
             })
@@ -145,7 +149,7 @@ function AltaCambioDomicilio() {
     //Pruebas
     const postData = () => {
 
-        if(jerarquia == null ){
+        if(jerarquia == null && hogar ){
             alert('Seleccione una jerarquia en el hogar')
             return
         }
@@ -153,16 +157,13 @@ function AltaCambioDomicilio() {
 
         if(hogar){
             formattedData = {
-                // id: 0,
-                per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: sector,
-                ct_Codigo_Transaccion: data.ct_Codigo_Transaccion, 
-                Usu_Usuario_Id: user.pem_Id_Ministro,
-                hte_Fecha_Transaccion: data.fecha_transaccion,
-                hte_Comentario: data.procedencia,
-                jerarquia: jerarquia,
-                hp_Id_Hogar_Persona: hogar.hd_Id_Hogar,
-            }
+                idPersona: data.per_Id_Persona,
+                comentrario: data.procedencia,
+                fecha: data.fecha_transaccion,
+                idMinistro: user.pem_Id_Ministro,
+                idDomicilio: hogar.hd_Id_Hogar,
+                jerarquia: jerarquia
+              }
             console.log(formattedData)
             helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
             .then(res => {
@@ -223,7 +224,7 @@ function AltaCambioDomicilio() {
                                 onChange={e => {handlePersona(e.target.value)}}>
                                 <option value="0" selected disabled>Selecionar persona...</option>
                                 {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno}</option>
+                                    <option key={persona.per_Id_Persona} value={JSON.stringify(persona)}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno}</option>
                                 ))}
                                 </Input>
                             </Col>
@@ -237,6 +238,7 @@ function AltaCambioDomicilio() {
                                 id='Procedencia'
                                 name='procedencia'
                                 type='text'
+                                value={data.procedencia}
                                 onInput={(e) => handleProcedencia( e.target.value )}>
                                 </Input>
                             </Col>
@@ -465,7 +467,7 @@ function AltaCambioDomicilio() {
                     </Form>}
                     <Row className="text-center">
                         <Col>
-                            <Button color="danger" size='lg'>
+                            <Button color="danger" size='lg' onClick={() => {setMostrarHogar(false)}}>
                                 Cancelar
                             </Button>
                         </Col>

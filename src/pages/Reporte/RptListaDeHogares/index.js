@@ -51,7 +51,7 @@ class RptListaDeHogares extends Component {
                     }
                 })
                 this.setState({data: filteredElements})
-
+                console.log(this.state.data);
             })
     }
 
