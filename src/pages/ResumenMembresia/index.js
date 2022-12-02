@@ -39,7 +39,8 @@ class ResumenMembresia extends Component {
             infoSector: {},
             infoMinistro: {},
             infoSecretario: {},
-            distrito: {}
+            distrito: {},
+            gradoMinistro: ""
         }
     }
 
@@ -106,27 +107,44 @@ class ResumenMembresia extends Component {
                 await helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
                     .then(res => {
                         this.setState({ infoSector: res.data.sector[0] })
-                        // console.log(res.data.sector);
                     });
                 await helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
                     .then(res => {
-                        this.setState({ infoMinistro: res.data.ministros[0] });
+                        this.setState({
+                            infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                            gradoMinistro: "PASTOR"
+                        });
                     })
                 await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
                     .then(res => {
-                        this.setState({ infoSecretario: res.data.infoSecretario[0] });
+                        this.setState({
+                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                        });
                     })
             }
             else {
+                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
+                    .then(res => {
+                        this.setState({
+                            infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                            gradoMinistro: "OBISPO"
+                        });
+                    })
+                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
+                    .then(res => {
+                        this.setState({ 
+                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                        });
+                    })
                 this.setState({
                     infoSector: {
                         ...this.state.infoSector,
                         sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
-                    },
+                    }/* ,
                     infoMinistro: {
                         ...this.state.infoMinistro,
                         pem_Nombre: "OBISPO DEL DISTRITO"
-                    }
+                    } */
                 });
             }
             const doc = new jsPDF("p", "mm", "letter");
@@ -140,18 +158,18 @@ class ResumenMembresia extends Component {
             doc.setFontSize(8);
 
             if (localStorage.getItem('sector') !== null) {
-                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 15);
+                doc.text(`${this.state.infoSector.sec_Alias}`, 85, 15);
                 /* doc.text(fechaTexto, 85, 25); */
             }
             else {
                 doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 85, 15);
-                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 20);
+                doc.text(`${this.state.infoSector.sec_Alias}`, 85, 20);
                 /* doc.text(fechaTexto, 85, 20); */
             }
 
             doc.line(10, 32, 200, 32);
 
-            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
             doc.rect(10, 35, 190, 4, "F");
             doc.setFont("", "", "bold");
             doc.text("MEMBRESIA BAUTIZADA", 15, 38);
@@ -165,7 +183,7 @@ class ResumenMembresia extends Component {
             doc.text(`${this.state.resumenDeMembresia.jhb}`, 70, 54);
             doc.text(`${this.state.resumenDeMembresia.jmb}`, 70, 59);
 
-            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
             doc.rect(10, 65, 190, 4, "F");
             doc.setFont("", "", "bold");
             doc.text("MEMBRESIA NO BAUTIZADA", 15, 68);
@@ -187,18 +205,17 @@ class ResumenMembresia extends Component {
 
             doc.line(30, 160, 90, 160);
             doc.text("SECRETARIO", 51, 163);
-            doc.text(`${this.state.infoSecretario.pem_Nombre}`, 38, 158);
+            doc.text(`${this.state.infoSecretario}`, 38, 158);
             doc.line(120, 160, 180, 160);
-            doc.text("PASTOR", 145, 163);
-            doc.text(`${this.state.infoMinistro.pem_Nombre}`, 130, 158);
+            doc.text(this.state.gradoMinistro, 145, 163);
+            doc.text(`${this.state.infoMinistro}`, 130, 158);
             doc.save("ResumenEnPDF.pdf");
         }
     }
 
     render() {
         return (
-            <Layout>
-                <Container>
+            <>                <Container>
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>
@@ -302,7 +319,7 @@ class ResumenMembresia extends Component {
                         </Row>
                     </FormGroup>
                 </Container>
-            </Layout >
+            </>
         )
     }
 }

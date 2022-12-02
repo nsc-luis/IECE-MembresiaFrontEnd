@@ -120,7 +120,7 @@ class Matrimonio extends Component {
     render() {
         if (this.state.listaMatrimoniosLegalizaciones.length > 0) {
             return (
-                <Layout>
+                <>
                     <Container>
                         {!this.state.enableFrmRegistroMatLegal &&
                             <React.Fragment>
@@ -224,12 +224,12 @@ class Matrimonio extends Component {
                             {this.state.mensajeDelProceso}
                         </ModalBody>
                     </Modal>
-                </Layout>
+                </>
             )
         }
         else {
             return (
-                <Layout>
+                <>
                     <Container>
                         {!this.state.enableFrmRegistroMatLegal &&
                             <React.Fragment>
@@ -262,7 +262,7 @@ class Matrimonio extends Component {
                             />
                         }
                     </Container>
-                </Layout>
+                </>
             )
         }
 

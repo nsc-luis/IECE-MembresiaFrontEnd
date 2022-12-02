@@ -307,27 +307,6 @@ class FrmMatrimonioLegalizacion extends Component {
         })
     }
 
-    fnSolicitudNvoEstado = async (idPais) => {
-        let contador = 0;
-        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
-            .then(res => {
-                res.data.estados.forEach(estado => {
-                    contador = contador + 1;
-                });
-            })
-        if (contador > 0) {
-            this.setState({
-                domicilio: {
-                    ...this.state.domicilio,
-                    nvoEstado: ""
-                }
-            })
-        }
-        else if (this.state.domicilio.nvoEstado !== "") {
-            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
-        }
-    }
-
     render() {
         const {
             handle_CancelaCaptura,
@@ -341,83 +320,96 @@ class FrmMatrimonioLegalizacion extends Component {
                     matLegalEntity: this.state.matLegal,
                     HogarDomicilioEntity: this.state.domicilio
                 }
-                this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais)
-                try {
-                    await helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatriminioLegalizacion/${this.state.rSelected}/${this.state.domicilio.nvoEstado}`, matLegalDom)
-                        .then(res => {
-                            if (res.data.status === "success") {
-                                // alert(res.data.mensaje);
-                                setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
-                                this.setState({
-                                    mensajeDelProceso: "Procesando...",
-                                    modalShow: true
-                                });
-                                setTimeout(() => {
-                                    this.setState({
-                                        mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                                    });
-                                }, 1500);
-                                setTimeout(() => {
-                                    document.location.href = '/Matrimonio'
-                                }, 3500);
-                            } else {
-                                // alert(res.data.mensaje);
-                                this.setState({
-                                    mensajeDelProceso: "Procesando...",
-                                    modalShow: true
-                                });
-                                setTimeout(() => {
-                                    this.setState({
-                                        mensajeDelProceso: res.data.mensaje,
-                                        modalShow: false
-                                    });
-                                }, 1500);
+                await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
+                    .then(res => {
+                        if (res.data.status === true) {
+                            let contador = 0
+                            res.data.estados.forEach(element => {
+                                contador = contador + 1
+                            })
+                            if ((contador < 1 && this.state.domicilio.nvoEstado === "") && this.state.rSelected) {
+                                alert("Error: \nEl pais seleccionado no tiene Estados para mostrar, por lo tanto, debe ingresar un nombre de Estado.")
+                                return false
                             }
-                        });
-                } catch (error) {
-                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-                    // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                }
-            }
-            else {
-                try {
-                    await helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
-                        .then(res => {
-                            if (res.data.status === "success") {
-                                // alert(res.data.mensaje);
-                                setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
-                                this.setState({
-                                    mensajeDelProceso: "Procesando...",
-                                    modalShow: true
-                                });
-                                setTimeout(() => {
-                                    this.setState({
-                                        mensajeDelProceso: "Los datos fueron actualizados satisfactoriamente."
-                                    });
-                                }, 1500);
-                                setTimeout(() => {
-                                    document.location.href = '/Matrimonio'
-                                }, 3500);
-                            } else {
-                                // alert(res.data.mensaje);
-                                this.setState({
-                                    mensajeDelProceso: "Procesando...",
-                                    modalShow: true
-                                });
-                                setTimeout(() => {
-                                    this.setState({
-                                        mensajeDelProceso: res.data.mensaje,
-                                        modalShow: false
-                                    });
-                                }, 1500);
+                            else {
+                                try {
+                                    helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatriminioLegalizacion/${this.state.rSelected}/${this.state.domicilio.nvoEstado}`, matLegalDom)
+                                        .then(res => {
+                                            if (res.data.status === "success") {
+                                                // alert(res.data.mensaje);
+                                                setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
+                                                this.setState({
+                                                    mensajeDelProceso: "Procesando...",
+                                                    modalShow: true
+                                                });
+                                                setTimeout(() => {
+                                                    this.setState({
+                                                        mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                                    });
+                                                }, 1500);
+                                                setTimeout(() => {
+                                                    document.location.href = '/Matrimonio'
+                                                }, 3500);
+                                            } else {
+                                                // alert(res.data.mensaje);
+                                                this.setState({
+                                                    mensajeDelProceso: "Procesando...",
+                                                    modalShow: true
+                                                });
+                                                setTimeout(() => {
+                                                    this.setState({
+                                                        mensajeDelProceso: res.data.mensaje,
+                                                        modalShow: false
+                                                    });
+                                                }, 1500);
+                                            }
+                                        });
+                                } catch (error) {
+                                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                                    // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                                }
                             }
-                        });
-                } catch (error) {
-                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-                    // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                }
+                        }
+                        else {
+                            try {
+                                helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
+                                    .then(res => {
+                                        if (res.data.status === "success") {
+                                            // alert(res.data.mensaje);
+                                            setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
+                                            this.setState({
+                                                mensajeDelProceso: "Procesando...",
+                                                modalShow: true
+                                            });
+                                            setTimeout(() => {
+                                                this.setState({
+                                                    mensajeDelProceso: "Los datos fueron actualizados satisfactoriamente."
+                                                });
+                                            }, 1500);
+                                            setTimeout(() => {
+                                                document.location.href = '/Matrimonio'
+                                            }, 3500);
+                                        } else {
+                                            // alert(res.data.mensaje);
+                                            this.setState({
+                                                mensajeDelProceso: "Procesando...",
+                                                modalShow: true
+                                            });
+                                            setTimeout(() => {
+                                                this.setState({
+                                                    mensajeDelProceso: res.data.mensaje,
+                                                    modalShow: false
+                                                });
+                                            }, 1500);
+                                        }
+                                    });
+                            } catch (error) {
+                                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                            }
+                        }
+                    })
             }
-
         }
 
         return (

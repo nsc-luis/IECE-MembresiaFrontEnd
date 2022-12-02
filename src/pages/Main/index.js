@@ -13,9 +13,7 @@ class Main extends Component {
 
     render() {
         return (
-            <Layout>
-                <Home />
-            </Layout>
+            <Home />
         )
     }
 }

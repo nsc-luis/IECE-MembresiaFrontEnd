@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Layout from '../../Layout';
 import helpers from '../../../components/Helpers';
 import {
     Container, Row, Col, Card, CardHeader,
@@ -177,7 +176,7 @@ class RptListaDeHogares extends Component {
     render() {
         if (this.state.data.length >= 0) {
             return (
-                <Layout>
+                <>
                     <Container fluid>
                     <Button className="btn-success m-3 " onClick={() => this.downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={() => this.reporteHogaresPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
@@ -281,25 +280,25 @@ class RptListaDeHogares extends Component {
                             </Row>
                         </div>
                     </Container>
-                </Layout>
+                </>
             )
         } else if (this.state.data.length === 0 && this.state.status === 'success') {
             return (
-                <Layout>
+                <>
                     <React.Fragment>
                         <h3>Aun no hay hogares registros!</h3>
                         <p>Los hogares son agregados desde el registro de personal.</p>
                     </React.Fragment>
-                </Layout>
+                </>
             );
         } else {
             return (
-                <Layout>
+                <>
                     <React.Fragment>
                         <h3>Cargando información...</h3>
                         <p>Por favor espere.</p>
                     </React.Fragment>
-                </Layout>
+                </>
             );
         }
     }

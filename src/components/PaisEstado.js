@@ -64,7 +64,7 @@ class PaisEstado extends React.Component {
                         onChange={handle_pais_Id_Pais}
                         value={domicilio.pais_Id_Pais}
                     >
-                        <option value="0">Selecciona un pais *</option>
+                        <option value="0">Selecciona un pais</option>
                         {
                             this.state.paises.map((pais) => {
                                 return (
@@ -73,7 +73,7 @@ class PaisEstado extends React.Component {
                             })
                         }
                     </select>
-                    <label htmlFor="pais_Id_Pais">País</label>
+                    <label htmlFor="pais_Id_Pais">País *</label>
                 </div>
                 {this.state.mostrarEstados &&
                     <div className="col-sm-4">
@@ -92,7 +92,7 @@ class PaisEstado extends React.Component {
                                 })
                             }
                         </select>
-                        <label>Estado/Provincia</label>
+                        <label>Estado/Provincia *</label>
                     </div>
                 }
                 {!this.state.mostrarEstados &&
@@ -104,7 +104,7 @@ class PaisEstado extends React.Component {
                             value={domicilio.nvoEstado}
                             onChange={onChangeDomicilio}
                         />
-                        <label>Estado/Provincia</label>
+                        <label>Estado/Provincia *</label>
                     </div>
                 }
             </React.Fragment>

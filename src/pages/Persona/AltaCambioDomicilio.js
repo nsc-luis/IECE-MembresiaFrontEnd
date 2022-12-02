@@ -205,7 +205,7 @@ function AltaCambioDomicilio() {
         }
     };
     return(
-        <Layout>
+        <>
             <Container>
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
@@ -479,7 +479,7 @@ function AltaCambioDomicilio() {
                     </Row>
                 </Card>}
             </Container>
-        </Layout>
+        </>
 
     );
 }

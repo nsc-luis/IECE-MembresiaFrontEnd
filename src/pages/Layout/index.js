@@ -51,7 +51,9 @@ class Layout extends Component {
                         </div>
                         {/* End of Main Content */}
 
-                        <Footer />
+                        <Footer
+                            GoToTop={this.GoToTop}
+                        />
 
                     </div>
                     {/* End of Content Wrapper */}

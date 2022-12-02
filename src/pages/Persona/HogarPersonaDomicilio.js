@@ -168,7 +168,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Exterior}
                                         onChange={onChangeDomicilio}
                                     />
-                                    <label>Número exterior *</label>
+                                    <label>Número exterior</label>
                                 </div>
                                 <div className="col-sm-4">
                                     <input
@@ -224,7 +224,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Localidad}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Localidad/Poblado *</label>
+                                        <label>Localidad/Poblado</label>
                                     </div>
 
                                 </div>
@@ -239,7 +239,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Municipio_Ciudad}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Municipio/Ciudad</label>
+                                        <label>Municipio/Ciudad *</label>
                                     </div>
                                     <PaisEstado
                                         domicilio={domicilio}

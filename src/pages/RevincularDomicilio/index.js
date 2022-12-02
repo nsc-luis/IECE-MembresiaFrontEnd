@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import helpers from '../../components/Helpers';
-import Layout from '../Layout';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button, ModalBody, Modal,
     FormFeedback, /* CardTitle, */ Card, CardBody, CardHeader, CardFooter
@@ -174,7 +174,7 @@ class RevinculaDomicilio extends Component {
                 await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaNvoHogar/${this.state.personaSeleccionada}/${this.infoSesion.pem_Id_Ministro}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                     .then(res => {
                         if (res.data.status === "success") {
-                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
                             this.setState({
                                 mensajeDelProceso: "Procesando...",
                                 modalShow: true
@@ -183,10 +183,10 @@ class RevinculaDomicilio extends Component {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                 });
-                            }, 1500);
+                            }, 1000);
                             setTimeout(() => {
                                 document.location.href = '/ListaDePersonal'
-                            }, 3500);
+                            }, 1000);
                         } else {
                             // alert(res.data.mensaje);
                             this.setState({
@@ -198,7 +198,7 @@ class RevinculaDomicilio extends Component {
                                     mensajeDelProceso: res.data.mensaje,
                                     modalShow: false
                                 });
-                            }, 1500);
+                            }, 1000);
                         }
                     })
             }
@@ -212,7 +212,7 @@ class RevinculaDomicilio extends Component {
                 await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
                     .then(res => {
                         if (res.data.status === "success") {
-                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
                             this.setState({
                                 mensajeDelProceso: "Procesando...",
                                 modalShow: true
@@ -221,10 +221,10 @@ class RevinculaDomicilio extends Component {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                 });
-                            }, 1500);
+                            }, 1000);
                             setTimeout(() => {
                                 document.location.href = '/ListaDePersonal'
-                            }, 3500);
+                            }, 1000);
                         } else {
                             // alert(res.data.mensaje);
                             this.setState({
@@ -236,7 +236,7 @@ class RevinculaDomicilio extends Component {
                                     mensajeDelProceso: res.data.mensaje,
                                     modalShow: false
                                 });
-                            }, 1500);
+                            }, 1000);
                         }
                     })
             }
@@ -249,7 +249,7 @@ class RevinculaDomicilio extends Component {
 
     render() {
         return (
-            <Layout>
+            <>
                 <Container>
                     <Row>
                         <Form onSubmit={this.GuardaCambioDomicilio}>
@@ -301,15 +301,14 @@ class RevinculaDomicilio extends Component {
                                     </FormGroup>
                                 </CardBody>
                                 <CardFooter>
-                                    <Button
-                                        type="button"
-                                        color="danger"
-                                        className="buttonMarginRight"
-                                        onClick={() => window.location = "/ListaDePersonal"}
+                                    <Link
+                                        to="/ListaDePersonal"
+                                        onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                                     >
-                                        <span className='fa fa-sw fa-times buttonMarginRight'></span>
-                                        Cancelar
-                                    </Button>
+                                        <Button type="button" color="danger" className="entreBotones">
+                                            Cancelar
+                                        </Button>
+                                    </Link>
                                     <Button
                                         type="submit"
                                         color="primary"
@@ -327,7 +326,7 @@ class RevinculaDomicilio extends Component {
                         {this.state.mensajeDelProceso}
                     </ModalBody>
                 </Modal>
-            </Layout>
+            </>
         )
     }
 }

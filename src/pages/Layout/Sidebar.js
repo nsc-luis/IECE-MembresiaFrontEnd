@@ -1,10 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert, 
+    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
+import PersonaForm from '../Persona/PersonaForm';
 import './style.css'
 
 class Sidebar extends Component {
@@ -14,122 +15,25 @@ class Sidebar extends Component {
         this.state = {
             modalEditaPersona: false,
             modalEditaPersonaNB: false,
-            modalBajaBautizadoExcomunion: false,
             personas: [],
-            formBajaBautizadoExcomunion: {},
             personaSeleccionada: '0',
             mensajeDelProceso: '',
             modalShow: false,
-            modalBajaBautizadoDefuncion: false,
-            formBajaBautizadoDefuncion: {},
-            modalBajaNoBautizadoDefuncion: false,
             modalBajaNoBautizadoAlejamiento: false,
-            modalBajaBautizadoCambioDomicilio: false,
             modalBajaNoBautizadoCambioDomicilio: false,
             modalEstableceVisibilidadAbierta: false,
-            formBajaNoBautizadoDefuncion: {},
-            formBajaNoBautizadoAlejamiento: {},
-            formBajaBautizadoCambioDomicilio: {},
-            formBajaNoBautizadoCambioDomicilio: {},
             formEstableceVisibilidadAbierta: {}
         }
     }
 
     componentDidMount() {
         this.setState({
-            formBajaBautizadoExcomunion: {
-                ...this.state.bajaBautizadoExcomunion,
-                personaSeleccionada: '0',
-                tipoExcomunion: '0',
-                excomunionDelito: '',
-                fechaExcomunion: '01/01/1900'
-            },
-            formBajaNoBautizadoDefuncion: {
-                ...this.state.formBajaNoBautizadoDefuncion,
-                personaSeleccionada: '0',
-                comentario: '',
-                fechaTransaccion: '01/01/1900'
-            },
-            formBajaNoBautizadoAlejamiento: {
-                ...this.state.formBajaNoBautizadoAlejamiento,
-                personaSeleccionada: '0',
-                codigoTransaccion: '0',
-                fechaTransaccion: '01/01/1900'
-            },
-            formBajaBautizadoCambioDomicilio: {
-                ...this.state.formBajaBautizadoCambioDomicilio,
-                idPersona: '0',
-                tipoDestino: '0',
-                fechaTransaccion: '01/01/1900',
-                idUsuario: this.infoSesion.pem_Id_Ministro
-            },
-            formBajaNoBautizadoCambioDomicilio: {
-                ...this.state.formBajaNoBautizadoCambioDomicilio,
-                idPersona: '0',
-                tipoDestino: '0',
-                fechaTransaccion: '01/01/1900',
-                idUsuario: this.infoSesion.pem_Id_Ministro
-            },
             formEstableceVisibilidadAbierta: {
                 ...this.state.formEstableceVisibilidadAbierta,
                 idPersona: '0',
                 idUsuario: this.infoSesion.pem_Id_Ministro
             }
         });
-    }
-
-    onChangeBajaBautizadoExcomunion = (e) => {
-        this.setState({
-            formBajaBautizadoExcomunion: {
-                ...this.state.formBajaBautizadoExcomunion,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
-    }
-
-    onChangeBajaBautizadoDefuncion = (e) => {
-        this.setState({
-            formBajaBautizadoDefuncion: {
-                ...this.state.formBajaBautizadoDefuncion,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
-    }
-
-    onChangeBajaNoBautizadoDefuncion = (e) => {
-        this.setState({
-            formBajaNoBautizadoDefuncion: {
-                ...this.state.formBajaNoBautizadoDefuncion,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
-    }
-
-    onChangeBajaNoBautizadoAlejamiento = (e) => {
-        this.setState({
-            formBajaNoBautizadoAlejamiento: {
-                ...this.state.formBajaNoBautizadoAlejamiento,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
-    }
-
-    onChangeBajaBautizadoCambioDomicilio = (e) => {
-        this.setState({
-            formBajaBautizadoCambioDomicilio: {
-                ...this.state.formBajaBautizadoCambioDomicilio,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
-    }
-
-    onChangeBajaNoBautizadoCambioDomicilio = (e) => {
-        this.setState({
-            formBajaNoBautizadoCambioDomicilio: {
-                ...this.state.formBajaNoBautizadoCambioDomicilio,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
     }
 
     onChangeEstableceVisibilidadAbierta = (e) => {
@@ -170,67 +74,17 @@ class Sidebar extends Component {
     invocaFormularioDePersona = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
-        // console.log(localStorage.getItem("idPersona"));
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
-        document.location.href = '/RegistroDePersona';
+        window.location = "/RegistroDePersona";
     }
 
     invocaFormularioDePersonaNB = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
-        // console.log(localStorage.getItem("idPersona"));
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
-        document.location.href = '/RegistroDePersona';
-    }
-
-    openModalBajaBautizadoExcomunion = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosComunionBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ personas: res.data.personas });
-            });
-        this.setState({ modalBajaBautizadoExcomunion: !this.state.modalBajaBautizadoExcomunion })
-    }
-
-    openModalBajaBautizadoDefuncion = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosComunionVivoBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ personas: res.data.personas });
-            });
-        this.setState({ modalBajaBautizadoDefuncion: !this.state.modalBajaBautizadoDefuncion })
-    }
-
-    openModalBajaNoBautizadoDefuncion = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosDefuncionBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ personas: res.data.personas });
-            });
-        this.setState({ modalBajaNoBautizadoDefuncion: !this.state.modalBajaNoBautizadoDefuncion })
-    }
-
-    openModalBajaNoBautizadoAlejamiento = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ personas: res.data.personas });
-            });
-        this.setState({ modalBajaNoBautizadoAlejamiento: !this.state.modalBajaNoBautizadoAlejamiento })
-    }
-
-    openModalBajaBautizadoCambioDomicilio = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ personas: res.data.personas });
-            });
-        this.setState({ modalBajaBautizadoCambioDomicilio: !this.state.modalBajaBautizadoCambioDomicilio })
-    }
-
-    openModalBajaNoBautizadoCambioDomicilio = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ personas: res.data.personas });
-            });
-        this.setState({ modalBajaNoBautizadoCambioDomicilio: !this.state.modalBajaNoBautizadoCambioDomicilio })
+        window.location = "/RegistroDePersona";
     }
 
     openModalVisibilidadAbierta = async () => {
@@ -247,7 +101,6 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
-        document.location.href = "/RegistroDePersona";
     }
 
     handle_AltaRestitucion = () => {
@@ -265,7 +118,6 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
-        document.location.href = "/RegistroDePersona";
     }
 
     handle_Reactivacion = () => {
@@ -278,332 +130,40 @@ class Sidebar extends Component {
         document.location.href = "/AltaCambioDomicilioNB";
     }
 
-    bajaBautizadoExcomunion = async (e) => {
-        e.preventDefault();
-        var datos = this.state.formBajaBautizadoExcomunion;
-
-        if (datos.personaSeleccionada === '0'
-            || datos.tipoExcomunion === '0'
-            || datos.excomunionDelito === ''
-            || datos.fechaExcomunion === ''
-            || datos.fechaExcomunion === '01/01/1900') {
-            alert('Error!\nDebe ingresar todos los datos requeridos.');
-            return false;
-        }
-        try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
-                "/" + datos.tipoExcomunion +
-                "/" + datos.excomunionDelito +
-                "/" + datos.fechaExcomunion +
-                "/" + this.infoSesion.pem_Id_Ministro)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                            });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
-                        }, 3500);
-                    } else {
-                        // alert(res.data.mensaje);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: res.data.mensaje,
-                                modalShow: false
-                            });
-                        }, 1500);
-                    }
-                });
-        } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-        }
-    }
-
-    bajaBautizadoDefuncion = async (e) => {
-        e.preventDefault();
-        var datos = this.state.formBajaBautizadoDefuncion;
-
-        if (datos.personaSeleccionada === '0'
-            || datos.comentarioDefuncion === ''
-            || datos.fechaDefuncion === ''
-            || datos.fechaDefuncion === '01/01/1900') {
-            alert('Error!\nDebe ingresar todos los datos requeridos.');
-            return false;
-        }
-        try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaBautizadoDefuncion/" + datos.personaSeleccionada +
-                "/" + datos.comentarioDefuncion +
-                "/" + datos.fechaDefuncion +
-                "/" + this.infoSesion.pem_Id_Ministro)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                            });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
-                        }, 3500);
-                    } else {
-                        // alert(res.data.mensaje);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: res.data.mensaje,
-                                modalShow: false
-                            });
-                        }, 1500);
-                    }
-                });
-        } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-        }
-    }
-
-    bajaNoBautizadoDefuncion = async (e) => {
-        e.preventDefault();
-        var datos = this.state.formBajaNoBautizadoDefuncion;
-
-        if (datos.personaSeleccionada === '0'
-            || datos.fechaTransaccion === ''
-            || datos.fechaTransaccion === '01/01/1900') {
-            alert('Error!\nDebe ingresar todos los datos requeridos.');
-            return false;
-        }
-        try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaNoBautizadoDefuncion/" + datos.personaSeleccionada +
-                "/" + datos.comentario +
-                "/" + datos.fechaTransaccion)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                            });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
-                        }, 3500);
-                    } else {
-                        // alert(res.data.mensaje);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: res.data.mensaje,
-                                modalShow: false
-                            });
-                        }, 1500);
-                    }
-                });
-        } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-        }
-    }
-
-    bajaNoBautizadoAlejamiento = async (e) => {
-        e.preventDefault();
-        var datos = this.state.formBajaNoBautizadoAlejamiento;
-
-        if (datos.personaSeleccionada === '0'
-            || datos.fechaTransaccion === ''
-            || datos.fechaTransaccion === '01/01/1900') {
-            alert('Error!\nDebe ingresar todos los datos requeridos.');
-            return false;
-        }
-        try {
-            await helpers.authAxios.post(
-                helpers.url_api + "/Persona/BajaNoBautizadoAlejamiento/" + datos.personaSeleccionada +
-                "/" + datos.comentario +
-                "/" + datos.fechaTransaccion)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                            });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
-                        }, 3500);
-                    } else {
-                        // alert(res.data.mensaje);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: res.data.mensaje,
-                                modalShow: false
-                            });
-                        }, 1500);
-                    }
-                });
-        } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-        }
-    }
-
-    bajaBautizadoCambioDomicilio = async(e) => {
-        e.preventDefault();
-        try {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
-            .then(res => {
-                if (res.data.status === "success") {
-                    // alert(res.data.mensaje);
-                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
-                        this.setState({
-                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                        });
-                    }, 1500);
-                    setTimeout(() => {
-                        document.location.href = '/ListaDePersonal'
-                    }, 3500);
-                } else {
-                    // alert(res.data.mensaje);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
-                        this.setState({
-                            mensajeDelProceso: res.data.mensaje,
-                            modalShow: false
-                        });
-                    }, 1500);
-                }
-            })
-        }
-        catch {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-        }
-    }
-
-    bajaNoBautizadoCambioDomicilio = async(e) => {
-        e.preventDefault();
-        try {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
-            .then(res => {
-                if (res.data.status === "success") {
-                    // alert(res.data.mensaje);
-                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
-                        this.setState({
-                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                        });
-                    }, 1500);
-                    setTimeout(() => {
-                        document.location.href = '/ListaDePersonal'
-                    }, 3500);
-                } else {
-                    // alert(res.data.mensaje);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
-                        this.setState({
-                            mensajeDelProceso: res.data.mensaje,
-                            modalShow: false
-                        });
-                    }, 1500);
-                }
-            })
-        }
-        catch {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-        }
-    }
-
-    estableceVisibilidadAbierta = async(e) => {
+    estableceVisibilidadAbierta = async (e) => {
         e.preventDefault();
         try {
             await helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/CambiarVisibilidad/${this.state.formEstableceVisibilidadAbierta.idPersona}/${this.state.formEstableceVisibilidadAbierta.idUsuario}`)
-            .then(res => {
-                if (res.data.status === "success") {
-                    // alert(res.data.mensaje);
-                    setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                .then(res => {
+                    if (res.data.status === "success") {
+                        // alert(res.data.mensaje);
+                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                         this.setState({
-                            mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                    setTimeout(() => {
-                        document.location.href = '/ListaDePersonal'
-                    }, 3500);
-                } else {
-                    // alert(res.data.mensaje);
-                    this.setState({
-                        mensajeDelProceso: "Procesando...",
-                        modalShow: true
-                    });
-                    setTimeout(() => {
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                            });
+                        }, 1500);
+                        setTimeout(() => {
+                            document.location.href = '/ListaDePersonal'
+                        }, 3500);
+                    } else {
+                        // alert(res.data.mensaje);
                         this.setState({
-                            mensajeDelProceso: res.data.mensaje,
-                            modalShow: false
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
                         });
-                    }, 1500);
-                }
-            })
+                        setTimeout(() => {
+                            this.setState({
+                                mensajeDelProceso: res.data.mensaje,
+                                modalShow: false
+                            });
+                        }, 1500);
+                    }
+                })
         }
         catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -654,10 +214,10 @@ class Sidebar extends Component {
                         <Link
                             className="nav-link"
                             to="/ListaDePersonal"
-                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
+                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Análisis de membresía")}
                         >
                             <i className="fas fa-fw fa-home"></i>
-                            <span>Anális de Membresía</span>
+                            <span>Análisis de Membresía</span>
                         </Link>
                     </li>
 
@@ -715,7 +275,7 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaBautizada}>Bautismo</Link>
+                                        <Link className="collapse-item" onClick={this.handle_AltaPersonaBautizada} to="/RegistroDePersona">Bautismo</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucion}>Restitución</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
                                     </div>
@@ -727,15 +287,11 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaPersonaNoBautizada}>Nuevo Ingreso</Link>
+                                        <Link className="collapse-item" onClick={this.handle_AltaPersonaNoBautizada} to="/RegistroDePersona">Nuevo Ingreso</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_Reactivacion}>Reativación</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>
-                                {/* <h6 className="collapse-header">Personal no bautizado:</h6>
-                                    <Link className="collapse-item" to="#">Nuevo ingreso</Link>
-                                    <Link className="collapse-item" to="#">Cambio de domicilio</Link>
-                                    <Link className="collapse-item" to="#">Reactivación</Link> */}
                             </div>
                         </div>
                     </li>
@@ -760,18 +316,19 @@ class Sidebar extends Component {
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link
                                             className="collapse-item"
-                                            to="#"
-                                            onClick={this.openModalBajaBautizadoDefuncion}
-                                        >Defunción</Link>
+                                            to="/BajaBautizadoDefuncion"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por defunción")}
+                                        >Defunción
+                                        </Link>
                                         <Link
                                             className="collapse-item"
-                                            to="#"
-                                            onClick={this.openModalBajaBautizadoExcomunion}
+                                            to="/BajaBautizadoExcomunion"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja por excomunion")}
                                         >Excomunión</Link>
-                                        <Link 
-                                            className="collapse-item" 
-                                            to="#"
-                                            onClick={this.openModalBajaBautizadoCambioDomicilio}
+                                        <Link
+                                            className="collapse-item"
+                                            to="/BajaBautizadoCambioDomicilio"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por cambio de domicilio")}
                                         >Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -780,24 +337,22 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseBajaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPBajas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link 
-                                            className="collapse-item" 
-                                            to="#"
-                                            onClick={this.openModalBajaNoBautizadoDefuncion}
-                                        >
-                                            Defunción
-                                        </Link>
-                                        <Link 
-                                            className="collapse-item" 
-                                            to="#"
-                                            onClick={this.openModalBajaNoBautizadoAlejamiento}
-                                        >
-                                            Alejamiento
+                                        <Link
+                                            className="collapse-item"
+                                            to="/BajaNoBautizadoDefuncion"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de NO bautizado por defunción")}
+                                        >Defunción
                                         </Link>
                                         <Link
-                                            className="collapse-item" 
-                                            to="#"
-                                            onClick={this.openModalBajaNoBautizadoCambioDomicilio}
+                                            className="collapse-item"
+                                            to="/BajaNoBautizadoAlejamiento"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de NO bautizado por alejamiento")}
+                                        >Alejamiento
+                                        </Link>
+                                        <Link
+                                            className="collapse-item"
+                                            to="/BajaNoBautizadoCambioDomicilio"
+                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de NO bautizado por cambio de domicilio")}
                                         >Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -856,9 +411,9 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Matrimonios */}
                     <li className="nav-item">
-                        <Link className="nav-link" 
+                        <Link className="nav-link"
                             to="/Matrimonio"
-                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
                         >
                             <i className="fas fa-fw fa-user-friends"></i>
                             <span>Matrimonio / Legalización</span>
@@ -867,9 +422,9 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Presentaciones  */}
                     <li className="nav-item">
-                        <Link className="nav-link" 
+                        <Link className="nav-link"
                             to="/PresentacionDeNino"
-                            onClick={()=>this.handle_LinkEncabezado('Sucesos Estádisticos', 'Presentación de niños')}
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estádisticos', 'Presentación de niños')}
                         >
                             <i className="fas fa-fw fa-baby"></i>
                             <span>Presentación de Niños</span>
@@ -886,19 +441,19 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Hogares  */}
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link" 
+                        <Link
+                            className="nav-link"
                             to="/EdicionDeDireccion"
-                            onClick={()=>this.handle_LinkEncabezado('Hogares', 'Edición de dirección.')}>
+                            onClick={() => this.handle_LinkEncabezado('Hogares', 'Edición de dirección.')}>
                             <i className="fas fa-address-book"></i>
                             <span>Edición de Dirección</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link text-wrap" 
+                        <Link
+                            className="nav-link text-wrap"
                             to="/RevinculaDomicilio"
-                            onClick={()=>this.handle_LinkEncabezado('Hogares', 'Revinculación persona-hogar.')}
+                            onClick={() => this.handle_LinkEncabezado('Hogares', 'Revinculación persona-hogar.')}
                         >
                             <i className="fas fa-house-user"></i>
                             <span>Revinculación Persona-Hogar</span>
@@ -912,8 +467,8 @@ class Sidebar extends Component {
 
                     {/* Nav Item - Hogares  */}
                     <li className="nav-item">
-                        <Link 
-                            className="nav-link" 
+                        <Link
+                            className="nav-link"
                             to="#"
                             onClick={this.openModalVisibilidadAbierta}
                         >
@@ -921,7 +476,7 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li>
-                    
+
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
@@ -1084,325 +639,15 @@ class Sidebar extends Component {
                             <Button
                                 type="button"
                                 color="success"
-                                onClick={this.invocaFormularioDePersonaNB}
-                            >
+                                onClick={this.invocaFormularioDePersonaNB}>
                                 <span className="fa fa-pencil"></span>Editar
                             </Button>
                         </CardFooter>
                     </Card>
                 </Modal>
 
-                {/* MODAL BAJA/BAUTIZADO/EXCOMUNION */}
-                <Modal isOpen={this.state.modalBajaBautizadoExcomunion} size="lg">
-                    <Card>
-                        <Form onSubmit={this.bajaBautizadoExcomunion}>
-                            <CardHeader>
-                                <CardTitle><h3>Seleccione una Persona.</h3></CardTitle>
-                            </CardHeader>
-                            <CardBody>
-
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="12">
-                                            <Alert color="warning">
-                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
-                                            </Alert>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * PERSONA:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                value={this.state.formBajaBautizadoExcomunion.personaSeleccionada}
-                                                name="personaSeleccionada"
-                                                onChange={this.onChangeBajaBautizadoExcomunion}
-                                            >
-                                                <option value="0">Seleccione una Persona</option>
-                                                {this.state.personas.map(persona => {
-                                                    return (
-                                                        <React.Fragment key={persona.per_Id_Persona}>
-                                                            <option value={persona.per_Id_Persona} >
-                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
-                                                            </option>
-                                                        </React.Fragment>
-                                                    )
-                                                })}
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Tipo de Excomunión:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                name="tipoExcomunion"
-                                                value={this.state.formBajaBautizadoExcomunion.tipoExcomunion}
-                                                onChange={this.onChangeBajaBautizadoExcomunion}
-                                            >
-                                                <option value="0">Seleccione una Opción</option>
-                                                <option value="11102">Excomunión Temporal</option>
-                                                <option value="11103">Excomunión</option>
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Delito:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="text"
-                                                name="excomunionDelito"
-                                                value={this.state.formBajaBautizadoExcomunion.excomunionDelito}
-                                                onChange={this.onChangeBajaBautizadoExcomunion}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Fecha de transacción:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="date"
-                                                name="fechaExcomunion"
-                                                placeholder='DD/MM/AAAA'
-                                                value={this.state.formBajaBautizadoExcomunion.fechaExcomunion}
-                                                onChange={this.onChangeBajaBautizadoExcomunion}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                            </CardBody>
-                            <CardFooter>
-                                <Button
-                                    type="button"
-                                    onClick={this.openModalBajaBautizadoExcomunion}
-                                    color="secondary"
-                                    className="entreBotones"
-                                >
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    color="success"
-                                /* onClick={this.invocaFormularioDePersona} */
-                                >
-                                    <span className="fa fa-pencil"></span>Proceder
-                                </Button>
-                            </CardFooter>
-                        </Form>
-                    </Card>
-                </Modal>
-
-                {/* MODAL BAJA/BAUTIZADO/DEFUNCION */}
-                <Modal isOpen={this.state.modalBajaBautizadoDefuncion} size="lg">
-                    <Card>
-                        <Form onSubmit={this.bajaBautizadoDefuncion}>
-                            <CardHeader>
-                                <CardTitle><h3>Seleccione una persona.</h3></CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="12">
-                                            <Alert color="warning">
-                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
-                                            </Alert>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * PERSONA:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                value={this.state.formBajaBautizadoDefuncion.personaSeleccionada}
-                                                name="personaSeleccionada"
-                                                onChange={this.onChangeBajaBautizadoDefuncion}
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-                                                {this.state.personas.map(persona => {
-                                                    return (
-                                                        <React.Fragment key={persona.per_Id_Persona}>
-                                                            <option value={persona.per_Id_Persona} >
-                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
-                                                            </option>
-                                                        </React.Fragment>
-                                                    )
-                                                })}
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            Comentario:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="text"
-                                                name="comentarioDefuncion"
-                                                value={this.state.formBajaBautizadoDefuncion.comentarioDefuncion}
-                                                onChange={this.onChangeBajaBautizadoDefuncion}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Fecha de transacción:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="date"
-                                                name="fechaDefuncion"
-                                                placeholder='DD/MM/AAAA'
-                                                value={this.state.formBajaBautizadoDefuncion.fechaDefuncion}
-                                                onChange={this.onChangeBajaBautizadoDefuncion}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                            </CardBody>
-                            <CardFooter>
-                                <Button
-                                    type="button"
-                                    onClick={this.openModalBajaBautizadoDefuncion}
-                                    color="secondary"
-                                    className="entreBotones"
-                                >
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    color="success"
-                                >
-                                    <span className="fa fa-pencil"></span>Proceder
-                                </Button>
-                            </CardFooter>
-                        </Form>
-                    </Card>
-                </Modal>
-
-                {/* MODAL BAJA/NOBAUTIZADO/DEFUNCION */}
-                <Modal isOpen={this.state.modalBajaNoBautizadoDefuncion} size="lg">
-                    <Card>
-                        <Form onSubmit={this.bajaNoBautizadoDefuncion}>
-                            <CardHeader>
-                                <CardTitle><h3>Baja de persona No Bautizada por defunción.</h3></CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="12">
-                                            <Alert color="warning">
-                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
-                                            </Alert>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * PERSONA:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                value={this.state.formBajaNoBautizadoDefuncion.personaSeleccionada}
-                                                name="personaSeleccionada"
-                                                onChange={this.onChangeBajaNoBautizadoDefuncion}
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-                                                {this.state.personas.map(persona => {
-                                                    return (
-                                                        <React.Fragment key={persona.per_Id_Persona}>
-                                                            <option value={persona.per_Id_Persona} >
-                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
-                                                            </option>
-                                                        </React.Fragment>
-                                                    )
-                                                })}
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            Comentario:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="text"
-                                                name="comentario"
-                                                value={this.state.formBajaNoBautizadoDefuncion.comentario}
-                                                onChange={this.onChangeBajaNoBautizadoDefuncion}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Fecha de transacción:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="date"
-                                                name="fechaTransaccion"
-                                                placeholder='DD/MM/AAAA'
-                                                value={this.state.formBajaNoBautizadoDefuncion.fechaTransaccion}
-                                                onChange={this.onChangeBajaNoBautizadoDefuncion}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                            </CardBody>
-                            <CardFooter>
-                                <Button
-                                    type="button"
-                                    onClick={this.openModalBajaNoBautizadoDefuncion}
-                                    color="secondary"
-                                    className="entreBotones"
-                                >
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    color="success"
-                                >
-                                    <span className="fa fa-pencil"></span>Proceder
-                                </Button>
-                            </CardFooter>
-                        </Form>
-                    </Card>
-                </Modal>
-
                 {/* MODAL BAJA/NOBAUTIZADO/ALEJAMIENTO */}
-                <Modal isOpen={this.state.modalBajaNoBautizadoAlejamiento} size="lg">
+                {/* <Modal isOpen={this.state.modalBajaNoBautizadoAlejamiento} size="lg">
                     <Card>
                         <Form onSubmit={this.bajaNoBautizadoAlejamiento}>
                             <CardHeader>
@@ -1495,207 +740,7 @@ class Sidebar extends Component {
                             </CardFooter>
                         </Form>
                     </Card>
-                </Modal>
-
-                {/* MODAL BAJA/BAUTIZADO/CAMBIODOMICILIO */}
-                <Modal isOpen={this.state.modalBajaBautizadoCambioDomicilio} size="lg">
-                    <Card>
-                        <Form onSubmit={this.bajaBautizadoCambioDomicilio}>
-                            <CardHeader>
-                                <CardTitle><h3>Baja de persona Bautizada por cambio de domicilio.</h3></CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="12">
-                                            <Alert color="warning">
-                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
-                                            </Alert>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * PERSONA:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                value={this.state.formBajaBautizadoCambioDomicilio.idPersona}
-                                                name="idPersona"
-                                                onChange={this.onChangeBajaBautizadoCambioDomicilio}
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-                                                {this.state.personas.map(persona => {
-                                                    return (
-                                                        <React.Fragment key={persona.per_Id_Persona}>
-                                                            <option value={persona.per_Id_Persona} >
-                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
-                                                            </option>
-                                                        </React.Fragment>
-                                                    )
-                                                })}
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Tipo destino:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                name="tipoDestino"
-                                                value={this.state.formBajaBautizadoCambioDomicilio.tipoDestino}
-                                                onChange={this.onChangeBajaBautizadoCambioDomicilio}
-                                            >
-                                                <option value="0">Seleccione una opción</option>
-                                                <option value="INTERNO">INTERNO</option>
-                                                <option value="EXTERNO">EXTERNO</option>
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Fecha de transacción:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="date"
-                                                name="fechaTransaccion"
-                                                placeholder='DD/MM/AAAA'
-                                                value={this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion}
-                                                onChange={this.onChangeBajaBautizadoCambioDomicilio}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                            </CardBody>
-                            <CardFooter>
-                                <Button
-                                    type="button"
-                                    onClick={this.openModalBajaBautizadoCambioDomicilio}
-                                    color="secondary"
-                                    className="entreBotones"
-                                >
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    color="success"
-                                >
-                                    <span className="fa fa-pencil"></span>Proceder
-                                </Button>
-                            </CardFooter>
-                        </Form>
-                    </Card>
-                </Modal>
-
-                {/* MODAL BAJA/NO BAUTIZADO/CAMBIODOMICILIO */}
-                <Modal isOpen={this.state.modalBajaNoBautizadoCambioDomicilio} size="lg">
-                    <Card>
-                        <Form onSubmit={this.bajaNoBautizadoCambioDomicilio}>
-                            <CardHeader>
-                                <CardTitle><h3>Baja de persona NO Bautizada por Cambio de Domicilio.</h3></CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="12">
-                                            <Alert color="warning">
-                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
-                                            </Alert>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * PERSONA:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                value={this.state.formBajaNoBautizadoCambioDomicilio.idPersona}
-                                                name="idPersona"
-                                                onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-                                                {this.state.personas.map(persona => {
-                                                    return (
-                                                        <React.Fragment key={persona.per_Id_Persona}>
-                                                            <option value={persona.per_Id_Persona} >
-                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
-                                                            </option>
-                                                        </React.Fragment>
-                                                    )
-                                                })}
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Tipo destino:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                name="tipoDestino"
-                                                value={this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino}
-                                                onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
-                                            >
-                                                <option value="0">Seleccione una opción</option>
-                                                <option value="INTERNO">INTERNO</option>
-                                                <option value="EXTERNO">EXTERNO</option>
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * Fecha de transacción:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="date"
-                                                name="fechaTransaccion"
-                                                placeholder='DD/MM/AAAA'
-                                                value={this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion}
-                                                onChange={this.onChangeBajaNoBautizadoCambioDomicilio}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                            </CardBody>
-                            <CardFooter>
-                                <Button
-                                    type="button"
-                                    onClick={this.openModalBajaNoBautizadoCambioDomicilio}
-                                    color="secondary"
-                                    className="entreBotones"
-                                >
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    color="success"
-                                >
-                                    <span className="fa fa-pencil"></span>Proceder
-                                </Button>
-                            </CardFooter>
-                        </Form>
-                    </Card>
-                </Modal>
+                </Modal> */}
 
                 {/* MODAL ESTABLECE VISIBILIDAD ABIERTA */}
                 <Modal isOpen={this.state.modalEstableceVisibilidadAbierta} size="lg">
