@@ -128,7 +128,7 @@ class Login extends Component {
         if (this.state.sectorSeleccionado !== "0") {
             localStorage.setItem('sector', this.state.sectorSeleccionado)
             localStorage.setItem('LoginValido', true)
-            helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")
+            helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Análisis de membresía")
             document.location.href = '/Main';
         }
     }

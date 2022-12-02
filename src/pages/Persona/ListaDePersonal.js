@@ -427,7 +427,7 @@ class ListaDePersonal extends Component {
         })
 
         // INICIA DOCUMENTO
-        doc.addImage(nvologo, 'PNG', 13, 5, 80, 25);
+        doc.addImage(nvologo, 'PNG', 13, 5, 80, 22.26);
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
 
@@ -579,12 +579,11 @@ class ListaDePersonal extends Component {
                         <Col xs="9">
                             {localStorage.getItem('sector') !== null &&
                                 <p>
-                                    Personal del {this.state.sector.dis_Tipo_Distrito} {this.state.sector.dis_Numero} ({this.state.sector.dis_Alias}, {this.state.sector.dis_Area}) <br />
                                     {this.state.sector.sec_Tipo_Sector} {this.state.sector.sec_Numero}: {this.state.sector.sec_Alias}
                                 </p>
                             }
                             {localStorage.getItem('sector') === null &&
-                                <p> Personal de TODOS los SECOTRES del DISTRITO. </p>
+                                <p> {this.state.sector.dis_Tipo_Distrito} {this.state.sector.dis_Numero} ({this.state.sector.dis_Alias}, {this.state.sector.dis_Area}) </p>
                             }
                         </Col>
                         <Col xs="2">

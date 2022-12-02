@@ -28,23 +28,23 @@ class PasswordEmailUsuario extends Component {
             <React.Fragment>
                 <FormGroup>
                     <Row>
-                        <Col xs="3"></Col>
+                        <Col xs="1"></Col>
                         <Col xs="2" className="txtNegrita">Contraseña: *</Col>
-                        <Col xs="4">
+                        <Col xs="8">
                             <Input
                                 type="password"
                                 onChange={handle_passEmailRegistro}
                                 value={passEmailRegistro}
                             />
                         </Col>
-                        <Col xs="3"></Col>
+                        <Col xs="1"></Col>
                     </Row>
                 </FormGroup>
                 {passwordInvalido &&
                     <FormGroup>
                         <Row>
                             <Col sm="3"></Col>
-                            <Col xs="6">
+                            <Col xs="9">
                                 <span style={{ color: "red" }}>
                                     <strong>Error: </strong>No se cumplen los requisitos de complejidad. <br />
                                     Deben existir al menos un carateres de cada uno de los siguientes grupos:
@@ -57,14 +57,14 @@ class PasswordEmailUsuario extends Component {
                                     </ul>
                                 </span>
                             </Col>
-                            <Col sm="3"></Col>
+                            <Col sm="1"></Col>
                         </Row>
                     </FormGroup>
                 }
                 <Row>
-                    <Col sm="3"></Col>
+                    <Col sm="1"></Col>
                     <Col xs="2" className="txtNegrita">Confirmar: *</Col>
-                    <Col xs="4">
+                    <Col xs="8">
                         <Input
                             type="password"
                             onChange={handle_confirmacion}
@@ -73,7 +73,7 @@ class PasswordEmailUsuario extends Component {
                         />
                         <FormFeedback>{msjRegexInvalido.confirmaPassInvalido}</FormFeedback>
                     </Col>
-                    <Col sm="3"></Col>
+                    <Col sm="1"></Col>
                 </Row>
             </React.Fragment>
         )

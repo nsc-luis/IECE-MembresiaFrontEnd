@@ -165,7 +165,7 @@ class PersonaForm extends Component {
                 })
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
-                    this.setState({ DatosHogarDomicilio: res.data })
+                    this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
 
             let jerarquias = [];

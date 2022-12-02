@@ -151,8 +151,7 @@ class Signup extends Component {
             <Container>
                 {!this.state.desplegarFase2 &&
                     <Row>
-                        <Col sm="2"></Col>
-                        <Col sm="8">
+                        <Col sm="12">
                             <Card className="tarjetaDeRegitro">
                                 <Form onSubmit={this.verificaFase1}>
                                     <CardHeader className="center">
@@ -160,40 +159,11 @@ class Signup extends Component {
                                         {/* Fase 1 */}
                                     </CardHeader>
                                     <CardBody>
-                                        {/* <Row>
-                                            <Col sm="12">
-                                                <Alert color="warning">
-                                                    <span className="txtNegrita">Instrucciones:</span>
-                                                    <ul>
-                                                        <li><span className="txtSubrayado">Fase 1</span>
-                                                            <ul>
-                                                                <li>
-                                                                    Email: debe ser un correo registrado en la base de datos; si su correo no esta registrado contacte al personal de soporte técnico.
-                                                                </li>
-                                                                <li>
-                                                                    Clave fase 1: esta clave es proporcionada por el personal de soporte técnico y sirve para verificar si el Email ingresado esta registrado en la base de datos.
-                                                                </li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><span className="txtSubrayado">Fase 2</span>
-                                                            <ul>
-                                                                <li>
-                                                                    Contraseña: debe ingresar una contraseña y confirmarla.
-                                                                </li>
-                                                                <li>
-                                                                    Clave fase 2: esta clave es proporcionada por el personal de soporte técnico y sirve para realizar el alta del definitiva del usuario (email) y contraseña para ser usado en el sistema.
-                                                                </li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </Alert>
-                                            </Col>
-                                        </Row> */}
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="3"></Col>
+                                            <Col sm="1"></Col>
                                                 <Col sm="2" className="txtNegrita">Email: *</Col>
-                                                <Col sm="4">
+                                                <Col sm="8">
                                                     <Input
                                                         type="email"
                                                         placeholder="Ej: correo@dominio.com"
@@ -204,42 +174,15 @@ class Signup extends Component {
                                                     />
                                                     <FormFeedback>{this.state.mesajeFase1Invalida}</FormFeedback>
                                                 </Col>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                             </Row>
                                         </FormGroup>
-                                        {/* <FormGroup>
-                                            <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="2" className="txtNegrita">Clave fase 1: *</Col>
-                                                <Col sm="4">
-                                                    <Input
-                                                        type="text"
-                                                        name="claveFase1"
-                                                        onChange={this.handle_onChange}
-                                                    />
-                                                </Col>
-                                                <Col sm="3"></Col>
-                                            </Row>
-                                        </FormGroup>
-                                        <FormGroup>
-                                            <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="6">
-                                                    <Input
-                                                        invalid={this.state.fase1Invalida}
-                                                        hidden={true}
-                                                    />
-                                                    <FormFeedback>{this.state.mesajeFase1Invalida}</FormFeedback>
-                                                </Col>
-                                                <Col sm="3"></Col>
-                                            </Row>
-                                        </FormGroup> */}
                                     </CardBody>
                                     <CardFooter>
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="6" className="center">
+                                                <Col sm="1"></Col>
+                                                <Col sm="10" className="center">
                                                     <Button
                                                         type="button"
                                                         className="faIconButton"
@@ -255,25 +198,23 @@ class Signup extends Component {
                                                         Verficar e-mail
                                                     </Button>
                                                 </Col>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                             </Row>
                                         </FormGroup>
                                     </CardFooter>
                                 </Form>
                             </Card>
                         </Col>
-                        <Col sm="2"></Col>
                     </Row>
                 }
 
                 {this.state.desplegarFase2 &&
                     <Row>
-                        <Col sm="2"></Col>
-                        <Col sm="8">
+                        <Col sm="12">
                             <Card className="tarjetaDeRegitro">
                                 <Form onSubmit={this.verificaFase2}>
                                     <CardHeader className="center">
-                                        <CardTitle className="txtNegrita txtEncabezadoTarjeta">Registro de usuarios</CardTitle>
+                                        <CardTitle className="txtNegrita txtEncabezadoTarjeta m-0 p-0">Registro de usuarios</CardTitle>
                                         Fase 2
                                     </CardHeader>
                                     <CardBody>
@@ -287,47 +228,32 @@ class Signup extends Component {
                                         </Row>
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                                 <Col sm="2" className="txtNegrita">Usuario/email: </Col>
-                                                <Col sm="4">
+                                                <Col sm="8">
                                                     <Input
                                                         type="email"
                                                         value={this.state.email}
                                                         readOnly={true}
                                                     />
                                                 </Col>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                             </Row>
                                         </FormGroup>
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                                 <Col sm="2" className="txtNegrita">Nombre: </Col>
-                                                <Col sm="4">
+                                                <Col sm="8">
                                                     <Input
                                                         type="text"
                                                         value={this.state.nombre}
                                                         readOnly={true}
                                                     />
                                                 </Col>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                             </Row>
                                         </FormGroup>
-                                        {/* <FormGroup>
-                                            <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="2" className="txtNegrita">Contraseña: *</Col>
-                                                <Col sm="4">
-                                                    <Input
-                                                        type="text"
-                                                        name="password"
-                                                        onChange={this.handle_passEmailRegistro}
-                                                        value={this.state.password}
-                                                    />
-                                                </Col>
-                                                <Col sm="3"></Col>
-                                            </Row>
-                                        </FormGroup> */}
                                         <FormGroup>
                                             <PasswordEmailUsuario
                                                 handle_passEmailRegistro={this.handle_passEmailRegistro}
@@ -338,41 +264,11 @@ class Signup extends Component {
                                                 confirmacionInvalida={this.state.confirmacionInvalida}
                                             />
                                         </FormGroup>
-                                        {/* <FormGroup>
-                                            <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="2" className="txtNegrita">Confirmación: *</Col>
-                                                <Col sm="4">
-                                                    <Input
-                                                        type="text"
-                                                        name="confirmacion"
-                                                        onChange={this.handle_confirmacion}
-                                                        value={this.state.confirmacion}
-                                                    />
-                                                </Col>
-                                                <Col sm="3"></Col>
-                                            </Row>
-                                        </FormGroup> */}
-                                        {/* <FormGroup>
-                                            <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="2" className="txtNegrita">Clave fase 2: *</Col>
-                                                <Col sm="4">
-                                                    <Input
-                                                        type="text"
-                                                        name="claveFase2"
-                                                        onChange={this.handle_onChange}
-                                                        value={this.state.claveFase2}
-                                                    />
-                                                </Col>
-                                                <Col sm="3"></Col>
-                                            </Row>
-                                        </FormGroup> */}
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                                 <Col sm="2" className="txtNegrita">Super secreto: *</Col>
-                                                <Col sm="4">
+                                                <Col sm="8">
                                                     <Input
                                                         type="text"
                                                         name="superSecreto"
@@ -381,15 +277,15 @@ class Signup extends Component {
                                                         invalid={this.state.fase2Invalida}
                                                     />
                                                 </Col>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                             </Row>
                                         </FormGroup>
                                     </CardBody>
                                     <CardFooter>
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="6" className="center">
+                                                <Col sm="1"></Col>
+                                                <Col sm="10" className="center">
                                                     <Button
                                                         type="button"
                                                         className="faIconButton"
@@ -405,33 +301,32 @@ class Signup extends Component {
                                                         Registrar
                                                     </Button>
                                                 </Col>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                             </Row>
                                             <Row>
-                                                <Col sm="3"></Col>
-                                                <Col sm="6">
+                                                <Col sm="1"></Col>
+                                                <Col sm="10">
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col sm="3"></Col>
-                                                            <Col sm="6">
+                                                            <Col sm="1"></Col>
+                                                            <Col sm="10">
                                                                 <Input
                                                                     invalid={this.state.fase2Invalida}
                                                                     hidden={true}
                                                                 />
                                                                 <FormFeedback>{this.state.mesajeFase2Invalida}</FormFeedback>
                                                             </Col>
-                                                            <Col sm="3"></Col>
+                                                            <Col sm="1"></Col>
                                                         </Row>
                                                     </FormGroup>
                                                 </Col>
-                                                <Col sm="3"></Col>
+                                                <Col sm="1"></Col>
                                             </Row>
                                         </FormGroup>
                                     </CardFooter>
                                 </Form>
                             </Card>
                         </Col>
-                        <Col sm="2"></Col>
                     </Row>
                 }
             </Container>

@@ -158,18 +158,18 @@ class ResumenMembresia extends Component {
             doc.setFontSize(8);
 
             if (localStorage.getItem('sector') !== null) {
-                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 15);
+                doc.text(`${this.state.infoSector.sec_Alias}`, 85, 15);
                 /* doc.text(fechaTexto, 85, 25); */
             }
             else {
                 doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 85, 15);
-                doc.text(`SECTOR: ${this.state.infoSector.sec_Alias}`, 85, 20);
+                doc.text(`${this.state.infoSector.sec_Alias}`, 85, 20);
                 /* doc.text(fechaTexto, 85, 20); */
             }
 
             doc.line(10, 32, 200, 32);
 
-            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
             doc.rect(10, 35, 190, 4, "F");
             doc.setFont("", "", "bold");
             doc.text("MEMBRESIA BAUTIZADA", 15, 38);
@@ -183,7 +183,7 @@ class ResumenMembresia extends Component {
             doc.text(`${this.state.resumenDeMembresia.jhb}`, 70, 54);
             doc.text(`${this.state.resumenDeMembresia.jmb}`, 70, 59);
 
-            doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+            doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
             doc.rect(10, 65, 190, 4, "F");
             doc.setFont("", "", "bold");
             doc.text("MEMBRESIA NO BAUTIZADA", 15, 68);

@@ -177,7 +177,7 @@ class RegistroDePersonal extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
-        if (e.target.name === "per_Email") {
+        if (e.target.name === "per_Email_Personal") {
             this.setState({
                 form: {
                     ...this.state.form,

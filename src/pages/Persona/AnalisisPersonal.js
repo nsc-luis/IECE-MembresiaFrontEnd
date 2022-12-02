@@ -63,26 +63,26 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col className="negrita" xs="2">Nombre:</Col>
                             <Col xs="6" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
-                            
-                                <Col className="negrita campoVivo" xs="2">
-                                    {this.objPersona.persona.per_Vivo &&
-                                        <span className="fa fa-check faIconMarginRight"></span>
-                                    }
-                                    {!this.objPersona.persona.per_Vivo &&
-                                        <span className="fa fa-times faIconMarginRight"></span>
-                                    }
-                                    Vivo
-                                </Col>
-                                <Col>
-                                    <img className="fotoPersona fotoAnalisis" src={this.state.foto} />
-                                </Col>
-                            
+
+                            <Col className="negrita campoVivo" xs="2">
+                                {this.objPersona.persona.per_Vivo &&
+                                    <span className="fa fa-check faIconMarginRight"></span>
+                                }
+                                {!this.objPersona.persona.per_Vivo &&
+                                    <span className="fa fa-times faIconMarginRight"></span>
+                                }
+                                Vivo
+                            </Col>
+                            <Col>
+                                <img className="fotoPersona fotoAnalisis" src={this.state.foto} />
+                            </Col>
+
                         </Row>
                     </FormGroup>
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="2">Grupo:</Col>
-                            <Col xs="2" className="border border-dark"> {this.bautizado} </Col>
+                            <Col xs="2" className="border border-dark"> {this.bautizado.toUpperCase()} </Col>
                             <Col className="negrita" xs="2">Categoria:</Col>
                             <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Categoria} </Col>
                             <Col className="negrita" xs="2">
@@ -155,10 +155,18 @@ class AnalisisPersonal extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="2">Celular:</Col>
+                            <Col className="negrita" xs="2">Telefonos:</Col>
                             <Col xs="2" className="border border-dark">
-                                {this.objPersona.persona.per_Telefono_Movil} ,
-                                {this.state.domicilioLocalizado && <>{this.objPersona.domicilio[0].hd_Telefono}</>}
+                                {this.objPersona.persona.per_Telefono_Movil !== null &&
+                                    <>
+                                        {this.objPersona.persona.per_Telefono_Movil},
+                                    </>
+                                }
+                                {this.state.domicilioLocalizado && this.objPersona.domicilio[0].hd_Telefono !== null &&
+                                    <>{
+                                        this.objPersona.domicilio[0].hd_Telefono}
+                                    </>
+                                }
                             </Col>
                             <Col className="negrita" xs="2">Email:</Col>
                             <Col xs="3" className="border border-dark"> {this.objPersona.persona.per_Email_Personal} </Col>
