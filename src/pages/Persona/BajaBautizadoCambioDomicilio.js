@@ -63,11 +63,15 @@ class BajaBautizadoCambioDomicilio extends Component {
         if (e.target.name === "idPersona") {
             await helpers.authAxios.get(`${helpers.url_api}/Hogar_Persona/GetHogarByPersona/${e.target.value}`)
                 .then(res => {
+                    var cuentaMiembros = 0;
+                    res.data.datosDelHogarPorPersona.miembros.forEach(miembro => {
+                        cuentaMiembros = cuentaMiembros + 1;
+                    });
                     if (res.data.status === "success" && res.data.datosDelHogarPorPersona.bautizadosVivos === 1) {
                         this.setState({
                             formBajaBautizadoCambioDomicilio: {
                                 ...this.state.formBajaBautizadoCambioDomicilio,
-                                ultimoBautizado: true
+                                ultimoBautizado: cuentaMiembros > 1 ? true : false
                             }
                         })
                     }
