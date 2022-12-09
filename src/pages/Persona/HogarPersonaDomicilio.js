@@ -230,7 +230,7 @@ class Domicilio extends React.Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div className="row">
+                                <div className="row PadreComponentPaisEstado">
                                     <div className="col-sm-4">
                                         <input
                                             type="text"

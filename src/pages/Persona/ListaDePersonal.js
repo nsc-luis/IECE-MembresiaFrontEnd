@@ -483,8 +483,8 @@ class ListaDePersonal extends Component {
         doc.text(`9. - Nombre de esposa(o): ${info.persona.per_Nombre_Conyuge} `, 13, 106);
         drawUnderlineTotext('9.- Nombre de esposa(o): ', 13, `${info.persona.per_Nombre_Conyuge} `, 106);
 
-        doc.text(`10. - Cuantos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos} `, 13, 112);
-        drawUnderlineTotext('10.- Cuantos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos} `, 112);
+        doc.text(`10. - Cuantos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 13, 112);
+        drawUnderlineTotext('10.- Cuantos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 112);
 
         doc.text(`${info.persona.per_Nombre_Hijos} `, 75, 112);
         drawUnderlineTotext('', 75, `${info.persona.per_Nombre_Hijos} `, 112);
@@ -546,21 +546,21 @@ class ListaDePersonal extends Component {
         }
 
         line = line + 6;
-        doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: ${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
+        doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, ${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
         drawUnderlineTotext('16. - Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
-        drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: `, 13, `${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line);
+        drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 13, `${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line);
 
         line = line + 6;
         doc.text(`17. - Telefonos.${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, 13, line);
         drawUnderlineTotext('17.- Telefonos. ', 13, `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, line);
 
         line = line + 6;
-        doc.text(`18. - Profesion / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, line);
-        drawUnderlineTotext('18.- Profesion / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
+        doc.text(`18. - Profesion / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, line);
+        drawUnderlineTotext('18.- Profesion / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
 
         line = line + 6;
-        doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
-        drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
+        doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
+        drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
 
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
