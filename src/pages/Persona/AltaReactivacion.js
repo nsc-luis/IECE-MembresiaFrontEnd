@@ -132,7 +132,7 @@ function AltaReactivacion() {
     //Pruebas
     const postData = () => {
 
-        if(jerarquia == null ){
+        if(jerarquia == null && hogar ){
             alert('Seleccione una jerarquia en el hogar')
             return
         }
@@ -303,14 +303,14 @@ function AltaReactivacion() {
                             name='hogar'
                             type='select'
                             onChange={e => {handleHogar(e.target.value)}}>
-                            <option value="0" selected>Nuevo hogar / domicilio</option>
+                            <option value="0" selected>Seleccione un hogar a asignar</option>
                             {opcionesHogares.map(hogar => (
                                 <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
                             ))}
                             </Input>
                         </Col>
                     </FormGroup>
-                    {hogar ? 
+                    {hogar &&
                     <Form>
                         <Alert color="warning">
                             <h5><strong>ATENCION:</strong></h5>
@@ -363,121 +363,6 @@ function AltaReactivacion() {
                                 </Input>
                             </Col>
                         </FormGroup>
-                    </Form>
-                    :
-                    <Form>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Calle
-                                    </Label>
-                                    <Input id='calle' name='calle' placeholder='Nombre de la calle' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Numero Exterior
-                                    </Label>
-                                    <Input id='extNumber' name='extNumber' placeholder='0000' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Numero Interior
-                                    </Label>
-                                    <Input id='intNumber' name='intNumber' placeholder='0000' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Tipo subdivisión
-                                    </Label>
-                                    <Input id='subDivType' name='subDivType' placeholder='Tipo subdivisión' type='select'>
-                                        <option value="COL">COLONIA</option>
-                                        <option value="FRACC">FRACC</option>
-                                        <option value="EJ">EJIDO</option>
-                                        <option value="SUBDIV">SUBDIV</option>
-                                        <option value="BRGY">BRGY</option>
-                                        <option value="RANCHO">RANCHO</option>
-                                        <option value="MANZANA">MANZANA</option>
-                                        <option value="RESIDENCIAL">RESIDENCIAL</option>
-                                        <option value="SECTOR">SECTOR</option>
-                                        <option value="SECCIÓN">SECCIÓN</option>
-                                        <option value="UNIDAD">UNIDAD</option>
-                                        <option value="BARRIO">BARRIO</option>
-                                        <option value="ZONA">ZONA</option>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Subdivisión
-                                    </Label>
-                                    <Input id='subDiv' name='subDiv' placeholder='Subdivisión' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Localidad
-                                    </Label>
-                                    <Input id='localidad' name='localidad' placeholder='Localidad' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Municipio / Ciudad
-                                    </Label>
-                                    <Input id='municipioCiudad' name='municipioCiudad' placeholder='Nombre de Municipio / Ciudad' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        País
-                                    </Label>
-                                    <Input id='pais' name='pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
-                                        <option value="0" selected disabled >Selecciona un país</option>
-                                        {paises.map(pais => (
-                                            <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}>{pais.pais_Nombre}</option>
-                                        ))}
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Estado
-                                    </Label>
-                                    <Input id='estado' name='estado' placeholder='Selecciona un estado' type='select' onChange={(e) => handleEstado( e.target.value )}>
-                                        <option value="0" selected disabled >Selecciona un estado</option>
-                                        {estados.map(estado => (
-                                            <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}>{estado.est_Nombre}</option>
-                                        ))}
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Telefono
-                                    </Label>
-                                    <Input id='tel' name='tel' placeholder='555 555 5555' type='tel'></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
                     </Form>}
                     <Row className="text-center">
                         <Col>
