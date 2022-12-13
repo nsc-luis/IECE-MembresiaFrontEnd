@@ -224,7 +224,7 @@ function AltaCambioDomicilio() {
                                 onChange={e => {handlePersona(e.target.value)}}>
                                 <option value="0" selected disabled>Selecionar persona...</option>
                                 {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={JSON.stringify(persona)}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno}</option>
+                                    <option key={persona.per_Id_Persona} value={JSON.stringify(persona)}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ''}</option>
                                 ))}
                                 </Input>
                             </Col>
