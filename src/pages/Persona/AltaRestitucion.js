@@ -32,6 +32,7 @@ function AltaRestitucion() {
                 setOpcionesPersonas(res.data.personas)
                 //console.log(opcionesPersonas)
             });
+            console.log(opcionesPersonas);
     }, [opcionesPersonas.length]);
 
     useEffect(() => {

@@ -66,7 +66,7 @@ function AltaCambioDomicilio() {
                         per_En_Comunion: true,
                         per_Visibilidad_Abierta: false,
                         ct_Codigo_Transaccion: 11003,
-                        procedencia: `${value.dis_Alias} - ${value.sec_Alias}`
+                        procedencia: `${value.sec_Alias}`
                     }))
                 }else{
                     setData( prevState => ({
@@ -75,7 +75,7 @@ function AltaCambioDomicilio() {
                         per_En_Comunion: true,
                         per_Visibilidad_Abierta: false,
                         ct_Codigo_Transaccion: 11004,
-                        procedencia: `${value.dis_Alias} - ${value.sec_Alias}`
+                        procedencia: `${value.sec_Alias}`
                     }))
                 }
             })
