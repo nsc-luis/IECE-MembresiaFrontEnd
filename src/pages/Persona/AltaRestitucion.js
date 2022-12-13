@@ -73,14 +73,15 @@ function AltaRestitucion() {
         }))
     };
     const handleComentario = (value) => {
+        console.log(value);
         setData( prevState => ({
             ...prevState,
             hte_Comentario: value
         }))
     };
     const handleFechaTransaccion = (value) => {
-        //console.log(value)
-        if(value == "") setMostrarHogar(false)
+        console.log(value)
+        if(value === "") setMostrarHogar(false)
     
         setData( prevState => ({
             ...prevState,
@@ -125,6 +126,7 @@ function AltaRestitucion() {
     
     //Validaciones
     const validarDatosPersona = () => {
+        console.log(data);
         if(!data.per_Id_Persona || data.per_Id_Persona == 0){
             alert('Seleccione una persona')
             return
