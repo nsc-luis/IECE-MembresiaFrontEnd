@@ -270,9 +270,6 @@ function AltaCambioDomicilio() {
                     <CardTitle className="text-center" tag="h4">
                         Hogar / Domicilio
                     </CardTitle>
-                    <Alert color="info">
-                        <h5><strong>AVISO:</strong> Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
-                    </Alert>
                     <FormGroup row>
                         <Label for='Hogar' sm={3}>
                             <h5>Asignar a hogar: </h5>
