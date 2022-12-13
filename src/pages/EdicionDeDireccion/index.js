@@ -6,10 +6,8 @@ import {
     Modal, ModalFooter, ModalBody, ModalHeader
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
-import Layout from '../Layout';
 import './style.css';
 import PaisEstado from '../../components/PaisEstado';
-import { ThemeConsumer } from 'styled-components';
 
 class EdicionDeDireccion extends Component {
 
@@ -54,7 +52,7 @@ class EdicionDeDireccion extends Component {
             })
     }
 
-    handle_HogarSeleccionado = (e) => {
+    handle_HogarSeleccionado = async (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
@@ -64,7 +62,6 @@ class EdicionDeDireccion extends Component {
             })
             seleccion[0].usu_Id_Usuario = this.infoSesion.pem_Id_Ministro
             this.setState({ domicilio: seleccion[0] })
-
         }
         else {
             this.setState({
@@ -87,13 +84,30 @@ class EdicionDeDireccion extends Component {
         }
     }
 
-    onChangeDomicilio = (e) => {
+    onChangeDomicilio = async (e) => {
         this.setState({
             domicilio: {
                 ...this.state.domicilio,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+        if (e.target.name === "pais_Id_Pais") {
+            await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
+                .then(res => {
+                    let contador = 0;
+                    res.data.estados.forEach(estado => {
+                        contador = contador + 1;
+                    });
+                    if (contador > 0) {
+                        this.setState({
+                            domicilio: {
+                                ...this.state.domicilio,
+                                est_Id_Estado: "0"
+                            }
+                        })
+                    }
+                })
+        }
     }
 
     habilitaEdicion = () => {
@@ -121,72 +135,103 @@ class EdicionDeDireccion extends Component {
         })
     }
 
-    fnSolicitudNvoEstado = async (idPais) => {
-        let contador = 0;
-        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
-            .then(res => {
-                res.data.estados.forEach(estado => {
-                    contador = contador + 1;
-                });
-            })
-        if (contador > 0) {
-            this.setState({
-                domicilio: {
-                    ...this.state.domicilio,
-                    nvoEstado: ""
-                }
-            })
-        }
-        else if (this.state.domicilio.nvoEstado !== "") {
-            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
-        }
-    }
-
     guardarEdicion = async (e) => {
-        e.preventDefault()
-        this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais);
-        try {
-            await helpers.authAxios.post(`${helpers.url_api}/HogarDomicilio/EditaDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
-                .then(res => {
-                    if (res.data.status === "success") {
-                        // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/EdicionDeDireccion'; }, 3000);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
+        e.preventDefault();
+        if (this.state.domicilio.est_Id_Estado === "0") {
+            if (this.state.domicilio.nvoEstado === "" || this.state.domicilio.nvoEstado === undefined) {
+                alert("Error:\nEl pais seleccionado no tiene estados relacionados, por lo tanto, debe ingresar un nombre de estado.")
+            }
+            else {
+                try {
+                    await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
+                        .then(res => {
                             this.setState({
-                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                            });
-                        }, 1500);
-                        setTimeout(() => {
-                            document.location.href = '/EdicionDeDireccion'
-                        }, 3500);
-                    } else {
-                        // alert(res.data.mensaje);
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                mensajeDelProceso: res.data.mensaje,
-                                modalShow: false
-                            });
-                        }, 1500);
-                    }
-                })
+                                domicilio: {
+                                    ...this.state.domicilio,
+                                    est_Id_Estado: res.data.estado.est_Id_Estado
+                                }
+                            })
+                            helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+                                .then(res => {
+                                    if (res.data.status === "success") {
+                                        // alert(res.data.mensaje);
+                                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
+                                        this.setState({
+                                            mensajeDelProceso: "Procesando...",
+                                            modalShow: true
+                                        });
+                                        setTimeout(() => {
+                                            this.setState({
+                                                mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                            });
+                                        }, 1000);
+                                        setTimeout(() => {
+                                            document.location.href = '/ListaDePersonal'
+                                        }, 1000);
+                                    } else {
+                                        // alert(res.data.mensaje);
+                                        this.setState({
+                                            mensajeDelProceso: "Procesando...",
+                                            modalShow: true
+                                        });
+                                        setTimeout(() => {
+                                            this.setState({
+                                                mensajeDelProceso: res.data.mensaje,
+                                                modalShow: false
+                                            });
+                                        }, 1000);
+                                    }
+                                })
+                        })
+                }
+                catch {
+                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                }
+            }
         }
-        catch {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-            // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+        else {
+            try {
+                await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            // alert(res.data.mensaje);
+                            setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1000);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 1000);
+                        } else {
+                            // alert(res.data.mensaje);
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: res.data.mensaje,
+                                    modalShow: false
+                                });
+                            }, 1000);
+                        }
+                    })
+            }
+            catch {
+                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            }
         }
     }
 
     render() {
         return (
-            <Layout>
+            <>
                 <Container>
                     <Row>
                         <Col xs="12">
@@ -398,7 +443,7 @@ class EdicionDeDireccion extends Component {
                         </ModalBody>
                     </Modal>
                 </Container>
-            </Layout>
+            </>
         )
     }
 }

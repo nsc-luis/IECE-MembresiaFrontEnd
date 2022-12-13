@@ -19,7 +19,7 @@ class PersonaForm extends Component {
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
-        alphaSpaceRequired: /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/,
+        alphaSpaceRequired: /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
         formatoEmail: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         formatoTelefono: /^(\+\d{1,3})*(\(\d{2,3}\))*\d{7,25}$/
@@ -53,7 +53,8 @@ class PersonaForm extends Component {
             mensajes: {},
             DatosHogarDomicilio: [],
             MiembrosDelHogar: [],
-            JerarquiasDisponibles: []
+            JerarquiasDisponibles: [],
+            foto: null
         };
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
@@ -78,7 +79,7 @@ class PersonaForm extends Component {
             || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
             || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
             cdv = true
-            csh = true
+            csh = false
             s = false
         }
         if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
@@ -112,7 +113,7 @@ class PersonaForm extends Component {
             mensajes: {
                 ...this.state.mensajes,
                 emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
-                fechaBautismoInvalida: 'Formato admintido: dd/mm/aaaa.',
+                fechaBautismoInvalida: 'Debe ingresar la fecha de bautismo, formato admintido: dd/mm/aaaa.',
                 fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
                 fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
                 fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
@@ -164,7 +165,7 @@ class PersonaForm extends Component {
                 })
             await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
-                    this.setState({ DatosHogarDomicilio: res.data })
+                    this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
 
             let jerarquias = [];
@@ -241,7 +242,6 @@ class PersonaForm extends Component {
             onChangeDomicilio,
             categoriaSeleccionada,
             msjCategoriaSeleccionada,
-            habilitaPerBautizado,
             per_Nombre_NoValido,
             per_Apellido_Paterno_NoValido,
             per_Fecha_Nacimiento_NoValido,
@@ -249,47 +249,59 @@ class PersonaForm extends Component {
             changeEstadoCivil,
             fnGuardaPersona,
             fnGuardaPersonaEnHogar,
-            tituloAgregarEditar,
             boolAgregarNvaPersona,
             boolComentarioEdicion,
             handle_ComentarioHistorialTransacciones,
             ComentarioHistorialTransacciones,
             fnEditaPersona,
             descNvaProfesion,
-            handle_descNvaProfesion
+            handle_descNvaProfesion,
+            foto
         } = this.props
 
-        /* const [CasadoDivorciadoViudo, setCasadoDivorciadoViudo] = useState()
-        const [ConcubinatoSolteroConHijos, setConcubinatoSolteroConHijos] = useState()
-        const [soltero, setSoltero] = useState()
-
-        useEffect(()=>{
-            setCasadoDivorciadoViudo(this.CasadoDivorciadoViudo)
-            setConcubinatoSolteroConHijos(this.ConcubinatoSolteroConHijos)
-            setSoltero(this.soltero)
-        }, []); */
-
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
-        const alphaSpaceRequired = /^[a-zA-Z]{3}[a-zA-Z\d\s]{0,37}$/
+        const alphaSpaceRequired = /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/
 
         // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
         const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
             // Obtener primera letra del apellido paterno
-            var ap = per_Apellido_Paterno.split("")
-            // Obtener primera vocal del apellido paterno
-            var regex = /[^aeiou]/gi
-            var vowels = per_Apellido_Paterno.replace(regex, "")
-            var pv = vowels[0] === ap[0] ? vowels[1] : vowels[0]
-            // Obtener primera letra del apellido materno
-            var am = per_Apellido_Materno.split("");
-            // Obtener primera letra del primer nombre
-            var n = per_Nombre.split("")
-            // Reformateando fecha
-            var f = per_Fecha_Nacimiento.split("-")
-            var y = f[0].substr(2, 2)
-            var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[2]
+            var ap = per_Apellido_Paterno.split("");
 
-            changeRFCSinHomo(RFCSinHomo)
+            // Obtener primera vocal del apellido paterno
+            var regex = /[^aeiou]/gi;
+            var vowels = per_Apellido_Paterno.replace(regex, "");
+            var pv = vowels[0] === ap[0] ? vowels[1] : vowels[0];
+
+            // Obtener primera letra del apellido materno
+            // var am = per_Apellido_Materno.split("");
+            var am;
+            switch (form.per_Categoria) {
+                default:
+                    am = "M";
+                    break;
+                case "ADULTO_MUJER":
+                    am = "F";
+                    break;
+                case "JOVEN_MUJER":
+                    am = "F";
+                    break;
+                case "NIÑA":
+                    am = "F";
+                    break;
+            }
+
+            // Obtener primera letra del primer nombre
+            var n = per_Nombre.split("");
+
+            // Reformateando fecha
+            var f = per_Fecha_Nacimiento.split("-");
+            var y = f[0].substr(2, 2);
+
+            // Creando cadena de validacion de duplicados
+            //var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[2]
+            var RFCSinHomo = ap[0] + pv + am + n[0] + y + f[1] + f[2];
+
+            changeRFCSinHomo(RFCSinHomo);
             getPersonaByRFCSinHomo(RFCSinHomo);
         }
 
@@ -364,7 +376,7 @@ class PersonaForm extends Component {
                 || e.target.value === 'VIUDO(A)') {
                 this.setState({
                     CasadoDivorciadoViudo: true,
-                    ConcubinatoSolteroConHijos: true,
+                    ConcubinatoSolteroConHijos: false,
                     soltero: false
                 })
             }
@@ -398,23 +410,20 @@ class PersonaForm extends Component {
             }
         }
 
-        const invocaFormularioDePersonaNB = () => {
-            if (this.state.datosPersonaEncontrada.per_Bautizado) {
-                helpers.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
-            }
-            else {
-                helpers.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
-            }
-            localStorage.setItem("idPersona", this.state.datosPersonaEncontrada.per_Id_Persona);
-            localStorage.setItem("nvaAltaBautizado", this.state.datosPersonaEncontrada.per_Bautizado);
-            localStorage.setItem("nvaAltaComunion", this.state.datosPersonaEncontrada.per_En_Comunion);
-            document.location.href = '/RegistroDePersona';
-        }
-
-        const enviarInfo = (e) => {
+        const enviarInfo = async (e) => {
             e.preventDefault();
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
+
+            if (objPersona.per_Bautizado === true
+                && objPersona.per_Fecha_Bautismo === "") {
+                alert("Error: \nNo se pueden guardar datos de una persona bautizda sin fecha de bautismo.");
+                this.setState({ fechaBautismoInvalida: true })
+                return false;
+            }
+            else {
+                this.setState({ fechaBautismoInvalida: false })
+            }
 
             // VALIDA CAMPOS DE PERSONA
             var camposPersonaAValidar = [
@@ -429,47 +438,33 @@ class PersonaForm extends Component {
                 validaFormatos(element.formato, objPersona[element.campo], element.estado)
             });
 
-            if (!this.state.emailInvalido && !this.state.fechaBautismoInvalida &&
-                !this.state.fechaBodaCivilInvalida && !this.state.fechaEspitiruSantoInvalida &&
-                !this.state.fechaBodaEclesiasticaInvalida) {
+            /* console.log("Success: Campos validados") */
+            if (boolAgregarNvaPersona) {
+                /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
+                if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
+                    alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un nuevo hogar/domicilio.");
+                    return false;
+                }
 
-                /* console.log("Success: Campos validados") */
-
-                if (boolAgregarNvaPersona) {
-                    /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
-                    if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
-                        alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un nuevo hogar/domicilio.");
+                if (this.state.hogar.hd_Id_Hogar === "0") {
+                    let PersonaDomicilioHogar = {
+                        id: 1,
+                        PersonaEntity: objPersona,
+                        HogarDomicilioEntity: objDomicilio
+                    }
+                    if (domicilio.pais_Id_Pais === "0"
+                        || domicilio.hd_Calle === ""
+                        || domicilio.hd_Municipio_Ciudad === "") {
+                        alert("Error!. Debe ingresar al menos calle, cuidad y pais y estado para un nuevo domicilio.")
                         return false;
                     }
-
-                    if (this.state.hogar.hd_Id_Hogar === "0") {
-                        let PersonaDomicilioHogar = {
-                            id: 1,
-                            PersonaEntity: objPersona,
-                            HogarDomicilioEntity: objDomicilio
-                        }
-                        if (domicilio.pais_Id_Pais === "0"
-                            || domicilio.hd_Calle === ""
-                            || domicilio.hd_Localidad === "" ||
-                            domicilio.hd_Numero_Exterior === "") {
-                            alert("Error!. Debe ingresar al menos calle, numero, localidad y pais para un nuevo domicilio.")
-                            return false;
-                        }
-                        fnGuardaPersona(PersonaDomicilioHogar)
-                    } else {
-                        fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
-                    }
+                    await fnGuardaPersona(PersonaDomicilioHogar)
+                } else {
+                    await fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
                 }
-                else {
-                    // FUNCION PARA FORMATO DE FECHAS PARA BD
-                    /* helpers.fechas.forEach(fecha => {
-                        objPersona[fecha] = helpers.fnFormatoFecha(objPersona[fecha])
-                    }) */
-
-                    fnEditaPersona(objPersona)
-                }
-            } else {
-                console.log("Error: Campos invalidos")
+            }
+            else {
+                await fnEditaPersona(objPersona)
             }
         }
 
@@ -652,7 +647,7 @@ class PersonaForm extends Component {
                                                                 type="button"
                                                                 onClick={handle_verificarDuplicados}
                                                                 color="primary"
-                                                                
+
                                                             >
                                                                 <i>Verificar duplicados</i>
                                                             </Button>
@@ -821,6 +816,7 @@ class PersonaForm extends Component {
                                                                         <Input
                                                                             type="email"
                                                                             name="per_Email_Personal"
+                                                                            className="email"
                                                                             onChange={onChange}
                                                                             invalid={this.state.emailInvalido}
                                                                             value={form.per_Email_Personal}
@@ -929,11 +925,19 @@ class PersonaForm extends Component {
                                                                     <div className="col-sm-4">
                                                                         <Input
                                                                             type="file"
-                                                                            name="per_foto"
+                                                                            name="idFoto"
                                                                             onChange={onChange}
                                                                             className="form-control"
                                                                         />
                                                                         <label>Foto</label>
+                                                                    </div>
+                                                                </div>
+                                                            </FormGroup>
+
+                                                            <FormGroup>
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                        <img src={foto} className="fotoFormulario" />
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>
@@ -1163,9 +1167,31 @@ class PersonaForm extends Component {
                                                                                                 <label>Lugar boda eclesiástica</label>
                                                                                             </FormGroup>
                                                                                         </div>
+                                                                                        <div className="col-sm-2">
+                                                                                            <Input
+                                                                                                type="number"
+                                                                                                name="per_Cantidad_Hijos"
+                                                                                                onChange={onChange}
+                                                                                                className="form-control"
+                                                                                                value={form.per_Cantidad_Hijos}
+                                                                                            />
+                                                                                            <label>Número de hijos</label>
+                                                                                        </div>
                                                                                     </React.Fragment>
                                                                                 }
                                                                             </div>
+                                                                            <FormGroup>
+                                                                                <div className="row">
+                                                                                    <div className="col-sm-12">
+                                                                                        <textarea
+                                                                                            name="per_Nombre_Hijos"
+                                                                                            onChange={onChange}
+                                                                                            value={form.per_Nombre_Hijos}
+                                                                                            className="form-control" ></textarea>
+                                                                                        <label>Nombre de los hijos</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </FormGroup>
                                                                         </React.Fragment>
                                                                     }
 
@@ -1174,6 +1200,16 @@ class PersonaForm extends Component {
                                                                             <div id="hijos">
                                                                                 <FormGroup>
                                                                                     <div className="row">
+                                                                                        <div className="col-sm-4">
+                                                                                            <Input
+                                                                                                type="text"
+                                                                                                name="per_Nombre_Conyuge"
+                                                                                                onChange={onChange}
+                                                                                                className="form-control"
+                                                                                                value={form.per_Nombre_Conyuge}
+                                                                                            />
+                                                                                            <label>Nombre de la pareja</label>
+                                                                                        </div>
                                                                                         <div className="col-sm-2">
                                                                                             <Input
                                                                                                 type="number"

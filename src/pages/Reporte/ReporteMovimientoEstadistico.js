@@ -318,7 +318,7 @@ export default function ReporteMovimientoEstadistico(){
 
     }
     return(
-        <Layout>
+        <>
             <Container fluid>
                 <Button className="btn-success m-3 " onClick={downloadTable}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
@@ -559,6 +559,6 @@ export default function ReporteMovimientoEstadistico(){
                             </Row>
                         </div>
             </Container>
-        </Layout>
+        </>
     )
 }
