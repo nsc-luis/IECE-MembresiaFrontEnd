@@ -68,6 +68,7 @@ class ListaDePersonal extends Component {
     componentDidMount() {
         this.getPersonas();
         this.getSector();
+        this.getDistrito();
         this.getSectoresPorDistrito();
     }
 
@@ -145,6 +146,17 @@ class ListaDePersonal extends Component {
                 .then(res => {
                     this.setState({
                         sector: res.data.sector[0]
+                    });
+                });
+        }
+    }
+
+    getDistrito = async () => {
+        if (localStorage.getItem('dto') !== null) {
+            await helpers.authAxios.get(this.url + "/distrito/" + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({
+                        distrito: res.data
                     });
                 });
         }
@@ -571,6 +583,7 @@ class ListaDePersonal extends Component {
 
     render() {
         /*  if (this.state.personas.length >= 1) { */
+        console.log(localStorage.getItem('sector'))
         return (
             <>
                 {/* <h1 className="text-info">Listado de personal</h1> */}
@@ -583,7 +596,7 @@ class ListaDePersonal extends Component {
                                 </p>
                             }
                             {localStorage.getItem('sector') === null &&
-                                <p> {this.state.sector.dis_Tipo_Distrito} {this.state.sector.dis_Numero} ({this.state.sector.dis_Alias}, {this.state.sector.dis_Area}) </p>
+                                <p> {this.state.distrito.dis_Tipo_Distrito} {this.state.distrito.dis_Numero} ({this.state.distrito.dis_Alias}, {this.state.distrito.dis_Area}) </p>
                             }
                         </Col>
                         <Col xs="2">

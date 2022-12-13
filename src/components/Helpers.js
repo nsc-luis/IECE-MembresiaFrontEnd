@@ -17,11 +17,11 @@ const helpers = {
     msjRegexInvalido: {
         alphaSpaceRequired: 'Formato incorrecto. Solo se aceptan espacios y letras',
         emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
-        fechaBautismoInvalida: 'Formato admintido: dd/mm/aaaa.',
-        fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
-        fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
-        fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
-        formatoFecha: 'Formato admintido: dd/mm/aaaa.',
+        fechaBautismoInvalida: 'Formato de fecha invalido.',
+        fechaBodaCivilInvalida: 'Formato de fecha invalido.',
+        fechaEspitiruSantoInvalida: 'Formato de fecha invalido.',
+        fechaBodaEclesiasticaInvalida: 'Formato de fecha invalido.',
+        formatoFecha: 'Formato de fecha invalido.',
         telMovilInvalido: 'Formatos admintidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 numeros sin espacios.',
         confirmaPassInvalido: 'Las contraseñas no coinciden.'
     },

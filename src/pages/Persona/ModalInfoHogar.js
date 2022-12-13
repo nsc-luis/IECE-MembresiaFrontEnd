@@ -23,7 +23,18 @@ class ModalInfoHogar extends Component {
                 <Row>
                     <Col xs="12">
                         <p>
-                            <h5><strong>Titular: </strong>{objPersona.miembros[0].per_Nombre} {objPersona.miembros[0].per_Apellido_Paterno} {objPersona.miembros[0].per_Apellido_Materno}</h5>
+                            {objPersona.miembros.length > 0 &&
+                                <>
+                                    <h5><strong>Titular: </strong>
+                                        {objPersona.miembros[0].per_Nombre} {objPersona.miembros[0].per_Apellido_Paterno} {objPersona.miembros[0].per_Apellido_Materno}
+                                    </h5>
+                                </>
+                            }
+                            {objPersona.miembros.length === 0 &&
+                                <>
+                                    <h5><strong>NO HAY PERSONAS VIVAS EN EL DOMICILIO. </strong></h5>
+                                </>
+                            }
                             <br />
                             {objPersona.domicilio.length > 0 &&
                                 <>
@@ -64,14 +75,18 @@ class ModalInfoHogar extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {objPersona.miembros.map((miembro) => {
-                                    return (
-                                        <tr key={miembro.per_Id_Persona}>
-                                            <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno} </td>
-                                            <td> {miembro.hp_Jerarquia} </td>
-                                        </tr>
-                                    )
-                                })
+                                {objPersona.miembros.length > 0 &&
+                                    <>
+                                        {objPersona.miembros.map((miembro) => {
+                                            return (
+                                                <tr key={miembro.per_Id_Persona}>
+                                                    <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno} </td>
+                                                    <td> {miembro.hp_Jerarquia} </td>
+                                                </tr>
+                                            )
+                                        })
+                                        }
+                                    </>
                                 }
                             </tbody>
                         </table>

@@ -53,7 +53,7 @@ class PaisEstado extends React.Component {
 
     render() {
 
-        const { domicilio, onChangeDomicilio } = this.props
+        const { domicilio, onChangeDomicilio, estadoBGColor } = this.props
         const handle_pais_Id_Pais = (e) => {
             this.getEstados(e.target.value)
             onChangeDomicilio(e)
@@ -85,6 +85,7 @@ class PaisEstado extends React.Component {
                         className="form-control"
                         value={domicilio.est_Id_Estado}
                         onChange={onChangeDomicilio}
+                        style={{ backgroundColor: estadoBGColor }}
                     >
                         <option value="0">Selecciona un estado</option>
                         {
@@ -94,19 +95,21 @@ class PaisEstado extends React.Component {
                                 )
                             })
                         }
+                        <option value="999">Otro estado</option>
                     </select>
                     <label>Estado/Provincia *</label>
                 </div>
                 {!this.state.estados.length > 0 &&
-                    <div className="col-sm-4 campoNvoEstado">
+                    <div className="col-sm-4">
                         <input
                             type="text"
                             name="nvoEstado"
                             className="form-control"
+                            style={{ backgroundColor: '#feffdd' }}
                             value={domicilio.nvoEstado}
                             onChange={onChangeDomicilio}
                         />
-                        <label>Estado/Provincia Nuevo*</label>
+                        <label>Otro estado *</label>
                     </div>
                 }
             </React.Fragment>

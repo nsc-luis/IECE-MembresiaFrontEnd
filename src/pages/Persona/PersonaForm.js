@@ -608,11 +608,11 @@ class PersonaForm extends Component {
                                                                 className="form-control"
                                                             />
                                                         </div>
-                                                        {!this.state.per_Apellido_Materno_OK &&
+                                                        {/* {!this.state.per_Apellido_Materno_OK &&
                                                             <span className="text-primary font-italic">
                                                                 (En blanco si se desconoce)
                                                             </span>
-                                                        }
+                                                        } */}
                                                     </div>
                                                 </FormGroup>
 
@@ -633,7 +633,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {per_Fecha_Nacimiento_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
+                                                                Campo requerido, el formato de fecha es invalido.
                                                             </span>
                                                         }
                                                     </div>
@@ -1238,16 +1238,6 @@ class PersonaForm extends Component {
                                                                             </div>
                                                                         </React.Fragment>
                                                                     }
-                                                                    {/* {per_Fecha_Boda_Civil_NoValido &&
-                                                                        <span className="text-danger">
-                                                                            Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                            </span>
-                                                                    }
-                                                                    {per_Fecha_Boda_Eclesiastica_NoValido &&
-                                                                        <span className="text-danger">
-                                                                            Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                                                    </span>
-                                                                    } */}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1380,16 +1370,6 @@ class PersonaForm extends Component {
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>
-                                                                    {/* {per_Fecha_Recibio_Espiritu_Santo_NoValido &&
-                                                                    <span className="text-danger">
-                                                                        Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                        </span>
-                                                                }
-                                                                {per_Fecha_Bautismo_NoValido &&
-                                                                    <span className="text-danger">
-                                                                        Campo requerido, el formato de fecha debe ser DD/MM/AAAA.
-                                            </span>
-                                                                } */}
                                                                 </div>
                                                             </div>
                                                         </div>

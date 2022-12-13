@@ -32,9 +32,9 @@ class RegistroDePersonal extends Component {
             categoriaSeleccionada: false,
             msjCategoriaSeleccionada: "",
             habilitaPerBautizado: false,
-            per_Nombre_NoValido: true,
-            per_Apellido_Paterno_NoValido: true,
-            per_Fecha_Nacimiento_NoValido: true,
+            per_Nombre_NoValido: false,
+            per_Apellido_Paterno_NoValido: false,
+            per_Fecha_Nacimiento_NoValido: false,
             modalShow: false,
             mensajeDelProceso: "",
             tituloAgregarEditar: "Agregar nuevo miembro",
@@ -44,7 +44,8 @@ class RegistroDePersonal extends Component {
             descNvaProfesion: {},
             foto: "",
             formDataFoto: null,
-            nuevaFoto: false
+            nuevaFoto: false,
+            estadoBGColor: "#000000"
         }
     }
 
@@ -168,6 +169,12 @@ class RegistroDePersonal extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+        if (e.target.name === "est_Id_Estado") {
+            console.log(e.target.value)
+            this.setState({
+                estadoBGColor: e.target.value === "999" ? "#feffdd" : null
+            })
+        }
     }
 
     handleChange = (e) => {
@@ -202,7 +209,7 @@ class RegistroDePersonal extends Component {
                 case "ADULTO_HOMBRE":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita todas las pestañas / Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "Habilita todas las secciones / Bautizado por defecto.",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -214,7 +221,7 @@ class RegistroDePersonal extends Component {
                 case "ADULTO_MUJER":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita todas las pestañas / Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "Habilita todas las secciones / Bautizado por defecto.",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -740,6 +747,7 @@ class RegistroDePersonal extends Component {
                     handle_descNvaProfesion={this.handle_descNvaProfesion}
                     descNvaProfesion={this.state.descNvaProfesion}
                     foto={this.state.foto}
+                    estadoBGColor={this.state.estadoBGColor}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

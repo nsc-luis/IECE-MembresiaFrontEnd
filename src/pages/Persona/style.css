@@ -40,13 +40,3 @@
     color: red;
     font-weight: bold;
 }
-
-.PadreComponentPaisEstado {
-    position: relative;
-}
-
-.campoNvoEstado {
-    position: absolute;
-    margin-top: 6em;
-    margin-left: 54em;
-}
