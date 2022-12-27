@@ -124,6 +124,20 @@ const helpers = {
     handle_LinkEncabezado: function (seccion, componente) {
         localStorage.setItem('seccion', seccion);
         localStorage.setItem('componente', componente);
+    },
+
+    getDomicilio: async function(id) {
+        let direccion = "";
+        let hogarDomicilio = {};
+        await this.authAxios.get(`/HogarDomicilio/${id}`)
+        .then(res => {
+            if(res.data.status === "success") {
+                return (
+                    direccion = res.data.direccion,
+                    hogarDomicilio = res.data.hogardomicilio[0]
+                );
+            }
+        });
     }
 }
 

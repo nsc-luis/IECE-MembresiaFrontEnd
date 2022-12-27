@@ -23,7 +23,7 @@ class PersonaEncontrada extends React.Component {
 
         return (
             <React.Fragment>
-                <div className="alert alert-warning mt-3" role="alert">
+                <div className="alert alert-danger mt-3" role="alert">
                     <h5><strong>AVISO: </strong>Se ha encontrado una persona con el mismo RFC: {/* {form.RFCSinHomoclave} */} (SIN homoclave), asegurese de no duplicar a la persona.</h5>
                 </div>
                 <table className="table">

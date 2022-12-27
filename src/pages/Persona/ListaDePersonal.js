@@ -62,6 +62,7 @@ class ListaDePersonal extends Component {
             habilitaFiltroActivoComunionVivo: '',
             modalInfoHogar: false,
             objPersona: {},
+            direccion: ""
         };
     }
 
@@ -70,6 +71,24 @@ class ListaDePersonal extends Component {
         this.getSector();
         this.getDistrito();
         this.getSectoresPorDistrito();
+    }
+
+    getDomicilio = async(id) => {
+        await helpers.authAxios.get(`/HogarDomicilio/${id}`)
+        .then(res => {
+            if(res.data.status === "success") {
+                this.setState({
+                    direccion: res.data.direccion,
+                    hogarDomicilio: res.data.hogardomicilio[0]
+                });
+            }
+            else {
+                this.setState({
+                    direccion: null,
+                    hogarDomicilio: null
+                });
+            }
+        });
     }
 
     getSectoresPorDistrito = async () => {
@@ -358,10 +377,19 @@ class ListaDePersonal extends Component {
         localStorage.setItem('objPersona', JSON.stringify(info));
     }
 
-    hojaDatosEstadisticosPDF = (info) => {
+    hojaDatosEstadisticosPDF = async (info) => {
 
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
+
+        await helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
+        .then(res => {
+            if(res.data.status === "success") {
+                this.setState({
+                    direccion: res.data.direccion
+                })
+            }
+        })
 
         // AGREGA DECORACION underline AL TEXTO
         //PARAMETROS: x = INICIO DE LINEA, contante = MARGEN, texto = TEXTO A DECORAR, y = ALTURA
@@ -558,9 +586,12 @@ class ListaDePersonal extends Component {
         }
 
         line = line + 6;
-        doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, ${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
+        /* doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, ${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
         drawUnderlineTotext('16. - Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
-        drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 13, `${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line);
+        drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 13, `${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line); */
+
+        doc.text(`16. - Domicilio actual: ${this.state.direccion}`, 13, line);
+        drawUnderlineTotext('16. - Domicilio actual: ', 13, `${this.state.direccion} `, line);
 
         line = line + 6;
         doc.text(`17. - Telefonos.${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, 13, line);
@@ -583,7 +614,7 @@ class ListaDePersonal extends Component {
 
     render() {
         /*  if (this.state.personas.length >= 1) { */
-        console.log(localStorage.getItem('sector'))
+        // console.log(localStorage.getItem('sector'))
         return (
             <>
                 {/* <h1 className="text-info">Listado de personal</h1> */}

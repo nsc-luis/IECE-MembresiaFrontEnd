@@ -46,7 +46,8 @@ class Domicilio extends React.Component {
             DatosHogarDomicilio,
             MiembrosDelHogar,
             JerarquiasDisponibles,
-            estadoBGColor
+            boolNvoEstado,
+            handleChangeEstado
         } = this.props
 
         return (
@@ -261,7 +262,8 @@ class Domicilio extends React.Component {
                                 <PaisEstado
                                     domicilio={domicilio}
                                     onChangeDomicilio={onChangeDomicilio}
-                                    estadoBGColor={estadoBGColor}
+                                    boolNvoEstado={boolNvoEstado}
+                                    handleChangeEstado={handleChangeEstado}
                                 />
                             </div>
                         </div>

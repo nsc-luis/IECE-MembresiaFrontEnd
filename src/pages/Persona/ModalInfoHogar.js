@@ -7,13 +7,35 @@ import {
 
 class ModalInfoHogar extends Component {
 
-    url = helpers.url_api;
-
     constructor(props) {
         super(props);
         this.state = {
-            domicilioLocalizado: false
+            domicilioLocalizado: false,
+            direccion: "",
+            hogarDomicilio: {}
         }
+    }
+
+    componentDidMount() {
+        this.getDomicilio(this.props.objPersona.hogar.hd_Id_Hogar);
+    }
+
+    getDomicilio = async(id) => {
+        await helpers.authAxios.get(`/HogarDomicilio/${id}`)
+        .then(res => {
+            if(res.data.status === "success") {
+                this.setState({
+                    direccion: res.data.direccion,
+                    hogarDomicilio: res.data.hogardomicilio[0]
+                });
+            }
+            else {
+                this.setState({
+                    direccion: null,
+                    hogarDomicilio: null
+                });
+            }
+        });
     }
 
     render() {
@@ -38,18 +60,17 @@ class ModalInfoHogar extends Component {
                             <br />
                             {objPersona.domicilio.length > 0 &&
                                 <>
-                                    <strong>Calle: </strong>{objPersona.domicilio[0].hd_Calle}, <strong>No.: </strong>{objPersona.domicilio[0].hd_Numero_Exterior}, <strong>Interior: </strong>{objPersona.domicilio[0].hd_Numero_Interior},
+                                    {/* <strong>Calle: </strong>{objPersona.domicilio[0].hd_Calle}, <strong>No.: </strong>{objPersona.domicilio[0].hd_Numero_Exterior}, <strong>Interior: </strong>{objPersona.domicilio[0].hd_Numero_Interior},
                                     <br />
-                                    {/* <strong>Tipo subdivision: </strong> */}{objPersona.domicilio[0].hd_Tipo_Subdivision}, {/* <strong>Subdivision: </strong> */}{objPersona.domicilio[0].hd_Subdivision}
+                                    {objPersona.domicilio[0].hd_Tipo_Subdivision}, {objPersona.domicilio[0].hd_Subdivision}
                                     <br />
-                                    {/* <strong>Localidad: </strong>{objPersona.domicilio[0].hd_Localidad}, 
-                            <br /> */}
                                     <strong>Municipio/cuidad: </strong>{objPersona.domicilio[0].hd_Municipio_Ciudad},
                                     <br />
                                     <strong>Pais: </strong>{objPersona.domicilio[0].pais_Nombre_Corto}, <strong>Estado: </strong>{objPersona.domicilio[0].est_Nombre}
                                     <br />
                                     <strong>Telefono: </strong>{objPersona.domicilio[0].hd_Telefono}
-                                    <br />
+                                    <br /> */}
+                                    <strong>Direccion: </strong>{this.state.direccion} <br />
                                     <strong>Estado del hogar: </strong>{objPersona.domicilio[0].hd_Activo ? <span className="hogarActivo">ACTIVO</span> : <span className="hogarInactivo">INACTIVO</span>}
                                 </>
                             }

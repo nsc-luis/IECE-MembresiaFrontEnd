@@ -256,7 +256,9 @@ class PersonaForm extends Component {
             fnEditaPersona,
             descNvaProfesion,
             handle_descNvaProfesion,
-            foto
+            foto,
+            boolNvoEstado,
+            handleChangeEstado
         } = this.props
 
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
@@ -1426,6 +1428,8 @@ class PersonaForm extends Component {
                                                                     DatosHogarDomicilio={this.state.DatosHogarDomicilio}
                                                                     MiembrosDelHogar={this.state.MiembrosDelHogar}
                                                                     JerarquiasDisponibles={this.state.JerarquiasDisponibles}
+                                                                    boolNvoEstado={boolNvoEstado}
+                                                                    handleChangeEstado={handleChangeEstado}
                                                                 />
                                                             </div>
                                                         </div>
