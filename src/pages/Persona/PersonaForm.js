@@ -258,7 +258,8 @@ class PersonaForm extends Component {
             handle_descNvaProfesion,
             foto,
             boolNvoEstado,
-            handleChangeEstado
+            handleChangeEstado,
+            handleCampoInvalido
         } = this.props
 
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
@@ -331,6 +332,18 @@ class PersonaForm extends Component {
 
         // FUNCION QUE REVISA DUPLICADOS DEACUERDO A RFC (SIN HOMOCLAVE)
         const handle_verificarDuplicados = (e) => {
+            if (!alphaSpaceRequired.test(form.per_Nombre) || form.per_Nombre === undefined) { 
+                handleCampoInvalido("per_Nombre_NoValido", true)
+            }
+            if (!alphaSpaceRequired.test(form.per_Apellido_Paterno) || form.per_Apellido_Paterno === undefined) { 
+                handleCampoInvalido("per_Apellido_Paterno_NoValido", true)
+            }
+            if (form.per_Fecha_Nacimiento === undefined || form.per_Fecha_Nacimiento === "") {
+                handleCampoInvalido("per_Fecha_Nacimiento_NoValido", true)
+            }
+            else if (!helpers.regex.formatoFecha.test(helpers.fnFormatoFecha3(form.per_Fecha_Nacimiento))) {
+                handleCampoInvalido("per_Fecha_Nacimiento_NoValido", true)
+            }
             if (categoriaSeleccionada
                 && !per_Nombre_NoValido
                 && !per_Apellido_Paterno_NoValido

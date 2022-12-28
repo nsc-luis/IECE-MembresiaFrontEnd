@@ -82,6 +82,7 @@ class RegistroDePersonal extends Component {
                     per_Nombre_Abuela_Materna: "",
                     per_Fecha_Boda_Civil: "",
                     per_Fecha_Boda_Eclesiastica: "",
+                    per_Fecha_Nacimiento: "",
                     per_Num_Acta_Boda_Civil: "",
                     per_Oficialia_Boda_Civil: "",
                     per_Registro_Civil: "",
@@ -173,7 +174,7 @@ class RegistroDePersonal extends Component {
     }
     handleChangeEstado = (e) => {
         if (e.target.value === "999") {
-            this.setState({ 
+            this.setState({
                 boolNvoEstado: true,
                 domicilio: {
                     ...this.state.domicilio,
@@ -182,7 +183,7 @@ class RegistroDePersonal extends Component {
             })
         }
         else {
-            this.setState({ 
+            this.setState({
                 boolNvoEstado: false,
                 domicilio: {
                     ...this.state.domicilio,
@@ -735,10 +736,11 @@ class RegistroDePersonal extends Component {
         })
     }
 
-    /* fnSolicitudNvaProfesion = async () => {
-        await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.infoSesion.pem_Id_Ministro}/${this.state.descNvaProfesion.nvaProf1}`)
-        await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.infoSesion.pem_Id_Ministro}/${this.state.descNvaProfesion.nvaProf2}`)
-    } */
+    handleCampoInvalido = (elementoState, bool) => {
+        this.setState({
+            [elementoState]: bool
+        })
+    }
 
     render() {
 
@@ -775,6 +777,7 @@ class RegistroDePersonal extends Component {
                     foto={this.state.foto}
                     boolNvoEstado={this.state.boolNvoEstado}
                     handleChangeEstado={this.handleChangeEstado}
+                    handleCampoInvalido={this.handleCampoInvalido}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

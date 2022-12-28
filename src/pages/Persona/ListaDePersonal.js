@@ -467,7 +467,7 @@ class ListaDePersonal extends Component {
         })
 
         // INICIA DOCUMENTO
-        doc.addImage(nvologo, 'PNG', 13, 5, 80, 22.26);
+        doc.addImage(nvologo, 'PNG', 13, 5, 85, 22.26);
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
 
@@ -605,8 +605,21 @@ class ListaDePersonal extends Component {
         doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
         drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
 
+        let fechaActual = new Date();
+        doc.text(`${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`, 52, 249);
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
+
+        await helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
+        .then(res => {
+            console.log(res.data)
+            if(res.data.status === "success" && res.data.infoSecretario.length > 0){
+                doc.text(`${res.data.infoSecretario.pem_Nombre}`, 130, 249);
+            }
+            else {
+                doc.text("No hay secretario asignado.", 135, 249);
+            }
+        })
         doc.line(120, 250, 180, 250);
         doc.text("LA COMISION", 142, 255);
         doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`);
