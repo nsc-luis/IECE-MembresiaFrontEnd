@@ -78,8 +78,8 @@ class ModalInfoHogar extends Component {
                                 <>
                                     <Alert
                                         color="warning">
-                                        No se encontro el domicilio debido a que el pais seleccionado no tiene estado. <br />
-                                        Comuniquese con el personal de soporte.
+                                        No se encontró el domicilio debido a que el País seleccionado no tiene Estado registrado. <br />
+                                        Comuníquese con el personal de Soporte.
                                     </Alert>
                                 </>
                             }
@@ -92,7 +92,7 @@ class ModalInfoHogar extends Component {
                             <thead>
                                 <tr>
                                     <th>Miembro</th>
-                                    <th>Jerarquia</th>
+                                    <th>Jerarquía</th>
                                 </tr>
                             </thead>
                             <tbody>
