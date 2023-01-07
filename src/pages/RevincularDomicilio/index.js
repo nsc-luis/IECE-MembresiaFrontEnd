@@ -203,7 +203,7 @@ class RevinculaDomicilio extends Component {
                     })
             }
             catch {
-                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
             }
         }
@@ -267,7 +267,7 @@ class RevinculaDomicilio extends Component {
                                                     value={this.state.personaSeleccionada}
                                                     onChange={this.handle_personaSeleccionada}
                                                 >
-                                                    <option value="0">Selecciona una persona</option>
+                                                    <option value="0">Selecciona una Persona</option>
                                                     {
                                                         this.state.listaPersonas.map((persona) => {
                                                             return (

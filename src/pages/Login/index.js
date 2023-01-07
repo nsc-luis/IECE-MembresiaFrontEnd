@@ -106,7 +106,7 @@ class Login extends Component {
     iniciarSesion = (e) => {
         e.preventDefault()
         if (this.state.distritoSeleccionado === "0") {
-            alert("Error: Debe seleccionar un distrito para continuar.");
+            alert("Error: Debe seleccionar un Distrito para continuar.");
             return false;
         }
         if (!this.state.obispo && this.state.sectorSeleccionado !== "0") {
@@ -122,7 +122,7 @@ class Login extends Component {
             document.location.href = '/Main';
         }
         if (!this.state.obispo && this.state.sectorSeleccionado === "0") {
-            alert("Error: Debe seleccionar un sector para continuar.");
+            alert("Error: Debe seleccionar un Sector para continuar.");
             return false;
         }
         if (this.state.sectorSeleccionado !== "0") {
@@ -146,13 +146,16 @@ class Login extends Component {
                                         <Alert color="warning" className="alertLogin">
                                             <strong>Aviso: </strong> <br />
                                             <ul>
-                                                <li>Si el usuario (ministro) es <strong>obispo</strong>:
+                                                <li>Para <strong>Sesión Obispo</strong>: deberá seleccionar solo el Distrito con el que trabajará. No seleccione Sector.
                                                     <ul>
-                                                        <li>Podra iniciar sesión seleccionando tan solo el distrito: en cuyo caso vera la información que correspone a los sectores del distrito.</li>
-                                                        <li>Si selecciona el sector ademas del distrito: vera solo la información que corresponde al sector.</li>
+                                                        <li>No podrá realizar ningún tipo de movimiento estadístico. Solo consultar información del Distrito y Sectores que lo compoenen.</li>
                                                     </ul>
                                                 </li>
-                                                <li>Si el usuario (ministro) es <strong>pastor</strong>: debera seleccionar distrito y sector para poder iniciar sesión.</li>
+                                                <li>Para <strong>Sesión Pastor</strong>: deberá seleccionar el Distrito y el Sector con el que trabajará.
+                                                <ul>
+                                                    <li>Podrá realizar todo tipo de movimientos estadísticos y cosultas.</li>
+                                                    </ul>
+                                                </li>
                                             </ul>
                                         </Alert>
                                         <FormGroup>
@@ -214,9 +217,9 @@ class Login extends Component {
                                         </FormGroup>
                                     }
                                     <FormGroup>
-                                        <Row>
+                                        <Row >
                                             <Col sm="8"></Col>
-                                            <Col sm="4">
+                                            <Col sm="4" >
                                                 <Button
                                                     type="button"
                                                     className="btnForm"
@@ -225,6 +228,7 @@ class Login extends Component {
                                                     Cancelar
                                                 </Button>
                                                 <Button
+                                                    
                                                     type="submit"
                                                     color="primary"
                                                 >

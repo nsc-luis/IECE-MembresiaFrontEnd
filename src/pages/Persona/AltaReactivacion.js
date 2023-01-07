@@ -133,7 +133,7 @@ function AltaReactivacion() {
     const postData = () => {
 
         if(jerarquia == null ){
-            alert('Seleccione una jerarquia en el hogar')
+            alert('Seleccione una jerarquía en el hogar')
             return
         }
         let formattedData = {}
@@ -201,6 +201,16 @@ function AltaReactivacion() {
     return(
         <>
             <Container>
+<<<<<<< Updated upstream
+=======
+            {alert&&
+                <div>
+                    <Alert>
+                        Alta de persona realizada correctamente
+                    </Alert>
+                </div>
+            }
+>>>>>>> Stashed changes
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Reactivación
@@ -225,7 +235,7 @@ function AltaReactivacion() {
                         </FormGroup>
                         <FormGroup row>
                             <Label for='Categoria' sm={3}>
-                                <h5>Categoria: </h5>
+                                <h5>Categoría: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
@@ -236,10 +246,17 @@ function AltaReactivacion() {
                                 onChange={(e) => handleCategoria( e.target.value )}
                                >
                                 <option value="0" selected disabled >Selecionar categoria</option>
+<<<<<<< Updated upstream
                                 <option value="JOVEN_HOMBRE">Joven hombre</option>
                                 <option value="JOVEN_MUJER">Joven mujer</option>
                                 <option value="NIÑO">Niño</option>
                                 <option value="NIÑA">Niña</option>
+=======
+                                <option value="ADULTO_HOMBRE">Adulto Hombre</option>
+                                <option value="ADULTO_MUJER">Adulto Mujer</option>
+                                <option value="JOVEN_HOMBRE">Joven Hombre</option>
+                                <option value="JOVEN_MUJER">Joven Mujer</option>
+>>>>>>> Stashed changes
 
                                 </Input>
                             </Col>
@@ -259,7 +276,7 @@ function AltaReactivacion() {
                         </FormGroup>
                         <FormGroup row>
                             <Label for='Fecha' sm={3}>
-                                <h5>Fecha de transaccion: </h5>
+                                <h5>Fecha de transacción: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
@@ -291,11 +308,11 @@ function AltaReactivacion() {
                         Hogar / Domicilio
                     </CardTitle>
                     <Alert color="info">
-                        <h5><strong>AVISO:</strong> Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
+                        <h5><strong>AVISO:</strong> Al seleccionar la opción "Nuevo hogar / domicilio" deberá completar los campos necesarios.</h5>
                     </Alert>
                     <FormGroup row>
                         <Label for='Hogar' sm={3}>
-                            <h5>Asignar a hogar: </h5>
+                            <h5>Asignar a Hogar: </h5>
                         </Label>
                         <Col sm={9}>
                             <Input
@@ -303,7 +320,7 @@ function AltaReactivacion() {
                             name='hogar'
                             type='select'
                             onChange={e => {handleHogar(e.target.value)}}>
-                            <option value="0" selected>Nuevo hogar / domicilio</option>
+                            <option value="0" selected>Núevo hogar / domicilio</option>
                             {opcionesHogares.map(hogar => (
                                 <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
                             ))}
@@ -313,11 +330,11 @@ function AltaReactivacion() {
                     {hogar ? 
                     <Form>
                         <Alert color="warning">
-                            <h5><strong>ATENCION:</strong></h5>
+                            <h5><strong>ATENCIÓN:</strong></h5>
                             <ul>
-                                <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia entre 1 y la jerarquia mas baja registrada.</li>
-                                <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
+                                <li>Debe establecer una jerarquía para la persona que esta registrando; la jerarquía 1 corresponde al representante del hogar.</li>
+                                <li>Solo puede seleccionar una jerarquía entre 1 y la jerarquía mas baja registrada.</li>
+                                {/* <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li> */}
                             </ul>
                         </Alert>
 
@@ -327,10 +344,10 @@ function AltaReactivacion() {
                             <thead>
                                 <tr>
                                     <th>
-                                        Miembros del hogar
+                                        Miembros del Hogar
                                     </th>
                                     <th>
-                                        Jerarquia
+                                        Jerarquía
                                     </th>
                                 </tr>
                             </thead>
@@ -346,7 +363,7 @@ function AltaReactivacion() {
                         <hr></hr>
                         <FormGroup row>
                             <Label for='Jerarquia' sm={3}>
-                                <h5>Jerarquia por asignar: </h5>
+                                <h5>Jerarquía por asignar: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
@@ -355,7 +372,7 @@ function AltaReactivacion() {
                                 type='select'
                                 onChange={(e) => handleJerarquia( e.target.value )}
                                >
-                                <option value="0" selected disabled >Selecionar jerarquia</option>
+                                <option value="0" selected disabled >Selecionar jerarquía</option>
                                 {miembrosHogar.map((miembro, index) => (
                                     <option key={miembro.hd_Id_Hogar} value={index + 1}>{index + 1}</option>
                                 ))}
@@ -378,7 +395,7 @@ function AltaReactivacion() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Numero Exterior
+                                        Número Exterior
                                     </Label>
                                     <Input id='extNumber' name='extNumber' placeholder='0000' type='text'></Input>
                                 </FormGroup>
@@ -386,7 +403,7 @@ function AltaReactivacion() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Numero Interior
+                                        Número Interior
                                     </Label>
                                     <Input id='intNumber' name='intNumber' placeholder='0000' type='text'></Input>
                                 </FormGroup>
@@ -399,16 +416,16 @@ function AltaReactivacion() {
                                         Tipo subdivisión
                                     </Label>
                                     <Input id='subDivType' name='subDivType' placeholder='Tipo subdivisión' type='select'>
-                                        <option value="COL">COLONIA</option>
-                                        <option value="FRACC">FRACC</option>
-                                        <option value="EJ">EJIDO</option>
-                                        <option value="SUBDIV">SUBDIV</option>
-                                        <option value="BRGY">BRGY</option>
+                                        <option value="COL.">COL.</option>
+                                        <option value="FRACC.">FRACC.</option>
+                                        <option value="EJ.">EJ.</option>
+                                        <option value="SUBDIV.">SUBDIV.</option>
+                                        <option value="BRGY.">BRGY.</option>
                                         <option value="RANCHO">RANCHO</option>
                                         <option value="MANZANA">MANZANA</option>
                                         <option value="RESIDENCIAL">RESIDENCIAL</option>
                                         <option value="SECTOR">SECTOR</option>
-                                        <option value="SECCIÓN">SECCIÓN</option>
+                                        <option value="SECC.">SECC.</option>
                                         <option value="UNIDAD">UNIDAD</option>
                                         <option value="BARRIO">BARRIO</option>
                                         <option value="ZONA">ZONA</option>

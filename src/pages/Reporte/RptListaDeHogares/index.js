@@ -186,7 +186,7 @@ class RptListaDeHogares extends Component {
                         </Row>
                         {this.state.infoDistrito && this.state.infoSector ? 
                             <Row>
-                                Pertenecientes al distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias}, sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
+                                Pertenecientes al Distrito {this.state.infoDistrito.dis_Numero} - {this.state.infoDistrito.dis_Alias}, Sector {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
                             </Row> : null
                         }
                         <div id="infoListaHogares">
@@ -286,7 +286,7 @@ class RptListaDeHogares extends Component {
             return (
                 <>
                     <React.Fragment>
-                        <h3>Aun no hay hogares registros!</h3>
+                        <h3>Aun no hay Hogares Registros!</h3>
                         <p>Los hogares son agregados desde el registro de personal.</p>
                     </React.Fragment>
                 </>

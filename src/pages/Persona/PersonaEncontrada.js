@@ -23,8 +23,13 @@ class PersonaEncontrada extends React.Component {
 
         return (
             <React.Fragment>
+<<<<<<< Updated upstream
                 <div className="alert alert-danger mt-3" role="alert">
                     <h5><strong>AVISO: </strong>Se ha encontrado una persona con el mismo RFC: {/* {form.RFCSinHomoclave} */} (SIN homoclave), asegurese de no duplicar a la persona.</h5>
+=======
+                <div className="alert alert-warning mt-3" role="alert">
+                    <h5><strong>AVISO: </strong>Se ha encontrado una persona con el mismo RFC(SIN homoclave): {/* {form.RFCSinHomoclave} */}, asegúrese de no duplicar a la persona.</h5>
+>>>>>>> Stashed changes
                 </div>
                 <table className="table">
                     <thead>
@@ -40,8 +45,13 @@ class PersonaEncontrada extends React.Component {
                     <tbody>
                         <tr>
                             <td>{datosPersonaEncontrada.per_Nombre} {datosPersonaEncontrada.per_Apellido_Paterno} {datosPersonaEncontrada.per_Apellido_Materno} </td>
+<<<<<<< Updated upstream
                             <td>{datosPersonaEncontrada.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(datosPersonaEncontrada.per_Fecha_Nacimiento) : null} </td>
                             <td>{datosPersonaEncontrada.per_Bautizado === true ? "Si" : "No"} </td>
+=======
+                            <td>{datosPersonaEncontrada.per_Fecha_Nacimiento} </td>
+                            <td>{datosPersonaEncontrada.per_Bautizado === true ? "Sí" : "No"} </td>
+>>>>>>> Stashed changes
                             <td>{datosPersonaEncontrada.dis_Tipo_Distrito} {datosPersonaEncontrada.dis_Numero}</td>
                             <td>{datosPersonaEncontrada.sec_Alias}</td>
                             <td>

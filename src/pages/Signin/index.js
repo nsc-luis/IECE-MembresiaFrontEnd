@@ -36,8 +36,8 @@ class Login extends Component {
         this.setState({
             mensajes: {
                 ...this.state.mensajes,
-                emailAlert: 'Este campo es requerido y/o debe tener la estructura de un email.',
-                passwordAlert: 'Este campo es requerido con minimo 7 caracteres.',
+                emailAlert: 'Este campo es requerido y debe tener la estructura de un Email.',
+                passwordAlert: 'Este campo es requerido con mínimo 7 caracteres.',
                 loginAlert: ''
             }
         });
@@ -96,7 +96,7 @@ class Login extends Component {
                                 this.setState({
                                     mensajes: {
                                         ...this.state.mensajes,
-                                        loginAlert: "Error: El usuario/ministro no tiene asignado un sector."
+                                        loginAlert: "Error: El usuario/ministro no tiene asignado algún Sector."
                                     },
                                     loginInvalido: true,
                                     loginSuccess: ""
@@ -174,7 +174,7 @@ class Login extends Component {
                                                         name="Email"
                                                         onChange={this.handleChange}
                                                         value={this.state.Email}
-                                                        placeholder="Direccion Email"
+                                                        placeholder="Dirección Email"
                                                         invalid={this.state.emailInvalido}
                                                         style={{ textTransform: 'lowercase' }} />
                                                     <FormFeedback>{this.state.mensajes.emailAlert}</FormFeedback>
@@ -197,7 +197,11 @@ class Login extends Component {
                                                         Validar credenciales
                                                     </Button>
                                                     <br />
+<<<<<<< Updated upstream
                                                     <Link to="/Signup">Registrar nuevo usuario.</Link> | <Link to="/SolicitudDeRestablecimiento">Olvidé mi contraseña.</Link>
+=======
+                                                    <Link to="/Signup">Registrar nuevo usuario</Link> | <Link to="/SolicitudDeRestablecimiento">Olvidé contraseña</Link>
+>>>>>>> Stashed changes
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Input
