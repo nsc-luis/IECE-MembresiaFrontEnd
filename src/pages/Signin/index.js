@@ -197,11 +197,7 @@ class Login extends Component {
                                                         Validar credenciales
                                                     </Button>
                                                     <br />
-<<<<<<< Updated upstream
                                                     <Link to="/Signup">Registrar nuevo usuario.</Link> | <Link to="/SolicitudDeRestablecimiento">Olvidé mi contraseña.</Link>
-=======
-                                                    <Link to="/Signup">Registrar nuevo usuario</Link> | <Link to="/SolicitudDeRestablecimiento">Olvidé contraseña</Link>
->>>>>>> Stashed changes
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Input

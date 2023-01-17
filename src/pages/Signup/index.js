@@ -266,15 +266,9 @@ class Signup extends Component {
                                         </FormGroup>
                                         <FormGroup>
                                             <Row>
-<<<<<<< Updated upstream
                                                 <Col sm="1"></Col>
                                                 <Col sm="2" className="txtNegrita">Super secreto: *</Col>
                                                 <Col sm="8">
-=======
-                                                <Col sm="3"></Col>
-                                                <Col sm="2" className="txtNegrita">Clave Super secreta: *</Col>
-                                                <Col sm="4">
->>>>>>> Stashed changes
                                                     <Input
                                                         type="text"
                                                         name="superSecreto"
