@@ -45,7 +45,9 @@ class Domicilio extends React.Component {
             hogar,
             DatosHogarDomicilio,
             MiembrosDelHogar,
-            JerarquiasDisponibles
+            JerarquiasDisponibles,
+            boolNvoEstado,
+            handleChangeEstado
         } = this.props
 
         return (
@@ -241,26 +243,28 @@ class Domicilio extends React.Component {
                                         />
                                         <label>Municipio/Ciudad *</label>
                                     </div>
-                                    <PaisEstado
-                                        domicilio={domicilio}
-                                        onChangeDomicilio={onChangeDomicilio}
-                                    />
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
+                                            name="hd_Telefono"
+                                            className="form-control"
+                                            value={domicilio.hd_Telefono}
+                                            onChange={onChangeDomicilio}
+                                        />
+                                        <label>Teléfono de Casa</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className="form-group">
                             <div className="row">
-                                <div className="col-sm-4">
-                                    <input
-                                        type="text"
-                                        name="hd_Telefono"
-                                        className="form-control"
-                                        value={domicilio.hd_Telefono}
-                                        onChange={onChangeDomicilio}
-                                    />
-                                    <label>Teléfono de Casa</label>
-                                </div>
+                                <PaisEstado
+                                    domicilio={domicilio}
+                                    onChangeDomicilio={onChangeDomicilio}
+                                    boolNvoEstado={boolNvoEstado}
+                                    handleChangeEstado={handleChangeEstado}
+                                />
                             </div>
                         </div>
                     </React.Fragment>

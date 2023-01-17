@@ -17,11 +17,11 @@ const helpers = {
     msjRegexInvalido: {
         alphaSpaceRequired: 'Formato incorrecto. Solo se aceptan espacios y letras',
         emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
-        fechaBautismoInvalida: 'Formato admintido: dd/mm/aaaa.',
-        fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
-        fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
-        fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
-        formatoFecha: 'Formato admintido: dd/mm/aaaa.',
+        fechaBautismoInvalida: 'Formato de fecha invalido.',
+        fechaBodaCivilInvalida: 'Formato de fecha invalido.',
+        fechaEspitiruSantoInvalida: 'Formato de fecha invalido.',
+        fechaBodaEclesiasticaInvalida: 'Formato de fecha invalido.',
+        formatoFecha: 'Formato de fecha invalido.',
         telMovilInvalido: 'Formatos admintidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 numeros sin espacios.',
         confirmaPassInvalido: 'Las contraseñas no coinciden.'
     },
@@ -91,13 +91,19 @@ const helpers = {
     fnFormatoFecha: function (fecha) {
         let sub = fecha.split("/")
         let fechaFormateada = sub[1] + "/" + sub[0] + "/" + sub[2]
-        console.log(fechaFormateada)
         return fechaFormateada
     },
 
     fnFormatoFecha2: function (fecha) {
         let sub = fecha.split("/")
         let fechaFormateada = sub[2] + "-" + sub[1] + "-" + sub[0]
+        return fechaFormateada
+    },
+
+    // FUNCION PARA FORMATO DE FECHAS PARA BD
+    fnFormatoFecha3: function (fecha) {
+        let sub = fecha.split("-")
+        let fechaFormateada = sub[2] + "/" + sub[1] + "/" + sub[0]
         return fechaFormateada
     },
 
@@ -124,6 +130,20 @@ const helpers = {
     handle_LinkEncabezado: function (seccion, componente) {
         localStorage.setItem('seccion', seccion);
         localStorage.setItem('componente', componente);
+    },
+
+    getDomicilio: async function(id) {
+        let direccion = "";
+        let hogarDomicilio = {};
+        await this.authAxios.get(`/HogarDomicilio/${id}`)
+        .then(res => {
+            if(res.data.status === "success") {
+                return (
+                    direccion = res.data.direccion,
+                    hogarDomicilio = res.data.hogardomicilio[0]
+                );
+            }
+        });
     }
 }
 

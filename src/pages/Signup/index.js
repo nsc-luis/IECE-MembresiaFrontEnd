@@ -195,7 +195,7 @@ class Signup extends Component {
                                                         color="primary"
                                                     >
                                                         {/* Verificar Fase 1 */}
-                                                        Verficar e-mail
+                                                        Verficar E-mail
                                                     </Button>
                                                 </Col>
                                                 <Col sm="1"></Col>
@@ -222,7 +222,7 @@ class Signup extends Component {
                                             <Col sm="12">
                                                 <Alert color="warning">
                                                     <span className="txtNegrita">Instrucciones:</span> <br />
-                                                    Se requiere contraseña para el nuevo usuario, confirmación de la contraseña y clave de la fase 2 para el alta definita del usuario.
+                                                    Se requiere contraseña para el nuevo usuario, confirmación de la contraseña y clave del usuario.
                                                 </Alert>
                                             </Col>
                                         </Row>
@@ -266,9 +266,15 @@ class Signup extends Component {
                                         </FormGroup>
                                         <FormGroup>
                                             <Row>
+<<<<<<< Updated upstream
                                                 <Col sm="1"></Col>
                                                 <Col sm="2" className="txtNegrita">Super secreto: *</Col>
                                                 <Col sm="8">
+=======
+                                                <Col sm="3"></Col>
+                                                <Col sm="2" className="txtNegrita">Clave Super secreta: *</Col>
+                                                <Col sm="4">
+>>>>>>> Stashed changes
                                                     <Input
                                                         type="text"
                                                         name="superSecreto"

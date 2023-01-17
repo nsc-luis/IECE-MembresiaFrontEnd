@@ -245,7 +245,7 @@ function AltaCambioDomicilio() {
                         </FormGroup>
                         <FormGroup row>
                             <Label for='Fecha' sm={3}>
-                                <h5>Fecha de transaccion: </h5>
+                                <h5>Fecha de transacción: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
@@ -277,7 +277,7 @@ function AltaCambioDomicilio() {
                         Hogar / Domicilio
                     </CardTitle>
                     <Alert color="info">
-                        <h5><strong>AVISO:</strong> Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
+                        <h5><strong>AVISO:</strong> Al seleccionar la opción "Nuevo hogar / domicilio" deberá completar los campos necesarios.</h5>
                     </Alert>
                     <FormGroup row>
                         <Label for='Hogar' sm={3}>
@@ -299,11 +299,11 @@ function AltaCambioDomicilio() {
                     {hogar ? 
                     <Form>
                         <Alert color="warning">
-                            <h5><strong>ATENCION:</strong></h5>
+                            <h5><strong>ATENCIÓN:</strong></h5>
                             <ul>
-                                <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia entre 1 y la jerarquia mas baja registrada.</li>
-                                <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
+                                <li>Debe establecer una jerarquía para la persona que está registrando; la jerarquia 1 corresponde al representante del Hogar.</li>
+                                <li>Sólo puede seleccionar una jerarquía entre la jerarquía 1 y la mas baja registrada.</li>
+                                {/* <li>Al establecer una jerarquía intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li> */}
                             </ul>
                         </Alert>
 
@@ -316,7 +316,7 @@ function AltaCambioDomicilio() {
                                         Miembros del hogar
                                     </th>
                                     <th>
-                                        Jerarquia
+                                        Jerarquía
                                     </th>
                                 </tr>
                             </thead>
@@ -332,7 +332,7 @@ function AltaCambioDomicilio() {
                         <hr></hr>
                         <FormGroup row>
                             <Label for='Jerarquia' sm={3}>
-                                <h5>Jerarquia por asignar: </h5>
+                                <h5>Jerarquía por asignar: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
@@ -364,7 +364,7 @@ function AltaCambioDomicilio() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Numero Exterior
+                                        Número Exterior
                                     </Label>
                                     <Input id='extNumber' name='hd_Numero_Exterior' placeholder='0000' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
@@ -372,7 +372,7 @@ function AltaCambioDomicilio() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Numero Interior
+                                        Número Interior
                                     </Label>
                                     <Input id='intNumber' name='hd_Numero_Interior' placeholder='0000' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
@@ -382,19 +382,19 @@ function AltaCambioDomicilio() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Tipo subdivisión
+                                        Tipo de Asentamiento
                                     </Label>
                                     <Input id='subDivType' name='hd_Tipo_Subdivision' placeholder='Tipo subdivisión' type='select' onChange={(e) => handleAdress( e.target )}>
-                                        <option value="COL">COLONIA</option>
-                                        <option value="FRACC">FRACC</option>
-                                        <option value="EJ">EJIDO</option>
-                                        <option value="SUBDIV">SUBDIV</option>
-                                        <option value="BRGY">BRGY</option>
+                                        <option value="COL.">COL.</option>
+                                        <option value="FRACC.">FRACC.</option>
+                                        <option value="EJ.">EJ.</option>
+                                        <option value="SUBDIV.">SUBDIV.</option>
+                                        <option value="BRGY.">BRGY.</option>
                                         <option value="RANCHO">RANCHO</option>
                                         <option value="MANZANA">MANZANA</option>
                                         <option value="RESIDENCIAL">RESIDENCIAL</option>
                                         <option value="SECTOR">SECTOR</option>
-                                        <option value="SECCIÓN">SECCIÓN</option>
+                                        <option value="SECC.">SECC.</option>
                                         <option value="UNIDAD">UNIDAD</option>
                                         <option value="BARRIO">BARRIO</option>
                                         <option value="ZONA">ZONA</option>
@@ -404,7 +404,7 @@ function AltaCambioDomicilio() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Subdivisión
+                                        Asentamiento
                                     </Label>
                                     <Input id='subDiv' name='hd_Subdivision' placeholder='Subdivisión' type='text' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>
@@ -433,7 +433,7 @@ function AltaCambioDomicilio() {
                                         País
                                     </Label>
                                     <Input id='pais' name='pais_Id_Pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
-                                        <option value="0" selected disabled >Selecciona un país</option>
+                                        <option value="0" selected disabled >Selecciona un País</option>
                                         {paises.map(pais => (
                                             <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}>{pais.pais_Nombre}</option>
                                         ))}
@@ -443,10 +443,10 @@ function AltaCambioDomicilio() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Estado
+                                        Estado/Provincia
                                     </Label>
                                     <Input id='estado' name='est_Id_Estado' placeholder='Selecciona un estado' type='select' onChange={(e) => handleAdress( e.target )}>
-                                        <option value="0" selected disabled >Selecciona un estado</option>
+                                        <option value="0" selected disabled >Selecciona un Estado</option>
                                         {estados.map(estado => (
                                             <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}>{estado.est_Nombre}</option>
                                         ))}
@@ -458,7 +458,7 @@ function AltaCambioDomicilio() {
                             <Col sm={4}>
                                 <FormGroup>
                                     <Label>
-                                        Telefono
+                                        Teléfono
                                     </Label>
                                     <Input id='tel' name='hd_Telefono' placeholder='555 555 5555' type='tel' onInput={(e) => handleAdress( e.target )}></Input>
                                 </FormGroup>

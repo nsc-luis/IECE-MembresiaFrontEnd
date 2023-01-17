@@ -32,9 +32,9 @@ class RegistroDePersonal extends Component {
             categoriaSeleccionada: false,
             msjCategoriaSeleccionada: "",
             habilitaPerBautizado: false,
-            per_Nombre_NoValido: true,
-            per_Apellido_Paterno_NoValido: true,
-            per_Fecha_Nacimiento_NoValido: true,
+            per_Nombre_NoValido: false,
+            per_Apellido_Paterno_NoValido: false,
+            per_Fecha_Nacimiento_NoValido: false,
             modalShow: false,
             mensajeDelProceso: "",
             tituloAgregarEditar: "Agregar nuevo miembro",
@@ -44,7 +44,8 @@ class RegistroDePersonal extends Component {
             descNvaProfesion: {},
             foto: "",
             formDataFoto: null,
-            nuevaFoto: false
+            nuevaFoto: false,
+            boolNvoEstado: false
         }
     }
 
@@ -81,6 +82,7 @@ class RegistroDePersonal extends Component {
                     per_Nombre_Abuela_Materna: "",
                     per_Fecha_Boda_Civil: "",
                     per_Fecha_Boda_Eclesiastica: "",
+                    per_Fecha_Nacimiento: "",
                     per_Num_Acta_Boda_Civil: "",
                     per_Oficialia_Boda_Civil: "",
                     per_Registro_Civil: "",
@@ -105,6 +107,7 @@ class RegistroDePersonal extends Component {
                     hd_Numero_Exterior: "",
                     usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                     hd_Activo: true,
+                    est_Id_Estado: 0,
                     nvoEstado: ""
                 },
                 habilitaPerBautizado: true,
@@ -169,6 +172,27 @@ class RegistroDePersonal extends Component {
             }
         })
     }
+    handleChangeEstado = (e) => {
+        if (e.target.value === "999") {
+            this.setState({
+                boolNvoEstado: true,
+                domicilio: {
+                    ...this.state.domicilio,
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+        else {
+            this.setState({
+                boolNvoEstado: false,
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+    }
 
     handleChange = (e) => {
         this.setState({
@@ -202,7 +226,7 @@ class RegistroDePersonal extends Component {
                 case "ADULTO_HOMBRE":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita todas las pestañas / Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "Habilita todas las secciones / Bautizado por defecto.",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -214,7 +238,7 @@ class RegistroDePersonal extends Component {
                 case "ADULTO_MUJER":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita todas las pestañas / Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "Habilita todas las secciones / Bautizado por defecto.",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -408,7 +432,14 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => {
-        this.fnSolicitudNvaProfesion();
+        // this.fnSolicitudNvaProfesion();
+        var info = {
+            PersonaEntity: datos.PersonaEntity,
+            HogarDomicilioEntity: datos.HogarDomicilioEntity,
+            nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
+            nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
+            nvoEstado: this.state.domicilio.nvoEstado
+        }
         await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
             .then(res => {
                 if (res.data.status === true) {
@@ -426,14 +457,14 @@ class RegistroDePersonal extends Component {
                                 helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                                     .then(resFoto => {
                                         if (resFoto.data.status === "success") {
-                                            datos.PersonaEntity.idFoto = resFoto.data.foto.idFoto
+                                            info.PersonaEntity.idFoto = resFoto.data.foto.idFoto
                                             this.setState({
                                                 mensajeDelProceso: "Procesando...",
                                                 modalShow: true
                                             });
                                         }
 
-                                        helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
+                                        helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar`, info)
                                             .then(res => {
                                                 if (res.data.status === "success") {
                                                     setTimeout(() => {
@@ -462,7 +493,7 @@ class RegistroDePersonal extends Component {
                                     })
                             }
                             else {
-                                helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar/${this.state.domicilio.nvoEstado}`, datos)
+                                helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar`, info)
                                     .then(res => {
                                         if (res.data.status === "success") {
                                             //alert("Datos guardados satisfactoriamente");
@@ -526,24 +557,25 @@ class RegistroDePersonal extends Component {
             datos.per_Nombre_Hijos = "";
             datos.per_Cantidad_Hijos = "0";
         }
-        this.fnSolicitudNvaProfesion();
+
+        var info = {
+            PersonaEntity: datos,
+            ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase(),
+            nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
+            nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : ""
+        };
+
+        // this.fnSolicitudNvaProfesion();
         if (this.state.nuevaFoto) {
             await helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                 .then(res => {
                     if (res.data.status === "success") {
-                        datos.idFoto = res.data.foto.idFoto
+                        info.PersonaEntity.idFoto = res.data.foto.idFoto
                         this.setState({
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
                         });
                     }
-
-                    let info = {
-                        id: 0,
-                        PersonaEntity: datos,
-                        ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
-                    };
-
                     try {
                         helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                             .then(res => {
@@ -577,12 +609,6 @@ class RegistroDePersonal extends Component {
                 })
         }
         else {
-            let info = {
-                id: 0,
-                PersonaEntity: datos,
-                ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase()
-            };
-
             try {
                 helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                     .then(res => {
@@ -621,7 +647,15 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => {
-        this.fnSolicitudNvaProfesion();
+        var PersonaEntity = datos;
+        datos = {
+            PersonaEntity,
+            jerarquia: jerarquia,
+            hdId: hdId,
+            nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
+            nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : ""
+        }
+        //this.fnSolicitudNvaProfesion();
         try {
             if (this.state.nuevaFoto) {
                 helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
@@ -633,7 +667,7 @@ class RegistroDePersonal extends Component {
                             });
                             datos.idFoto = resFoto.data.foto.idFoto
                         }
-                        helpers.authAxios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
+                        helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
                             .then(res => {
                                 if (res.data.status === "success") {
                                     setTimeout(() => {
@@ -651,7 +685,7 @@ class RegistroDePersonal extends Component {
                     })
             }
             else {
-                helpers.authAxios.post(this.url + "/persona/AddPersonaHogar/" + jerarquia + "/" + hdId, datos)
+                helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
                     .then(res => {
                         if (res.data.status === "success") {
                             this.setState({
@@ -702,9 +736,10 @@ class RegistroDePersonal extends Component {
         })
     }
 
-    fnSolicitudNvaProfesion = async () => {
-        await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.infoSesion.pem_Id_Ministro}/${this.state.descNvaProfesion.nvaProf1}`)
-        await helpers.authAxios.post(`${helpers.url_api}/SolicitudNuevaProfesion/RegistroDeNvaSolicitud/${this.infoSesion.pem_Id_Ministro}/${this.state.descNvaProfesion.nvaProf2}`)
+    handleCampoInvalido = (elementoState, bool) => {
+        this.setState({
+            [elementoState]: bool
+        })
     }
 
     render() {
@@ -740,6 +775,9 @@ class RegistroDePersonal extends Component {
                     handle_descNvaProfesion={this.handle_descNvaProfesion}
                     descNvaProfesion={this.state.descNvaProfesion}
                     foto={this.state.foto}
+                    boolNvoEstado={this.state.boolNvoEstado}
+                    handleChangeEstado={this.handleChangeEstado}
+                    handleCampoInvalido={this.handleCampoInvalido}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

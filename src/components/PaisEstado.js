@@ -9,12 +9,13 @@ class PaisEstado extends React.Component {
         this.state = {
             paises: [],
             estados: [],
-            mostrarEstados: false
+            mostrarEstados: true
         }
     }
 
     componentDidMount() {
         this.getPaises();
+        this.getEstados(this.props.domicilio.pais_Id_Pais)
     }
 
     getEstados = async (pais_Id_Pais) => {
@@ -32,7 +33,10 @@ class PaisEstado extends React.Component {
                         });
                     }
                     else {
-                        this.setState({ mostrarEstados: false });
+                        this.setState({
+                            mostrarEstados: false,
+                            estados: []
+                        });
                     }
                 }
             });
@@ -49,7 +53,12 @@ class PaisEstado extends React.Component {
 
     render() {
 
-        const { domicilio, onChangeDomicilio } = this.props
+        const { 
+            domicilio, 
+            onChangeDomicilio, 
+            boolNvoEstado,
+            handleChangeEstado
+        } = this.props
         const handle_pais_Id_Pais = (e) => {
             this.getEstados(e.target.value)
             onChangeDomicilio(e)
@@ -75,36 +84,36 @@ class PaisEstado extends React.Component {
                     </select>
                     <label htmlFor="pais_Id_Pais">País *</label>
                 </div>
-                {this.state.mostrarEstados &&
-                    <div className="col-sm-4">
-                        <select
-                            name="est_Id_Estado"
-                            className="form-control"
-                            value={domicilio.est_Id_Estado}
-                            onChange={onChangeDomicilio}
-                        >
-                            <option value="0">Selecciona un estado</option>
-                            {
-                                this.state.estados.map((estado) => {
-                                    return (
-                                        <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}> {estado.est_Nombre} </option>
-                                    )
-                                })
-                            }
-                        </select>
-                        <label>Estado/Provincia *</label>
-                    </div>
-                }
-                {!this.state.mostrarEstados &&
+                <div className="col-sm-4">
+                    <select
+                        name="est_Id_Estado"
+                        className="form-control"
+                        value={domicilio.est_Id_Estado}
+                        onChange={handleChangeEstado}
+                    >
+                        <option value="0">Selecciona un estado</option>
+                        {
+                            this.state.estados.map((estado) => {
+                                return (
+                                    <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}> {estado.est_Nombre} </option>
+                                )
+                            })
+                        }
+                        <option value="999">Otro estado</option>
+                    </select>
+                    <label>Estado/Provincia *</label>
+                </div>
+                {boolNvoEstado &&
                     <div className="col-sm-4">
                         <input
                             type="text"
                             name="nvoEstado"
                             className="form-control"
+                            style={{ backgroundColor: '#feffdd' }}
                             value={domicilio.nvoEstado}
                             onChange={onChangeDomicilio}
                         />
-                        <label>Estado/Provincia *</label>
+                        <label>Otro estado *</label>
                     </div>
                 }
             </React.Fragment>

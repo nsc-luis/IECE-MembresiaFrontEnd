@@ -62,13 +62,33 @@ class ListaDePersonal extends Component {
             habilitaFiltroActivoComunionVivo: '',
             modalInfoHogar: false,
             objPersona: {},
+            direccion: ""
         };
     }
 
     componentDidMount() {
         this.getPersonas();
         this.getSector();
+        this.getDistrito();
         this.getSectoresPorDistrito();
+    }
+
+    getDomicilio = async(id) => {
+        await helpers.authAxios.get(`/HogarDomicilio/${id}`)
+        .then(res => {
+            if(res.data.status === "success") {
+                this.setState({
+                    direccion: res.data.direccion,
+                    hogarDomicilio: res.data.hogardomicilio[0]
+                });
+            }
+            else {
+                this.setState({
+                    direccion: null,
+                    hogarDomicilio: null
+                });
+            }
+        });
     }
 
     getSectoresPorDistrito = async () => {
@@ -145,6 +165,17 @@ class ListaDePersonal extends Component {
                 .then(res => {
                     this.setState({
                         sector: res.data.sector[0]
+                    });
+                });
+        }
+    }
+
+    getDistrito = async () => {
+        if (localStorage.getItem('dto') !== null) {
+            await helpers.authAxios.get(this.url + "/distrito/" + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({
+                        distrito: res.data
                     });
                 });
         }
@@ -346,10 +377,19 @@ class ListaDePersonal extends Component {
         localStorage.setItem('objPersona', JSON.stringify(info));
     }
 
-    hojaDatosEstadisticosPDF = (info) => {
+    hojaDatosEstadisticosPDF = async (info) => {
 
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
+
+        await helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
+        .then(res => {
+            if(res.data.status === "success") {
+                this.setState({
+                    direccion: res.data.direccion
+                })
+            }
+        })
 
         // AGREGA DECORACION underline AL TEXTO
         //PARAMETROS: x = INICIO DE LINEA, contante = MARGEN, texto = TEXTO A DECORAR, y = ALTURA
@@ -406,13 +446,13 @@ class ListaDePersonal extends Component {
         else {
             info.domicilio.push({
                 est_Nombre: "",
-                hd_Calle: "Sin info para mostrar. Reviselo con soporte tecnico.",
+                hd_Calle: "Sin información para mostrar. Revíselo con Soporte Técnico.",
                 hd_Localidad: "",
                 hd_Municipio_Ciudad: "",
                 hd_Numero_Exterior: "",
                 hd_Numero_Interior: "",
                 hd_Subdivision: "",
-                hd_Telefono: "Sin info para mostrar. Reviselo con soporte tecnico.",
+                hd_Telefono: "Sin información para mostrar. Revíselo con Soporte Técnico.",
                 hd_Tipo_Subdivision: "",
                 pais_Nombre_Corto: ""
             })
@@ -427,7 +467,7 @@ class ListaDePersonal extends Component {
         })
 
         // INICIA DOCUMENTO
-        doc.addImage(nvologo, 'PNG', 13, 5, 80, 22.26);
+        doc.addImage(nvologo, 'PNG', 13, 5, 85, 22.26);
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
 
@@ -468,27 +508,46 @@ class ListaDePersonal extends Component {
         doc.text(`Del libro No.: ${info.persona.per_Libro_Acta_Boda_Civil} `, 70, 82);
         drawUnderlineTotext('Del libro No.: ', 70, `${info.persona.per_Libro_Acta_Boda_Civil} `, 82);
 
+<<<<<<< Updated upstream
         doc.text(`Que lleva la oficialia.: ${info.persona.per_Oficialia_Boda_Civil} `, 120, 82);
         drawUnderlineTotext('Que lleva la oficialia.: ', 120, `${info.persona.per_Oficialia_Boda_Civil} `, 82);
+=======
+        doc.text(`Que lleva la oficialía.: ${info.persona.per_Oficialia_Boda_Civil}`, 120, 82);
+        drawUnderlineTotext('Que lleva la oficialía.: ', 120, `${info.persona.per_Oficialia_Boda_Civil}`, 82);
+>>>>>>> Stashed changes
 
         doc.text(`Del registro civil en: ${info.persona.per_Registro_Civil} `, 18, 88);
         drawUnderlineTotext('Del registro civil en: ', 18, `${info.persona.per_Registro_Civil} `, 88);
 
+<<<<<<< Updated upstream
         doc.text(`8. - Contrajo matrimonio eclesiastico en la IECE el día: ${info.persona.per_Fecha_Boda_Eclesiastica} `, 13, 94);
         drawUnderlineTotext('8.- Contrajo matrimonio eclesiastico en la IECE el día: ', 13, `${info.persona.per_Fecha_Boda_Eclesiastica} `, 94);
 
         doc.text(`Lugar de matrimonio eclesiastico en la IECE: ${info.persona.per_Lugar_Boda_Eclesiastica} `, 18, 100);
         drawUnderlineTotext('Lugar de matrimonio eclesiastico en la IECE: ', 18, `${info.persona.per_Lugar_Boda_Eclesiastica} `, 100);
+=======
+        doc.text(`8.- Contrajo matrimonio eclesiástico en la IECE el día: ${info.persona.per_Fecha_Boda_Eclesiastica}`, 13, 94);
+        drawUnderlineTotext('8.- Contrajo matrimonio eclesiástico en la IECE el día: ', 13, `${info.persona.per_Fecha_Boda_Eclesiastica}`, 94);
+
+        doc.text(`Lugar de matrimonio eclesiástico en la IECE: ${info.persona.per_Lugar_Boda_Eclesiastica}`, 18, 100);
+        drawUnderlineTotext('Lugar de matrimonio eclesiástico en la IECE: ', 18, `${info.persona.per_Lugar_Boda_Eclesiastica}`, 100);
+>>>>>>> Stashed changes
 
         doc.text(`9. - Nombre de esposa(o): ${info.persona.per_Nombre_Conyuge} `, 13, 106);
         drawUnderlineTotext('9.- Nombre de esposa(o): ', 13, `${info.persona.per_Nombre_Conyuge} `, 106);
 
-        doc.text(`10. - Cuantos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos} `, 13, 112);
-        drawUnderlineTotext('10.- Cuantos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos} `, 112);
+<<<<<<< Updated upstream
+        doc.text(`10. - Cuantos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 13, 112);
+        drawUnderlineTotext('10.- Cuantos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 112);
+=======
+        doc.text(`10.- Cuántos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos}`, 13, 112);
+        drawUnderlineTotext('10.- Cuántos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos}`, 112);
+>>>>>>> Stashed changes
 
         doc.text(`${info.persona.per_Nombre_Hijos} `, 75, 112);
         drawUnderlineTotext('', 75, `${info.persona.per_Nombre_Hijos} `, 112);
 
+<<<<<<< Updated upstream
         doc.text(`11. - Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, EN FECHA: ${info.persona.per_Fecha_Bautismo} `, 13, 118);
         drawUnderlineTotext('11.- Lugar y fecha de bautismo: ', 13, `${info.persona.per_Lugar_Bautismo} `, 118);
         drawUnderlineTotext(`11. - Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, EN FECHA: `, 13, `${info.persona.per_Fecha_Bautismo} `, 118);
@@ -501,6 +560,20 @@ class ListaDePersonal extends Component {
 
         doc.text(`Bajo la imposicion de manos del presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos} `, 20, 136);
         drawUnderlineTotext('Bajo la imposicion de manos del presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos} `, 136);
+=======
+        doc.text(`11.- Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, En fecha: ${info.persona.per_Fecha_Bautismo}`, 13, 118);
+        drawUnderlineTotext('11.- Lugar y fecha de bautismo: ', 13, `${info.persona.per_Lugar_Bautismo}`, 118);
+        drawUnderlineTotext(`11.- Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, En fecha: `, 13, `${info.persona.per_Fecha_Bautismo}`, 118);
+
+        doc.text(`12.- Por quién fue bautizado: ${info.persona.per_Ministro_Que_Bautizo}`, 13, 124);
+        drawUnderlineTotext('12.- Por quién fue bautizado: ', 13, `${info.persona.per_Ministro_Que_Bautizo}`, 124);
+
+        doc.text(`13.- Fecha en la que recibió la Promesa del Espíritu Santo: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 13, 130);
+        drawUnderlineTotext('13.- Fecha en la que recibió la Promesa del Espíritu Santo: ', 13, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 130);
+
+        doc.text(`Bajo la imposición de manos del Presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 20, 136);
+        drawUnderlineTotext('Bajo la imposición de manos del Presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 136);
+>>>>>>> Stashed changes
 
         let line = 142
         if (info.persona.per_Cargos_Desempenados !== null) {
@@ -546,31 +619,61 @@ class ListaDePersonal extends Component {
         }
 
         line = line + 6;
-        doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: ${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
+        /* doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, ${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
         drawUnderlineTotext('16. - Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
-        drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, Interior: `, 13, `${info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line);
+        drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 13, `${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line); */
+
+        doc.text(`16. - Domicilio actual: ${this.state.direccion}`, 13, line);
+        drawUnderlineTotext('16. - Domicilio actual: ', 13, `${this.state.direccion} `, line);
 
         line = line + 6;
+<<<<<<< Updated upstream
         doc.text(`17. - Telefonos.${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, 13, line);
         drawUnderlineTotext('17.- Telefonos. ', 13, `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, line);
 
         line = line + 6;
-        doc.text(`18. - Profesion / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, line);
-        drawUnderlineTotext('18.- Profesion / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
+        doc.text(`18. - Profesion / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, line);
+        drawUnderlineTotext('18.- Profesion / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
 
         line = line + 6;
-        doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
-        drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
+        doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
+        drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
+=======
+        doc.text(`17.- Teléfonos. ${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`, 13, line);
+        drawUnderlineTotext('17.- Teléfonos. ', 13, `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`, line);
 
+        line = line + 6;
+        doc.text(`18.- Profesión / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, line);
+        drawUnderlineTotext('18.- Profesión / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
+
+        line = line + 6;
+        doc.text(`Profesión / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
+        drawUnderlineTotext('Profesión / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
+>>>>>>> Stashed changes
+
+        let fechaActual = new Date();
+        doc.text(`${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`, 52, 249);
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
+
+        await helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
+        .then(res => {
+            console.log(res.data)
+            if(res.data.status === "success" && res.data.infoSecretario.length > 0){
+                doc.text(`${res.data.infoSecretario.pem_Nombre}`, 130, 249);
+            }
+            else {
+                doc.text("No hay secretario asignado.", 135, 249);
+            }
+        })
         doc.line(120, 250, 180, 250);
-        doc.text("LA COMISION", 142, 255);
+        doc.text("LA COMISIÓN", 142, 255);
         doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`);
     }
 
     render() {
         /*  if (this.state.personas.length >= 1) { */
+        // console.log(localStorage.getItem('sector'))
         return (
             <>
                 {/* <h1 className="text-info">Listado de personal</h1> */}
@@ -583,7 +686,11 @@ class ListaDePersonal extends Component {
                                 </p>
                             }
                             {localStorage.getItem('sector') === null &&
-                                <p> {this.state.sector.dis_Tipo_Distrito} {this.state.sector.dis_Numero} ({this.state.sector.dis_Alias}, {this.state.sector.dis_Area}) </p>
+<<<<<<< Updated upstream
+                                <p> {this.state.distrito.dis_Tipo_Distrito} {this.state.distrito.dis_Numero} ({this.state.distrito.dis_Alias}, {this.state.distrito.dis_Area}) </p>
+=======
+                                <p> Personal de TODOS los SECTORES del DISTRITO. </p>
+>>>>>>> Stashed changes
                             }
                         </Col>
                         <Col xs="2">
@@ -640,7 +747,7 @@ class ListaDePersonal extends Component {
                                 <option value="bautizado">BAUTIZADO</option>
                                 <option value="noBautizado">NO BAUTIZADO</option>
                             </Input>
-                            <Label>Filtro por grupo</Label>
+                            <Label>Filtro por Grupo</Label>
                         </Col>
                         <Col xs="3">
                             <Input
@@ -657,7 +764,7 @@ class ListaDePersonal extends Component {
                                 <option value="NIÑO">NIÑO</option>
                                 <option value="NIÑA">NIÑA</option>
                             </Input>
-                            <Label>Filtro por categoria</Label>
+                            <Label>Filtro por categoría</Label>
                         </Col>
                     </Row>
 
@@ -671,7 +778,7 @@ class ListaDePersonal extends Component {
                                 onChange={this.handle_filtroPorNombre}
                             >
                             </Input>
-                            <Label>Filtro por nombre</Label>
+                            <Label>Filtro por Nombre</Label>
                         </Col>
                         <Col xs="3">
                             <Input
@@ -680,7 +787,7 @@ class ListaDePersonal extends Component {
                                 value={this.state.fProfesionOficio}
                                 onChange={this.handle_filtroPorProfesion}
                             />
-                            <Label>Filtro por profesión/ocupación</Label>
+                            <Label>Filtro por Profesión/Oficio</Label>
                         </Col>
                         <Col xs="3">
                             <Input
@@ -714,7 +821,7 @@ class ListaDePersonal extends Component {
                                     <tr>
                                         <th scope="col">Nombre</th>
                                         <th scope="col" className="text-center">Grupo</th>
-                                        <th scope="col" className="text-center">Categoria</th>
+                                        <th scope="col" className="text-center">Categoría</th>
                                         <th scope="col" className="text-center">Activo</th>
                                         {/* <th scope="col" className="text-center">Vivo</th> */}
                                         <th scope="col" className="text-center">Sector</th>
@@ -743,7 +850,7 @@ class ListaDePersonal extends Component {
                                                         <td className="text-center">
                                                             <Link
                                                                 // onClick={this.handle_modalInfoPersona}
-                                                                onClick={() => this.handle_LinkEncabezado("Seccion: ", "Analisis Personal", obj)}
+                                                                onClick={() => this.handle_LinkEncabezado("Seccion: ", "Análisis Personal", obj)}
                                                                 className="btn btn-success btn-sm btnMarginRight"
                                                                 title="Analizar persona"
                                                                 to="/AnalisisPersonal"
@@ -875,8 +982,8 @@ class ListaDePersonal extends Component {
                                                                     </Row>
                                                                     <Row className="modalBodyRowDatosEstadisticos">
                                                                         <Col sm="12">
-                                                                            <span className="tituloListaDatosEstadisticos" >13.- Fecha en la que recibio la promesa del Espiritu Santo: </span>
-                                                                            <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Fecha_Recibio_Espiritu_SantoFormateada} </span>
+                                                                            <span className="tituloListaDatosEstadisticos" >13.- Fecha en la que recibio la promesa del Espíritu Santo: </span>
+                                                                            <span className="infoDatosEstadisticos" >{this.state.currentPersona.per_Fecha_Recibio_Espíritu_SantoFormateada} </span>
                                                                         </Col>
                                                                     </Row>
                                                                     <Row className="modalBodyRowDatosEstadisticos">
@@ -991,8 +1098,8 @@ class ListaDePersonal extends Component {
                                 <ModalBody>
                                     <Alert color="warning">
                                         <strong>Advertencia: </strong><br />
-                                        Al eliminar una persona seran reorganizadas las jerarquias dentro del hogar y
-                                        si la persona es la ultima del hogar, entonces, el hogar tambien sera eliminado.
+                                        Al eliminar una persona serán reorganizadas las jerarquías dentro del hogar y
+                                        si la persona es la última del hogar, entonces, el hogar también será dado de baja.
                                     </Alert>
                                     ¿Esta seguro de querer eliminar a la persona: <strong>{this.state.currentPersona.per_Nombre} {this.state.currentPersona.per_Apellido_Paterno} {this.state.currentPersona.per_Apellido_Materno}</strong>?
                                 </ModalBody>
@@ -1005,7 +1112,7 @@ class ListaDePersonal extends Component {
                     }
                     {this.state.personas.length === 0 &&
                         <React.Fragment>
-                            <h3>Aun no hay personas registras o no hay coincidencias con el filtro!</h3>
+                            <h3>Aun no hay personas registradas o no hay coincidencias con el filtro!</h3>
                             {/* <p>Haga clic en el boton Registrar persona para registrar una persona.</p> */}
                         </React.Fragment>
                     }

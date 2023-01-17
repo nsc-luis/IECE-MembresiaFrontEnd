@@ -53,8 +53,8 @@ class AnalisisPersonal extends Component {
                                     <>
                                         <Alert
                                             color="warning">
-                                            No se encontro el domicilio debido a que el pais seleccionado no tiene estado. <br />
-                                            Comuniquese con el personal de soporte.
+                                            No se encontró el domicilio debido a que el país seleccionado no tiene Estado registrado. <br />
+                                            Comuníquese con el personal de soporte.
                                         </Alert>
                                     </>
                                 }
@@ -92,7 +92,7 @@ class AnalisisPersonal extends Component {
                                 {!this.objPersona.persona.per_En_Comunion &&
                                     <span className="fa fa-times faIconMarginRight"></span>
                                 }
-                                En comunion
+                                En comunión
                             </Col>
                         </Row>
                     </FormGroup>
@@ -115,7 +115,7 @@ class AnalisisPersonal extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="2">Direccion:</Col>
+                            <Col className="negrita" xs="2">Dirección:</Col>
                             <Col xs="6" className="border border-dark">
                                 {this.state.domicilioLocalizado &&
                                     <>
@@ -192,12 +192,12 @@ class AnalisisPersonal extends Component {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>Fecha</th>
-                                <th>Tipo_Mov</th>
-                                <th>SubTipo_Mov</th>
-                                <th>Comentarios</th>
-                                <th>Sector</th>
-                                <th>Distrito</th>
+                                <th style={{ width: "10%" }}>Fecha</th>
+                                <th style={{ width: "10%" }}>Tipo_Mov</th>
+                                <th style={{ width: "15%" }}>SubTipo_Mov</th>
+                                <th style={{ width: "30%" }}>Comentarios</th>
+                                <th style={{ width: "15%" }}>Sector</th>
+                                <th style={{ width: "20%" }}>Distrito</th>
                             </tr>
                         </thead>
                         <tbody>
