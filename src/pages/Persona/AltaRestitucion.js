@@ -20,6 +20,7 @@ function AltaRestitucion() {
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
+    const [hogarActual, setHogarActual] = useState(false)
 
     const user = JSON.parse(localStorage.getItem('infoSesion'))
     const sector = JSON.parse(localStorage.getItem("sector"))
@@ -32,6 +33,7 @@ function AltaRestitucion() {
                 setOpcionesPersonas(res.data.personas)
                 //console.log(opcionesPersonas)
             });
+            console.log(opcionesPersonas);
     }, [opcionesPersonas.length]);
 
     useEffect(() => {
@@ -73,14 +75,15 @@ function AltaRestitucion() {
         }))
     };
     const handleComentario = (value) => {
+        console.log(value);
         setData( prevState => ({
             ...prevState,
             hte_Comentario: value
         }))
     };
     const handleFechaTransaccion = (value) => {
-        //console.log(value)
-        if(value == "") setMostrarHogar(false)
+        console.log(value)
+        if(value === "") setMostrarHogar(false)
     
         setData( prevState => ({
             ...prevState,
@@ -97,12 +100,24 @@ function AltaRestitucion() {
 
     //Manejo de eventos de hogar
     const handleHogar = (value) => {
-        if(value == 0){
+        if(value === 0){
             setHogar(null)
+            return
+        }
+        if(value === "same"){
+            setHogarActual(true)
+            helpers.authAxios.get(`Hogar_Persona/GetHogarByPersona/${data.per_Id_Persona}`)
+            .then(res => {
+                setHogar(res.data.datosDelHogarPorPersona.domicilio);
+                setMiembrosHogar(res.data.datosDelHogarPorPersona.miembros)
+                console.log(res.data.datosDelHogarPorPersona);
+            });
+            return
         }
         helpers.authAxios.get(`/Hogar_Persona/GetDatosHogarDomicilio/${value}`)
             .then(res => {
-                setHogar(res.data[0])
+                setHogar(res.data.miembros[0])
+                console.log(res.data);
             });
         helpers.authAxios.get(`/Hogar_Persona/GetMiembros/${value}`)
             .then(res => {
@@ -125,7 +140,8 @@ function AltaRestitucion() {
     
     //Validaciones
     const validarDatosPersona = () => {
-        if(!data.per_Id_Persona || data.per_Id_Persona == 0){
+        console.log(data);
+        if(!data.per_Id_Persona || data.per_Id_Persona === 0){
             alert('Seleccione una persona')
             return
         };
@@ -138,13 +154,31 @@ function AltaRestitucion() {
     //Pruebas
     const postData = () => {
 
-        if(jerarquia == null && hogar ){
+        if(jerarquia == null && hogar && !hogarActual ){
             alert('Seleccione una jerarquia en el hogar')
             return
         }
         let formattedData = {}
 
         if(!mostrarHogar){
+            if(hogarActual){
+                formattedData = {
+                    idPersona: data.per_Id_Persona,
+                    comentario: data.hte_Comentario,
+                    fecha: data.fecha_transaccion,
+                    idMinisto: user.pem_Id_Ministro,
+                }
+                helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaReactivacionRestitucion_HogarActual`, formattedData)
+                .then(res => {
+                    if(res.data.status === 'error') {
+                        console.log(res.data.mensaje)
+                    } 
+                    else {
+                        console.log(res.data)
+                        document.location.href = '/Main';
+                    }
+                });
+            }
             formattedData = {
                 id: 0,
                 per_Id_Persona: data.per_Id_Persona,
@@ -227,7 +261,7 @@ function AltaRestitucion() {
                                 onChange={e => {handlePersona(e.target.value)}}>
                                 <option value="0" selected disabled>Selecionar persona...</option>
                                 {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno}</option>
+                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ''}</option>
                                 ))}
                                 </Input>
                             </Col>
@@ -313,6 +347,7 @@ function AltaRestitucion() {
                             type='select'
                             onChange={e => {handleHogar(e.target.value)}}>
                             <option value="0" selected>Nuevo hogar / domicilio</option>
+                            <option value="same">Mismo hogar</option>
                             {opcionesHogares.map(hogar => (
                                 <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
                             ))}
@@ -336,7 +371,7 @@ function AltaRestitucion() {
                             <thead>
                                 <tr>
                                     <th>
-                                        Miembros del hogar
+                                        Miembros del hogar %
                                     </th>
                                     <th>
                                         Jerarquia
@@ -346,14 +381,14 @@ function AltaRestitucion() {
                             <tbody>
                             {miembrosHogar.map(miembro => (
                                     <tr>
-                                        <td>{miembro.per_Nombre + ' ' + miembro.per_Apellido_Paterno + ' ' + miembro.per_Apellido_Materno}</td>
+                                        <td>{miembro.per_Nombre ? miembro.per_Nombre : '' + ' ' + miembro.per_Apellido_Paterno ? miembro.per_Apellido_Paterno : '' + ' ' + miembro.per_Apellido_Materno ? miembro.per_Apellido_Materno : ''}</td>
                                         <td>{miembro.hp_Jerarquia}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </Table>
                         <hr></hr>
-                        <FormGroup row>
+                        {!hogarActual && <FormGroup row>
                             <Label for='Jerarquia' sm={3}>
                                 <h5>Jerarquia por asignar: </h5>
                             </Label>
@@ -371,7 +406,7 @@ function AltaRestitucion() {
                                 <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option>
                                 </Input>
                             </Col>
-                        </FormGroup>
+                        </FormGroup>}
                     </Form>
                     :
                     <Form>

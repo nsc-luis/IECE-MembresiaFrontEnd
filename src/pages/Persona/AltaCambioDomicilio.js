@@ -66,7 +66,7 @@ function AltaCambioDomicilio() {
                         per_En_Comunion: true,
                         per_Visibilidad_Abierta: false,
                         ct_Codigo_Transaccion: 11003,
-                        procedencia: `${value.dis_Alias} - ${value.sec_Alias}`
+                        procedencia: `${value.sec_Alias}`
                     }))
                 }else{
                     setData( prevState => ({
@@ -75,7 +75,7 @@ function AltaCambioDomicilio() {
                         per_En_Comunion: true,
                         per_Visibilidad_Abierta: false,
                         ct_Codigo_Transaccion: 11004,
-                        procedencia: `${value.dis_Alias} - ${value.sec_Alias}`
+                        procedencia: `${value.sec_Alias}`
                     }))
                 }
             })
@@ -224,7 +224,7 @@ function AltaCambioDomicilio() {
                                 onChange={e => {handlePersona(e.target.value)}}>
                                 <option value="0" selected disabled>Selecionar persona...</option>
                                 {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={JSON.stringify(persona)}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno}</option>
+                                    <option key={persona.per_Id_Persona} value={JSON.stringify(persona)}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ''}</option>
                                 ))}
                                 </Input>
                             </Col>

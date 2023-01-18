@@ -64,7 +64,8 @@ function AltaCambioDomicilio() {
                         per_Activo: true,
                         per_En_Comunion: false,
                         per_Visibilidad_Abierta: false,
-                        ct_Codigo_Transaccion: 12002
+                        ct_Codigo_Transaccion: 12002,
+                        procedencia: `${value.sec_Alias}`
                     }))
                 }else{
                     setData( prevState => ({
@@ -72,7 +73,8 @@ function AltaCambioDomicilio() {
                         per_Activo: true,
                         per_En_Comunion: false,
                         per_Visibilidad_Abierta: false,
-                        ct_Codigo_Transaccion: 12003
+                        ct_Codigo_Transaccion: 12003,
+                        procedencia: `${value.sec_Alias}`
                     }))
                 }
             })
@@ -137,7 +139,7 @@ function AltaCambioDomicilio() {
     };
     //Pruebas
     const postData = () => {
-        if(jerarquia == null ){
+        if(jerarquia == null && hogar ){
             alert('Seleccione una jerarquia en el hogar')
             return
         }
@@ -216,7 +218,7 @@ function AltaCambioDomicilio() {
                                 onChange={e => {handlePersona(e.target.value)}}>
                                 <option value="0" selected disabled>Selecionar persona...</option>
                                 {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno}</option>
+                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ''}</option>
                                 ))}
                                 </Input>
                             </Col>
@@ -229,6 +231,7 @@ function AltaCambioDomicilio() {
                                 <Input
                                 id='Procedencia'
                                 name='procedencia'
+                                value={data.procedencia}
                                 type='text'
                                 onInput={(e) => handleProcedencia( e.target.value )}>
                                 </Input>
@@ -267,9 +270,6 @@ function AltaCambioDomicilio() {
                     <CardTitle className="text-center" tag="h4">
                         Hogar / Domicilio
                     </CardTitle>
-                    <Alert color="info">
-                        <h5><strong>AVISO:</strong> Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
-                    </Alert>
                     <FormGroup row>
                         <Label for='Hogar' sm={3}>
                             <h5>Asignar a hogar: </h5>
@@ -341,121 +341,6 @@ function AltaCambioDomicilio() {
                             </Col>
                         </FormGroup>
                     </Form>}
-                    
-                    {/* <Form>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Calle
-                                    </Label>
-                                    <Input id='calle' name='calle' placeholder='Nombre de la calle' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Numero Exterior
-                                    </Label>
-                                    <Input id='extNumber' name='extNumber' placeholder='0000' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Numero Interior
-                                    </Label>
-                                    <Input id='intNumber' name='intNumber' placeholder='0000' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Tipo de Asentamiento
-                                    </Label>
-                                    <Input id='subDivType' name='subDivType' placeholder='Tipo subdivisión' type='select'>
-                                        <option value="COL">COLONIA</option>
-                                        <option value="FRACC">FRACC</option>
-                                        <option value="EJ">EJIDO</option>
-                                        <option value="SUBDIV">SUBDIV</option>
-                                        <option value="BRGY">BRGY</option>
-                                        <option value="RANCHO">RANCHO</option>
-                                        <option value="MANZANA">MANZANA</option>
-                                        <option value="RESIDENCIAL">RESIDENCIAL</option>
-                                        <option value="SECTOR">SECTOR</option>
-                                        <option value="SECCIÓN">SECCIÓN</option>
-                                        <option value="UNIDAD">UNIDAD</option>
-                                        <option value="BARRIO">BARRIO</option>
-                                        <option value="ZONA">ZONA</option>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Asentamiento
-                                    </Label>
-                                    <Input id='subDiv' name='subDiv' placeholder='Subdivisión' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Localidad
-                                    </Label>
-                                    <Input id='localidad' name='localidad' placeholder='Localidad' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Municipio / Ciudad
-                                    </Label>
-                                    <Input id='municipioCiudad' name='municipioCiudad' placeholder='Nombre de Municipio / Ciudad' type='text'></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        País
-                                    </Label>
-                                    <Input id='pais' name='pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
-                                        <option value="0" selected disabled >Selecciona un país</option>
-                                        {paises.map(pais => (
-                                            <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}>{pais.pais_Nombre}</option>
-                                        ))}
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Estado/Provincia
-                                    </Label>
-                                    <Input id='estado' name='estado' placeholder='Selecciona un estado' type='select' onChange={(e) => handleEstado( e.target.value )}>
-                                        <option value="0" selected disabled >Selecciona un estado</option>
-                                        {estados.map(estado => (
-                                            <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}>{estado.est_Nombre}</option>
-                                        ))}
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Teléfono
-                                    </Label>
-                                    <Input id='tel' name='tel' placeholder='555 555 5555' type='tel'></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </Form> */}
                     <Row className="text-center">
                         <Col>
                             <Button color="danger" size='lg' onClick={() => {setMostrarHogar(false)}}>

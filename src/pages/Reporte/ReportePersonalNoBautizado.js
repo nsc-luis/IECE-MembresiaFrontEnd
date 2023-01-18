@@ -24,12 +24,12 @@ export default function ReportePersonalNoBautizado(){
         if(sector == null){
             helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
                 .then(res => {
-                    setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado))
+                    setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado && persona.persona.per_Activo))
                 });
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
-                setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado))
+                setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado && persona.persona.per_Activo))
             });
         }
     }, [personas.length])

@@ -27,7 +27,7 @@ export default function ReportePersonalBautizado(){
         if(sector == null){
             helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
                 .then(res => {
-                    setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion))
+                    setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
                 });
 
             helpers.authAxios.get("/Distrito/" + dto)
@@ -37,7 +37,7 @@ export default function ReportePersonalBautizado(){
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
-                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion))
+                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
             });
             helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
@@ -48,6 +48,7 @@ export default function ReportePersonalBautizado(){
                 setInfoSec(res.data.sector[0].sec_Alias)
             })
         }
+        console.log(personas);
     }, [personas.length])
 
     const downloadTable = () =>{
