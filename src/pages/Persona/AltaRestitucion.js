@@ -154,7 +154,7 @@ function AltaRestitucion() {
     //Pruebas
     const postData = () => {
 
-        if(jerarquia == null && hogar ){
+        if(jerarquia == null && hogar && !hogarActual ){
             alert('Seleccione una jerarquia en el hogar')
             return
         }
