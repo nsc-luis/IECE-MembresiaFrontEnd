@@ -371,7 +371,7 @@ function AltaRestitucion() {
                             <thead>
                                 <tr>
                                     <th>
-                                        Miembros del hogar %
+                                        Miembros del hogar
                                     </th>
                                     <th>
                                         Jerarquia
