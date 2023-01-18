@@ -201,8 +201,6 @@ function AltaReactivacion() {
     return(
         <>
             <Container>
-<<<<<<< Updated upstream
-=======
             {alert&&
                 <div>
                     <Alert>
@@ -210,7 +208,6 @@ function AltaReactivacion() {
                     </Alert>
                 </div>
             }
->>>>>>> Stashed changes
                 <Card body className="mb-5">
                     <CardTitle className="text-center" tag="h4">
                         Alta Reactivación
@@ -246,17 +243,10 @@ function AltaReactivacion() {
                                 onChange={(e) => handleCategoria( e.target.value )}
                                >
                                 <option value="0" selected disabled >Selecionar categoria</option>
-<<<<<<< Updated upstream
-                                <option value="JOVEN_HOMBRE">Joven hombre</option>
-                                <option value="JOVEN_MUJER">Joven mujer</option>
-                                <option value="NIÑO">Niño</option>
-                                <option value="NIÑA">Niña</option>
-=======
                                 <option value="ADULTO_HOMBRE">Adulto Hombre</option>
                                 <option value="ADULTO_MUJER">Adulto Mujer</option>
                                 <option value="JOVEN_HOMBRE">Joven Hombre</option>
                                 <option value="JOVEN_MUJER">Joven Mujer</option>
->>>>>>> Stashed changes
 
                                 </Input>
                             </Col>

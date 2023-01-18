@@ -508,46 +508,27 @@ class ListaDePersonal extends Component {
         doc.text(`Del libro No.: ${info.persona.per_Libro_Acta_Boda_Civil} `, 70, 82);
         drawUnderlineTotext('Del libro No.: ', 70, `${info.persona.per_Libro_Acta_Boda_Civil} `, 82);
 
-<<<<<<< Updated upstream
         doc.text(`Que lleva la oficialia.: ${info.persona.per_Oficialia_Boda_Civil} `, 120, 82);
         drawUnderlineTotext('Que lleva la oficialia.: ', 120, `${info.persona.per_Oficialia_Boda_Civil} `, 82);
-=======
-        doc.text(`Que lleva la oficialía.: ${info.persona.per_Oficialia_Boda_Civil}`, 120, 82);
-        drawUnderlineTotext('Que lleva la oficialía.: ', 120, `${info.persona.per_Oficialia_Boda_Civil}`, 82);
->>>>>>> Stashed changes
 
         doc.text(`Del registro civil en: ${info.persona.per_Registro_Civil} `, 18, 88);
         drawUnderlineTotext('Del registro civil en: ', 18, `${info.persona.per_Registro_Civil} `, 88);
 
-<<<<<<< Updated upstream
         doc.text(`8. - Contrajo matrimonio eclesiastico en la IECE el día: ${info.persona.per_Fecha_Boda_Eclesiastica} `, 13, 94);
         drawUnderlineTotext('8.- Contrajo matrimonio eclesiastico en la IECE el día: ', 13, `${info.persona.per_Fecha_Boda_Eclesiastica} `, 94);
 
         doc.text(`Lugar de matrimonio eclesiastico en la IECE: ${info.persona.per_Lugar_Boda_Eclesiastica} `, 18, 100);
         drawUnderlineTotext('Lugar de matrimonio eclesiastico en la IECE: ', 18, `${info.persona.per_Lugar_Boda_Eclesiastica} `, 100);
-=======
-        doc.text(`8.- Contrajo matrimonio eclesiástico en la IECE el día: ${info.persona.per_Fecha_Boda_Eclesiastica}`, 13, 94);
-        drawUnderlineTotext('8.- Contrajo matrimonio eclesiástico en la IECE el día: ', 13, `${info.persona.per_Fecha_Boda_Eclesiastica}`, 94);
-
-        doc.text(`Lugar de matrimonio eclesiástico en la IECE: ${info.persona.per_Lugar_Boda_Eclesiastica}`, 18, 100);
-        drawUnderlineTotext('Lugar de matrimonio eclesiástico en la IECE: ', 18, `${info.persona.per_Lugar_Boda_Eclesiastica}`, 100);
->>>>>>> Stashed changes
 
         doc.text(`9. - Nombre de esposa(o): ${info.persona.per_Nombre_Conyuge} `, 13, 106);
         drawUnderlineTotext('9.- Nombre de esposa(o): ', 13, `${info.persona.per_Nombre_Conyuge} `, 106);
 
-<<<<<<< Updated upstream
         doc.text(`10. - Cuantos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 13, 112);
         drawUnderlineTotext('10.- Cuantos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 112);
-=======
-        doc.text(`10.- Cuántos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos}`, 13, 112);
-        drawUnderlineTotext('10.- Cuántos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos}`, 112);
->>>>>>> Stashed changes
 
         doc.text(`${info.persona.per_Nombre_Hijos} `, 75, 112);
         drawUnderlineTotext('', 75, `${info.persona.per_Nombre_Hijos} `, 112);
 
-<<<<<<< Updated upstream
         doc.text(`11. - Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, EN FECHA: ${info.persona.per_Fecha_Bautismo} `, 13, 118);
         drawUnderlineTotext('11.- Lugar y fecha de bautismo: ', 13, `${info.persona.per_Lugar_Bautismo} `, 118);
         drawUnderlineTotext(`11. - Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, EN FECHA: `, 13, `${info.persona.per_Fecha_Bautismo} `, 118);
@@ -560,20 +541,6 @@ class ListaDePersonal extends Component {
 
         doc.text(`Bajo la imposicion de manos del presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos} `, 20, 136);
         drawUnderlineTotext('Bajo la imposicion de manos del presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos} `, 136);
-=======
-        doc.text(`11.- Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, En fecha: ${info.persona.per_Fecha_Bautismo}`, 13, 118);
-        drawUnderlineTotext('11.- Lugar y fecha de bautismo: ', 13, `${info.persona.per_Lugar_Bautismo}`, 118);
-        drawUnderlineTotext(`11.- Lugar y fecha de bautismo: ${info.persona.per_Lugar_Bautismo}, En fecha: `, 13, `${info.persona.per_Fecha_Bautismo}`, 118);
-
-        doc.text(`12.- Por quién fue bautizado: ${info.persona.per_Ministro_Que_Bautizo}`, 13, 124);
-        drawUnderlineTotext('12.- Por quién fue bautizado: ', 13, `${info.persona.per_Ministro_Que_Bautizo}`, 124);
-
-        doc.text(`13.- Fecha en la que recibió la Promesa del Espíritu Santo: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 13, 130);
-        drawUnderlineTotext('13.- Fecha en la que recibió la Promesa del Espíritu Santo: ', 13, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 130);
-
-        doc.text(`Bajo la imposición de manos del Presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos}`, 20, 136);
-        drawUnderlineTotext('Bajo la imposición de manos del Presbiterio: ', 20, `${info.persona.per_Bajo_Imposicion_De_Manos}`, 136);
->>>>>>> Stashed changes
 
         let line = 142
         if (info.persona.per_Cargos_Desempenados !== null) {
@@ -627,7 +594,6 @@ class ListaDePersonal extends Component {
         drawUnderlineTotext('16. - Domicilio actual: ', 13, `${this.state.direccion} `, line);
 
         line = line + 6;
-<<<<<<< Updated upstream
         doc.text(`17. - Telefonos.${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, 13, line);
         drawUnderlineTotext('17.- Telefonos. ', 13, `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, line);
 
@@ -638,18 +604,6 @@ class ListaDePersonal extends Component {
         line = line + 6;
         doc.text(`Profesion / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
         drawUnderlineTotext('Profesion / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
-=======
-        doc.text(`17.- Teléfonos. ${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`, 13, line);
-        drawUnderlineTotext('17.- Teléfonos. ', 13, `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`, line);
-
-        line = line + 6;
-        doc.text(`18.- Profesión / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 13, line);
-        drawUnderlineTotext('18.- Profesión / Oficio1: ', 13, `${info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
-
-        line = line + 6;
-        doc.text(`Profesión / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 19, line);
-        drawUnderlineTotext('Profesión / Oficio2: ', 18, `${info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
->>>>>>> Stashed changes
 
         let fechaActual = new Date();
         doc.text(`${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`, 52, 249);
@@ -686,11 +640,7 @@ class ListaDePersonal extends Component {
                                 </p>
                             }
                             {localStorage.getItem('sector') === null &&
-<<<<<<< Updated upstream
                                 <p> {this.state.distrito.dis_Tipo_Distrito} {this.state.distrito.dis_Numero} ({this.state.distrito.dis_Alias}, {this.state.distrito.dis_Area}) </p>
-=======
-                                <p> Personal de TODOS los SECTORES del DISTRITO. </p>
->>>>>>> Stashed changes
                             }
                         </Col>
                         <Col xs="2">

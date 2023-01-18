@@ -507,11 +507,7 @@ class PersonaForm extends Component {
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-<<<<<<< Updated upstream
-                                                            <label><strong>* </strong>Categoría</label>
-=======
                                                             <label><strong>*</strong>Categoría</label>
->>>>>>> Stashed changes
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input type="select"
@@ -868,11 +864,7 @@ class PersonaForm extends Component {
                                                                                 })
                                                                             }
                                                                         </Input>
-<<<<<<< Updated upstream
                                                                         <label>Profesión/Oficio No. 1</label>
-=======
-                                                                        <label>Profesión / Oficio1</label>
->>>>>>> Stashed changes
                                                                     </FormGroup>
                                                                 </div>
                                                                 <div className="col-sm-4">
@@ -895,11 +887,7 @@ class PersonaForm extends Component {
                                                                                 })
                                                                             }
                                                                         </Input>
-<<<<<<< Updated upstream
                                                                         <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesión/Oficio No. 2</label>
-=======
-                                                                        <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesión / Oficio2</label>
->>>>>>> Stashed changes
                                                                     </FormGroup>
                                                                 </div>
                                                                 <div className="col-sm-4">
@@ -911,11 +899,7 @@ class PersonaForm extends Component {
                                                                             invalid={this.state.telMovilInvalido}
                                                                             value={form.per_Telefono_Movil}
                                                                         />
-<<<<<<< Updated upstream
                                                                         <label>Telefono móvil</label>
-=======
-                                                                        <label>Teléfono Movil</label>
->>>>>>> Stashed changes
                                                                         <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
                                                                     </FormGroup>
                                                                 </div>
@@ -931,11 +915,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf1}
                                                                             />
-<<<<<<< Updated upstream
                                                                             <label>Nueva profesión u oficio No.1</label>
-=======
-                                                                            <label>Descripción de la Profesión/Oficio 1</label>
->>>>>>> Stashed changes
                                                                         </FormGroup>
                                                                     </div>
                                                                 }
@@ -948,11 +928,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf2}
                                                                             />
-<<<<<<< Updated upstream
                                                                             <label>Nueva profesión u oficio No. 2</label>
-=======
-                                                                            <label>Descripción de la Profesión/Oficio 2</label>
->>>>>>> Stashed changes
                                                                         </FormGroup>
                                                                     </div>
 
@@ -992,11 +968,7 @@ class PersonaForm extends Component {
                                                         <div className="col-sm-12">
                                                             <div className="card border-info acceso-directo">
                                                                 <div className="card-header">
-<<<<<<< Updated upstream
                                                                     <h5><strong>Datos de Familia Ascendente</strong></h5>
-=======
-                                                                    <h5><strong>Familia Ascendente</strong></h5>
->>>>>>> Stashed changes
                                                                 </div>
                                                                 <div className="card-body">
                                                                     <FormGroup>
@@ -1146,11 +1118,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Num_Acta_Boda_Civil}
                                                                                         />
-<<<<<<< Updated upstream
                                                                                         <label>Num. de acta boda civil</label>
-=======
-                                                                                        <label>Número Acta Boda Civil</label>
->>>>>>> Stashed changes
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
@@ -1160,11 +1128,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Libro_Acta_Boda_Civil}
                                                                                         />
-<<<<<<< Updated upstream
                                                                                         <label>Libro de acta de boda civil</label>
-=======
-                                                                                        <label>Libro Acta Boda Civil</label>
->>>>>>> Stashed changes
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
@@ -1174,11 +1138,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Oficialia_Boda_Civil}
                                                                                         />
-<<<<<<< Updated upstream
                                                                                         <label>Oficialia de boda civil</label>
-=======
-                                                                                        <label>Oficialía Boda Civil</label>
->>>>>>> Stashed changes
                                                                                     </div>
                                                                                 </div>
                                                                             </FormGroup>
@@ -1206,11 +1166,7 @@ class PersonaForm extends Component {
                                                                                                     placeholder="DD/MM/AAAA"
                                                                                                     invalid={this.state.fechaBodaEclesiasticaInvalida}
                                                                                                 />
-<<<<<<< Updated upstream
                                                                                                 <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiástica</label>
-=======
-                                                                                                <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha Boda Eclesiástica</label>
->>>>>>> Stashed changes
                                                                                                 <FormFeedback>{this.state.mensajes.fechaBodaEclesiasticaInvalida}</FormFeedback>
                                                                                             </FormGroup>
                                                                                         </div>
@@ -1223,11 +1179,7 @@ class PersonaForm extends Component {
                                                                                                     className="form-control"
                                                                                                     value={form.per_Lugar_Boda_Eclesiastica}
                                                                                                 />
-<<<<<<< Updated upstream
                                                                                                 <label>Lugar boda eclesiástica</label>
-=======
-                                                                                                <label>Lugar Boda Eclesiástica</label>
->>>>>>> Stashed changes
                                                                                             </FormGroup>
                                                                                         </div>
                                                                                         <div className="col-sm-2">
@@ -1281,11 +1233,7 @@ class PersonaForm extends Component {
                                                                                                 className="form-control"
                                                                                                 value={form.per_Cantidad_Hijos}
                                                                                             />
-<<<<<<< Updated upstream
                                                                                             <label>Número de hijos</label>
-=======
-                                                                                            <label>Cantidad de Hijos</label>
->>>>>>> Stashed changes
                                                                                         </div>
                                                                                     </div>
                                                                                 </FormGroup>
@@ -1357,11 +1305,7 @@ class PersonaForm extends Component {
                                                                                             placeholder="DD/MM/AAAA"
                                                                                             invalid={this.state.fechaBautismoInvalida}
                                                                                         />
-<<<<<<< Updated upstream
                                                                                         <label>Fecha de bautismo</label>
-=======
-                                                                                        <label>Fecha Bautismo</label>
->>>>>>> Stashed changes
                                                                                         <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
                                                                                     </FormGroup>
                                                                                 </div>
@@ -1382,11 +1326,7 @@ class PersonaForm extends Component {
                                                                                     placeholder="DD/MM/AAAA"
                                                                                     invalid={this.state.fechaEspitiruSantoInvalida}
                                                                                 />
-<<<<<<< Updated upstream
                                                                                 <label>Fecha en que recibió Espíritu Santo</label>
-=======
-                                                                                <label>Fecha Recibió Espíritu Santo</label>
->>>>>>> Stashed changes
                                                                                 <FormFeedback>{this.state.mensajes.fechaEspitiruSantoInvalida}</FormFeedback>
                                                                             </FormGroup>
                                                                         </div>
@@ -1399,11 +1339,7 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Bajo_Imposicion_De_Manos}
                                                                                     className="form-control"
                                                                                 />
-<<<<<<< Updated upstream
                                                                                 <label>Bajo imposición de manos de</label>
-=======
-                                                                                <label>Bajo Imposición de Manos</label>
->>>>>>> Stashed changes
                                                                             </FormGroup>
                                                                         </div>
                                                                         {/* <div className="col-sm-4">
@@ -1432,11 +1368,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     value={form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"></textarea>
-<<<<<<< Updated upstream
                                                                                 <label>Cambios de domicilio en la IECE</label>
-=======
-                                                                                <label>Cambios de Domicilio</label>
->>>>>>> Stashed changes
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>
@@ -1449,11 +1381,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Cargos_Desempenados}
                                                                                 ></textarea>
-<<<<<<< Updated upstream
                                                                                 <label>Cargos desempeñados en la IECE</label>
-=======
-                                                                                <label>Cargos Desempeñados</label>
->>>>>>> Stashed changes
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>
