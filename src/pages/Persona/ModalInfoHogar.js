@@ -70,7 +70,7 @@ class ModalInfoHogar extends Component {
                                     <br />
                                     <strong>Telefono: </strong>{objPersona.domicilio[0].hd_Telefono}
                                     <br /> */}
-                                    <strong>Direccion: </strong>{this.state.direccion} <br />
+                                    <strong>Dirección: </strong>{this.state.direccion} <br />
                                     <strong>Estado del hogar: </strong>{objPersona.domicilio[0].hd_Activo ? <span className="hogarActivo">ACTIVO</span> : <span className="hogarInactivo">INACTIVO</span>}
                                 </>
                             }

@@ -16,11 +16,15 @@ class AnalisisPersonal extends Component {
         this.state = {
             historial: [],
             domicilioLocalizado: false,
-            foto: ""
+            foto: "",
+            direccion: ""
         }
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
-        this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No bautizado';
+        this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No Bautizado';
         this.getHistorial(this.objPersona.persona.per_Id_Persona);
+        
+
+
     }
 
     componentDidMount() {
@@ -33,6 +37,10 @@ class AnalisisPersonal extends Component {
         this.setState({
             foto: `${helpers.url_api}/Foto/${this.objPersona.persona.per_Id_Persona}`
         })
+
+        //Se llama a la API que trae la Dirección con mulyi-nomenclatura por países
+        const {persona} = this.props.location
+        this.getDireccion(persona.hogar.hd_Id_Hogar);
     }
 
     getHistorial = async (id) => {
@@ -42,8 +50,18 @@ class AnalisisPersonal extends Component {
             })
     }
 
+    getDireccion = async (id) => {
+        await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+            .then(res => {
+                this.setState({ direccion: res.data.direccion });
+            })
+    }
+
     render() {
+
         return (
+
+
             <>
                 <Container>
                     <FormGroup>
@@ -61,9 +79,8 @@ class AnalisisPersonal extends Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col className="negrita" xs="2">Nombre:</Col>
-                            <Col xs="6" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
-
+                            <Col className="negrita" xs="1">Nombre:</Col>
+                            <Col xs="7" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
                             <Col className="negrita campoVivo" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -73,17 +90,18 @@ class AnalisisPersonal extends Component {
                                 }
                                 Vivo
                             </Col>
-                            <Col>
-                                <img className="fotoPersona fotoAnalisis" src={this.state.foto} />
+                            <Col >
+                                <img className="fotoPersona fotoAnalisis d-block mx-auto" src={this.state.foto} />
                             </Col>
 
                         </Row>
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="2">Grupo:</Col>
+                            <Col className="negrita" xs="1">Grupo:</Col>
                             <Col xs="2" className="border border-dark"> {this.bautizado.toUpperCase()} </Col>
-                            <Col className="negrita" xs="2">Categoria:</Col>
+                            <Col className="negrita" xs="2"></Col>
+                            <Col className="negrita" xs="1">Categoria:</Col>
                             <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Categoria} </Col>
                             <Col className="negrita" xs="2">
                                 {this.objPersona.persona.per_En_Comunion &&
@@ -98,11 +116,12 @@ class AnalisisPersonal extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="2">Edad:</Col>
+                            <Col className="negrita" xs="1">Edad:</Col>
                             <Col xs="2" className="border border-dark"> {this.objPersona.persona.edad} </Col>
-                            <Col className="negrita" xs="2">Estado civil:</Col>
+                            <Col className="negrita" xs="2"></Col>
+                            <Col className="negrita" xs="1">Est. Civil:</Col>
                             <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Estado_Civil} </Col>
-                            <Col className="negrita" xs="2">
+                            <Col className="negrita" xs="1">
                                 {this.objPersona.persona.per_Activo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
                                 }
@@ -115,12 +134,13 @@ class AnalisisPersonal extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="2">Dirección:</Col>
-                            <Col xs="6" className="border border-dark">
+                            <Col className="negrita" xs="1">Dirección:</Col>
+                            <Col xs="7" className="border border-dark">
                                 {this.state.domicilioLocalizado &&
                                     <>
-                                        {this.objPersona.domicilio[0].hd_Calle} {this.objPersona.domicilio[0].hd_Numero_Exterior}, Interior: {this.objPersona.domicilio[0].hd_Numero_Interior},
-                                        {this.objPersona.domicilio[0].hd_Tipo_Subdivision} {this.objPersona.domicilio[0].hd_Subdivision}
+                                        {this.state.direccion}
+                                        {/* {this.objPersona.domicilio[0].hd_Calle} {this.objPersona.domicilio[0].hd_Numero_Exterior}, Int. {this.objPersona.domicilio[0].hd_Numero_Interior},
+                                        {this.objPersona.domicilio[0].hd_Tipo_Subdivision} {this.objPersona.domicilio[0].hd_Subdivision} */}
                                     </>
                                 }
                                 {!this.state.domicilioLocalizado &&
@@ -138,7 +158,7 @@ class AnalisisPersonal extends Component {
                             </Col>
                         </Row>
                     </FormGroup>
-                    <FormGroup>
+                    {/* <FormGroup>
                         <Row>
                             <Col xs="2"></Col>
                             <Col xs="6" className="border border-dark">
@@ -152,52 +172,54 @@ class AnalisisPersonal extends Component {
                                 }
                             </Col>
                         </Row>
-                    </FormGroup>
+                    </FormGroup> */}
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="2">Telefonos:</Col>
-                            <Col xs="2" className="border border-dark">
+                            <Col className="negrita" xs="1">Teléfonos:</Col>
+                            <Col xs="3" className="border border-dark">
                                 {this.objPersona.persona.per_Telefono_Movil !== null &&
                                     <>
-                                        {this.objPersona.persona.per_Telefono_Movil},
+                                        Cel: {this.objPersona.persona.per_Telefono_Movil} - {" "}
                                     </>
                                 }
                                 {this.state.domicilioLocalizado && this.objPersona.domicilio[0].hd_Telefono !== null &&
-                                    <>{
-                                        this.objPersona.domicilio[0].hd_Telefono}
+                                    <>
+                                     Casa: {this.objPersona.domicilio[0].hd_Telefono}
                                     </>
                                 }
                             </Col>
-                            <Col className="negrita" xs="2">Email:</Col>
+                            <Col className="negrita" xs="1"></Col>
+                            <Col className="negrita" xs="1">Email:</Col>
                             <Col xs="3" className="border border-dark"> {this.objPersona.persona.per_Email_Personal} </Col>
                             <Col xs="7"> </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="2">Profesion/Oficio1:</Col>
-                            <Col xs="4" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
-                            <Col className="negrita" xs="2">Profesion/Oficio2:</Col>
-                            <Col xs="4" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
+                            <Col className="negrita" xs="1">Prof./Ofi1:</Col>
+                            <Col xs="3" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
+                            <Col className="negrita" xs="1"></Col>
+                            <Col className="negrita" xs="1">Prof./Ofi2:</Col>
+                            <Col xs="3" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
                         </Row>
                     </FormGroup>
-                    <FormGroup>
-                        <Row>
-                            <Col xs="12">
-                                <h5>Historial Personal</h5>
+                    <FormGroup className="pt-2">
+                        <Row >
+                            <Col xs="12" >
+                                <h5 className="font-weight-bold">Historial Personal</h5>
                             </Col>
                         </Row>
                     </FormGroup>
 
-                    <table className="table">
-                        <thead>
+                    <table className="table table-striped border bt-0">
+                        <thead className="bg-info">
                             <tr>
                                 <th style={{ width: "10%" }}>Fecha</th>
-                                <th style={{ width: "10%" }}>Tipo_Mov</th>
+                                <th style={{ width: "12%" }}>Tipo_Mov</th>
                                 <th style={{ width: "15%" }}>SubTipo_Mov</th>
-                                <th style={{ width: "30%" }}>Comentarios</th>
-                                <th style={{ width: "15%" }}>Sector</th>
-                                <th style={{ width: "20%" }}>Distrito</th>
+                                <th style={{ width: "12%" }}>Comentarios</th>
+                                <th style={{ width: "25%" }}>Sector</th>
+                                <th style={{ width: "25%" }}>Distrito</th>
                             </tr>
                         </thead>
                         <tbody>

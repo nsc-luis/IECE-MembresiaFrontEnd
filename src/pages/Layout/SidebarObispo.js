@@ -63,7 +63,7 @@ class SidebarObispo extends Component {
                             onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                         >
                             <i className="fas fa-fw fa-home"></i>
-                            <span>Anális de Membresia</span>
+                            <span>Análisis de Membresía</span>
                         </Link>
                     </li>
 
@@ -111,7 +111,7 @@ class SidebarObispo extends Component {
                     <li className="nav-item">
                         <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-clipboard-list"></i>
-                            <span>Reporte de Membresia Actual</span>
+                            <span>Reporte de Membresía Actual</span>
                         </Link>
                     </li>
                     <li className="nav-item">
@@ -141,7 +141,7 @@ class SidebarObispo extends Component {
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReporteCumpleaños">
                             <i className="fas fa-fw fa-clipboard-list"></i>
-                            <span>Lista por fecha de cumpleaños</span>
+                            <span>Lista por Fecha de Cumpleaños</span>
                         </Link>
                     </li>
                     <li className="nav-item">
@@ -169,7 +169,7 @@ class SidebarObispo extends Component {
                     <li className="nav-item">
                         <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-baby"></i>
-                            <span>Membresia a Excel</span>
+                            <span>Membresía a Excel</span>
                         </Link>
                     </li>
                     <li className="nav-item">
