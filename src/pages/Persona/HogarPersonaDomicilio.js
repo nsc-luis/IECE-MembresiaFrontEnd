@@ -54,7 +54,7 @@ class Domicilio extends React.Component {
             <React.Fragment>
                 <div className="form-group">
                     <div className="alert alert-info mt-3" role="alert">
-                        <h5><strong>AVISO: </strong>Si es un "Nuevo hogar / domicilio", llene los datos del domicilio.</h5>
+                        <h5><strong>AVISO: </strong>Si es un "Nuevo hogar / Domicilio", llene los datos del domicilio.</h5>
                     </div>
                     <div className="row">
                         <div className="col-sm-2">
@@ -68,7 +68,7 @@ class Domicilio extends React.Component {
                                 /* id="hd_Id_Hogar" */
                                 value={hogar.hd_Id_Hogar}
                             >
-                                <option value="0">Nuevo hogar / domicilio</option>
+                                <option value="0">Nuevo hogar / Domicilio</option>
                                 {
                                     this.state.ListaHogares.map((h) => {
                                         return (
@@ -81,14 +81,15 @@ class Domicilio extends React.Component {
                     </div>
                 </div>
 
+                {/* Si se elige Un HOGAR EXISTENTE */}
                 {hogar.hd_Id_Hogar !== '0' &&
                     <React.Fragment>
                         <div className="alert alert-warning mt-3" role="alert">
                             <h5>ATENCION: </h5>
                             <ul>
-                                <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia entre 1 y la jerarquia mas baja registrada.</li>
-                                <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
+                                <li>Debe establecer una jerarquía para la persona que está registrando, siendo la jerarquía 1 el representante del hogar.</li>
+                                <li>Solo puede seleccionar una jerarquia que esté entre la 1 y la mas baja registrada.</li>
+                                {/* <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquía mas baja a la establecida.</li> */}
                             </ul>
                         </div>
                         <strong>HOGAR: </strong>
@@ -147,7 +148,7 @@ class Domicilio extends React.Component {
                     </React.Fragment>
                 }
 
-                {/* <Domicilio /> */}
+                {/* <Domicilio /> Si se elige NUEVO HOGAR / DOMICILIO */}
                 {hogar.hd_Id_Hogar === '0' &&
                     <React.Fragment>
                         <div className="form-group">
@@ -201,7 +202,7 @@ class Domicilio extends React.Component {
                                             <option value="MANZANA">MANZANA</option>
                                             <option value="RESIDENCIAL">RESIDENCIAL</option>
                                             <option value="SECTOR">SECTOR</option>
-                                            <option value="SECCIÓN">SECCIÓN</option>
+                                            <option value="SECC.">SECCIÓN</option>
                                             <option value="UNIDAD">UNIDAD</option>
                                             <option value="BARRIO">BARRIO</option>
                                             <option value="ZONA">ZONA</option>

@@ -47,6 +47,7 @@ class ResumenMembresia extends Component {
     componentDidMount() {
         this.getSectoresPorDistrito();
         this.getDistrito();
+
     }
 
     getDistrito = async () => {
@@ -64,8 +65,10 @@ class ResumenMembresia extends Component {
                 .then(res => {
                     this.setState({
                         sectores: res.data.sectores
+                        
                     })
                 });
+                
         }
         else {
             await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
@@ -74,6 +77,7 @@ class ResumenMembresia extends Component {
                         sectores: res.data.sector
                     })
                 });
+
         }
     }
 
@@ -152,63 +156,108 @@ class ResumenMembresia extends Component {
             let fechaActual = moment();
             let mesActual = fechaActual.format("MM");
             let fechaTexto = `AL DÍA ${fechaActual.format('DD')} DE ${helpers.meses[mesActual]} DEL ${fechaActual.format('YYYY')}`;
+            let line = 7;
 
-            doc.addImage(nvologo, 'JPG', 10, 5, 70, 20);
-            doc.text("RESUMEN DE MEMBRESIA GENERAL", 85, 10);
-            doc.setFontSize(8);
+            doc.addImage(nvologo, 'JPG', 10, line, 70, 20);
+            doc.text("RESUMEN DE MEMBRESIA GENERAL", 136, 11, {align:'center'});
+            doc.setFontSize(10);
 
+            //Si en LocalStorage tiene Numero de Sector, significa que es Sesión Sector
             if (localStorage.getItem('sector') !== null) {
-                doc.text(`${this.state.infoSector.sec_Alias}`, 85, 15);
+                doc.text(`${this.state.infoSector.sec_Alias}`, 136, 18,{align:'center'});
                 /* doc.text(fechaTexto, 85, 25); */
             }
             else {
-                doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 85, 15);
-                doc.text(`${this.state.infoSector.sec_Alias}`, 85, 20);
+                doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 136, 18,{align:'center'});
+                doc.text(`${this.state.infoSector.sec_Alias}`, 136, 24,{align:'center'});
                 /* doc.text(fechaTexto, 85, 20); */
             }
 
-            doc.line(10, 32, 200, 32);
+            line=line+25;
+            doc.setFontSize(9);
+            doc.line(10, line, 200, line);
 
+            line=line+7;
             doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
-            doc.rect(10, 35, 190, 4, "F");
-            doc.setFont("", "", "bold");
-            doc.text("MEMBRESIA BAUTIZADA", 15, 38);
-            doc.text("ADULTO HOMBRE: ", 20, 44);
-            doc.text("ADULTO MUJER: ", 20, 49);
-            doc.text("JÓVEN HOMBRE: ", 20, 54);
-            doc.text("JÓVEN MUJER: ", 20, 59);
-            doc.text(`${this.state.resumenDeMembresia.totalBautizados}`, 80, 38);
-            doc.text(`${this.state.resumenDeMembresia.hb}`, 70, 44);
-            doc.text(`${this.state.resumenDeMembresia.mb}`, 70, 49);
-            doc.text(`${this.state.resumenDeMembresia.jhb}`, 70, 54);
-            doc.text(`${this.state.resumenDeMembresia.jmb}`, 70, 59);
+            doc.rect(10, line-4, 190, 6, "F");
 
+            doc.setFont("", "", "bold");
+            doc.text("MEMBRESIA BAUTIZADA", 15, line);
+            doc.text(`${this.state.resumenDeMembresia.totalBautizados}`, 80, line);
+
+            line=line+10;
+            doc.setFont("", "", "normal");
+            doc.text("ADULTO HOMBRE: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.hb}`, 70, line);
+
+            line=line+6;
+            doc.text("ADULTO MUJER: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.mb}`, 70, line);
+
+            line=line+6;
+            doc.text("JÓVEN HOMBRE: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.jhb}`, 70, line);
+
+            line=line+6;
+            doc.text("JÓVEN MUJER: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.jmb}`, 70, line);
+
+            line=line+10;
             doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
-            doc.rect(10, 65, 190, 4, "F");
+            doc.rect(10, line-4, 190, 6, "F");
             doc.setFont("", "", "bold");
-            doc.text("MEMBRESIA NO BAUTIZADA", 15, 68);
-            doc.text("JÓVEN HOMBRE: ", 20, 74);
-            doc.text("JÓVEN MUJER: ", 20, 79);
-            doc.text("NIÑOS: ", 20, 84);
-            doc.text("NIÑAS: ", 20, 89);
-            doc.text(`${this.state.resumenDeMembresia.totalNoBautizados}`, 80, 68);
-            doc.text(`${this.state.resumenDeMembresia.jhnb}`, 70, 74);
-            doc.text(`${this.state.resumenDeMembresia.jmnb}`, 70, 79);
-            doc.text(`${this.state.resumenDeMembresia.ninos}`, 70, 84);
-            doc.text(`${this.state.resumenDeMembresia.ninas}`, 70, 89);
-            doc.text("MEMBRESÍA GENERAL: ", 32, 95);
-            doc.rect(70, 92, 15, 4);
-            doc.text(`${this.state.resumenDeMembresia.totalDeMiembros}`, 80, 95);
+            doc.text("MEMBRESIA NO BAUTIZADA", 15, line);
+            doc.text(`${this.state.resumenDeMembresia.totalNoBautizados}`, 80, line);
 
-            doc.text(`JUSTICIA Y VERDAD`, 100, 120);
-            doc.text(fechaTexto, 91, 125);
 
-            doc.line(30, 160, 90, 160);
-            doc.text("SECRETARIO", 51, 163);
-            doc.text(`${this.state.infoSecretario}`, 38, 158);
-            doc.line(120, 160, 180, 160);
-            doc.text(this.state.gradoMinistro, 145, 163);
-            doc.text(`${this.state.infoMinistro}`, 130, 158);
+            line=line+10;
+            doc.setFont("", "", "normal");
+            doc.text("JÓVEN HOMBRE: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.jhnb}`, 70, line);
+
+            line=line+6;
+            doc.text("JÓVEN MUJER: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.jmnb}`, 70, line);
+
+            line=line+6;
+            doc.text("NIÑOS: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.ninos}`, 70, line);
+
+            line=line+6;
+            doc.text("NIÑAS: ", 20, line);
+            doc.text(`${this.state.resumenDeMembresia.ninas}`, 70, line);
+
+            line=line+5;
+            doc.line(10, line, 200, line);
+
+            line=line+8;
+            doc.setFont("", "", "bold");
+            doc.setFontSize(10);
+            doc.text("MEMBRESÍA GENERAL: ", 142, line);
+            //doc.rect(175, line-4, 16, 6);
+            doc.text(`${this.state.resumenDeMembresia.totalDeMiembros}`, 190, line);
+            doc.line(185, line+1, 200, line+1);
+
+            doc.setFont("", "", "normal");
+            doc.setFontSize(9);
+            line=line+30;
+            doc.text(`JUSTICIA Y VERDAD`, 105, line,{align:'center'});
+            line=line+5;
+            doc.text(fechaTexto, 105, line,{align:'center'});
+
+            line=line+25;
+            doc.text(`${this.state.infoSecretario}`, 38, line);
+            doc.text(`${this.state.infoMinistro}`, 130, line);
+
+            line=line+1;
+            doc.line(30, line, 90, line);
+
+            doc.line(120, line, 180, line);
+
+            line=line+4;
+            doc.text("SECRETARIO", 51, line);
+            doc.text(this.state.gradoMinistro, 145, line);
+
             doc.save("ResumenEnPDF.pdf");
         }
     }
@@ -239,10 +288,11 @@ class ResumenMembresia extends Component {
                                     onChange={this.handle_sectorSeleccionado}
                                 >
                                     <option value="0">Selecciona un sector</option>
+                                    
                                     {this.state.sectores.map(sector => {
                                         return (
                                             <React.Fragment key={sector.sec_Id_Sector}>
-                                                <option value={sector.sec_Id_Sector}>{sector.sec_Tipo_Sector}: {sector.sec_Alias}</option>
+                                                <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
                                             </React.Fragment>
                                         )
                                     })}

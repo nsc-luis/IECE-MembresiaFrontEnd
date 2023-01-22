@@ -29,11 +29,12 @@ class RegistroDePersonal extends Component {
             /* hogar: {}, */
             FrmValidaPersona: true,
             bolPersonaEncontrada: false,
-            categoriaSeleccionada: false,
-            msjCategoriaSeleccionada: "",
+            categoriaSeleccionada: true,
+            msjCategoriaSeleccionada: "Seleccione una Categoría",
             habilitaPerBautizado: false,
             per_Nombre_NoValido: false,
             per_Apellido_Paterno_NoValido: false,
+            per_Apellido_Materno_OK: true,
             per_Fecha_Nacimiento_NoValido: false,
             modalShow: false,
             mensajeDelProceso: "",
@@ -98,7 +99,7 @@ class RegistroDePersonal extends Component {
                 },
                 domicilio: {
                     ...this.state.domicilio,
-                    hd_Tipo_Subdivision: "COL",
+                    hd_Tipo_Subdivision: "COL.",
                     sec_Id_Sector: localStorage.getItem("sector"),
                     dis_Id_Distrito: localStorage.getItem("dto"),
                     pais_Id_Pais: "0",
@@ -160,9 +161,11 @@ class RegistroDePersonal extends Component {
     }
 
     const_regex = {
-        alphaSpaceRequired: /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/,
+        alphaSpaceRequired: /^[a-zA-Z]{1}[a-zA-ZÑ\d\s]{0,37}$/,
+        alphaSpace:/^[a-zA-ZÑ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
     }
+    
 
     handleChangeDomicilio = (e) => {
         this.setState({
@@ -195,6 +198,7 @@ class RegistroDePersonal extends Component {
     }
 
     handleChange = (e) => {
+        
         this.setState({
             form: {
                 ...this.state.form,
@@ -214,7 +218,7 @@ class RegistroDePersonal extends Component {
                 default:
                     this.setState({
                         categoriaSeleccionada: false,
-                        msjCategoriaSeleccionada: "Debes seleccionar una categoria valida.",
+                        msjCategoriaSeleccionada: "Debes seleccionar una Categoría.",
                         habilitaPerBautizado: false,
                         form: {
                             ...this.state.form,
@@ -226,7 +230,7 @@ class RegistroDePersonal extends Component {
                 case "ADULTO_HOMBRE":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita todas las secciones / Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -238,7 +242,7 @@ class RegistroDePersonal extends Component {
                 case "ADULTO_MUJER":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita todas las secciones / Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -250,7 +254,7 @@ class RegistroDePersonal extends Component {
                 case "JOVEN_HOMBRE":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita las perstañas: Personales, Eclesiasticos y Hogar.",
+                        msjCategoriaSeleccionada: "",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -262,7 +266,7 @@ class RegistroDePersonal extends Component {
                 case "JOVEN_MUJER":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita las perstañas: Personales, Eclesiasticos y Hogar.",
+                        msjCategoriaSeleccionada: "",
                         habilitaPerBautizado: true,
                         form: {
                             ...this.state.form,
@@ -274,7 +278,7 @@ class RegistroDePersonal extends Component {
                 case "NIÑO":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita solo la pestaña Hogar / NO Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "",
                         habilitaPerBautizado: false,
                         form: {
                             ...this.state.form,
@@ -286,7 +290,7 @@ class RegistroDePersonal extends Component {
                 case "NIÑA":
                     this.setState({
                         categoriaSeleccionada: true,
-                        msjCategoriaSeleccionada: "Habilita solo la pestaña Hogar / NO Bautizado por defecto.",
+                        msjCategoriaSeleccionada: "",
                         habilitaPerBautizado: false,
                         form: {
                             ...this.state.form,
@@ -354,6 +358,21 @@ class RegistroDePersonal extends Component {
                     per_Apellido_Paterno_NoValido: false
                 });
             }
+        }
+        
+        if (e.target.name === "per_Apellido_Materno") {
+            if (!this.const_regex.alphaSpace.test(e.target.value)) {
+                this.setState({
+                    per_Apellido_Materno_OK: false
+                    
+                });
+            } else if(e.target.value==='' || this.const_regex.alphaSpace.test(e.target.value)){
+
+                this.setState({
+                    per_Apellido_Materno_OK: true
+                });
+            }
+            
         }
         if (e.target.name === "per_Fecha_Nacimiento") {
             if (e.target.value === '') {
@@ -448,7 +467,7 @@ class RegistroDePersonal extends Component {
                         contador = contador + 1
                     })
                     if (contador < 1 && this.state.domicilio.nvoEstado == "") {
-                        alert("Error: \nEl pais seleccionado no tiene Estados para mostrar, por lo tanto, debe ingresar un nombre de Estado.")
+                        alert("Error: \nEl País seleccionado no tiene Estados para mostrar, por lo tanto, debe ingresar un nombre de Estado.")
                         return false
                     }
                     else {
@@ -743,9 +762,9 @@ class RegistroDePersonal extends Component {
     }
 
     render() {
-
         return (
             <>
+                
                 <PersonaForm
                     onChange={this.handleChange}
                     FrmValidaPersona={this.state.FrmValidaPersona}
@@ -761,6 +780,7 @@ class RegistroDePersonal extends Component {
                     habilitaPerBautizado={this.state.habilitaPerBautizado}
                     per_Nombre_NoValido={this.state.per_Nombre_NoValido}
                     per_Apellido_Paterno_NoValido={this.state.per_Apellido_Paterno_NoValido}
+                    per_Apellido_Materno_OK={this.state.per_Apellido_Materno_OK}
                     per_Fecha_Nacimiento_NoValido={this.state.per_Fecha_Nacimiento_NoValido}
                     changeRFCSinHomo={this.changeRFCSinHomo}
                     changeEstadoCivil={this.changeEstadoCivil}
@@ -778,7 +798,7 @@ class RegistroDePersonal extends Component {
                     boolNvoEstado={this.state.boolNvoEstado}
                     handleChangeEstado={this.handleChangeEstado}
                     handleCampoInvalido={this.handleCampoInvalido}
-                />
+                /> 
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>
                     {/* <ModalHeader>
