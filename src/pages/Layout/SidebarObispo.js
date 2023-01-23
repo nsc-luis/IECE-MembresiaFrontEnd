@@ -48,7 +48,7 @@ class SidebarObispo extends Component {
                         <Link
                             className="nav-link collapsed"
                             to="/ResumenMembresia"
-                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Resúmen de membresía actual")}
+                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Resumen de membresía actual")}
                         >
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresía Actual</span>
@@ -60,7 +60,7 @@ class SidebarObispo extends Component {
                         <Link
                             className="nav-link"
                             to="/ListaDePersonal"
-                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
+                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Análisis de membresía")}
                         >
                             <i className="fas fa-fw fa-home"></i>
                             <span>Análisis de Membresía</span>
@@ -158,15 +158,16 @@ class SidebarObispo extends Component {
                     </li>
 
                     {/* Divider */}
-                    <hr className="sidebar-divider" />
 
-                    {/* Heading */}
+                    {/* <hr className="sidebar-divider" />
+               
+                    Heading
                     <div className="sidebar-heading">
                         Exportaciones
-                    </div>
+                    </div> */}
 
                     {/* Nav Item - Exportaciones  */}
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <Link className="nav-link" to="#">
                             <i className="fas fa-fw fa-baby"></i>
                             <span>Membresía a Excel</span>
@@ -177,10 +178,11 @@ class SidebarObispo extends Component {
                             <i className="fas fa-fw fa-baby"></i>
                             <span>Hogares a Excel</span>
                         </Link>
-                    </li>
+                    </li> */}
 
-                    {/* Divider */
-                        <hr className="sidebar-divider d-none d-md-block" />}
+                    {/* Divider */}
+                        <hr className="sidebar-divider d-none d-md-block" />
+                        
 
                     {/* Sidebar Toggler (Sidebar) */}
                     <div className="text-center d-none d-md-inline">

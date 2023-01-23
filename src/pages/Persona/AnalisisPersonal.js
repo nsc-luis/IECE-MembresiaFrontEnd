@@ -22,9 +22,6 @@ class AnalisisPersonal extends Component {
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
         this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No Bautizado';
         this.getHistorial(this.objPersona.persona.per_Id_Persona);
-        
-
-
     }
 
     componentDidMount() {
@@ -38,7 +35,7 @@ class AnalisisPersonal extends Component {
             foto: `${helpers.url_api}/Foto/${this.objPersona.persona.per_Id_Persona}`
         })
 
-        //Se llama a la API que trae la Dirección con mulyi-nomenclatura por países
+        //Se trae la Data de la Persona que se le pasó desde el Componente Padre
         const {persona} = this.props.location
         this.getDireccion(persona.hogar.hd_Id_Hogar);
     }
@@ -50,6 +47,7 @@ class AnalisisPersonal extends Component {
             })
     }
 
+    //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
     getDireccion = async (id) => {
         await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
             .then(res => {

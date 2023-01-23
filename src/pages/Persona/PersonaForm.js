@@ -17,9 +17,11 @@ class PersonaForm extends Component {
     url = helpers.url_api;
     fechaNoIngresada = "";
 
+
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
         alphaSpaceRequired: /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/,
+        alfaSpace: /^[a-zA-ZÑ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
         formatoEmail: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         formatoTelefono: /^(\+\d{1,3})*(\(\d{2,3}\))*\d{7,25}$/
@@ -40,7 +42,6 @@ class PersonaForm extends Component {
             RFCSinHomoclave: "",
             distritoSeleccionado: "0",
             sectores: [],
-            per_Apellido_Materno_OK: false,
             hogar: {},
             redirect: false,
             showModalAltaPersona: false,
@@ -60,6 +61,10 @@ class PersonaForm extends Component {
             document.location.href = '/';
         }
     }
+
+    componentDidMount() {
+        //console.log("Componente Hijo " this.props.per_Apellido_Materno_OK)
+      }
 
     openModalAltaPersona = () => {
         this.setState({
@@ -231,6 +236,7 @@ class PersonaForm extends Component {
     }
 
     render() {
+        
         const {
             onChange,
             form,
@@ -245,6 +251,7 @@ class PersonaForm extends Component {
             per_Nombre_NoValido,
             per_Apellido_Paterno_NoValido,
             per_Fecha_Nacimiento_NoValido,
+            per_Apellido_Materno_OK,
             changeRFCSinHomo,
             changeEstadoCivil,
             fnGuardaPersona,
@@ -261,9 +268,9 @@ class PersonaForm extends Component {
             handleChangeEstado,
             handleCampoInvalido
         } = this.props
-
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
-        const alphaSpaceRequired = /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/
+        const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
+        const alphaSpace= /^[a-zA-ZÑ\s]{0,37}$/;
 
         // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
         const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
@@ -332,12 +339,19 @@ class PersonaForm extends Component {
 
         // FUNCION QUE REVISA DUPLICADOS DEACUERDO A RFC (SIN HOMOCLAVE)
         const handle_verificarDuplicados = (e) => {
+
+            if (form.per_Categoria === 0) { 
+                handleCampoInvalido("categoriaSeleccionada", false);
+            }
             if (!alphaSpaceRequired.test(form.per_Nombre) || form.per_Nombre === undefined) { 
                 handleCampoInvalido("per_Nombre_NoValido", true)
             }
             if (!alphaSpaceRequired.test(form.per_Apellido_Paterno) || form.per_Apellido_Paterno === undefined) { 
                 handleCampoInvalido("per_Apellido_Paterno_NoValido", true)
             }
+            if (!alphaSpace.test(form.per_Apellido_Materno)) { 
+                handleCampoInvalido("per_Apellido_Materno_OK", false)}
+
             if (form.per_Fecha_Nacimiento === undefined || form.per_Fecha_Nacimiento === "") {
                 handleCampoInvalido("per_Fecha_Nacimiento_NoValido", true)
             }
@@ -347,34 +361,37 @@ class PersonaForm extends Component {
             if (categoriaSeleccionada
                 && !per_Nombre_NoValido
                 && !per_Apellido_Paterno_NoValido
-                && !per_Fecha_Nacimiento_NoValido) {
+                && !per_Fecha_Nacimiento_NoValido
+                && per_Apellido_Materno_OK) {
+                    
+                    if (form.per_Categoria === "NIÑO" || form.per_Categoria === "NIÑA") {
+                        this.setState({ infante: true })
+                    } else {
+                        this.setState({ infante: false })
+                    }
 
-                if (form.per_Categoria === "NIÑO" || form.per_Categoria === "NIÑA") {
-                    this.setState({ infante: true })
-                } else {
-                    this.setState({ infante: false })
-                }
+                    if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false) {
+                        this.setState({ infante: true })
+                    }
 
-                if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false) {
-                    this.setState({ infante: true })
-                }
+                    var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
 
-                var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
-                if (alphaSpaceRequired.test(per_Apellido_Materno.value)
-                    || per_Apellido_Materno.value === "") {
+                    if (alphaSpace.test(per_Apellido_Materno.value)
+                        || per_Apellido_Materno.value === "") {
 
-                    this.setState({ per_Apellido_Materno_OK: true })
-                    let am = per_Apellido_Materno.value === "" ? "1" : per_Apellido_Materno.value
+                        this.setState({ per_Apellido_Materno_OK: true })
+                        let am = per_Apellido_Materno.value === "" ? "1" : per_Apellido_Materno.value
 
-                    CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
+                        CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
 
-                } else {
-                    this.setState({ per_Apellido_Materno_OK: false })
-                    alert("Debes capturar correctamente los campos requeridos.")
-                }
+                    } else if(!per_Apellido_Materno.value === "" && !alphaSpace.test(per_Apellido_Materno.value))
+                    {
+                        this.setState({ per_Apellido_Materno_OK: false })
+                        //alert("Sólo acepta letras (Sin acentos) y espacios.")
+                    }
             } else {
                 this.setState({ per_Apellido_Materno_OK: false })
-                alert("Debes capturar correctamente los campos requeridos.")
+                alert("Debes capturar correctamente los campos requeridos de acuerdo a las reglas indicadas.")
             }
         }
 
@@ -432,7 +449,7 @@ class PersonaForm extends Component {
 
             if (objPersona.per_Bautizado === true
                 && objPersona.per_Fecha_Bautismo === "") {
-                alert("Error: \nNo se pueden guardar datos de una persona bautizda sin fecha de bautismo.");
+                alert("Error: \nSe requiere la fecha de bautismo.");
                 this.setState({ fechaBautismoInvalida: true })
                 return false;
             }
@@ -457,10 +474,11 @@ class PersonaForm extends Component {
             if (boolAgregarNvaPersona) {
                 /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
                 if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
-                    alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un nuevo hogar/domicilio.");
+                    alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un Nuevo Hogar/Domicilio.");
                     return false;
                 }
 
+                // Si el Registro es de Persona y de Hogar
                 if (this.state.hogar.hd_Id_Hogar === "0") {
                     let PersonaDomicilioHogar = {
                         id: 1,
@@ -470,11 +488,12 @@ class PersonaForm extends Component {
                     if (domicilio.pais_Id_Pais === "0"
                         || domicilio.hd_Calle === ""
                         || domicilio.hd_Municipio_Ciudad === "") {
-                        alert("Error!. Debe ingresar al menos calle, cuidad y pais y estado para un nuevo domicilio.")
+                        alert("Error!. Debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
                         return false;
                     }
-                    await fnGuardaPersona(PersonaDomicilioHogar)
+                    await fnGuardaPersona(PersonaDomicilioHogar) 
                 } else {
+                    //Si el Registro es de una Persona que se asignará a un Hogar Existente
                     await fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
                 }
             }
@@ -580,7 +599,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {per_Nombre_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo requerido, sólo acepta letras, números y espacios.
+                                                                Campo Requerido, sólo acepta letras (Sin acentos) y espacios.
                                                             </span>
                                                         }
                                                     </div>
@@ -602,7 +621,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {per_Apellido_Paterno_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo requerido, sólo acepta letras, números y espacios.
+                                                                Campo Requerido, sólo acepta letras (Sin acentos) y espacios.
                                                             </span>
                                                         }
                                                     </div>
@@ -623,11 +642,11 @@ class PersonaForm extends Component {
                                                                 className="form-control"
                                                             />
                                                         </div>
-                                                        {/* {!this.state.per_Apellido_Materno_OK &&
-                                                            <span className="text-primary font-italic">
-                                                                (En blanco si se desconoce)
+                                                         {!per_Apellido_Materno_OK &&
+                                                            <span className="text-danger">
+                                                                Sólo acepta letras (Sin acentos) y espacios.
                                                             </span>
-                                                        } */}
+                                                        }
                                                     </div>
                                                 </FormGroup>
 
