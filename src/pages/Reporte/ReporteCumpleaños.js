@@ -1,14 +1,14 @@
-import Layout from "../Layout";
+/* import Layout from "../Layout"; */
 import helpers from "../../components/Helpers";
 import {
     Container, Button,
-     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+     CardTitle, Card, CardBody, Table, /* UncontrolledCollapse, */ Row, Col
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
-import Moment from "react-moment";
+/* import Moment from "react-moment"; */
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
@@ -65,7 +65,7 @@ export default function ReporteCumpleaños(){
 
     let totalCount = 0;
 
-    const countPersons = (type) =>{
+    /* const countPersons = (type) =>{
         let count = 0
         personas.map(persona => {
             if(persona.persona.per_Categoria === type){
@@ -74,7 +74,7 @@ export default function ReporteCumpleaños(){
         })
         totalCount += count;
         return count
-    }
+    } */
     const reportePersonalBautizadoPDF = () =>{
         totalCount = 0
         let index = 1

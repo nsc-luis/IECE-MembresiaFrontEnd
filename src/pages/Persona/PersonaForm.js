@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import '../../assets/css/index.css'
 import 'react-day-picker/lib/style.css';
 import axios from 'axios';
@@ -62,10 +62,6 @@ class PersonaForm extends Component {
         }
     }
 
-    componentDidMount() {
-        //console.log("Componente Hijo " this.props.per_Apellido_Materno_OK)
-      }
-
     openModalAltaPersona = () => {
         this.setState({
             showModalAltaPersona: true
@@ -126,16 +122,17 @@ class PersonaForm extends Component {
             }
         });
         if (localStorage.getItem("idPersona") !== "0") {
-            helpers.authAxios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
+            //helpers.authAxios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
+            helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     this.setState({
                         hogar: {
                             ...this.state.hogar,
-                            hd_Id_Hogar: String(res.data.hd_Id_Hogar),
-                            hp_Jerarquia: String(res.data.hp_Jerarquia)
+                            hd_Id_Hogar: String(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar),
+                            hp_Jerarquia: String(res.data.datosDelHogarPorPersona.hp_Jerarquia)
                         }
                     })
-                    this.fnGetDatosDelHogar(res.data.hd_Id_Hogar)
+                    this.fnGetDatosDelHogar(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar)
                 })
             setInterval(() => {
                 this.actualizaEstadoCivil();

@@ -66,7 +66,7 @@ export default function ReporteMovimientoEstadistico(){
             fechaInicial: startDate,
             fechaFinal: endDate,
         }
-        if(sector == null){
+        if(sector === null){
             params.idSectorDistrito = dto
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
             orderData(res.data.datos)
@@ -87,29 +87,29 @@ export default function ReporteMovimientoEstadistico(){
     }
 
     const orderData = (trans) => {
-        setBautismos(trans.filter(t => t.ct_Codigo_Transaccion == 11001))
-        setRestituciones(trans.filter(t => t.ct_Codigo_Transaccion == 11002))
-        setAltasCambioDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 11003 || t.ct_Codigo_Transaccion == 11004 : t.ct_Codigo_Transaccion == 11004 ))
-        setDefunciones(trans.filter(t => t.ct_Codigo_Transaccion == 11101))
-        setExcomunionesTemp(trans.filter(t => t.ct_Codigo_Transaccion == 11102))
-        setExcomuniones(trans.filter(t => t.ct_Codigo_Transaccion == 11103))
-        setBajasCambiosDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 11104 || t.ct_Codigo_Transaccion == 11105 : t.ct_Codigo_Transaccion == 11105))
-        setActualizacionB(trans.filter(t => t.ct_Codigo_Transaccion == 11201))
-        setNuevoIngreso(trans.filter(t => t.ct_Codigo_Transaccion == 12001))
-        setAltasCambioDomNB(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 12002 || t.ct_Codigo_Transaccion == 12003 : t.ct_Codigo_Transaccion == 12003))
-        setReactivaciones(trans.filter(t => t.ct_Codigo_Transaccion == 12004))
-        setDefuncionesNB(trans.filter(t => t.ct_Codigo_Transaccion == 12101))
-        setAlejamientos(trans.filter(t => t.ct_Codigo_Transaccion == 12102))
-        setBajasCambioDomNB(trans.filter(t => sector ?  t.ct_Codigo_Transaccion == 12103 || t.ct_Codigo_Transaccion == 12104 : t.ct_Codigo_Transaccion == 12104))
-        setCambiosABautizado(trans.filter(t => t.ct_Codigo_Transaccion == 12105))
-        setBajasPorPadres(trans.filter(t => t.ct_Codigo_Transaccion == 12106))
-        setActualizacionNB(trans.filter(t => t.ct_Codigo_Transaccion == 12201))
-        setMatrimonios(trans.filter(t => t.ct_Codigo_Transaccion == 21001))
-        setLegalizaciones(trans.filter(t => t.ct_Codigo_Transaccion == 21102))
-        setPresentacionesNiños(trans.filter(t => t.ct_Codigo_Transaccion == 23203))
-        setAltasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31001))
-        setBajasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31102))
-        setActualizacionHogar(trans.filter(t => t.ct_Codigo_Transaccion == 31203))
+        setBautismos(trans.filter(t => t.ct_Codigo_Transaccion === 11001))
+        setRestituciones(trans.filter(t => t.ct_Codigo_Transaccion === 11002))
+        setAltasCambioDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion === 11003 || t.ct_Codigo_Transaccion === 11004 : t.ct_Codigo_Transaccion === 11004 ))
+        setDefunciones(trans.filter(t => t.ct_Codigo_Transaccion === 11101))
+        setExcomunionesTemp(trans.filter(t => t.ct_Codigo_Transaccion === 11102))
+        setExcomuniones(trans.filter(t => t.ct_Codigo_Transaccion === 11103))
+        setBajasCambiosDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion === 11104 || t.ct_Codigo_Transaccion === 11105 : t.ct_Codigo_Transaccion === 11105))
+        setActualizacionB(trans.filter(t => t.ct_Codigo_Transaccion === 11201))
+        setNuevoIngreso(trans.filter(t => t.ct_Codigo_Transaccion === 12001))
+        setAltasCambioDomNB(trans.filter(t => sector ? t.ct_Codigo_Transaccion === 12002 || t.ct_Codigo_Transaccion === 12003 : t.ct_Codigo_Transaccion === 12003))
+        setReactivaciones(trans.filter(t => t.ct_Codigo_Transaccion === 12004))
+        setDefuncionesNB(trans.filter(t => t.ct_Codigo_Transaccion === 12101))
+        setAlejamientos(trans.filter(t => t.ct_Codigo_Transaccion === 12102))
+        setBajasCambioDomNB(trans.filter(t => sector ?  t.ct_Codigo_Transaccion === 12103 || t.ct_Codigo_Transaccion === 12104 : t.ct_Codigo_Transaccion === 12104))
+        setCambiosABautizado(trans.filter(t => t.ct_Codigo_Transaccion === 12105))
+        setBajasPorPadres(trans.filter(t => t.ct_Codigo_Transaccion === 12106))
+        setActualizacionNB(trans.filter(t => t.ct_Codigo_Transaccion === 12201))
+        setMatrimonios(trans.filter(t => t.ct_Codigo_Transaccion === 21001))
+        setLegalizaciones(trans.filter(t => t.ct_Codigo_Transaccion === 21102))
+        setPresentacionesNiños(trans.filter(t => t.ct_Codigo_Transaccion === 23203))
+        setAltasHogares(trans.filter(t => t.ct_Codigo_Transaccion === 31001))
+        setBajasHogares(trans.filter(t => t.ct_Codigo_Transaccion === 31102))
+        setActualizacionHogar(trans.filter(t => t.ct_Codigo_Transaccion === 31203))
 
 
         setLoading(false)
