@@ -55,7 +55,8 @@ class PersonaForm extends Component {
             DatosHogarDomicilio: [],
             MiembrosDelHogar: [],
             JerarquiasDisponibles: [],
-            foto: null
+            foto: null,
+            direccion:""
         };
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
@@ -206,12 +207,24 @@ class PersonaForm extends Component {
                         }
                     })
                 });
+
             this.setState({
                 hogar: {
                     ...this.state.hogar,
                     hd_Id_Hogar: idHogar
                 }
             })
+
+    //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
+    let getDireccion = async (id) => {
+        await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+            .then(res => {
+                this.setState({ direccion: res.data.direccion });
+                console.log("direccion" + this.state.direccion)
+            });
+    }
+    getDireccion(idHogar);
+    
         }
         else {
             this.setState({
@@ -1462,6 +1475,7 @@ class PersonaForm extends Component {
                                                                     JerarquiasDisponibles={this.state.JerarquiasDisponibles}
                                                                     boolNvoEstado={boolNvoEstado}
                                                                     handleChangeEstado={handleChangeEstado}
+                                                                    direccion={this.state.direccion}
                                                                 />
                                                             </div>
                                                         </div>

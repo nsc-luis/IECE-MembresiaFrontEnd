@@ -60,6 +60,7 @@ class BajaBautizadoExcomunion extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
+
         try {
             await helpers.authAxios.post(
                 helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
@@ -76,7 +77,7 @@ class BajaBautizadoExcomunion extends Component {
                     }
                 });
         } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
         }
     }
 
@@ -176,12 +177,12 @@ class BajaBautizadoExcomunion extends Component {
                         <CardFooter>
                         <Link
                                 to="/ListaDePersonal"
-                                onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
+                                onClick={() => helpers.handle_LinkEncabezado("Sección: Monitoreo", "Información de membresía")}
                             >
                                 <Button type="button" color="secondary" className="entreBotones">
                                     Cancelar
                                 </Button>
-                            </Link>
+                        </Link>
                             <Button
                                 type="submit"
                                 color="success"

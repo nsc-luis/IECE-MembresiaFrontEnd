@@ -47,20 +47,21 @@ class Domicilio extends React.Component {
             MiembrosDelHogar,
             JerarquiasDisponibles,
             boolNvoEstado,
-            handleChangeEstado
+            handleChangeEstado,
+            direccion
         } = this.props
 
         return (
             <React.Fragment>
                 <div className="form-group">
                     <div className="alert alert-info mt-3" role="alert">
-                        <h5><strong>AVISO: </strong>Si es un "Nuevo hogar / Domicilio", llene los datos del domicilio.</h5>
+                        <h5><strong>AVISO: </strong>Si es un "Nuevo Hogar / Domicilio", llene los datos del domicilio.</h5>
                     </div>
                     <div className="row">
                         <div className="col-sm-2">
                             <label>Asignar a hogar: </label>
                         </div>
-                        <div className="col-sm-4">
+                        <div className="col-sm-9">
                             <select
                                 name="hd_Id_Hogar"
                                 className="form-control"
@@ -72,7 +73,9 @@ class Domicilio extends React.Component {
                                 {
                                     this.state.ListaHogares.map((h) => {
                                         return (
-                                            <option key={h.hd_Id_Hogar} value={h.hd_Id_Hogar}>{h.per_Nombre} {h.per_Apellido_Paterno} {h.per_Apellido_Materno} | {h.hd_Calle} {h.hd_Numero_Exterior}, {h.hd_Localidad}, {h.est_Nombre}</option>
+                                            <option key={h.hd_Id_Hogar} value={h.hd_Id_Hogar}>
+                                                {h.per_Nombre} {h.per_Apellido_Paterno} {h.per_Apellido_Materno} |
+                                                {h.hd_Calle} {h.hd_Numero_Exterior}, {h.hd_Municipio_Ciudad}, {h.est_Nombre}</option>
                                         )
                                     })
                                 }
@@ -85,10 +88,10 @@ class Domicilio extends React.Component {
                 {hogar.hd_Id_Hogar !== '0' &&
                     <React.Fragment>
                         <div className="alert alert-warning mt-3" role="alert">
-                            <h5>ATENCION: </h5>
+                            <h5>ATENCIÓN: </h5>
                             <ul>
                                 <li>Debe establecer una jerarquía para la persona que está registrando, siendo la jerarquía 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia que esté entre la 1 y la mas baja registrada.</li>
+                                <li>Solo puede seleccionar una jerarquia que esté entre la jerarquía 1 y la mas baja registrada.</li>
                                 {/* <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquía mas baja a la establecida.</li> */}
                             </ul>
                         </div>
@@ -97,13 +100,14 @@ class Domicilio extends React.Component {
                         {
                             DatosHogarDomicilio.map((HogarDomicilio) => {
                                 return (
-                                    <p key={HogarDomicilio.hd_Id_Hogar}>
-                                        Calle: {HogarDomicilio.hd_Calle}, No.: {HogarDomicilio.hd_Numero_Exterior}, Interior: {HogarDomicilio.hd_Numero_Interior},
-                                        Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
-                                        Localidad: {HogarDomicilio.hd_Localidad}, Municipio/cuidad: {HogarDomicilio.hd_Municipio_Ciudad},
-                                        {HogarDomicilio.est_Nombre}, Pais: {HogarDomicilio.pais_Nombre_Corto} <br />
-                                        Telefono: {HogarDomicilio.hd_Telefono}
-                                    </p>
+                                    // <p key={HogarDomicilio.hd_Id_Hogar}>
+                                    //     Calle: {HogarDomicilio.hd_Calle}, No.: {HogarDomicilio.hd_Numero_Exterior}, Interior: {HogarDomicilio.hd_Numero_Interior},
+                                    //     Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
+                                    //     Localidad: {HogarDomicilio.hd_Localidad}, Municipio/cuidad: {HogarDomicilio.hd_Municipio_Ciudad},
+                                    //     {HogarDomicilio.est_Nombre}, Pais: {HogarDomicilio.pais_Nombre_Corto} <br />
+                                    //     Telefono: {HogarDomicilio.hd_Telefono}
+                                    // </p>
+                                    <p><h7>{direccion}</h7></p>
                                 )
                             })
                         }

@@ -31,6 +31,7 @@ class AnalisisPersonal extends Component {
         else {
             this.setState({ domicilioLocalizado: false })
         }
+
         this.setState({
             foto: `${helpers.url_api}/Foto/${this.objPersona.persona.per_Id_Persona}`
         })
@@ -78,7 +79,11 @@ class AnalisisPersonal extends Component {
                         </Row>
                         <Row>
                             <Col className="negrita" xs="1">Nombre:</Col>
-                            <Col xs="7" className="border border-dark"> {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno} </Col>
+                            <Col xs="7" className="border border-dark"> 
+                                {this.objPersona.persona.per_Nombre} 
+                                {this.objPersona.persona.per_Apellido_Paterno}
+                                {this.objPersona.persona.per_Apellido_Materno} 
+                            </Col>
                             <Col className="negrita campoVivo" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -195,10 +200,10 @@ class AnalisisPersonal extends Component {
                     <FormGroup>
                         <Row>
                             <Col className="negrita" xs="1">Prof./Ofi1:</Col>
-                            <Col xs="3" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio1[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
+                            <Col xs="3" className="border border-dark"> {this.objPersona.persona.profesionOficio1[0].pro_Sub_Categoria} </Col>
                             <Col className="negrita" xs="1"></Col>
                             <Col className="negrita" xs="1">Prof./Ofi2:</Col>
-                            <Col xs="3" className="border border-dark"> {/* {this.objPersona.persona.profesionOficio2[0].pro_Categoria} / */} {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
+                            <Col xs="3" className="border border-dark"> {this.objPersona.persona.profesionOficio2[0].pro_Sub_Categoria} </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup className="pt-2">

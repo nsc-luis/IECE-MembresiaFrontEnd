@@ -21,6 +21,7 @@ function AltaRestitucion() {
     const [paises, setPaises] = useState([])
     const [estados, setEstados] = useState([])
     const [hogarActual, setHogarActual] = useState(false)
+    const [direccion, setDireccion]=useState("")
 
     const user = JSON.parse(localStorage.getItem('infoSesion'))
     const sector = JSON.parse(localStorage.getItem("sector"))
@@ -98,34 +99,48 @@ function AltaRestitucion() {
         //console.log(data)
     };
 
+    //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
+    const getDireccion = async (id) => {
+        helpers.authAxios.get("/HogarDomicilio/" + id)
+            .then(res => {
+                setDireccion(res.data.direccion);
+            })
+    }
+
     //Manejo de eventos de hogar
     const handleHogar = (value) => {
         if(value === 0){
             setHogar(null)
             return
         }
+        //Opción Mismo Hogar
         if(value === "same"){
             setHogarActual(true)
             helpers.authAxios.get(`Hogar_Persona/GetHogarByPersona/${data.per_Id_Persona}`)
             .then(res => {
                 setHogar(res.data.datosDelHogarPorPersona.domicilio);
                 setMiembrosHogar(res.data.datosDelHogarPorPersona.miembros)
-                console.log(res.data.datosDelHogarPorPersona);
+                console.log("DatosDomicilio: " + res.data.datosDelHogarPorPersona);
+                getDireccion(res.data.datosDelHogarPorPersona.domicilio.hd_Id_Hogar)
             });
+
             return
         }
+        //Opción Hogar Existente
         helpers.authAxios.get(`/Hogar_Persona/GetDatosHogarDomicilio/${value}`)
             .then(res => {
                 setHogar(res.data.miembros[0])
-                console.log(res.data);
+                getDireccion(res.data.miembros[0].hd_Id_Hogar);
+                //console.log(res.data);
             });
         helpers.authAxios.get(`/Hogar_Persona/GetMiembros/${value}`)
             .then(res => {
                 setMiembrosHogar(res.data)
             });
             //console.log(hogar)
-            console.log(miembrosHogar)
+            console.log("HogarExistente"+ {hogar})
 
+            
     };
     const handleJerarquia = (value) => {
         setJerarquia(value)
@@ -261,7 +276,7 @@ function AltaRestitucion() {
                                 onChange={e => {handlePersona(e.target.value)}}>
                                 <option value="0" selected disabled>Selecionar persona...</option>
                                 {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ''}</option>
+                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : '')}</option>
                                 ))}
                                 </Input>
                             </Col>
@@ -334,7 +349,7 @@ function AltaRestitucion() {
                         Hogar / Domicilio
                     </CardTitle>
                     <Alert color="info">
-                        <h5><strong>AVISO:</strong> Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
+                        <h5><strong>AVISO:</strong> Al seleccionar la opción "Nuevo hogar / domicilio" deberá completar los campos necesarios.</h5>
                     </Alert>
                     <FormGroup row>
                         <Label for='Hogar' sm={3}>
@@ -346,8 +361,8 @@ function AltaRestitucion() {
                             name='hogar'
                             type='select'
                             onChange={e => {handleHogar(e.target.value)}}>
-                            <option value="0" selected>Nuevo hogar / domicilio</option>
-                            <option value="same">Mismo hogar</option>
+                            <option value="0" selected>Nuevo Hogar / Domicilio</option>
+                            <option value="same">Mismo Hogar</option>
                             {opcionesHogares.map(hogar => (
                                 <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
                             ))}
@@ -357,16 +372,17 @@ function AltaRestitucion() {
                     {hogar ? 
                     <Form>
                         <Alert color="warning">
-                            <h5><strong>ATENCION:</strong></h5>
+                            <h5><strong>ATENCIÓN:</strong></h5>
                             <ul>
-                                <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia entre 1 y la jerarquia mas baja registrada.</li>
-                                <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
+                                <li>Debe establecer una jerarquía para la persona que está dando de alta, siendo la jerarquía 1 el representante del hogar.</li>
+                                <li>Sólo puede seleccionar una jerarquía entre 1 y la jerarquia mas baja registrada.</li>
+                                {/* <li>Al establecer una jerarquía intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li> */}
                             </ul>
                         </Alert>
 
                         <h5><strong>Dirección:</strong></h5>
-                        <p>{hogar.hd_Calle} #{hogar.hd_Numero_Exterior}, {hogar.hd_Localidad}, {hogar.hd_Municipio_Ciudad}, {hogar.est_Nombre}, {hogar.pais_Nombre_Corto}</p>
+                        {/* <p>{hogar.hd_Calle} #{hogar.hd_Numero_Exterior}, {hogar.hd_Localidad}, {hogar.hd_Municipio_Ciudad}, {hogar.est_Nombre}, {hogar.pais_Nombre_Corto}</p> */}
+                        <p><h6>{direccion}</h6></p>
                         <Table hover responsive>
                             <thead>
                                 <tr>
@@ -374,7 +390,7 @@ function AltaRestitucion() {
                                         Miembros del hogar
                                     </th>
                                     <th>
-                                        Jerarquia
+                                        Jerarquía
                                     </th>
                                 </tr>
                             </thead>
