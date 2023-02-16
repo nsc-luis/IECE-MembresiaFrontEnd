@@ -92,6 +92,14 @@ function AltaRestitucion() {
         }))
     };
 
+    //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
+    const getDireccion = async (id) => {
+        helpers.authAxios.get("/HogarDomicilio/" + id)
+            .then(res => {
+                setDireccion(res.data.direccion);
+            })
+    }
+
     //Manejo de eventos de hogar
     const handleHogar = (value) => {
         if (value === "0") {

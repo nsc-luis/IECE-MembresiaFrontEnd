@@ -17,6 +17,9 @@ import logo from '../../assets/images/IECE_LogoOficial.jpg'
 export default function ReportePersonalNoBautizado(){
     //Estados
     const [personas, setPersonas] = useState([])
+    const [infoSecretario, setInfoSecretario] = useState({})
+    const [infoDis, setInfoDis] = useState(null)
+    const [infoSec, setInfoSec] = useState(null)
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     //Llamadas en render
@@ -26,11 +29,30 @@ export default function ReportePersonalNoBautizado(){
                 .then(res => {
                     setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado && persona.persona.per_Activo))
                 });
+
+                helpers.authAxios.get("/Distrito/" + dto)
+                .then(res => {
+                    setInfoDis(res.data.dis_Alias)
+                })
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
                 setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado && persona.persona.per_Activo))
             });
+
+            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            .then(res => {
+                setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
+            })
+
+            helpers.authAxios.get("/Distrito/" + dto)
+            .then(res => {
+                setInfoDis(res.data.dis_Alias)
+            })
+            helpers.authAxios.get("/Sector/" + sector)
+            .then(res => {
+                setInfoSec(res.data.sector[0].sec_Alias)
+            })
         }
     }, [personas.length])
 
@@ -63,18 +85,18 @@ export default function ReportePersonalNoBautizado(){
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
         doc.text("REPORTE DE PERSONAL NO BAUTIZADO", 85, 10);
-        doc.setFontSize(8);
-        doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 15)
+        doc.setFontSize(9);
         
         if (sector) {
-            doc.text(`SECTOR: ${JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}`, 85, 20);
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 25);
+            doc.text(`${infoSec}`, 135, 18, {align:"center"});
+            // doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
+            doc.text(`${infoDis}`, 135, 18, {align:"center"})
+            // doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         doc.line(10, 32, 200, 32);
-        
+        doc.setFontSize(8);
         let yAxis = 35
         doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
@@ -161,6 +183,7 @@ export default function ReportePersonalNoBautizado(){
         doc.text("PASTOR", 145, yAxis);
         yAxis -= 5;
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
+        doc.text(`${infoSecretario}`, 40, yAxis);
 
 
         doc.save("ReportePersonalNoBautizado.pdf");
@@ -176,10 +199,9 @@ export default function ReportePersonalNoBautizado(){
                             <img src={logo} width="100%"></img> 
                         </Col>
                         <Col lg="7">
-                            <CardTitle className="text-left" tag="h3">
-                                REPORTE DE PERSONAL NO BAUTIZADO
-                                <h5 className="mt-3"><strong>Distrito: </strong>{JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
-                                {sector ? <h5 className="mt-3"><strong>Sector: </strong>{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
+                            <CardTitle className="text-center" tag="h3">
+                                LISTA DE PERSONAL NO BAUTIZADO
+                                {sector ? <h5 className="mt-3">{infoSec}</h5> : <h5 className="mt-3"><strong>Distrito: </strong>{infoDis}</h5>}
                             </CardTitle>
                         </Col>
                     </Row>
@@ -251,14 +273,11 @@ export default function ReportePersonalNoBautizado(){
 
                         <h4 className="text-right m-4">Total de personal no bautizado: <strong>{totalCount}</strong></h4>
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
-                        {sector ?
-                            <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias} a <Moment locale="es" format="LL"></Moment></h4> :
-                            <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).dis_Alias} a <Moment locale="es" format="LL"></Moment></h4>
-                        }
+                        <h4 className="text-center m-4">a {moment().format('LL')}</h4>
                         <Row className="text-center mt-5">
                             <Col>
-                                <h5 style={{height: "1.2em"}}></h5>
-                                {/* <Input className="text-center" bsSize="sm" type="text" placeholder="Escriba nombre del secretario"></Input> */}
+                                {/* <h5 style={{height: "1.2em"}}></h5> */}
+                                <h5>{`${infoSecretario}`}</h5>
                                 <hr color="black"></hr>
                                 <h5>Secretario</h5>
                             </Col>

@@ -77,9 +77,9 @@ export default function ReporteOficiosProfesiones(){
         const doc = new jsPDF("p", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("REPORTE PROFESIONES Y OFICIOS", 85, 10);
+        doc.text("LISTA PROFESIONES Y OFICIOS", 85, 10);
         doc.setFontSize(8);
-        doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 15)
+        
         
         if (sector) {
             doc.text(`SECTOR: ${JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}`, 85, 20);
@@ -87,6 +87,7 @@ export default function ReporteOficiosProfesiones(){
         }
         else {
             doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
+            doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 25)
         }
         
         
@@ -175,9 +176,12 @@ export default function ReporteOficiosProfesiones(){
                         <img src={logo} width="100%"></img> 
                     </Col>
                     <Col>
-                        REPORTE DE PROFESIONES Y OFICIOS
-                        <h5>Distrito: {infoDis}</h5>
-                        {sector ? <h5>Sector: {infoSec}</h5> : null}
+                        LISTA DE PROFESIONES Y OFICIOS
+                        {/* <h5>Distrito: {infoDis}</h5> */}
+
+                        <div></div>
+                        {sector ? <h5>{infoSec}</h5> : null}
+                        
                     </Col>
                 </Row>
                 </CardTitle>

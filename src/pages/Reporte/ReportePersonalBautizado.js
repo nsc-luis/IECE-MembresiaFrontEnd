@@ -20,6 +20,7 @@ export default function ReportePersonalBautizado(){
     const [personas, setPersonas] = useState([])
     const [infoDis, setInfoDis] = useState(null)
     const [infoSec, setInfoSec] = useState(null)
+    const [infoSecretario, setInfoSecretario] = useState({})
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     //Llamadas en render
@@ -37,8 +38,11 @@ export default function ReportePersonalBautizado(){
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
-                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
-            });
+                setPersonas(res.data.filter(persona => (
+                   persona.persona.per_Activo && persona.persona.per_Bautizado  && persona.persona.per_En_Comunion )))
+           });
+           
+            
             helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data.dis_Alias)
@@ -47,8 +51,13 @@ export default function ReportePersonalBautizado(){
             .then(res => {
                 setInfoSec(res.data.sector[0].sec_Alias)
             })
+
+            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            .then(res => {
+                setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
+            })
         }
-        console.log(personas);
+        
     }, [personas.length])
 
     const downloadTable = () =>{
@@ -78,17 +87,17 @@ export default function ReportePersonalBautizado(){
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
 
-        doc.addImage(logo, 'PNG', 10, 5, 70, 20);
+        doc.addImage(logo, 'PNG', 10, 5, 70, 20); 
         doc.text("REPORTE DE PERSONAL BAUTIZADO", 85, 10);
         doc.setFontSize(8);
-        doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 15)
-        
+                
         if (sector) {
-            doc.text(`SECTOR: ${JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}`, 85, 20);
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 25);
+            doc.text(`${infoSec}`, 135, 18, {align:"center"});
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
+            doc.text(`${infoDis}`, 135, 18, {align:"center"})
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         doc.line(10, 32, 200, 32);
         
@@ -166,9 +175,9 @@ export default function ReportePersonalBautizado(){
         doc.text(`${totalCount}`, 80, yAxis);
 
         yAxis += 25;
-        doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
+        doc.text(`JUSTICIA Y VERDAD`, 105, yAxis, {align:"center"});
         yAxis += 5;
-        doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, yAxis);
+        doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 105, yAxis, {align:"center"});
 
         yAxis += 35;
         doc.line(30, yAxis, 90, yAxis);
@@ -178,6 +187,7 @@ export default function ReportePersonalBautizado(){
         doc.text("PASTOR", 145, yAxis);
         yAxis -= 5;
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
+        doc.text(`${infoSecretario}`, 40, yAxis);
 
 
         doc.save("ReportePersonalBautizado.pdf");
@@ -192,11 +202,10 @@ export default function ReportePersonalBautizado(){
                         <Col lg="5">
                             <img src={logo} width="100%"></img> 
                         </Col>
-                        <Col lg="7">
-                            <CardTitle className="text-left" tag="h3">
-                                REPORTE DE PERSONAL BAUTIZADO
-                                <h5 className="mt-3"><strong>Distrito: </strong>{infoDis}</h5>
-                                {sector ? <h5 className="mt-3"><strong>Sector: </strong>{infoSec}</h5> : null}
+                        <Col lg="6" >
+                            <CardTitle className="text-center" tag="h3">
+                                LISTA DE PERSONAL BAUTIZADO
+                                {sector ? <h5 className="mt-3">{infoSec}</h5> : <h5 className="mt-3"><strong>Distrito: </strong>{infoDis}</h5>}
                             </CardTitle>
                         </Col>
                     </Row>
@@ -268,14 +277,13 @@ export default function ReportePersonalBautizado(){
 
                         <h4 className="text-right m-4">Total de personal bautizado: <strong>{totalCount}</strong></h4>
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
-                        {sector ?
-                            <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias} a <Moment locale="es" format="LL"></Moment></h4> :
-                            <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).dis_Alias} a <Moment locale="es" format="LL"></Moment></h4>
-                        }
+                        <h4 className="text-center m-4">a {moment().format('LL')}</h4>
+                            
+
                         <Row className="text-center mt-5">
                             <Col>
-                                <h5 style={{height: "1.2em"}}></h5>
-                                {/* <Input className="text-center" bsSize="sm" type="text" placeholder="Escriba nombre del secretario"></Input> */}
+                                {/* <h5 style={{height: "1.2em"}}></h5> */}
+                                <h5>{`${infoSecretario}`}</h5>
                                 <hr color="black"></hr>
                                 <h5>Secretario</h5>
                             </Col>
@@ -289,7 +297,7 @@ export default function ReportePersonalBautizado(){
                 </Card>
 
 
-                {/* TABLA */}
+                {/* TABLA PARA EXCEL */}
                 <Card hidden body>
                 <CardTitle className="text-center" tag="h3">
                     Reporte de Personal Bautizado
