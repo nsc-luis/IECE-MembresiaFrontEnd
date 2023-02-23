@@ -56,7 +56,7 @@ class PersonaForm extends Component {
             MiembrosDelHogar: [],
             JerarquiasDisponibles: [],
             foto: null,
-            direccion:""
+            direccion: ""
         };
         if (!localStorage.getItem("token")) {
             document.location.href = '/';
@@ -212,16 +212,16 @@ class PersonaForm extends Component {
                 }
             })
 
-    //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
-    let getDireccion = async (id) => {
-        await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
-            .then(res => {
-                this.setState({ direccion: res.data.direccion });
-                console.log("direccion" + this.state.direccion)
-            });
-    }
-    getDireccion(idHogar);
-    
+            //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
+            let getDireccion = async (id) => {
+                await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+                    .then(res => {
+                        this.setState({ direccion: res.data.direccion });
+                        console.log("direccion" + this.state.direccion)
+                    });
+            }
+            getDireccion(idHogar);
+
         }
         else {
             this.setState({
@@ -246,7 +246,7 @@ class PersonaForm extends Component {
     }
 
     render() {
-        
+
         const {
             onChange,
             form,
@@ -280,7 +280,7 @@ class PersonaForm extends Component {
         } = this.props
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
-        const alphaSpace= /^[a-zA-ZÑ\s]{0,37}$/;
+        const alphaSpace = /^[a-zA-ZÑ\s]{0,37}$/;
 
         // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
         const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
@@ -350,17 +350,18 @@ class PersonaForm extends Component {
         // FUNCION QUE REVISA DUPLICADOS DEACUERDO A RFC (SIN HOMOCLAVE)
         const handle_verificarDuplicados = (e) => {
 
-            if (form.per_Categoria === 0) { 
+            if (form.per_Categoria === 0) {
                 handleCampoInvalido("categoriaSeleccionada", false);
             }
-            if (!alphaSpaceRequired.test(form.per_Nombre) || form.per_Nombre === undefined) { 
+            if (!alphaSpaceRequired.test(form.per_Nombre) || form.per_Nombre === undefined) {
                 handleCampoInvalido("per_Nombre_NoValido", true)
             }
-            if (!alphaSpaceRequired.test(form.per_Apellido_Paterno) || form.per_Apellido_Paterno === undefined) { 
+            if (!alphaSpaceRequired.test(form.per_Apellido_Paterno) || form.per_Apellido_Paterno === undefined) {
                 handleCampoInvalido("per_Apellido_Paterno_NoValido", true)
             }
-            if (!alphaSpace.test(form.per_Apellido_Materno)) { 
-                handleCampoInvalido("per_Apellido_Materno_OK", false)}
+            if (!alphaSpace.test(form.per_Apellido_Materno)) {
+                handleCampoInvalido("per_Apellido_Materno_OK", false)
+            }
 
             if (form.per_Fecha_Nacimiento === undefined || form.per_Fecha_Nacimiento === "") {
                 handleCampoInvalido("per_Fecha_Nacimiento_NoValido", true)
@@ -373,32 +374,31 @@ class PersonaForm extends Component {
                 && !per_Apellido_Paterno_NoValido
                 && !per_Fecha_Nacimiento_NoValido
                 && per_Apellido_Materno_OK) {
-                    
-                    if (form.per_Categoria === "NIÑO" || form.per_Categoria === "NIÑA") {
-                        this.setState({ infante: true })
-                    } else {
-                        this.setState({ infante: false })
-                    }
 
-                    if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false) {
-                        this.setState({ infante: true })
-                    }
+                if (form.per_Categoria === "NIÑO" || form.per_Categoria === "NIÑA") {
+                    this.setState({ infante: true })
+                } else {
+                    this.setState({ infante: false })
+                }
 
-                    var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
+                if (JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false) {
+                    this.setState({ infante: true })
+                }
 
-                    if (alphaSpace.test(per_Apellido_Materno.value)
-                        || per_Apellido_Materno.value === "") {
+                var per_Apellido_Materno = document.getElementById('per_Apellido_Materno')
 
-                        this.setState({ per_Apellido_Materno_OK: true })
-                        let am = per_Apellido_Materno.value === "" ? "1" : per_Apellido_Materno.value
+                if (alphaSpace.test(per_Apellido_Materno.value)
+                    || per_Apellido_Materno.value === "") {
 
-                        CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
+                    this.setState({ per_Apellido_Materno_OK: true })
+                    let am = per_Apellido_Materno.value === "" ? "1" : per_Apellido_Materno.value
 
-                    } else if(!per_Apellido_Materno.value === "" && !alphaSpace.test(per_Apellido_Materno.value))
-                    {
-                        this.setState({ per_Apellido_Materno_OK: false })
-                        //alert("Sólo acepta letras (Sin acentos) y espacios.")
-                    }
+                    CheckNvaPersona(form.per_Nombre, form.per_Apellido_Paterno, am, form.per_Fecha_Nacimiento)
+
+                } else if (!per_Apellido_Materno.value === "" && !alphaSpace.test(per_Apellido_Materno.value)) {
+                    this.setState({ per_Apellido_Materno_OK: false })
+                    //alert("Sólo acepta letras (Sin acentos) y espacios.")
+                }
             } else {
                 this.setState({ per_Apellido_Materno_OK: false })
                 alert("Debes capturar correctamente los campos requeridos de acuerdo a las reglas indicadas.")
@@ -501,7 +501,7 @@ class PersonaForm extends Component {
                         alert("Error!. Debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
                         return false;
                     }
-                    await fnGuardaPersona(PersonaDomicilioHogar) 
+                    await fnGuardaPersona(PersonaDomicilioHogar)
                 } else {
                     //Si el Registro es de una Persona que se asignará a un Hogar Existente
                     await fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
@@ -652,7 +652,7 @@ class PersonaForm extends Component {
                                                                 className="form-control"
                                                             />
                                                         </div>
-                                                         {!per_Apellido_Materno_OK &&
+                                                        {!per_Apellido_Materno_OK &&
                                                             <span className="text-danger">
                                                                 Sólo acepta letras (Sin acentos) y espacios.
                                                             </span>

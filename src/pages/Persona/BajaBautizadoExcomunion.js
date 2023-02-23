@@ -161,7 +161,7 @@ class BajaBautizadoExcomunion extends Component {
                                     <Col xs="3">
                                         * Fecha de transacción:
                                     </Col>
-                                    <Col xs="9">
+                                    <Col xs="3">
                                         <Input
                                             type="date"
                                             name="fechaExcomunion"

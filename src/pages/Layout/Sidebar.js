@@ -107,6 +107,10 @@ class Sidebar extends Component {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Restitución");
         document.location.href = "/AltaRestitucion";
     }
+    handle_AltaRestitucionVictor = () => {
+        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Restitución");
+        document.location.href = "/AltaRestitucionVictor";
+    }
 
     handle_AltaCambioDomicilio = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
@@ -277,6 +281,7 @@ class Sidebar extends Component {
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" onClick={this.handle_AltaPersonaBautizada} to="/RegistroDePersona">Bautismo</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucion}>Restitución</Link>
+                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucionVictor}>RestituciónVictor</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>

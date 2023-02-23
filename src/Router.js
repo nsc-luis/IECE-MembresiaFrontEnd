@@ -13,6 +13,7 @@ import RptBautizados from './pages/Reporte/RptBautizados';
 import Sector from './pages/Sector';
 import Login from './pages/Login';
 import ResumenMembresia from './pages/ResumenMembresia';
+import AltaRestitucionVictor from './pages/Persona/AltaRestitucionVictor';
 import AltaRestitucion from './pages/Persona/AltaRestitucion';
 import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio'
 import AltaReactivacion from './pages/Persona/AltaReactivacion'
@@ -80,8 +81,9 @@ class Router extends Component {
                         <Route exact path="/BajaBautizadoCambioDomicilio" component={BajaBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoCambioDomicilio" component={BajaNoBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoAlejamiento" component={BajaNoBautizadoAlejamiento} />
-                        {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
+                        {/* COMPONENTES DE VICTOR */}
+                        <Route exact path="/AltaRestitucionVictor" component={AltaRestitucionVictor} />
                         <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
                         <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
                         <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
