@@ -240,9 +240,7 @@ class ListaDePersonal extends Component {
     }
 
     handle_filtroPorNombre = (e) => {
-        console.log(this.state.fNombre);
         this.setState({ fNombre: e.target.value });
-        console.log(this.state.fNombre);
         if (e.target.value !== '' && e.target.value.length > 2) {
             var result = this.state.personas.filter((obj) => {
                 const query = e.target.value.toLowerCase();
@@ -255,7 +253,6 @@ class ListaDePersonal extends Component {
                     || obj.persona.per_Apellido_Paterno.toLowerCase().includes(query)
                 }
             });
-            console.log(result)
             this.setState({
                 personas: result,
                 habilitaFiltroCategoria: 'disabled',

@@ -276,7 +276,8 @@ class PersonaForm extends Component {
             foto,
             boolNvoEstado,
             handleChangeEstado,
-            handleCampoInvalido
+            handleCampoInvalido,
+            habilitaPerBautizado
         } = this.props
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
@@ -1473,6 +1474,7 @@ class PersonaForm extends Component {
                                                                     boolNvoEstado={boolNvoEstado}
                                                                     handleChangeEstado={handleChangeEstado}
                                                                     direccion={this.state.direccion}
+                                                                    habilitaPerBautizado={habilitaPerBautizado}
                                                                 />
                                                             </div>
                                                         </div>

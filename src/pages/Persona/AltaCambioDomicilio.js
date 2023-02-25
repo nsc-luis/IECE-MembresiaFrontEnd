@@ -1,487 +1,368 @@
-import Layout from '../Layout';
-import helpers from '../../components/Helpers'
-import moment from 'moment';
-import { Link, Redirect } from 'react-router-dom';
+import React, { Component } from 'react';
+import helpers from '../../components/Helpers';
 import {
-    Container, Row, Col, Form, FormGroup, Input, Button,
-    FormFeedback, CardTitle, Card, CardBody, CardHeader, CardText, Label, Alert, Table
+    Button, Input, Alert, Container, Row, Col, Card, ButtonGroup, FormFeedback,
+    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import HogarPersonaDomicilio from './HogarPersonaDomicilio';
+import './style.css'
 
-import React, {useEffect, useState } from 'react';
-
-function AltaCambioDomicilio() {
-    //Estados
-    const [opcionesPersonas, setOpcionesPersonas] = useState([])
-    const [opcionesHogares, setOpcionesHogares] = useState([])
-    const [data, setData] = useState({})
-    const [hogar, setHogar] = useState(null)
-    const [jerarquia, setJerarquia] = useState(null)
-    const [miembrosHogar, setMiembrosHogar] = useState([])
-    const [mostrarHogar, setMostrarHogar] = useState(false)
-    const [paises, setPaises] = useState([])
-    const [estados, setEstados] = useState([])
-
-    const user = JSON.parse(localStorage.getItem('infoSesion'))
-    const dto = JSON.parse(localStorage.getItem("dto"))
-    const sector = JSON.parse(localStorage.getItem("sector"))
-
-    //LLamadas en renderizado
-    useEffect(() => {
-        helpers.authAxios.get(`/Persona/GetPersonaCambioDomicilio/${sector}/true`)
+class AltaCambioDomicilio extends Component {
+    infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
+    constructor(props) {
+        super(props);
+        this.state = {
+            domicilio: {},
+            hogar: {},
+            DatosHogarDomicilio: [],
+            JerarquiasDisponibles: [],
+            MiembrosDelHogar: [],
+            direccion: "",
+            boolNvoEstado: false,
+            habilitaPerBautizado: true,
+            comentario: "",
+            fechaTransaccion: "",
+            fechaTransaccionInvalida: false,
+            perIdPersonaInvalida: false,
+            perCategoriaInvalida: false,
+            personas: [],
+            procedencia: "",
+            per_Id_Persona: 0
+        }
+    }
+    componentDidMount() {
+        this.setState({
+            domicilio: {
+                ...this.state.domicilio,
+                hd_Tipo_Subdivision: "COL",
+                sec_Id_Sector: localStorage.getItem("sector"),
+                dis_Id_Distrito: localStorage.getItem("dto"),
+                pais_Id_Pais: "0",
+                hd_Calle: "",
+                hd_Localidad: "",
+                est_Id_Estado: "0",
+                hd_Numero_Exterior: "",
+                usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
+                hd_Activo: true,
+                nvoEstado: ""
+            },
+            hogar: {
+                ...this.state.hogar,
+                hd_Id_Hogar: "0",
+                hp_Jerarquia: "1"
+            }
+        });
+        this.GetPersonaCambioDomicilioReactivacionRestitucion();
+    }
+    GetPersonaCambioDomicilioReactivacionRestitucion = async () => {
+        await helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/true")
             .then(res => {
-                setOpcionesPersonas(res.data.personas)
-                console.log(opcionesPersonas)
+                this.setState({ personas: res.data.personas })
             });
-    }, [opcionesPersonas.length]);
+    }
+    fnGetDatosDelHogar = async (id) => {
+        if (id !== "0") {
+            await helpers.authAxios.get("/Hogar_Persona/GetMiembros/" + id)
+                .then(res => {
+                    this.setState({ MiembrosDelHogar: res.data })
+                })
+            await helpers.authAxios.get("/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+                .then(res => {
+                    this.setState({ DatosHogarDomicilio: res.data.miembros })
+                })
 
-    useEffect(() => {
-        helpers.authAxios.get("/HogarDomicilio/GetBySector/" + sector)
-            .then(res => {
-                setOpcionesHogares(res.data.domicilios)
-                console.log(opcionesHogares)
-            });
-    }, [opcionesHogares.length]);
+            let jerarquias = [];
+            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
+                jerarquias.push(<option value={i}>{i}</option>)
+            }
 
-    useEffect(() => {
-        helpers.authAxios.get("/pais")
-            .then(res => {
-                setPaises(res.data)
-                console.log(paises)
-            });
-    }, [paises.length]);
-
-    //Manejo de eventos de datos generales
-    const handlePersona = (value) => {
-        value = JSON.parse(value)
-        helpers.authAxios.get(`/Persona/${value.per_Id_Persona}`)
-            .then(res => {
-                setData(res.data)
-                console.log(value);
-            })
-            .then(() => {
-                if(data.dis_Id_Distrito == dto){
-                    setData( prevState => ({
-                        ...prevState,
-                        per_Activo: true,
-                        per_En_Comunion: true,
-                        per_Visibilidad_Abierta: false,
-                        ct_Codigo_Transaccion: 11003,
-                        procedencia: `${value.sec_Alias}`
-                    }))
-                }else{
-                    setData( prevState => ({
-                        ...prevState,
-                        per_Activo: true,
-                        per_En_Comunion: true,
-                        per_Visibilidad_Abierta: false,
-                        ct_Codigo_Transaccion: 11004,
-                        procedencia: `${value.sec_Alias}`
-                    }))
+            this.setState({
+                JerarquiasDisponibles: jerarquias,
+                hogar: {
+                    ...this.state.hogar,
+                    hp_Jerarquia: jerarquias.length
                 }
             })
-    };
-    const handleProcedencia = (value) => {
-        setData( prevState => ({
-            ...prevState,
-            procedencia: value
-        }))
-    };
-    const handleFechaTransaccion = (value) => {
-        console.log(value)
-        if(value == "") setMostrarHogar(false)
-    
-        setData( prevState => ({
-            ...prevState,
-            fecha_transaccion: value
-        }))
-    };
-
-    //Manejo de eventos de hogar
-    const handleHogar = (value) => {
-        if(value == 0){
-            setHogar(null)
+        } else {
+            this.setState({
+                MiembrosDelHogar: [],
+                DatosHogarDomicilio: [],
+                JerarquiasDisponibles: []
+            })
         }
-        helpers.authAxios.get(`/Hogar_Persona/GetDatosHogarDomicilio/${value}`)
-            .then(res => {
-                setHogar(res.data[0])
-            });
-        helpers.authAxios.get(`/Hogar_Persona/GetMiembros/${value}`)
-            .then(res => {
-                setMiembrosHogar(res.data)
-            });
-            console.log(hogar)
-            console.log(miembrosHogar)
-
-    };
-    const handleJerarquia = (value) => {
-        setJerarquia(value)
-    };
-    const handlePais = (value) => {
-        setData( prevState => ({
-            ...prevState,
-            pais_Id_Pais: value
-        }))
-        helpers.authAxios.get(`/Estado/GetEstadoByIdPais/${value}`)
-            .then(res => {
-                setEstados(res.data.estados)
-            });
-    };
-
-    const handleAdress = (e) => {
-        setData(prevState => {
-            prevState[`${e.name}`] = e.value
-            return prevState
+    }
+    onChangeDomicilio = (e) => {
+        this.setState({
+            domicilio: {
+                ...this.state.domicilio,
+                [e.target.name]: e.target.value.toUpperCase()
+            }
         })
     }
-    
-    //Validaciones
-    const validarDatosPersona = () => {
-        if(!data.per_Id_Persona || data.per_Id_Persona == 0){
-            alert('Seleccione una persona')
-            return
-        };
-        if(data.fecha_transaccion == null || !data.fecha_transaccion ){
-            alert('Seleccione una fecha para la transacción')
-            return
-        }
-        setMostrarHogar(true)
-    };
-    //Pruebas
-    const postData = () => {
-
-        if(jerarquia == null && hogar ){
-            alert('Seleccione una jerarquia en el hogar')
-            return
-        }
-        let formattedData = {}
-
-        if(hogar){
-            formattedData = {
-                idPersona: data.per_Id_Persona,
-                comentrario: data.procedencia,
-                fecha: data.fecha_transaccion,
-                idMinistro: user.pem_Id_Ministro,
-                idDomicilio: hogar.hd_Id_Hogar,
-                jerarquia: jerarquia
-              }
-            console.log(formattedData)
-            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, formattedData)
-            .then(res => {
-                console.log(res)
-                document.location.href = '/Main';
-            });
-        }else{
-            formattedData = {
-                // id: 0,
-                per_Id_Persona: data.per_Id_Persona,
-                sec_Id_Sector: sector,
-                ct_Codigo_Transaccion: data.ct_Codigo_Transaccion, 
-                Usu_Usuario_Id: user.pem_Id_Ministro,
-                hte_Fecha_Transaccion: data.fecha_transaccion,
-                hte_Comentario: data.procedencia,
-                HD: {
-                    hd_Calle: data.hd_Calle,
-                    hd_Numero_Exterior: data.hd_Numero_Exterior,
-                    hd_Numero_Interior: data.hd_Numero_Interior,
-                    hd_Tipo_Subdivision: data.hd_Tipo_Subdivision,
-                    hd_Subdivision: data.hd_Subdivision,
-                    hd_Localidad: data.hd_Localidad,
-                    hd_Municipio_Ciudad: data.hd_Municipio_Ciudad,
-                    pais_Id_Pais: data.pais_Id_Pais,
-                    est_Id_Estado: data.est_Id_Estado,
-                    hd_Telefono: data.hd_Telefono,
-                    dis_Id_Distrito: dto,
-                    sec_Id_Sector: sector,
-                    usu_Id_Usuario: user.pem_Id_Ministro,
-                    Fecha_Registro: moment().format("YYYY-MM-DD"),
-                }
-            }
-            console.log(formattedData)
-            helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, formattedData)
+    handle_hd_Id_Hogar = async (e) => {
+        let idHogar = e.target.value;
+        this.fnGetDatosDelHogar(idHogar);
+        if (idHogar !== "0") {
+            await helpers.authAxios.get('/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
-                    console.log(res)
-                    document.location.href = '/Main';
+                    this.setState({
+                        hogar: {
+                            ...this.state.hogar,
+                            hp_Jerarquia: res.data.length
+                        }
+                    })
+                });
+
+            this.setState({
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: idHogar
+                }
+            })
+
+            //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
+            let getDireccion = async (id) => {
+                await helpers.authAxios.get("/HogarDomicilio/" + id)
+                    .then(res => {
+                        this.setState({ direccion: res.data.direccion });
+                        console.log("direccion" + this.state.direccion)
+                    });
+            }
+
+            getDireccion(idHogar);
+        }
+        else {
+            this.setState({
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: idHogar,
+                    hp_Jerarquia: "1"
+                }
+            })
+        }
+    }
+    handle_hp_Jerarquia = (e) => {
+        this.setState({
+            hogar: {
+                ...this.state.hogar,
+                hp_Jerarquia: e.target.value
+            }
+        })
+    }
+    handleChangeEstado = (e) => {
+        if (e.target.value === "999") {
+            this.setState({
+                boolNvoEstado: true,
+                domicilio: {
+                    ...this.state.domicilio,
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+        else {
+            this.setState({
+                boolNvoEstado: false,
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+    }
+    onRadioBtnClick = (bool) => {
+        this.setState({
+            mismoHogar: !this.state.mismoHogar
+        })
+    }
+    onChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+        if (e.target.name === "per_Id_Persona") {
+            if (e.target.value !== "0") {
+                var procedencia = this.state.personas.filter((obj) => {
+                    return obj.per_Id_Persona = parseInt(e.target.value);
+                })
+                this.setState({ procedencia: `${procedencia[0].dis_Tipo_Distrito} ${procedencia[0].dis_Numero}: ${procedencia[0].sec_Alias}` })
+            }
+            else {
+                this.setState({ procedencia: "" })
+            }
+        }
+    }
+    guardarCambios = async (e) => {
+        e.preventDefault();
+        this.setState({
+            perIdPersonaInvalida: this.state.per_Id_Persona === "0" ? true : false,
+            fechaTransaccionInvalida: this.state.fechaTransaccion === "" ? true : false,
+        })
+        let perIdPersonaInvalida = this.state.per_Id_Persona === "0" ? true : false;
+        let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
+        if (fechaTransaccionInvalida || perIdPersonaInvalida) {
+            return false;
+        }
+        if (this.state.hogar.hd_Id_Hogar === "0") {
+            if (this.state.domicilio.hd_Calle === "" ||
+                this.state.domicilio.hd_Municipio_Ciudad === "" ||
+                this.state.domicilio.pais_Id_Pais === "0" ||
+                this.state.domicilio.est_Id_Estado === "0") {
+                alert("Error:\nLos campos del hogar/domicilio marcados con * son requeridos.")
+                return false;
+            }
+            else {
+                let info = {
+                    per_Id_Persona: this.state.per_Id_Persona,
+                    sec_Id_Sector: localStorage.getItem("sector"),
+                    ct_Codigo_Transaccion: 11004,
+                    Usu_Usuario_Id: this.infoSesion.pem_Id_Ministro,
+                    hte_Fecha_Transaccion: this.state.fechaTransaccion,
+                    hte_Comentario: this.state.comentario,
+                    HD: this.state.domicilio
+                }
+                await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
+                    .then(res => {
+                        if (res.data.status === 'error') {
+                            console.log(res.data.mensaje)
+                        }
+                        else {
+                            document.location.href = '/Main';
+                        }
+                    });
+            }
+        }
+        else {
+            var info = {
+                idPersona: this.state.per_Id_Persona,
+                comentrario: "",
+                fecha: this.state.fechaTransaccion,
+                idMinistro: this.infoSesion.pem_Id_Ministro,
+                idDomicilio: this.state.hogar.hd_Id_Hogar,
+                jerarquia: this.state.hogar.hp_Jerarquia
+            }
+            await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, info)
+                .then(res => {
+                    if (res.data.status === 'error') {
+                        console.log(res.data.mensaje)
+                    }
+                    else {
+                        document.location.href = '/Main';
+                    }
                 });
         }
-    };
-    return(
-        <>
+    }
+
+    render() {
+        return (
             <Container>
-                <Card body className="mb-5">
-                    <CardTitle className="text-center" tag="h4">
-                        Alta Cambio de Domicilio
-                    </CardTitle>
-                    <Form>
-                        <FormGroup row>
-                            <Label for='NombrePersona' sm={3}>
-                                <h5>Persona: </h5>
-                            </Label>
-                            <Col sm={9}>
-                                <Input
-                                id='NombrePersona'
-                                name='nombre'
-                                type='select'
-                                onChange={e => {handlePersona(e.target.value)}}>
-                                <option value="0" selected disabled>Selecionar persona...</option>
-                                {opcionesPersonas.map(persona => (
-                                    <option key={persona.per_Id_Persona} value={JSON.stringify(persona)}>{persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ''}</option>
-                                ))}
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for='Procedencia' sm={3}>
-                                <h5>Procedencia: </h5>
-                            </Label>
-                            <Col sm={9}>
-                                <Input
-                                id='Procedencia'
-                                name='procedencia'
-                                type='text'
-                                value={data.procedencia}
-                                onInput={(e) => handleProcedencia( e.target.value )}>
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for='Fecha' sm={3}>
-                                <h5>Fecha de transacción: </h5>
-                            </Label>
-                            <Col sm={9}>
-                                <Input
-                                id='Fecha'
-                                name='fecha'
-                                type='date'
-                                onChange={(e) => handleFechaTransaccion( e.target.value )}>
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <Row className="text-center">
-                            <Col>
-                                <Button color="danger" size='lg'>
+                <Card>
+                    <Form onSubmit={this.guardarCambios}>
+                        <CardBody>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="12">
+                                        <Alert color="warning">
+                                            <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                        </Alert>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="3">
+                                        * PERSONA:
+                                    </Col>
+                                    <Col xs="9">
+                                        <Input
+                                            type="select"
+                                            onChange={this.onChange}
+                                            name="per_Id_Persona"
+                                            value={this.state.per_Id_Persona}
+                                            invalid={this.state.perIdPersonaInvalida}
+                                        >
+                                            <option value="0">Seleccione una persona</option>
+                                            {this.state.personas.map(persona => {
+                                                return (
+                                                    <React.Fragment key={persona.per_Id_Persona}>
+                                                        <option value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                        </Input>
+                                        <FormFeedback>Este campo es requerido</FormFeedback>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="3">
+                                        Procedencia:
+                                    </Col>
+                                    <Col xs="9">
+                                        <Input
+                                            type="text"
+                                            name="procedencia"
+                                            readOnly
+                                            value={this.state.procedencia}
+                                        />
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="3">
+                                        * Fecha de transacción:
+                                    </Col>
+                                    <Col xs="3">
+                                        <Input
+                                            type="date"
+                                            name="fechaTransaccion"
+                                            placeholder='DD/MM/AAAA'
+                                            onChange={this.onChange}
+                                            value={this.state.fechaTransaccion}
+                                            invalid={this.state.fechaTransaccionInvalida}
+                                        />
+                                        <FormFeedback>Este campo es requerido</FormFeedback>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <hr />
+                            <HogarPersonaDomicilio
+                                domicilio={this.state.domicilio}
+                                onChangeDomicilio={this.onChangeDomicilio}
+                                handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
+                                handle_hp_Jerarquia={this.handle_hp_Jerarquia}
+                                hogar={this.state.hogar}
+                                DatosHogarDomicilio={this.state.DatosHogarDomicilio}
+                                MiembrosDelHogar={this.state.MiembrosDelHogar}
+                                JerarquiasDisponibles={this.state.JerarquiasDisponibles}
+                                boolNvoEstado={this.state.boolNvoEstado}
+                                handleChangeEstado={this.handleChangeEstado}
+                                direccion={this.state.direccion}
+                                habilitaPerBautizado={this.state.habilitaPerBautizado}
+                            />
+                        </CardBody>
+                        <CardFooter>
+                            <Link
+                                to="/ListaDePersonal"
+
+                            >
+                                <Button type="button" color="secondary" className="entreBotones">
                                     Cancelar
                                 </Button>
-                            </Col>
-                            <Col>
-                                <Button color="primary" size='lg' onClick={e => validarDatosPersona()}>
-                                    Proceder
-                                </Button>
-                            </Col>
-                        </Row>
+                            </Link>
+                            <Button
+                                type="submit"
+                                color="success"
+                            >
+                                <span className="fa fa-pencil"></span>Proceder
+                            </Button>
+                        </CardFooter>
                     </Form>
                 </Card>
-                {/* Hogar */}
-                { mostrarHogar &&
-                <Card body className="mb-5">
-                    <CardTitle className="text-center" tag="h4">
-                        Hogar / Domicilio
-                    </CardTitle>
-                    <Alert color="info">
-                        <h5><strong>AVISO:</strong> Al seleccionar la opción "Nuevo hogar / domicilio" deberá completar los campos necesarios.</h5>
-                    </Alert>
-                    <FormGroup row>
-                        <Label for='Hogar' sm={3}>
-                            <h5>Asignar a hogar: </h5>
-                        </Label>
-                        <Col sm={9}>
-                            <Input
-                            id='Hogar'
-                            name='hogar'
-                            type='select'
-                            onChange={e => {handleHogar(e.target.value)}}>
-                            <option value="0" selected>Nuevo hogar / domicilio</option>
-                            {opcionesHogares.map(hogar => (
-                                <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
-                            ))}
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    {hogar ? 
-                    <Form>
-                        <Alert color="warning">
-                            <h5><strong>ATENCIÓN:</strong></h5>
-                            <ul>
-                                <li>Debe establecer una jerarquía para la persona que está registrando; la jerarquia 1 corresponde al representante del Hogar.</li>
-                                <li>Sólo puede seleccionar una jerarquía entre la jerarquía 1 y la mas baja registrada.</li>
-                                {/* <li>Al establecer una jerarquía intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li> */}
-                            </ul>
-                        </Alert>
-
-                        <h5><strong>Dirección:</strong></h5>
-                        <p>{hogar.hd_Calle} #{hogar.hd_Numero_Exterior}, {hogar.hd_Localidad}, {hogar.hd_Municipio_Ciudad}, {hogar.est_Nombre}, {hogar.pais_Nombre_Corto}</p>
-                        <Table hover responsive>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Miembros del hogar
-                                    </th>
-                                    <th>
-                                        Jerarquía
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {miembrosHogar.map(miembro => (
-                                    <tr>
-                                        <td>{miembro.per_Nombre + ' ' + miembro.per_Apellido_Paterno + ' ' + miembro.per_Apellido_Materno}</td>
-                                        <td>{miembro.hp_Jerarquia}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                        <hr></hr>
-                        <FormGroup row>
-                            <Label for='Jerarquia' sm={3}>
-                                <h5>Jerarquía por asignar: </h5>
-                            </Label>
-                            <Col sm={9}>
-                                <Input
-                                id='Jerarquia'
-                                name='jerarquia'
-                                type='select'
-                                onChange={(e) => handleJerarquia( e.target.value )}
-                               >
-                                <option value="0" selected disabled >Selecionar jerarquia</option>
-                                {miembrosHogar.map((miembro, index) => (
-                                    <option key={miembro.hd_Id_Hogar} value={index + 1}>{index + 1}</option>
-                                ))}
-                                <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option>
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                    </Form>
-                    :
-                    <Form>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Calle
-                                    </Label>
-                                    <Input id='calle' name='hd_Calle' placeholder='Nombre de la calle' type='text' onInput={(e) => handleAdress( e.target )}></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Número Exterior
-                                    </Label>
-                                    <Input id='extNumber' name='hd_Numero_Exterior' placeholder='0000' type='text' onInput={(e) => handleAdress( e.target )}></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Número Interior
-                                    </Label>
-                                    <Input id='intNumber' name='hd_Numero_Interior' placeholder='0000' type='text' onInput={(e) => handleAdress( e.target )}></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Tipo de Asentamiento
-                                    </Label>
-                                    <Input id='subDivType' name='hd_Tipo_Subdivision' placeholder='Tipo subdivisión' type='select' onChange={(e) => handleAdress( e.target )}>
-                                        <option value="COL.">COL.</option>
-                                        <option value="FRACC.">FRACC.</option>
-                                        <option value="EJ.">EJ.</option>
-                                        <option value="SUBDIV.">SUBDIV.</option>
-                                        <option value="BRGY.">BRGY.</option>
-                                        <option value="RANCHO">RANCHO</option>
-                                        <option value="MANZANA">MANZANA</option>
-                                        <option value="RESIDENCIAL">RESIDENCIAL</option>
-                                        <option value="SECTOR">SECTOR</option>
-                                        <option value="SECC.">SECC.</option>
-                                        <option value="UNIDAD">UNIDAD</option>
-                                        <option value="BARRIO">BARRIO</option>
-                                        <option value="ZONA">ZONA</option>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Asentamiento
-                                    </Label>
-                                    <Input id='subDiv' name='hd_Subdivision' placeholder='Subdivisión' type='text' onInput={(e) => handleAdress( e.target )}></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Localidad
-                                    </Label>
-                                    <Input id='localidad' name='hd_Localidad' placeholder='Localidad' type='text' onInput={(e) => handleAdress( e.target )}></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Municipio / Ciudad
-                                    </Label>
-                                    <Input id='municipioCiudad' name='hd_Municipio_Ciudad' placeholder='Nombre de Municipio / Ciudad' type='text' onInput={(e) => handleAdress( e.target )}></Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        País
-                                    </Label>
-                                    <Input id='pais' name='pais_Id_Pais' placeholder='Selecciona un país' type='select' onChange={(e) => handlePais( e.target.value )}>
-                                        <option value="0" selected disabled >Selecciona un País</option>
-                                        {paises.map(pais => (
-                                            <option key={pais.pais_Id_Pais} value={pais.pais_Id_Pais}>{pais.pais_Nombre}</option>
-                                        ))}
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Estado/Provincia
-                                    </Label>
-                                    <Input id='estado' name='est_Id_Estado' placeholder='Selecciona un estado' type='select' onChange={(e) => handleAdress( e.target )}>
-                                        <option value="0" selected disabled >Selecciona un Estado</option>
-                                        {estados.map(estado => (
-                                            <option key={estado.est_Id_Estado} value={estado.est_Id_Estado}>{estado.est_Nombre}</option>
-                                        ))}
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col sm={4}>
-                                <FormGroup>
-                                    <Label>
-                                        Teléfono
-                                    </Label>
-                                    <Input id='tel' name='hd_Telefono' placeholder='555 555 5555' type='tel' onInput={(e) => handleAdress( e.target )}></Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </Form>}
-                    <Row className="text-center">
-                        <Col>
-                            <Button color="danger" size='lg' onClick={() => {setMostrarHogar(false)}}>
-                                Cancelar
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button color="primary" size='lg' onClick={e => postData()}>
-                                <span className='fas fa-save'></span> Guardar
-                            </Button>
-                        </Col>
-                    </Row>
-                </Card>}
             </Container>
-        </>
-
-    );
+        )
+    }
 }
-
-export default AltaCambioDomicilio
+export default AltaCambioDomicilio;

@@ -48,7 +48,8 @@ class Domicilio extends React.Component {
             JerarquiasDisponibles,
             boolNvoEstado,
             handleChangeEstado,
-            direccion
+            direccion,
+            habilitaPerBautizado
         } = this.props
 
         return (
@@ -69,7 +70,12 @@ class Domicilio extends React.Component {
                                 /* id="hd_Id_Hogar" */
                                 value={hogar.hd_Id_Hogar}
                             >
-                                <option value="0">Nuevo hogar / Domicilio</option>
+                                {habilitaPerBautizado &&
+                                    <option value="0">Nuevo hogar / Domicilio</option>
+                                }
+                                {!habilitaPerBautizado &&
+                                    <option value="0">Selecciona un hogar</option>
+                                }
                                 {
                                     this.state.ListaHogares.map((h) => {
                                         return (
@@ -153,7 +159,7 @@ class Domicilio extends React.Component {
                 }
 
                 {/* <Domicilio /> Si se elige NUEVO HOGAR / DOMICILIO */}
-                {hogar.hd_Id_Hogar === '0' &&
+                {hogar.hd_Id_Hogar === '0' && habilitaPerBautizado === true &&
                     <React.Fragment>
                         <div className="form-group">
                             <div className="row">

@@ -24,6 +24,7 @@ class AltaRestitucion extends Component {
             personaParaRestitucion: [],
             per_Id_Persona: "0",
             per_Categoria: "0",
+            habilitaPerBautizado: true,
             comentario: "",
             fechaTransaccion: "",
             fechaTransaccionInvalida: false,
@@ -397,6 +398,7 @@ class AltaRestitucion extends Component {
                                     boolNvoEstado={this.state.boolNvoEstado}
                                     handleChangeEstado={this.handleChangeEstado}
                                     direccion={this.state.direccion}
+                                    habilitaPerBautizado={this.state.habilitaPerBautizado}
                                 />
                             }
                         </CardBody>

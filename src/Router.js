@@ -16,8 +16,11 @@ import ResumenMembresia from './pages/ResumenMembresia';
 import AltaRestitucionVictor from './pages/Persona/AltaRestitucionVictor';
 import AltaRestitucion from './pages/Persona/AltaRestitucion';
 import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio'
+import AltaCambioDomicilioVictor from './pages/Persona/AltaCambioDomicilioVictor'
+import AltaReactivacionVictor from './pages/Persona/AltaReactivacionVictor'
 import AltaReactivacion from './pages/Persona/AltaReactivacion'
 import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB'
+import AltaCambioDomicilioNBVictor from './pages/Persona/AltaCambioDomicilioNBVictor'
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
@@ -82,11 +85,14 @@ class Router extends Component {
                         <Route exact path="/BajaNoBautizadoCambioDomicilio" component={BajaNoBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoAlejamiento" component={BajaNoBautizadoAlejamiento} />
                         <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
+                        <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
+                        <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
+                        <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
                         {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/AltaRestitucionVictor" component={AltaRestitucionVictor} />
-                        <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
-                        <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
-                        <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
+                        <Route exact path="/AltaCambioDomicilioVictor" component={AltaCambioDomicilioVictor} />
+                        <Route exact path="/AltaReactivacionVictor" component={AltaReactivacionVictor} />
+                        <Route exact path="/AltaCambioDomicilioNBVictor" component={AltaCambioDomicilioNBVictor} />
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                         <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
