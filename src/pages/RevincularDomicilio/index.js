@@ -23,6 +23,7 @@ class RevinculaDomicilio extends Component {
             personaSeleccionada: "",
             modalShow: false,
             mensajeDelProceso: "",
+            habilitaPerBautizado: true
         }
     }
 
@@ -67,7 +68,7 @@ class RevinculaDomicilio extends Component {
                 })
             await helpers.authAxios.get(helpers.url_api + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
-                    this.setState({ DatosHogarDomicilio: res.data })
+                    this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
 
             let jerarquias = [];
@@ -102,6 +103,8 @@ class RevinculaDomicilio extends Component {
 
     handle_hd_Id_Hogar = async (e) => {
         let idHogar = e.target.value;
+        this.fnGetDatosDelHogar(idHogar);
+        this.setState({ hd_Id_Hogar: e.target.value });
         if (idHogar !== "0") {
             await helpers.authAxios.get(helpers.url_api + '/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
@@ -128,8 +131,6 @@ class RevinculaDomicilio extends Component {
                 }
             })
         }
-
-        this.fnGetDatosDelHogar(idHogar);
     }
 
     handle_hp_Jerarquia = (e) => {
@@ -281,7 +282,6 @@ class RevinculaDomicilio extends Component {
                                     </FormGroup>
                                 </CardHeader>
                                 <CardBody>
-
                                     <FormGroup>
                                         <Row>
                                             <Col xs="12">
@@ -295,6 +295,7 @@ class RevinculaDomicilio extends Component {
                                                     MiembrosDelHogar={this.state.MiembrosDelHogar}
                                                     JerarquiasDisponibles={this.state.JerarquiasDisponibles}
                                                     listaPersonas={this.state.listaPersonas}
+                                                    habilitaPerBautizado={this.state.habilitaPerBautizado}
                                                 />
                                             </Col>
                                         </Row>

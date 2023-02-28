@@ -107,19 +107,10 @@ class Sidebar extends Component {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Restitución");
         document.location.href = "/AltaRestitucion";
     }
-    handle_AltaRestitucionVictor = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por RestituciónVictor");
-        document.location.href = "/AltaRestitucionVictor";
-    }
 
     handle_AltaCambioDomicilio = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
         document.location.href = "/AltaCambioDomicilio";
-    }
-
-    handle_AltaCambioDomicilioVictor = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Cambio de DomicilioVictor");
-        document.location.href = "/AltaCambioDomicilioVictor";
     }
 
     handle_AltaPersonaNoBautizada = () => {
@@ -134,19 +125,9 @@ class Sidebar extends Component {
         document.location.href = "/AltaReactivacion";
     }
 
-    handle_ReactivacionVictor = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por ReactivaciónVictor");
-        document.location.href = "/AltaReactivacionVictor";
-    }
-
     handle_AltaCambioDomicilioNB = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
         document.location.href = "/AltaCambioDomicilioNB";
-    }
-
-    handle_AltaCambioDomicilioNBVictor = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de DomicilioVictor");
-        document.location.href = "/AltaCambioDomicilioNBVictor";
     }
 
     estableceVisibilidadAbierta = async (e) => {
@@ -296,9 +277,7 @@ class Sidebar extends Component {
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" onClick={this.handle_AltaPersonaBautizada} to="/RegistroDePersona">Bautismo</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucion}>Restitución</Link>
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaRestitucionVictor}>RestituciónVictor</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilioVictor}>Cambio de DomicilioVictor</Link>
                                     </div>
                                 </div>
 
@@ -310,9 +289,7 @@ class Sidebar extends Component {
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" onClick={this.handle_AltaPersonaNoBautizada} to="/RegistroDePersona">Nuevo Ingreso</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_Reactivacion}>Reativación</Link>
-                                        <Link className="collapse-item" to="#" onClick={this.handle_ReactivacionVictor}>ReativaciónVictor</Link>
                                         <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
-                                        <Link className="collapse-item" to="#" onClick={this.handle_AltaCambioDomicilioNBVictor}>Cambio de DomicilioVictor</Link>
                                     </div>
                                 </div>
                             </div>

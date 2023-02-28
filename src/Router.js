@@ -13,14 +13,10 @@ import RptBautizados from './pages/Reporte/RptBautizados';
 import Sector from './pages/Sector';
 import Login from './pages/Login';
 import ResumenMembresia from './pages/ResumenMembresia';
-import AltaRestitucionVictor from './pages/Persona/AltaRestitucionVictor';
 import AltaRestitucion from './pages/Persona/AltaRestitucion';
 import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio'
-import AltaCambioDomicilioVictor from './pages/Persona/AltaCambioDomicilioVictor'
-import AltaReactivacionVictor from './pages/Persona/AltaReactivacionVictor'
 import AltaReactivacion from './pages/Persona/AltaReactivacion'
 import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB'
-import AltaCambioDomicilioNBVictor from './pages/Persona/AltaCambioDomicilioNBVictor'
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
@@ -89,10 +85,6 @@ class Router extends Component {
                         <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
                         <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
                         {/* COMPONENTES DE VICTOR */}
-                        <Route exact path="/AltaRestitucionVictor" component={AltaRestitucionVictor} />
-                        <Route exact path="/AltaCambioDomicilioVictor" component={AltaCambioDomicilioVictor} />
-                        <Route exact path="/AltaReactivacionVictor" component={AltaReactivacionVictor} />
-                        <Route exact path="/AltaCambioDomicilioNBVictor" component={AltaCambioDomicilioNBVictor} />
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                         <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
