@@ -97,19 +97,19 @@ class Sidebar extends Component {
 
     // METODO PARA INVOCAR UN FORMULARIO DE PERSONA NUEVO
     handle_AltaPersonaBautizada = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona Bautizada");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona Bautizada");
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
     }
 
     handle_AltaRestitucion = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Restitución");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Restitución");
         document.location.href = "/AltaRestitucion";
     }
 
     handle_AltaCambioDomicilio = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
         document.location.href = "/AltaCambioDomicilio";
     }
 
@@ -121,12 +121,12 @@ class Sidebar extends Component {
     }
 
     handle_Reactivacion = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Reactivación");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Reactivación");
         document.location.href = "/AltaReactivacion";
     }
 
     handle_AltaCambioDomicilioNB = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
         document.location.href = "/AltaCambioDomicilioNB";
     }
 
@@ -317,18 +317,18 @@ class Sidebar extends Component {
                                         <Link
                                             className="collapse-item"
                                             to="/BajaBautizadoDefuncion"
-                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por defunción")}
+                                            onClick={() => this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Baja de bautizado por defunción")}
                                         >Defunción
                                         </Link>
                                         <Link
                                             className="collapse-item"
                                             to="/BajaBautizadoExcomunion"
-                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja por excomunion")}
+                                            onClick={() => this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Baja por excomunión")}
                                         >Excomunión</Link>
                                         <Link
                                             className="collapse-item"
                                             to="/BajaBautizadoCambioDomicilio"
-                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de bautizado por cambio de domicilio")}
+                                            onClick={() => this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Baja de bautizado por cambio de domicilio")}
                                         >Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -340,19 +340,19 @@ class Sidebar extends Component {
                                         <Link
                                             className="collapse-item"
                                             to="/BajaNoBautizadoDefuncion"
-                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de NO bautizado por defunción")}
+                                            onClick={() => this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Baja de NO bautizado por defunción")}
                                         >Defunción
                                         </Link>
                                         <Link
                                             className="collapse-item"
                                             to="/BajaNoBautizadoAlejamiento"
-                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de NO bautizado por alejamiento")}
+                                            onClick={() => this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Baja de NO bautizado por alejamiento")}
                                         >Alejamiento
                                         </Link>
                                         <Link
                                             className="collapse-item"
                                             to="/BajaNoBautizadoCambioDomicilio"
-                                            onClick={() => this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Baja de NO bautizado por cambio de domicilio")}
+                                            onClick={() => this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Baja de NO bautizado por cambio de domicilio")}
                                         >Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -495,14 +495,39 @@ class Sidebar extends Component {
                         <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item text-wrap" to="/ResumenMembresia">Reporte de Membresía Actual</Link>
-                                <Link className="collapse-item text-wrap" to="/ReportePersonalBautizado">Lista de Personal Bautizado</Link>
-                                <Link className="collapse-item text-wrap" to="/ReportePersonalNoBautizado">Lista de Personal No Bautizado</Link>
-                                <Link className="collapse-item text-wrap" to="/RptListaDeHogares">Lista de hogares</Link>
-                                <Link className="collapse-item text-wrap" to="/ReporteOficiosProfesiones">Lista por Profesiones/Oficios</Link>
-                                <Link className="collapse-item text-wrap" to="/ReporteCumpleaños">Lista por Fecha de Cumpleaños</Link>
-                                <Link className="collapse-item text-wrap" to="/ReporteMovimientoEstadistico">Reporte de Movimiento Estadístico</Link>
-                                <Link className="collapse-item text-wrap" to="/ReporteTransacciones">Reporte de Transacciones</Link>
+                                <Link className="collapse-item text-wrap" 
+                                    to="/ResumenMembresia"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Membresía Actual")}
+                                    >Reporte de Membresía Actual
+                                </Link>
+                                <Link className="collapse-item text-wrap" 
+                                      to="/ReportePersonalBautizado"
+                                      onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Bautizado")}
+                                      >Lista de Personal Bautizado</Link>
+                                <Link className="collapse-item text-wrap" 
+                                        to="/ReportePersonalNoBautizado"
+                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal No Bautizado")}
+                                >Lista de Personal No Bautizado</Link>
+                                <Link className="collapse-item text-wrap" 
+                                        to="/RptListaDeHogares"
+                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de hogares")}
+                                        >Lista de hogares</Link>
+                                <Link className="collapse-item text-wrap" 
+                                        to="/ReporteOficiosProfesiones"
+                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Profesiones/Oficios")}
+                                        >Lista por Profesiones/Oficios</Link>
+                                <Link className="collapse-item text-wrap" 
+                                        to="/ReporteCumpleaños"
+                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Fecha de Cumpleaños")}
+                                        >Lista por Fecha de Cumpleaños</Link>
+                                <Link className="collapse-item text-wrap" 
+                                        to="/ReporteMovimientoEstadistico"
+                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}
+                                        >Reporte de Movimientos Estadísticos</Link>
+                                <Link className="collapse-item text-wrap" 
+                                        to="/ReporteTransacciones"
+                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}
+                                        >Reporte de Transacciones</Link>
                             </div>
                         </div>
                     </li>
