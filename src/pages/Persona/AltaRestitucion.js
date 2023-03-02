@@ -6,6 +6,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import HogarPersonaDomicilio from './HogarPersonaDomicilio';
+import MostrarJerarquias from './MostrarJerarquias';
 import './style.css'
 
 class AltaRestitucion extends Component {
@@ -29,7 +30,8 @@ class AltaRestitucion extends Component {
             fechaTransaccion: "",
             fechaTransaccionInvalida: false,
             perIdPersonaInvalida: false,
-            perCategoriaInvalida: false
+            perCategoriaInvalida: false,
+            mostrarJerarquias: false
         }
     }
     componentDidMount() {
@@ -166,9 +168,36 @@ class AltaRestitucion extends Component {
         }
     }
     onRadioBtnClick = (bool) => {
-        this.setState({
-            mismoHogar: !this.state.mismoHogar
-        })
+        if (bool === false) {
+            this.setState({
+                mostrarJerarquias: false,
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: "0",
+                    hp_Jerarquia: "1"
+                },
+                MiembrosDelHogar: [],
+                DatosHogarDomicilio: [],
+                JerarquiasDisponibles: []
+            })
+        }
+        else {
+            if (this.state.per_Id_Persona !== "0") {
+                helpers.authAxios.get(`Hogar_Persona/GetHogarByPersona/${this.state.per_Id_Persona}`)
+                    .then(res => {
+                        this.fnGetDatosDelHogar(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar);
+                        this.setState({
+                            //per_Categoria: persona[0].per_Categoria,
+                            hogar: {
+                                ...this.state.hogar,
+                                hd_Id_Hogar: res.data.datosDelHogarPorPersona.hd_Id_Hogar
+                            },
+                            mostrarJerarquias: true
+                        });
+                    })
+            }
+        }
+        this.setState({ mismoHogar: bool })
     }
     personaParaRestitucion = async () => {
         await helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${localStorage.getItem('sector')}/true`)
@@ -180,16 +209,50 @@ class AltaRestitucion extends Component {
         this.setState({
             [e.target.name]: e.target.value
         })
-        if (e.target.name === "per_Id_Persona") {
+        if (e.target.name === "per_Id_Persona" && e.target.value !== "0") {
             if (e.target.value !== "0") {
-                let persona = this.state.personaParaRestitucion.filter(obj => {
-                    return obj.per_Id_Persona === parseInt(e.target.value)
-                })
-                this.setState({ per_Categoria: persona[0].per_Categoria })
+                if (this.state.mismoHogar) {
+                    var persona = this.state.personaParaRestitucion.filter(obj => {
+                        return obj.per_Id_Persona === parseInt(e.target.value)
+                    });
+                    this.fnGetDatosDelHogar(persona[0].hd_Id_Hogar);
+                    this.setState({
+                        per_Categoria: persona[0].per_Categoria,
+                        hogar: {
+                            ...this.state.hogar,
+                            hd_Id_Hogar: persona[0].hd_Id_Hogar
+                        },
+                        mostrarJerarquias: true
+                    });
+                }
+                else {
+                    this.setState({
+                        mostrarJerarquias: false,
+                        hogar: {
+                            ...this.state.hogar,
+                            hd_Id_Hogar: "0",
+                            hp_Jerarquia: "1"
+                        },
+                        MiembrosDelHogar: [],
+                        DatosHogarDomicilio: [],
+                        JerarquiasDisponibles: []
+                    })
+                }
             }
-            else {
-                this.setState({ per_Categoria: "0" })
-            }
+        }
+        if (e.target.name === "per_Id_Persona" && e.target.value === "0") {
+            this.setState({
+                per_Categoria: "0",
+                mostrarJerarquias: false,
+                MiembrosDelHogar: [],
+                DatosHogarDomicilio: [],
+                JerarquiasDisponibles: [],
+                hogar: {
+                    ...this.state.hogar,
+                    hd_Id_Hogar: "0",
+                    hp_Jerarquia: "1"
+                }
+            })
         }
     }
     guardarRestitucion = async (e) => {
@@ -200,7 +263,7 @@ class AltaRestitucion extends Component {
             fechaTransaccionInvalida: this.state.fechaTransaccion === "" ? true : false,
         })
         let perIdPersonaInvalida = this.state.per_Id_Persona === "0" ? true : false;
-        let perCategoriaInvalida =  this.state.per_Categoria === "0" ? true : false;
+        let perCategoriaInvalida = this.state.per_Categoria === "0" ? true : false;
         let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
         if (perIdPersonaInvalida ||
             perCategoriaInvalida ||
@@ -212,8 +275,8 @@ class AltaRestitucion extends Component {
                 idPersona: this.state.per_Id_Persona,
                 comentario: this.state.comentario,
                 fecha: this.state.fechaTransaccion,
-                idMinisto: this.infoSesion.pem_Id_Ministro,
-                jerarquia: 1
+                idMinistro: this.infoSesion.pem_Id_Ministro,
+                jerarquia: this.state.hogar.hp_Jerarquia
             }
             if (this.state.mismoHogar) {
                 await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaReactivacionRestitucion_HogarActual`, info)
@@ -401,11 +464,20 @@ class AltaRestitucion extends Component {
                                     habilitaPerBautizado={this.state.habilitaPerBautizado}
                                 />
                             }
+                            {this.state.mostrarJerarquias &&
+                                <MostrarJerarquias
+                                    handle_hp_Jerarquia={this.handle_hp_Jerarquia}
+                                    hogar={this.state.hogar}
+                                    DatosHogarDomicilio={this.state.DatosHogarDomicilio}
+                                    MiembrosDelHogar={this.state.MiembrosDelHogar}
+                                    JerarquiasDisponibles={this.state.JerarquiasDisponibles}
+                                    direccion={this.state.direccion}
+                                />
+                            }
                         </CardBody>
                         <CardFooter>
                             <Link
                                 to="/ListaDePersonal"
-
                             >
                                 <Button type="button" color="secondary" className="entreBotones">
                                     Cancelar

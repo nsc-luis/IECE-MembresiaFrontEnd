@@ -253,73 +253,75 @@ class RevinculaDomicilio extends Component {
             <>
                 <Container>
                     <Row>
-                        <Form onSubmit={this.GuardaCambioDomicilio}>
-                            <Card>
-                                <CardHeader>
-                                    <FormGroup>
-                                        <Row>
-                                            <Col xs="2">
-                                                Persona *:
-                                            </Col>
-                                            <Col xs="10">
-                                                <Input
-                                                    type="select"
-                                                    name="personaSeleccionada"
-                                                    value={this.state.personaSeleccionada}
-                                                    onChange={this.handle_personaSeleccionada}
-                                                >
-                                                    <option value="0">Selecciona una Persona</option>
-                                                    {
-                                                        this.state.listaPersonas.map((persona) => {
-                                                            return (
-                                                                <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
-                                                            )
-                                                        })
-                                                    }
-                                                </Input>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </CardHeader>
-                                <CardBody>
-                                    <FormGroup>
-                                        <Row>
-                                            <Col xs="12">
-                                                <HogarPersonaDomicilio
-                                                    domicilio={this.state.domicilio}
-                                                    onChangeDomicilio={this.onChangeDomicilio}
-                                                    handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
-                                                    handle_hp_Jerarquia={this.handle_hp_Jerarquia}
-                                                    hogar={this.state.hogar}
-                                                    DatosHogarDomicilio={this.state.DatosHogarDomicilio}
-                                                    MiembrosDelHogar={this.state.MiembrosDelHogar}
-                                                    JerarquiasDisponibles={this.state.JerarquiasDisponibles}
-                                                    listaPersonas={this.state.listaPersonas}
-                                                    habilitaPerBautizado={this.state.habilitaPerBautizado}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </CardBody>
-                                <CardFooter>
-                                    <Link
-                                        to="/ListaDePersonal"
-                                        onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
-                                    >
-                                        <Button type="button" color="danger" className="entreBotones">
-                                            Cancelar
+                        <Col xs="12">
+                            <Form onSubmit={this.GuardaCambioDomicilio}>
+                                <Card>
+                                    <CardHeader>
+                                        <FormGroup>
+                                            <Row>
+                                                <Col xs="2">
+                                                    Persona *:
+                                                </Col>
+                                                <Col xs="10">
+                                                    <Input
+                                                        type="select"
+                                                        name="personaSeleccionada"
+                                                        value={this.state.personaSeleccionada}
+                                                        onChange={this.handle_personaSeleccionada}
+                                                    >
+                                                        <option value="0">Selecciona una Persona</option>
+                                                        {
+                                                            this.state.listaPersonas.map((persona) => {
+                                                                return (
+                                                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Input>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <FormGroup>
+                                            <Row>
+                                                <Col xs="12">
+                                                    <HogarPersonaDomicilio
+                                                        domicilio={this.state.domicilio}
+                                                        onChangeDomicilio={this.onChangeDomicilio}
+                                                        handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
+                                                        handle_hp_Jerarquia={this.handle_hp_Jerarquia}
+                                                        hogar={this.state.hogar}
+                                                        DatosHogarDomicilio={this.state.DatosHogarDomicilio}
+                                                        MiembrosDelHogar={this.state.MiembrosDelHogar}
+                                                        JerarquiasDisponibles={this.state.JerarquiasDisponibles}
+                                                        listaPersonas={this.state.listaPersonas}
+                                                        habilitaPerBautizado={this.state.habilitaPerBautizado}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    </CardBody>
+                                    <CardFooter>
+                                        <Link
+                                            to="/ListaDePersonal"
+                                            onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
+                                        >
+                                            <Button type="button" color="danger" className="entreBotones">
+                                                Cancelar
+                                            </Button>
+                                        </Link>
+                                        <Button
+                                            type="submit"
+                                            color="primary"
+                                        >
+                                            <span className='fa fa-sw fa-save buttonMarginRight'></span>
+                                            Guardar
                                         </Button>
-                                    </Link>
-                                    <Button
-                                        type="submit"
-                                        color="primary"
-                                    >
-                                        <span className='fa fa-sw fa-save buttonMarginRight'></span>
-                                        Guardar
-                                    </Button>
-                                </CardFooter>
-                            </Card>
-                        </Form>
+                                    </CardFooter>
+                                </Card>
+                            </Form>
+                        </Col>
                     </Row>
                 </Container>
                 <Modal isOpen={this.state.modalShow}>
