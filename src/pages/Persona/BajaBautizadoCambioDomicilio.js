@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert, Label, ButtonGroup,
+    Card, CardBody, CardFooter, CardHeader, CardTitle, Alert, Label, ButtonGroup, Typography,
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container, FormFeedback
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
@@ -192,12 +192,12 @@ class BajaBautizadoCambioDomicilio extends Component {
                                             <Col xs="12">
                                                 <FormGroup>
                                                     <Alert color="info">
-                                                        <strong>ADVERTENCIA. </strong>
-                                                        La persona seleccionada es la ultima persona BAUTIZADA en el domicilio y existen personas NO bautizadas en el mismo.
-                                                        Debe elegir uno de las siguientes opciones.
+                                                        <strong>ADVERTENCIA: </strong>
+                                                        La persona seleccionada es la última persona BAUTIZADA en el Hogar, pero existen miembros NO bautizados en el mismo, los cuales se darán de Baja automáticamente.
+                                                        Debe elegir el Tipo de Baja que aplicará para los miembros No Bautizados. Las opciones son:
                                                         <ul>
-                                                            <li><strong>Por cambio de domicilio.</strong> La baja de los miembros NO bautizados se realiza por concepto de "Baja por cambio de domicilio".</li>
-                                                            <li><strong>Por baja de padres.</strong> La baja de los miembros NO bautizados se realiza por concepto de "Baja por padres".</li>
+                                                            <li><strong>Por Cambio de Domicilio.</strong> La baja de los miembros NO bautizados se realiza por concepto de "Baja por cambio de domicilio".</li>
+                                                            <li><strong>Por Baja de Padres.</strong> La baja de los miembros NO bautizados se realiza por concepto de "Baja por padres".</li>
                                                         </ul>
                                                     </Alert>
                                                 </FormGroup>
@@ -208,14 +208,14 @@ class BajaBautizadoCambioDomicilio extends Component {
                                         <Row>
                                             <Col xs="3">
                                                 <FormGroup>
-                                                    <Label><strong>Baja de miembros NO bautizados:</strong></Label>
+                                                    <Label><strong>Seleccione el Tipo de Baja de los miembros NO bautizados:</strong></Label>
                                                 </FormGroup>
                                             </Col>
                                             <Col xs="9">
                                                 <FormGroup>
                                                     <ButtonGroup>
-                                                        <Button size="sm" color="danger" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === false}>Por cambio de domicilio</Button>
-                                                        <Button size="sm" color="danger" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === true}>Por baja de padres</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === false}>Por cambio de domicilio</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === true}>Por baja de padres</Button>
                                                     </ButtonGroup>
                                                 </FormGroup>
                                             </Col>

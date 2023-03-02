@@ -21,6 +21,7 @@ export default function ReporteCumpleaños(){
     const [infoSec, setInfoSec] = useState(null)
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
+    const [infoSecretario, setInfoSecretario] = useState(null)
     //Llamadas en render
     useEffect(() => {
         if(sector == null){
@@ -49,6 +50,10 @@ export default function ReporteCumpleaños(){
             helpers.authAxios.get("/Sector/" + sector)
             .then(res => {
                 setInfoSec(res.data.sector[0].sec_Alias)
+            })
+            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            .then(res => {
+                setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
             })
             });
         }
@@ -82,18 +87,18 @@ export default function ReporteCumpleaños(){
         const doc = new jsPDF("p", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("REPORTE CUMPLEAÑOS", 85, 10);
+        doc.text("LISTA DE CUMPLEAÑOS", 135, 10, {align:"center"});
         doc.setFontSize(8);
-        doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 15)
-        
+
         if (sector) {
-            doc.text(`SECTOR: ${JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}`, 85, 20);
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 25);
+            doc.text(`${infoSec}`, 135, 18, {align:"center"});
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
+            doc.text(`${infoDis}`, 135, 18, {align:"center"})
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
-        
+        doc.line(10, 32, 200, 32);
         
         const headers = [
             'Indice',
@@ -103,16 +108,20 @@ export default function ReporteCumpleaños(){
             'Edad_Actual',
         ]
         const data = personas.map((persona,index) => ({
-            Indice: String(index+1),
-            Nombre: persona.persona ? persona.persona.per_Nombre : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Paterno : " " + ' ' + persona.persona ? persona.persona.per_Apellido_Materno : " ",
-            Grupo: persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
-            Fecha_Nacimiento: String(moment(persona.persona.per_Fecha_Nacimiento).format("DD/MM/YYYY")),
-            Edad_Actual: String(moment().diff(persona.persona.per_Fecha_Nacimiento, "years")),
+            Indice: String(index+1),            
+            Nombre: (persona.per_Nombre ? persona.per_Nombre : " ") + ' ' + (persona.per_Apellido_Paterno ? persona.per_Apellido_Paterno : " ") + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : " "),
+            Grupo: persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
+            Fecha_Nacimiento: String(moment(persona.per_Fecha_Nacimiento).format("LL")),
+            Edad_Actual: String(moment().diff(persona.per_Fecha_Nacimiento, "years")),
         }))
-        doc.table(10, 35, data, headers, {autoSize:true, fontSize: 8, padding:1})
 
-        let yAxis = 160
+        let yAxis = 35+ data.length * 7 + 5
         doc.setFontSize(8);
+
+        doc.table(10, 35, data, headers, {autoSize:true, fontSize: 8, padding:2, margins:{left: 150, top: 10,bottom: 10, width: 10}})
+
+        // let yAxis = 160
+        // doc.setFontSize(8);
 
         yAxis += 20;
         doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
@@ -126,6 +135,7 @@ export default function ReporteCumpleaños(){
         doc.text("SECRETARIO", 51, yAxis);
         doc.text("PASTOR", 145, yAxis);
         yAxis -= 5;
+        doc.text(`${infoSecretario}`, 41, yAxis);
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
 
 

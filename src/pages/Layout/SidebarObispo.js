@@ -108,49 +108,58 @@ class SidebarObispo extends Component {
 
                     {/* Nav Item - Reportes Collapse Menu */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="#">
+                        <Link className="nav-link" to="#"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Membresía Actual")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Reporte de Membresía Actual</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ReportePersonalBautizado">
+                        <Link className="nav-link" to="/ReportePersonalBautizado"
+                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Bautizado")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de Personal Bautizado</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ReportePersonalNoBautizado">
+                        <Link className="nav-link" to="/ReportePersonalNoBautizado"
+                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal No Bautizado")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de Personal No Bautizado</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/RptListaDeHogares">
+                        <Link className="nav-link" to="/RptListaDeHogares"
+                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de hogares")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de hogares</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ReporteOficiosProfesiones">
+                        <Link className="nav-link" to="/ReporteOficiosProfesiones"
+                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Profesiones/Oficios")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista por Profesiones/Oficios</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ReporteCumpleaños">
+                        <Link className="nav-link" 
+                            to="/ReporteCumpleaños"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Fecha de Cumpleaños")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista por Fecha de Cumpleaños</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ReporteMovimientoEstadistico">
+                        <Link className="nav-link" to="/ReporteMovimientoEstadistico"
+                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
-                            <span>Reporte de Movimiento Estadístico</span>
+                            <span>Reporte de Movimientos Estadísticos</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ReporteTransacciones">
+                        <Link className="nav-link" to="/ReporteTransacciones"
+                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Reporte de Transacciones</span>
                         </Link>
