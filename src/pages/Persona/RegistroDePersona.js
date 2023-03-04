@@ -165,7 +165,6 @@ class RegistroDePersonal extends Component {
         alphaSpace:/^[a-zA-ZÑ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
     }
-    
 
     handleChangeDomicilio = (e) => {
         this.setState({
@@ -175,6 +174,7 @@ class RegistroDePersonal extends Component {
             }
         })
     }
+
     handleChangeEstado = (e) => {
         if (e.target.value === "999") {
             this.setState({
@@ -405,7 +405,7 @@ class RegistroDePersonal extends Component {
             }
         }
         if (e.target.name === "idFoto") {
-            let mimeTypeValidos = ["image/png", "image/jpeg"]
+            var mimeTypeValidos = ["image/png", "image/jpeg", "image/jpg"];
             if (e.target.files[0].size / 1024 / 1024 > 3
                 || !mimeTypeValidos.includes(e.target.files[0].type)) {
                 alert("Error: \nSolo se admiten archivos menores o iguales a 3MB. \nO el archivo NO es una imagen del tipo 'png' o 'jpg'.")

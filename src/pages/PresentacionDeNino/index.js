@@ -43,7 +43,7 @@ class PresentacionDeNino extends Component {
                 ...this.state.currentPresentacion,
                 per_Id_Persona: "0",
                 pdn_Ministro_Oficiante: "0",
-                pdn_Fecha_Presentacion: "01/01/1900",
+                pdn_Fecha_Presentacion: null,
                 sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
             }
@@ -100,7 +100,7 @@ class PresentacionDeNino extends Component {
                 ...this.state.currentPresentacion,
                 per_Id_Persona: "0",
                 pdn_Ministro_Oficiante: "0",
-                pdn_Fecha_Presentacion: "1900-01-01",
+                pdn_Fecha_Presentacion: null,
                 sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
             },
@@ -229,11 +229,11 @@ class PresentacionDeNino extends Component {
                 this.setState({
                     ministroOficianteInvalido: this.state.currentPresentacion.pdn_Ministro_Oficiante === '0' ? true : false,
                     ninoSelectInvalido: this.state.currentPresentacion.per_Id_Persona === '0' ? true : false,
-                    fechaPresentacionInvalida: this.state.currentPresentacion.pdn_Fecha_Presentacion === '1900-01-01' || this.state.currentPresentacion.pdn_Fecha_Presentacion === null ? true : false
+                    fechaPresentacionInvalida: this.state.currentPresentacion.pdn_Fecha_Presentacion === '' || this.state.currentPresentacion.pdn_Fecha_Presentacion === null ? true : false
                 }), 500
             )
             if (this.state.currentPresentacion.per_Id_Persona === "0") return false;
-            if (this.state.currentPresentacion.pdn_Fecha_Presentacion === "1900-01-01" || this.state.currentPresentacion.pdn_Fecha_Presentacion === null) return false;
+            if (this.state.currentPresentacion.pdn_Fecha_Presentacion === "" || this.state.currentPresentacion.pdn_Fecha_Presentacion === null) return false;
             if (this.state.currentPresentacion.pdn_Ministro_Oficiante === "0") return false;
             if (this.state.otroMinistro === "" && this.state.currentPresentacion.pdn_Ministro_Oficiante === "-1") return false;
 

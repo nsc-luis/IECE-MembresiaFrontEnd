@@ -20,6 +20,8 @@ class Domicilio extends React.Component {
         const {
             domicilio,
             onChangeDomicilio,
+            handleChangeEstado,
+            boolNvoEstado,
             handle_hd_Id_Hogar,
             hogar
         } = this.props
@@ -144,6 +146,8 @@ class Domicilio extends React.Component {
                             <PaisEstado
                                 domicilio={domicilio}
                                 onChangeDomicilio={onChangeDomicilio}
+                                boolNvoEstado={boolNvoEstado}
+                                handleChangeEstado={handleChangeEstado}
                             />
                         </div>
                     </div>

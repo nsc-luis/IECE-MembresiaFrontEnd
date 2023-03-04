@@ -53,7 +53,7 @@ class PasswordEmailUsuario extends Component {
                                         <li> minusculas [a-z]. </li>
                                         <li> Número [0-9]. </li>
                                         <li> Caracteres especiales: $#@!%*?& </li>
-                                        <li> Longitud de 6 a 20 caracteres. </li>
+                                        <li> Longitud de 8 a 20 caracteres. </li>
                                     </ul>
                                 </span>
                             </Col>

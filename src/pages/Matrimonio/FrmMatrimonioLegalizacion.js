@@ -12,7 +12,6 @@ import HogarPersonaDomicilio from './HogarPersonaDomicilio';
 class FrmMatrimonioLegalizacion extends Component {
 
     url = helpers.url_api;
-    fechaNoIngresada = "01/01/1900";
 
     constructor(props) {
         super(props);
@@ -27,7 +26,15 @@ class FrmMatrimonioLegalizacion extends Component {
             rSelected: false,
             hogar: {},
             domicilio: {},
-            habilitaComponenteDomicilio: false
+            habilitaComponenteDomicilio: false,
+            boolNvoEstado: false,
+            matNombreContrayenteMujerForaneoInvalid: false,
+            matNombreContrayenteHombreForaneoInvalid: false,
+            matTipoEnalceInvalid: false,
+            perIdPersonaHombreInvalid: false,
+            perIdPersonaMujerInvalid: false,
+            matFechaBodaEclesiasticaInvalid: false,
+            sector: {}
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     }
@@ -41,13 +48,13 @@ class FrmMatrimonioLegalizacion extends Component {
                 per_Id_Persona_Mujer: "",
                 mat_Nombre_Contrayente_Hombre_Foraneo: "",
                 mat_Nombre_Contrayente_Mujer_Foraneo: "",
-                mat_Fecha_Boda_Civil: "1900-01-01",
+                mat_Fecha_Boda_Civil: null,
                 mat_Numero_Acta: "",
                 mat_Libro_Acta: "",
                 mat_Oficialia: "",
                 mat_Registro_Civil: "",
-                mat_Fecha_Boda_Eclesiastica: "1900-01-01",
-                mat_Cantidad_Hijos: "",
+                mat_Fecha_Boda_Eclesiastica: null,
+                mat_Cantidad_Hijos: "0",
                 mat_Nombre_Hijos: "",
                 dis_Id_Distrito: localStorage.getItem("dto"),
                 sec_Id_Sector: localStorage.getItem("sector"),
@@ -59,6 +66,7 @@ class FrmMatrimonioLegalizacion extends Component {
                 sec_Id_Sector: localStorage.getItem("sector"),
                 dis_Id_Distrito: localStorage.getItem("dto"),
                 pais_Id_Pais: "0",
+                est_Id_Estado: "0",
                 hd_Calle: "",
                 hd_Localidad: "",
                 hd_Numero_Exterior: "",
@@ -76,13 +84,13 @@ class FrmMatrimonioLegalizacion extends Component {
                     per_Id_Persona_Mujer: "0",
                     mat_Nombre_Contrayente_Hombre_Foraneo: "",
                     mat_Nombre_Contrayente_Mujer_Foraneo: "",
-                    mat_Fecha_Boda_Civil: "1900-01-01",
+                    mat_Fecha_Boda_Civil: null,
                     mat_Numero_Acta: "",
                     mat_Libro_Acta: "",
                     mat_Oficialia: "",
                     mat_Registro_Civil: "",
-                    mat_Fecha_Boda_Eclesiastica: "1900-01-01",
-                    mat_Cantidad_Hijos: "",
+                    mat_Fecha_Boda_Eclesiastica: null,
+                    mat_Cantidad_Hijos: "0",
                     mat_Nombre_Hijos: "",
                     dis_Id_Distrito: localStorage.getItem("dto"),
                     sec_Id_Sector: localStorage.getItem("sector"),
@@ -94,7 +102,7 @@ class FrmMatrimonioLegalizacion extends Component {
         else {
             helpers.authAxios.get(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"))
                 .then(res => {
-                    res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil);
+                    res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil = res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil === null ? null : helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Civil);
                     res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica = helpers.reFormatoFecha(res.data.matrimonioLegalizacion.mat_Fecha_Boda_Eclesiastica)
                     this.setState({
                         matLegal: res.data.matrimonioLegalizacion,
@@ -102,8 +110,8 @@ class FrmMatrimonioLegalizacion extends Component {
                         bolForaneoMujer: res.data.matrimonioLegalizacion.mat_Nombre_Contrayente_Mujer_Foraneo !== "" ? true : false,
                         habilitaComponenteDomicilio: false
                     })
-                    this.getHombres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
-                    this.getMujeres(res.data.matrimonioLegalizacion.mat_Tipo_Enlace);
+                    this.getHombres(localStorage.getItem("sector"));
+                    this.getMujeres(localStorage.getItem("sector"));
                 });
         }
     }
@@ -124,6 +132,35 @@ class FrmMatrimonioLegalizacion extends Component {
                         hombres: res.data.hombresParaLegalizacion
                     })
                 })
+        }
+    }
+
+    getSector = async(id) => {
+        await helpers.authAxios.get(`/Sector/${id}`)
+        .then(res => {
+            this.setState({ sector: res.data.sector[0] })
+        })
+    }
+
+    handleChangeEstado = (e) => {
+        if (e.target.value === "999") {
+            this.setState({
+                boolNvoEstado: true,
+                domicilio: {
+                    ...this.state.domicilio,
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+        else {
+            this.setState({
+                boolNvoEstado: false,
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: e.target.value
+                }
+            })
         }
     }
 
@@ -203,6 +240,7 @@ class FrmMatrimonioLegalizacion extends Component {
         });
 
         if (e.target.name === "mat_Tipo_Enlace") {
+            this.getSector(this.state.matLegal.sec_Id_Sector);
             switch (e.target.value) {
                 case "0":
                     this.setState({
@@ -221,7 +259,6 @@ class FrmMatrimonioLegalizacion extends Component {
                     this.getMujeres(e.target.value);
                     break;
             }
-
         }
     }
 
@@ -315,100 +352,127 @@ class FrmMatrimonioLegalizacion extends Component {
 
         const handle_Submit = async (e) => {
             e.preventDefault();
+
             if (localStorage.getItem("mat_Id_MatrimonioLegalizacion") === "0") {
+                // VALIDACIONES
+                this.setState({
+                    matTipoEnalceInvalid: this.state.matLegal.mat_Tipo_Enlace === "0" ? true : false,
+                    matNombreContrayenteMujerForaneoInvalid: this.state.bolForaneoMujer && this.state.matLegal.mat_Nombre_Contrayente_Mujer_Foraneo === "" ? true : false,
+                    matNombreContrayenteHombreForaneoInvalid: this.state.bolForaneoHombre && this.state.matLegal.mat_Nombre_Contrayente_Hombre_Foraneo === "" ? true : false,
+                    perIdPersonaMujerInvalid: !this.state.bolForaneoMujer && this.state.matLegal.per_Id_Persona_Mujer === "0" ? true : false,
+                    perIdPersonaHombreInvalid: !this.state.bolForaneoHombre && this.state.matLegal.per_Id_Persona_Hombre === "0" ? true : false,
+                    matFechaBodaEclesiasticaInvalid: this.state.matLegal.mat_Fecha_Boda_Eclesiastica === null || this.state.matLegal.mat_Fecha_Boda_Eclesiastica === "" ? true : false
+                });
+
+                let matTipoEnalceInvalidTmp = this.state.matLegal.mat_Tipo_Enlace === "0" ? true : false;
+                let matNombreContrayenteMujerForaneoInvalidTmp = this.state.bolForaneoMujer && this.state.matLegal.mat_Nombre_Contrayente_Mujer_Foraneo === "" ? true : false;
+                let matNombreContrayenteHombreForaneoInvalidTmp = this.state.bolForaneoHombre && this.state.matLegal.mat_Nombre_Contrayente_Hombre_Foraneo === "" ? true : false;
+                let perIdPersonaMujerInvalidTmp = !this.state.bolForaneoMujer && this.state.matLegal.per_Id_Persona_Mujer === "0" ? true : false;
+                let perIdPersonaHombreInvalidTmp = !this.state.bolForaneoHombre && this.state.matLegal.per_Id_Persona_Hombre === "0" ? true : false;
+                let matFechaBodaEclesiasticaInvalidTmp = this.state.matLegal.mat_Fecha_Boda_Eclesiastica === null || this.state.matLegal.mat_Fecha_Boda_Eclesiastica === "" ? true : false;
+                if (matTipoEnalceInvalidTmp || matNombreContrayenteMujerForaneoInvalidTmp ||
+                    matNombreContrayenteHombreForaneoInvalidTmp || perIdPersonaMujerInvalidTmp ||
+                    perIdPersonaHombreInvalidTmp || matFechaBodaEclesiasticaInvalidTmp) {
+                    return false;
+                }
+
+                // HABILITA SECCION DEL NUEVO DOMICILIO
+                if (this.state.rSelected) {
+                    // VALIDACIONES
+                    if (this.state.domicilio.pais_Id_Pais === "0" || this.state.domicilio.est_Id_Estado === "0") {
+                        alert("Error:\nDebe seleccionar un pais / estado.");
+                        return false;
+                    }
+                    if (this.state.domicilio.est_Id_Estado === "999" && this.state.domicilio.nvoEstado === "") {
+                        alert("Error:\nHas seleccionado agregar \"Otro estado\", por lo tanto, el campo no puede quedar vacio.");
+                        return false;
+                    }
+                }
+
+                // PREPARA OBJETO PARA REGISTRO DE BASE DE DATOS
                 let matLegalDom = {
                     matLegalEntity: this.state.matLegal,
-                    HogarDomicilioEntity: this.state.domicilio
+                    HogarDomicilioEntity: this.state.domicilio,
+                    boolNvoDomicilio: this.state.rSelected,
+                    nvoEstado: this.state.domicilio.nvoEstado,
+                    sectorAlias: this.state.sector.sec_Alias
                 }
-                await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
-                    .then(res => {
-                        if (res.data.status === true) {
-                            let contador = 0
-                            res.data.estados.forEach(element => {
-                                contador = contador + 1
-                            })
-                            if ((contador < 1 && this.state.domicilio.nvoEstado === "") && this.state.rSelected) {
-                                alert("Error: \nEl pais seleccionado no tiene Estados para mostrar, por lo tanto, debe ingresar un nombre de Estado.")
-                                return false
-                            }
-                            else {
-                                try {
-                                    helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatriminioLegalizacion/${this.state.rSelected}/${this.state.domicilio.nvoEstado}`, matLegalDom)
-                                        .then(res => {
-                                            if (res.data.status === "success") {
-                                                // alert(res.data.mensaje);
-                                                setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
-                                                this.setState({
-                                                    mensajeDelProceso: "Procesando...",
-                                                    modalShow: true
-                                                });
-                                                setTimeout(() => {
-                                                    this.setState({
-                                                        mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
-                                                    });
-                                                }, 1500);
-                                                setTimeout(() => {
-                                                    document.location.href = '/Matrimonio'
-                                                }, 3500);
-                                            } else {
-                                                // alert(res.data.mensaje);
-                                                this.setState({
-                                                    mensajeDelProceso: "Procesando...",
-                                                    modalShow: true
-                                                });
-                                                setTimeout(() => {
-                                                    this.setState({
-                                                        mensajeDelProceso: res.data.mensaje,
-                                                        modalShow: false
-                                                    });
-                                                }, 1500);
-                                            }
-                                        });
-                                } catch (error) {
-                                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-                                    // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-                                }
-                            }
-                        }
-                        else {
-                            try {
-                                helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
-                                    .then(res => {
-                                        if (res.data.status === "success") {
-                                            // alert(res.data.mensaje);
-                                            setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
-                                            this.setState({
-                                                mensajeDelProceso: "Procesando...",
-                                                modalShow: true
-                                            });
-                                            setTimeout(() => {
-                                                this.setState({
-                                                    mensajeDelProceso: "Los datos fueron actualizados satisfactoriamente."
-                                                });
-                                            }, 1500);
-                                            setTimeout(() => {
-                                                document.location.href = '/Matrimonio'
-                                            }, 3500);
-                                        } else {
-                                            // alert(res.data.mensaje);
-                                            this.setState({
-                                                mensajeDelProceso: "Procesando...",
-                                                modalShow: true
-                                            });
-                                            setTimeout(() => {
-                                                this.setState({
-                                                    mensajeDelProceso: res.data.mensaje,
-                                                    modalShow: false
-                                                });
-                                            }, 1500);
-                                        }
+
+                try {
+                    helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatriminioLegalizacion`, matLegalDom)
+                        .then(res => {
+                            if (res.data.status === "success") {
+                                // alert(res.data.mensaje);
+                                setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
+                                this.setState({
+                                    mensajeDelProceso: "Procesando...",
+                                    modalShow: true
+                                });
+                                setTimeout(() => {
+                                    this.setState({
+                                        mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                     });
-                            } catch (error) {
-                                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-                                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                                }, 1500);
+                                setTimeout(() => {
+                                    document.location.href = '/Matrimonio'
+                                }, 3500);
+                            } else {
+                                // alert(res.data.mensaje);
+                                this.setState({
+                                    mensajeDelProceso: "Procesando...",
+                                    modalShow: true
+                                });
+                                setTimeout(() => {
+                                    this.setState({
+                                        mensajeDelProceso: res.data.mensaje,
+                                        modalShow: false
+                                    });
+                                }, 1500);
                             }
-                        }
-                    })
+                        });
+                }
+                catch (error) {
+                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                    // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                }
+            }
+            else {
+                try {
+                    helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
+                        .then(res => {
+                            if (res.data.status === "success") {
+                                // alert(res.data.mensaje);
+                                setTimeout(() => { document.location.href = '/Matrimonio'; }, 3000);
+                                this.setState({
+                                    mensajeDelProceso: "Procesando...",
+                                    modalShow: true
+                                });
+                                setTimeout(() => {
+                                    this.setState({
+                                        mensajeDelProceso: "Los datos fueron actualizados satisfactoriamente."
+                                    });
+                                }, 1500);
+                                setTimeout(() => {
+                                    document.location.href = '/Matrimonio'
+                                }, 3500);
+                            } else {
+                                // alert(res.data.mensaje);
+                                this.setState({
+                                    mensajeDelProceso: "Procesando...",
+                                    modalShow: true
+                                });
+                                setTimeout(() => {
+                                    this.setState({
+                                        mensajeDelProceso: res.data.mensaje,
+                                        modalShow: false
+                                    });
+                                }, 1500);
+                            }
+                        });
+                } catch (error) {
+                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                    // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                }
             }
         }
 
@@ -432,11 +496,13 @@ class FrmMatrimonioLegalizacion extends Component {
                                                     name="mat_Tipo_Enlace"
                                                     onChange={this.onChange}
                                                     value={this.state.matLegal.mat_Tipo_Enlace}
+                                                    invalid={this.state.matTipoEnalceInvalid}
                                                 >
                                                     <option value="0">Selecionar categoria</option>
                                                     <option value="MATRIMONIO">MATRIMONIO</option>
                                                     <option value="LEGALIZACION">LEGALIZACION</option>
                                                 </Input>
+                                                <FormFeedback>Debe seleccionar un tipo de enlace.</FormFeedback>
                                             </Col>
                                         </Row>
                                     </FormGroup>
@@ -473,6 +539,7 @@ class FrmMatrimonioLegalizacion extends Component {
                                                                         name="per_Id_Persona_Hombre"
                                                                         onChange={this.onChange}
                                                                         value={this.state.matLegal.per_Id_Persona_Hombre}
+                                                                        invalid={this.state.perIdPersonaHombreInvalid}
                                                                     >
                                                                         <option value="0">Seleccionar hombre</option>
                                                                         {
@@ -483,6 +550,7 @@ class FrmMatrimonioLegalizacion extends Component {
                                                                             })
                                                                         }
                                                                     </Input>
+                                                                    <FormFeedback>Debe seleccionar el contrayente hombre.</FormFeedback>
                                                                 </Col>
                                                             </Row>
                                                         </FormGroup>
@@ -499,7 +567,9 @@ class FrmMatrimonioLegalizacion extends Component {
                                                                         type="text"
                                                                         onChange={this.onChange}
                                                                         value={this.state.matLegal.mat_Nombre_Contrayente_Hombre_Foraneo}
+                                                                        invalid={this.state.matNombreContrayenteHombreForaneoInvalid}
                                                                     />
+                                                                    <FormFeedback>Este campo no puede quedar vacio.</FormFeedback>
                                                                 </Col>
                                                             </Row>
                                                         </FormGroup>
@@ -540,6 +610,7 @@ class FrmMatrimonioLegalizacion extends Component {
                                                                         name="per_Id_Persona_Mujer"
                                                                         onChange={this.onChange}
                                                                         value={this.state.matLegal.per_Id_Persona_Mujer}
+                                                                        invalid={this.state.perIdPersonaMujerInvalid}
                                                                     >
                                                                         <option value="0">Seleccionar mujer</option>
                                                                         {
@@ -550,6 +621,7 @@ class FrmMatrimonioLegalizacion extends Component {
                                                                             })
                                                                         }
                                                                     </Input>
+                                                                    <FormFeedback>Debe seleccionar la contrayente mujer.</FormFeedback>
                                                                 </Col>
                                                             </Row>
                                                         </FormGroup>
@@ -567,7 +639,9 @@ class FrmMatrimonioLegalizacion extends Component {
                                                                         onChange={this.onChange}
                                                                         type="text"
                                                                         value={this.state.matLegal.mat_Nombre_Contrayente_Mujer_Foraneo}
+                                                                        invalid={this.state.matNombreContrayenteMujerForaneoInvalid}
                                                                     />
+                                                                    <FormFeedback>Este campo no puede quedar vacio.</FormFeedback>
                                                                 </Col>
                                                             </Row>
                                                         </FormGroup>
@@ -647,9 +721,10 @@ class FrmMatrimonioLegalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Eclesiastica}
+                                                    invalid={this.state.matFechaBodaEclesiasticaInvalid}
                                                 />
                                                 <Label><strong>Fecha Boda Eclesiastica: </strong></Label>
-                                                <FormFeedback></FormFeedback>
+                                                <FormFeedback>Debe seleccionar una fecha para continuar.</FormFeedback>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -661,6 +736,8 @@ class FrmMatrimonioLegalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="number"
                                                     value={this.state.matLegal.mat_Cantidad_Hijos}
+                                                    min="0"
+                                                    max="25"
                                                 />
                                                 <Label><strong>Cantidad Hijos: </strong></Label>
                                                 <FormFeedback></FormFeedback>
@@ -708,6 +785,8 @@ class FrmMatrimonioLegalizacion extends Component {
                                             onChangeDomicilio={this.handleChangeDomicilio}
                                             handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
                                             hogar={this.state.hogar}
+                                            handleChangeEstado={this.handleChangeEstado}
+                                            boolNvoEstado={this.state.boolNvoEstado}
                                         />
                                     }
                                 </CardBody>
@@ -735,7 +814,7 @@ class FrmMatrimonioLegalizacion extends Component {
                         {this.state.mensajeDelProceso}
                     </ModalBody>
                 </Modal>
-            </Container>
+            </Container >
         )
     }
 }
