@@ -108,7 +108,7 @@ class SidebarObispo extends Component {
 
                     {/* Nav Item - Reportes Collapse Menu */}
                     <li className="nav-item">
-                        <Link className="nav-link" to="#"
+                        <Link className="nav-link" to="/ResumenMembresia"
                             onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Membresía Actual")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Reporte de Membresía Actual</span>

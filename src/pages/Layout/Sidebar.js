@@ -779,7 +779,7 @@ class Sidebar extends Component {
                                     <Row>
                                         <Col xs="12">
                                             <Alert color="warning">
-                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                                <strong>AVISO: </strong>Esta Transacción permite que una persona inactiva de este Sector, sea vista por algun otro Distrito que quiere darla de Alta.
                                             </Alert>
                                         </Col>
                                     </Row>

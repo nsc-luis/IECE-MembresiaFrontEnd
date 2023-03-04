@@ -20,7 +20,7 @@ class RevinculaDomicilio extends Component {
             MiembrosDelHogar: [],
             JerarquiasDisponibles: [],
             listaPersonas: [],
-            personaSeleccionada: "",
+            personaSeleccionada: "0",
             modalShow: false,
             mensajeDelProceso: "",
             habilitaPerBautizado: true
@@ -53,9 +53,10 @@ class RevinculaDomicilio extends Component {
     }
 
     getPersonasParaCambioDomicilio = async () => {
-        await helpers.authAxios.get(`${helpers.url_api}/Persona/GetBautizadosBySector/${localStorage.getItem("sector")}`)
+        await helpers.authAxios.get(`${helpers.url_api}/Persona/GetBySector/${localStorage.getItem("sector")}`)
             .then(res => {
-                this.setState({ listaPersonas: res.data.personas })
+                this.setState({ listaPersonas: res.data.filter((obj)=>{
+                    return obj.persona.per_Activo ==true}) })
             })
     }
 
@@ -253,15 +254,15 @@ class RevinculaDomicilio extends Component {
             <>
                 <Container>
                     <Row>
-                        <Form onSubmit={this.GuardaCambioDomicilio}>
-                            <Card>
+                        <Form onSubmit={this.GuardaCambioDomicilio} style={{width:"80%"}}>
+                            <Card >
                                 <CardHeader>
                                     <FormGroup>
                                         <Row>
-                                            <Col xs="2">
-                                                Persona *:
+                                            <Col xs="4">
+                                                <h4>Persona a Revincular:</h4>
                                             </Col>
-                                            <Col xs="10">
+                                            <Col xs="8">
                                                 <Input
                                                     type="select"
                                                     name="personaSeleccionada"
@@ -270,9 +271,9 @@ class RevinculaDomicilio extends Component {
                                                 >
                                                     <option value="0">Selecciona una Persona</option>
                                                     {
-                                                        this.state.listaPersonas.map((persona) => {
+                                                        this.state.listaPersonas.map((obj) => {
                                                             return (
-                                                                <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
+                                                                <option key={obj.persona.per_Id_Persona} value={obj.persona.per_Id_Persona}>{obj.persona.per_Nombre} {obj.persona.per_Apellido_Paterno} {obj.persona.per_Apellido_Materno}</option>
                                                             )
                                                         })
                                                     }
@@ -281,6 +282,8 @@ class RevinculaDomicilio extends Component {
                                         </Row>
                                     </FormGroup>
                                 </CardHeader>
+                                {this.state.personaSeleccionada !=="0" &&
+                                <>
                                 <CardBody>
                                     <FormGroup>
                                         <Row>
@@ -301,6 +304,7 @@ class RevinculaDomicilio extends Component {
                                         </Row>
                                     </FormGroup>
                                 </CardBody>
+
                                 <CardFooter>
                                     <Link
                                         to="/ListaDePersonal"
@@ -318,6 +322,8 @@ class RevinculaDomicilio extends Component {
                                         Guardar
                                     </Button>
                                 </CardFooter>
+                                </>
+                                }
                             </Card>
                         </Form>
                     </Row>

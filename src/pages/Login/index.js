@@ -148,7 +148,7 @@ class Login extends Component {
                                             <ul>
                                                 <li>Para <strong>Sesión Obispo</strong>: deberá seleccionar solo el Distrito con el que trabajará. No seleccione Sector.
                                                     <ul>
-                                                        <li>No podrá realizar ningún tipo de movimiento estadístico. Solo consultar información del Distrito y Sectores que lo compoenen.</li>
+                                                        <li>No podrá realizar ningún tipo de movimiento estadístico. Solo consultar información del Distrito y Sectores que lo componen.</li>
                                                     </ul>
                                                 </li>
                                                 <li>Para <strong>Sesión Pastor</strong>: deberá seleccionar el Distrito y el Sector con el que trabajará.

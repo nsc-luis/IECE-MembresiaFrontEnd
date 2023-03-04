@@ -18,7 +18,7 @@ class EdicionDeDireccion extends Component {
             domicilio: {},
             listaDomicilios: [],
             hogarSeleccionado: "0",
-            boolHabilitaEdicion: true,
+            boolHabilitaEdicion: false,
             modalShow: false,
             mensajeDelProceso: "",
         }
@@ -60,13 +60,16 @@ class EdicionDeDireccion extends Component {
             let seleccion = this.state.listaDomicilios.filter((obj) => {
                 return obj.hd_Id_Hogar === parseInt(e.target.value)
             })
+            console.log("seleccion inicial:", seleccion);
             seleccion[0].usu_Id_Usuario = this.infoSesion.pem_Id_Ministro
+            console.log("seleccion final:", seleccion);
             this.setState({ domicilio: seleccion[0] })
+            
         }
         else {
             this.setState({
                 ...this.state.domicilio,
-                domicilio: {
+                domicilio: { 
                     hd_Id_Hogar: 0,
                     hd_Calle: "",
                     hd_Numero_Exterior: "",
@@ -239,14 +242,14 @@ class EdicionDeDireccion extends Component {
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>
-                                            <h3>Selecciona un hogar/domicilio para editar </h3>
+                                            <h3>Selecciona el Titular del Hogar/Domicilio a editar </h3>
                                         </CardTitle>
                                     </CardHeader>
                                     <CardBody>
                                         <FormGroup>
                                             <Row>
                                                 <Col xs="2">
-                                                    <Label>Titular</Label>
+                                                    <Label><h3>Titular:</h3></Label>
                                                 </Col>
                                                 <Col xs="10">
                                                     <Input
@@ -383,7 +386,7 @@ class EdicionDeDireccion extends Component {
                                                             />
                                                             <Label>Telefono</Label>
                                                         </Col>
-                                                        <Col xs="4">
+                                                        {/* <Col xs="4">
                                                             <Input
                                                                 type="text"
                                                                 name="hd_Activo"
@@ -391,7 +394,7 @@ class EdicionDeDireccion extends Component {
                                                                 readOnly={true}
                                                             />
                                                             <Label>Activo</Label>
-                                                        </Col>
+                                                        </Col> */}
                                                     </Row>
                                                 </FormGroup>
                                             </React.Fragment>
@@ -399,7 +402,7 @@ class EdicionDeDireccion extends Component {
                                     </CardBody>
                                     {this.state.hogarSeleccionado !== "0" &&
                                         <React.Fragment>
-                                            {this.state.boolHabilitaEdicion &&
+                                            {/* {this.state.boolHabilitaEdicion &&
                                                 <CardFooter>
                                                     <Button
                                                         type="button"
@@ -410,7 +413,7 @@ class EdicionDeDireccion extends Component {
                                                         Editar
                                                     </Button>
                                                 </CardFooter>
-                                            }
+                                            } */}
                                             {!this.state.boolHabilitaEdicion &&
                                                 <CardFooter>
                                                     <Button
