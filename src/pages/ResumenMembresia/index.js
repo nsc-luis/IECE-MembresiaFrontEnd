@@ -182,7 +182,7 @@ class ResumenMembresia extends Component {
             doc.rect(10, line-4, 190, 6, "F");
 
             doc.setFont("", "", "bold");
-            doc.text("MEMBRESIA BAUTIZADA", 15, line);
+            doc.text("MEMBRESÍA BAUTIZADA", 15, line);
             doc.text(`${this.state.resumenDeMembresia.totalBautizados}`, 80, line);
 
             line=line+10;
@@ -206,7 +206,7 @@ class ResumenMembresia extends Component {
             doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
             doc.rect(10, line-4, 190, 6, "F");
             doc.setFont("", "", "bold");
-            doc.text("MEMBRESIA NO BAUTIZADA", 15, line);
+            doc.text("MEMBRESÍA NO BAUTIZADA", 15, line);
             doc.text(`${this.state.resumenDeMembresia.totalNoBautizados}`, 80, line);
 
 
@@ -264,7 +264,8 @@ class ResumenMembresia extends Component {
 
     render() {
         return (
-            <>                <Container>
+            <>                
+            <Container>
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>
@@ -364,7 +365,7 @@ class ResumenMembresia extends Component {
                     <FormGroup>
                         <Row>
                             <Col xs="12" className='negrita totalesTitulos'>
-                                Número completo de personal que integra la Iglesia: {this.state.resumenDeMembresia.totalDeMiembros}
+                                Número completo de personal que integra la Iglesia: <u>  {this.state.resumenDeMembresia.totalDeMiembros}  </u>
                             </Col>
                         </Row>
                     </FormGroup>

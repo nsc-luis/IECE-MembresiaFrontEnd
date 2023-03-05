@@ -275,18 +275,20 @@ export default function ReportePersonalNoBautizado(){
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
                         <h4 className="text-center m-4">a {moment().format('LL')}</h4>
                         <Row className="text-center mt-5">
-                            <Col>
+                        <Col xs="1"></Col>
+                            <Col xs="4">
                                 {/* <h5 style={{height: "1.2em"}}></h5> */}
                                 <h5>{`${infoSecretario}`}</h5>
                                 <hr color="black"></hr>
                                 <h5>Secretario</h5>
                             </Col>
                             <Col cols="2"></Col>
-                            <Col>
+                            <Col xs="4">
                                 <h5>{JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}</h5>
                                 <hr color="black"></hr>
                                 {sector ? <h5>Pastor</h5> : <h5>Obispo</h5>}
-                            </Col>
+                            </Col >
+                            <Col xs="1"></Col>
                         </Row>
                 </CardBody>
                 </Card>

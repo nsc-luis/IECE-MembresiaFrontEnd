@@ -26,6 +26,7 @@ class ListaDePersonal extends Component {
         super(props);
         this.state = {
             personas: [],
+            personasTodas: [],
             status: null,
             sector: {},
             distrito: {},
@@ -52,7 +53,7 @@ class ListaDePersonal extends Component {
             fSector: '0',
             fGrupo: '0',
             fProfesionOficio: '',
-            fActivoComunionVivo: 'todos',
+            fActivoComunionVivo: 'activo',
             habilitaFiltroNombre: '',
             habilitaFiltroCategoria: '',
             habilitaFiltroSector: '',
@@ -71,6 +72,25 @@ class ListaDePersonal extends Component {
         this.getSector();
         this.getDistrito();
         this.getSectoresPorDistrito();
+        
+    }
+
+    getActivos()  {
+        let result = this.state.personasTodas.filter((obj) => {
+            return obj.persona.per_Activo === true;
+        })
+    this.setState({ personas: result })
+    }
+
+    getInactivos()  {
+        let result = this.state.personasTodas.filter((obj) => {
+            return obj.persona.per_Activo === false;
+        })
+    this.setState({ personas: result })
+    }
+
+    getTodos(){
+        this.setState({personas: this.state.personasTodas});
     }
 
     getDomicilio = async(id) => {
@@ -115,20 +135,22 @@ class ListaDePersonal extends Component {
             await helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
-                        personas: res.data,
+                        personasTodas: res.data,
                         status: 'success',
                         tempPersonas: res.data
                     });
+                    this.getActivos();
                 });
         }
         else {
             await helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
-                        personas: res.data,
+                        personasTodas: res.data,
                         status: 'success',
                         tempPersonas: res.data
                     });
+                    this.getActivos();
                 });
         }
     };
@@ -329,31 +351,30 @@ class ListaDePersonal extends Component {
 
     handle_filtroActivoComunionVivo = (e) => {
         this.setState({ fActivoComunionVivo: e.target.value })
-        if (e.target.value !== 'todos') {
-            var result = this.state.personas.filter((obj) => {
-                switch (e.target.value) {
-                    case 'sinComunion':
-                        return obj.persona.per_En_Comunion === false;
-                    case 'inactivo':
-                        return obj.persona.per_Activo === false;
-                    default:
-                        return obj.persona.per_Activo === true;
-                }
-            });
-            this.setState({ personas: result })
-        }
+            switch (e.target.value) {
+                case 'todos':
+                    this.getTodos();
+                    break;
+                case 'inactivo':
+                    this.getInactivos();
+                    break;
+                case 'activo':
+                    this.getActivos();
+                    break;
+            }
         this.setState({ habilitaFiltroActivoComunionVivo: 'disabled' })
     }
 
     handle_BorrarFiltros = () => {
+        this.getActivos();
         this.setState({
-            personas: this.state.tempPersonas,
+            //personas: this.state.tempPersonas,
             fCategoria: '0',
             fNombre: '',
             fGrupo: '0',
             fSector: '0',
             fProfesionOficio: '',
-            fActivoComunionVivo: 'todos',
+            fActivoComunionVivo: 'activo',
             habilitaFiltroCategoria: '',
             habilitaFiltroGrupo: '',
             habilitaFiltroNombre: '',
@@ -660,11 +681,13 @@ class ListaDePersonal extends Component {
                         <Col xs="9">
                             {localStorage.getItem('sector') !== null &&
                                 <p>
-                                    {this.state.sector.sec_Tipo_Sector} {this.state.sector.sec_Numero}: {this.state.sector.sec_Alias}
+                                    <h4>{this.state.sector.sec_Tipo_Sector} {this.state.sector.sec_Numero}: {this.state.sector.sec_Alias}</h4>
                                 </p>
                             }
                             {localStorage.getItem('sector') === null &&
-                                <p> {this.state.distrito.dis_Tipo_Distrito} {this.state.distrito.dis_Numero} ({this.state.distrito.dis_Alias}, {this.state.distrito.dis_Area}) </p>
+                                <p> 
+                                    <h4> {this.state.distrito.dis_Tipo_Distrito} {this.state.distrito.dis_Numero} ({this.state.distrito.dis_Alias}, {this.state.distrito.dis_Area}) </h4>
+                                    </p>
                             }
                         </Col>
                         <Col xs="2">

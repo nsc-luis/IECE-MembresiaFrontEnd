@@ -20,7 +20,7 @@ class RevinculaDomicilio extends Component {
             MiembrosDelHogar: [],
             JerarquiasDisponibles: [],
             listaPersonas: [],
-            personaSeleccionada: "",
+            personaSeleccionada: "0",
             modalShow: false,
             mensajeDelProceso: "",
             habilitaPerBautizado: true
@@ -53,9 +53,10 @@ class RevinculaDomicilio extends Component {
     }
 
     getPersonasParaCambioDomicilio = async () => {
-        await helpers.authAxios.get(`${helpers.url_api}/Persona/GetBautizadosBySector/${localStorage.getItem("sector")}`)
+        await helpers.authAxios.get(`${helpers.url_api}/Persona/GetBySector/${localStorage.getItem("sector")}`)
             .then(res => {
-                this.setState({ listaPersonas: res.data.personas })
+                this.setState({ listaPersonas: res.data.filter((obj)=>{
+                    return obj.persona.per_Activo ==true}) })
             })
     }
 
@@ -253,6 +254,7 @@ class RevinculaDomicilio extends Component {
             <>
                 <Container>
                     <Row>
+
                         <Col xs="12">
                             <Form onSubmit={this.GuardaCambioDomicilio}>
                                 <Card>
@@ -322,6 +324,7 @@ class RevinculaDomicilio extends Component {
                                 </Card>
                             </Form>
                         </Col>
+
                     </Row>
                 </Container>
                 <Modal isOpen={this.state.modalShow}>
