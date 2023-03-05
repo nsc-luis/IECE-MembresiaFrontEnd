@@ -44,7 +44,7 @@ const helpers = {
     // URLs PARA PRUEBA
     url_api: "http://" + window.location.hostname + ":59239/api",
     //url_api: "http://" + window.location.hostname + ":81/webapi/api",
-    //comentario de prueba
+    //comentario de prueba desde master
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
