@@ -4,7 +4,7 @@ import {
     Container, Row, Col, Card, CardHeader,
     CardBody, CardFooter, Form, Input, Label,
     Button, FormFeedback, Table,
-    Modal, ModalFooter, ModalBody, ModalHeader
+    Modal, ModalFooter, ModalBody, ModalHeader, FormGroup
 } from 'reactstrap';
 import axios from 'axios';
 import logo from '../../../assets/images/IECE_LogoOficial.jpg'
@@ -33,6 +33,10 @@ class RptListaDeHogares extends Component {
             infoListaHogares: [],
             listaArreglada:[],
             infoSecretario:{},
+            distrito:{},
+            sectores:[],
+            sectorSeleccionado: localStorage.getItem('sector'),
+            lider: ""
         }
     }
 
@@ -41,8 +45,58 @@ class RptListaDeHogares extends Component {
         this.getInfoDistrito();
         this.getInfoSector();
         this.getListaHogares();
+        this.getDistrito();
+        this.getSectoresPorDistrito();
         }
 
+        getDistrito = async () => {
+            await helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({
+                        distrito: res.data
+                    })
+                });
+        }
+    
+        getSectoresPorDistrito = async () => {
+            if (localStorage.getItem('sector') === null) {
+                await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
+                    .then(res => {
+                        this.setState({
+                            sectores: res.data.sectores
+                        })
+                    });
+                    this.setState ({lider:"OBISPO"})
+                    
+            }
+            else {
+                await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
+                    .then(res => {
+                        this.setState({
+                            sectores: res.data.sector
+                        })
+                    });
+                    this.setState ({lider:"PASTOR"})
+            }
+        }
+
+        handle_sectorSeleccionado = async (e) => {
+            
+            this.setState({ sectorSeleccionado: e.target.value });
+                console.log("Sector: ", e.target.value)
+                await helpers.authAxios.get(this.url + '/HogarDomicilio/getListaHogaresBySector/' + e.target.value)
+                    .then(res => {
+                        // console.log(res.data.value);
+                        this.setState({ infoListaHogares: res.data.listahogares })
+                        console.log("Hogares: ", res.data.listahogares)
+                        this.arreglarLista();
+                        this.getInfoSector();
+                    });
+                    
+            }
+
+
+        
     getPersonas = async() => {
         await helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
@@ -60,12 +114,15 @@ class RptListaDeHogares extends Component {
     }
     
     getListaHogares = async () => {
+        
         await helpers.authAxios.get(this.url + "/HogarDomicilio/getListaHogaresBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ infoListaHogares: res.data.listahogares});
             })
             console.log("Sale de la API: ", this.state.infoListaHogares)
+            this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
             this.arreglarLista();
+            
     }
 
 arreglarLista= () =>{
@@ -108,6 +165,7 @@ this.setState({listaArreglada : data2})
     }
 
     getInfoSector = async () => {
+        if (localStorage.getItem('sector') !==null){
         await helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ infoSector: res.data.sector[0]});
@@ -118,7 +176,21 @@ this.setState({listaArreglada : data2})
                 this.setState({
                     infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
                 });
+            })    
+        } else{
+            await helpers.authAxios.get(this.url + "/sector/" + this.state.sectorSeleccionado)
+            .then(res => {
+                this.setState({ infoSector: res.data.sector[0]});
             })
+        await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem('dto'))
+            .then(res => {
+                this.setState({
+                    infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                });
+            })
+        }
+
+
     }
 
     downloadTable = () => {
@@ -176,7 +248,7 @@ this.setState({listaArreglada : data2})
         } 
 
         
-        yAxis = 35+ this.state.listaArreglada.length * 8 + 5
+        yAxis = 35+ this.state.listaArreglada.length * 8 + 9
 
         doc.text(`JUSTICIA Y VERDAD`, 120, yAxis);
         yAxis += 5;
@@ -187,7 +259,7 @@ this.setState({listaArreglada : data2})
         doc.line(160, yAxis, 220, yAxis);
         yAxis += 3;
         doc.text("SECRETARIO", 85, yAxis);
-        doc.text("PASTOR", 185, yAxis);
+        doc.text(`${this.state.lider}`, 185, yAxis);
         yAxis -= 5;
         doc.text(`${this.state.infoSecretario}`, 70, yAxis);
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 170, yAxis)
@@ -203,14 +275,57 @@ this.setState({listaArreglada : data2})
         if (this.state.listaArreglada.length >= 0) {
             return (
                <>
-                    <Container fluid>
+                <Container fluid>
+                    <FormGroup>
+                        <Row>
+                            <Col xs="5">
+                                <Input
+                                    type="select"
+                                    name="idDistrito"
+                                >
+                                    <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
+                                </Input>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
+                            <Col xs="5">
+                                <Input
+                                    type="select"
+                                    name="sectorSeleccionado"
+                                    value={this.state.sectorSeleccionado}
+                                    onChange={this.handle_sectorSeleccionado}
+                                >
+                                    <option value="0">Selecciona un sector</option>
+                                    
+                                    {this.state.sectores.map(sector => {
+                                        return (
+                                            <React.Fragment key={sector.sec_Id_Sector}>
+                                                <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                            </React.Fragment>
+                                        )
+                                    })}
+                                    {localStorage.getItem('sector') === null &&
+                                        <React.Fragment>
+                                            <option value="todos">TODOS LOS SECTORES</option>
+                                        </React.Fragment>
+                                    }
+                                </Input>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+
+
+
+                 {/* Iniciaba versión anterior */}
                     <Button className="btn-success m-3 " onClick={() => this.downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={() => this.reporteHogaresPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
 
                         <Row>
                             <h1 className="text-info">Listado de hogares</h1>
                         </Row>
-                        {this.state.infoDistrito.dis_Numero && this.state.infoSector.sec_Alias ? 
+                        {this.state.infoDistrito.dis_Numero || this.state.infoSector.sec_Alias ? 
                             <Row>
                                 <strong>DISTRITO:</strong> &nbsp;  {this.state.infoDistrito.dis_Numero}, {this.state.infoDistrito.dis_Alias}, &nbsp; <strong>Sector:</strong>&nbsp; {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
                             </Row> : null

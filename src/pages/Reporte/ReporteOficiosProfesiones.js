@@ -21,6 +21,8 @@ export default function ReporteOficiosProfesiones(){
     const [infoSec, setInfoSec] = useState(null)
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
+    const [infoSecretario, setInfoSecretario] = useState(null)
+    
     //Llamadas en render
     useEffect(() => {
         if(sector == null){
@@ -31,6 +33,10 @@ export default function ReporteOficiosProfesiones(){
                 helpers.authAxios.get("/Distrito/" + dto)
                 .then(res => {
                     setInfoDis(res.data.dis_Alias)
+                })
+                helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+                .then(res => {
+                    setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
         }else{
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
@@ -45,6 +51,10 @@ export default function ReporteOficiosProfesiones(){
             helpers.authAxios.get("/Sector/" + sector)
             .then(res => {
                 setInfoSec(res.data.sector[0].sec_Alias)
+            })
+            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            .then(res => {
+                setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
             })
         }
     }, [personas.length])
@@ -77,20 +87,18 @@ export default function ReporteOficiosProfesiones(){
         const doc = new jsPDF("p", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("LISTA PROFESIONES Y OFICIOS", 85, 10);
-        doc.setFontSize(8);
-        
+        doc.text("LISTA PROFESIONES Y OFICIOS", 135, 10, {align:"center"});
+        doc.setFontSize(10);
         
         if (sector) {
-            doc.text(`SECTOR: ${JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}`, 85, 20);
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 25);
+            doc.text(`${infoSec}`, 135, 18, {align:"center"});
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
-            doc.text(`DISTRITO: ${JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}`, 85, 25)
+            doc.text(`${infoDis}`, 135, 18, {align:"center"})
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
-        
-        
+        doc.setFontSize(8);
         const headers = [
             'Indice',
             'Nombre',
@@ -104,48 +112,17 @@ export default function ReporteOficiosProfesiones(){
             Indice: String(index+1),
             Nombre: persona.persona.per_Nombre + ' ' + persona.persona.per_Apellido_Paterno + ' ' + persona.persona.per_Apellido_Materno,
             Grupo: persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
-            Profesion_Oficio_1: String(persona.persona.profesionOficio1[0].pro_Sub_Categoria),
-            Profesion_Oficio_2: String(persona.persona.profesionOficio2[0].pro_Sub_Categoria),
-            Tel_Celular: String(persona.persona.per_Telefono_Movil ? persona.persona.per_Telefono_Movil : 'n/a'),
-            Email: String(persona.persona.per_Email_Personal)
+            Profesion_Oficio_1: String(persona.persona.profesionOficio1[0].pro_Sub_Categoria!='OTRO'?persona.persona.profesionOficio1[0].pro_Sub_Categoria:'-'),
+            Profesion_Oficio_2: String(persona.persona.profesionOficio2[0].pro_Sub_Categoria!='OTRO'?persona.persona.profesionOficio2[0].pro_Sub_Categoria:'-'),
+            Tel_Celular: String(persona.persona.per_Telefono_Movil ? persona.persona.per_Telefono_Movil : '-'),
+            Email: String(persona.persona.per_Email_Personal?persona.persona.per_Email_Personal:'-')
         }))
-        doc.table(10, 35, data, headers, {autoSize:true, fontSize: 6, padding:1})
-        // doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-        // doc.rect(10, yAxis, 190, 4, "F");
-        // doc.setFont("", "", "bold");
-        // yAxis += 3;
-        // doc.text("Indice", 11, yAxis);
-        // doc.text("Nombre Completo", 20, yAxis);
-        // doc.text("Grupo", 60, yAxis);
-        // doc.text("Profesión/Oficio 1", 80, yAxis);
-        // doc.text("Profesión/Oficio 2", 110, yAxis);
-        // doc.text("Teléfono Movil", 140, yAxis);
-        // doc.text("E-mail", 170, yAxis);
-        // yAxis += 7;
-        // doc.setFontSize(6);
-        // personas.map((persona) => {
-        //     doc.text(`${index}`, 13, yAxis);
-        //     doc.text(`${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-        //     doc.text(`${persona.persona.per_Bautizado ? 'Bautizado' : 'No Bautizado'}`, 60, yAxis);
-        //     doc.text(`${persona.persona.profesionOficio1[0].pro_Sub_Categoria}`, 80, yAxis);
-        //     doc.text(`${persona.persona.profesionOficio2[0].pro_Sub_Categoria}`, 110, yAxis);
-        //     doc.text(`${persona.persona.per_Telefono_Movil}`, 140, yAxis);
-        //     doc.text(`${persona.persona.per_Email_Personal}`, 170, yAxis);
-        //     yAxis+=5;
-        //     index++;
-            
-        // })
+        doc.table(10, 35, data, headers, {autoSize:true, fontSize: 6.5, padding:1})
 
-        // yAxis += 2;
-        // doc.rect(75, yAxis, 15, 4);
-        // yAxis += 3;
-        // doc.text("TOTAL DE PERSONAL BAUTIZADO:", 20, yAxis);
-        // doc.text(`${totalCount}`, 80, yAxis);
-
-        let yAxis = 160
+        let yAxis = 35+ data.length * 7 + 5
         doc.setFontSize(8);
 
-        yAxis += 20;
+        //yAxis += 20;
         doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
         yAxis += 5;
         doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, yAxis);
@@ -157,6 +134,7 @@ export default function ReporteOficiosProfesiones(){
         doc.text("SECRETARIO", 51, yAxis);
         doc.text("PASTOR", 145, yAxis);
         yAxis -= 5;
+        doc.text(`${infoSecretario}`, 40, yAxis);
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
 
 
@@ -180,7 +158,10 @@ export default function ReporteOficiosProfesiones(){
                         {/* <h5>Distrito: {infoDis}</h5> */}
 
                         <div></div>
-                        {sector ? <h5>{infoSec}</h5> : null}
+                        <div></div>
+                    {sector?(sector ? <h5>{infoSec}</h5> : null):(dto ? <h5>{infoDis}</h5> : null)}
+
+                    {/* {sector ? <h5>{infoSec}</h5> : null} */}
                         
                     </Col>
                 </Row>

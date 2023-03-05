@@ -71,8 +71,8 @@ class SolicitudDeRestablecimiento extends Component {
                                             <Col sm='8'>
                                                 <Alert color='warning'>
                                                     Los campos marcados con * son requeridos. <br />
-                                                    Ingrese el correo al cual desea cambiar la contraseña. <br />
-                                                    Si el correo esta registrado recibira un e-mail con intrucciones para restablecer la contraseña.
+                                                    Ingrese la cuenta de correo a la cual desea cambiar la contraseña. <br />
+                                                    Si el correo esta registrado recibirá un e-mail con intrucciones para restablecer la contraseña.
                                                 </Alert>
                                             </Col>
                                             <Col sm='2'></Col>
@@ -136,8 +136,8 @@ class SolicitudDeRestablecimiento extends Component {
                                             <Col sm='1'></Col>
                                             <Col sm='10'>
                                                 Revise la "Bandeja de entrada" en la cuenta de correo: {this.state.correo} <br />
-                                                Si no llega el correo en la "Bandeja de entrada" busca por favor en la carpeta de SPAM / BULK (No deseados). <br />
-                                                Sigue las instrucciones del correo enviado para restablecer la contraseña.
+                                                Si no encuentra el correo en la "Bandeja de entrada" busque por favor en la carpeta de SPAM / BULK (No deseados). <br />
+                                                Siga las instrucciones del correo enviado para restablecer la contraseña.
                                             </Col>
                                             <Col sm='1'></Col>
                                         </Row>
