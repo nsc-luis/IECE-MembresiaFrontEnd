@@ -5,7 +5,6 @@ import {
     Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
-import PersonaForm from '../Persona/PersonaForm';
 import './style.css'
 
 class Sidebar extends Component {
@@ -499,39 +498,43 @@ class Sidebar extends Component {
                         <div id="collapseReportes" className="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Seleccione un reporte:</h6>
-                                <Link className="collapse-item text-wrap" 
+                                <Link className="collapse-item text-wrap"
                                     to="/ResumenMembresia"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Membresía Actual")}
-                                    >Reporte de Membresía Actual
+                                >Reporte de Membresía Actual
                                 </Link>
-                                <Link className="collapse-item text-wrap" 
-                                      to="/ReportePersonalBautizado"
-                                      onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Bautizado")}
-                                      >Lista de Personal Bautizado</Link>
-                                <Link className="collapse-item text-wrap" 
-                                        to="/ReportePersonalNoBautizado"
-                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal No Bautizado")}
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReportePersonalBautizado"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Bautizado")}
+                                >Lista de Personal Bautizado</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReportePersonalNoBautizado"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal No Bautizado")}
                                 >Lista de Personal No Bautizado</Link>
-                                <Link className="collapse-item text-wrap" 
-                                        to="/RptListaDeHogares"
-                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de hogares")}
-                                        >Lista de hogares</Link>
-                                <Link className="collapse-item text-wrap" 
-                                        to="/ReporteOficiosProfesiones"
-                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Profesiones/Oficios")}
-                                        >Lista por Profesiones/Oficios</Link>
-                                <Link className="collapse-item text-wrap" 
-                                        to="/ReporteCumpleaños"
-                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Fecha de Cumpleaños")}
-                                        >Lista por Fecha de Cumpleaños</Link>
-                                <Link className="collapse-item text-wrap" 
-                                        to="/ReporteMovimientoEstadistico"
-                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}
-                                        >Reporte de Movimientos Estadísticos</Link>
-                                <Link className="collapse-item text-wrap" 
-                                        to="/ReporteTransacciones"
-                                        onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}
-                                        >Reporte de Transacciones</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/RptListaDeHogares"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de hogares")}
+                                >Lista de hogares</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteOficiosProfesiones"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Profesiones/Oficios")}
+                                >Lista por Profesiones/Oficios</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteCumpleaños"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Fecha de Cumpleaños")}
+                                >Lista por Fecha de Cumpleaños</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteMovimientoEstadistico"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}
+                                >Reporte de Movimientos Estadísticos</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteTransacciones"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}
+                                >Reporte de Transacciones</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteTransaccionesVictor"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de TransaccionesVictor")}
+                                >Reporte de TransaccionesVictor</Link>
                             </div>
                         </div>
                     </li>

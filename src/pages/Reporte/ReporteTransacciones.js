@@ -1,537 +1,713 @@
-import Layout from "../Layout";
+import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
-    Container, Button,Input,
-     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+    Container, Button, Input,
+    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback
 } from 'reactstrap';
-
-import React, { Fragment, useEffect, useState, } from 'react';
-import TableToExcel from "@linways/table-to-excel";
-import jsPDF from 'jspdf';
-import Moment from "react-moment";
-import moment from 'moment/min/moment-with-locales';
-import 'moment/dist/locale/es'
+import moment from 'moment';
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
-
-export default function ReporteMovimientoEstadistico(){
-    //Estados
-
-    const [infoDis, setInfoDis] = useState(null)
-    const [infoSec, setInfoSec] = useState(null)
-
-    const [loading, setLoading] = useState(true)
-
-    const[startDate, setStartDate] = useState(moment().startOf('month').format("YYYY-MM-DD"))
-    const[endDate, setEndDate] = useState(moment().endOf('month').format("YYYY-MM-DD"))
-
-    const dto = JSON.parse(localStorage.getItem("dto"))
-    const sector = JSON.parse(localStorage.getItem("sector"))
-
-    const [bautismos, setBautismos] = useState(null)
-    const [restituciones, setRestituciones] = useState(null)
-    const [altasCambioDom, setAltasCambioDom] = useState(null)
-    const [defunciones, setDefunciones] = useState(null)
-    const [excomunionesTemp, setExcomunionesTemp] = useState(null)
-    const [excomuniones, setExcomuniones] = useState(null)
-    const [bajasCambioDom, setBajasCambiosDom] = useState(null)
-    const [actualizacionB, setActualizacionB] = useState(null)
-    const [nuevoIngreso, setNuevoIngreso] = useState(null)
-    const [altasCambioDomNB, setAltasCambioDomNB] = useState(null)
-    const [reactivaciones, setReactivaciones] = useState(null)
-    const [defuncionesNB, setDefuncionesNB] = useState(null)
-    const [alejamientos, setAlejamientos] = useState(null)
-    const [bajasCambioDomNB, setBajasCambioDomNB] = useState(null)
-    const [cambiosABautizado, setCambiosABautizado] = useState(null)
-    const [bajasPorPadres, setBajasPorPadres] = useState(null)
-    const [actualizacionNB, setActualizacionNB] = useState(null)
-    const [matrimonios, setMatrimonios] = useState(null)
-    const [legalizaciones, setLegalizaciones] = useState(null)
-    const [presentacionesNiños, setPresentacionesNiños] = useState(null)
-    const [altasHogares, setAltasHogares] = useState(null)
-    const [bajasHogares, setBajasHogares] = useState(null)
-    const [actualizacionHogar, setActualizacionHogar] = useState(null)
-
-
-
-    //Llamadas en render
-    useEffect( () => {
-         loadData()
-         calculateLastMont()
-    }, [])
-
-    const calculateLastMont = async () =>{
-        const params = {
-            fechaInicial: moment().subtract(1,'month').startOf('month').format("YYYY-MM-DD"),
-            fechaFinal: moment().subtract(1,'month').endOf('month').format("YYYY-MM-DD"),
-        }
-        console.log(params);
-        if(sector == null){
-            params.idSectorDistrito = dto
-            const res = await helpers.authAxios.get("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
-            
-            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
-            setInfoDis(resDto.data.dis_Alias)
-        }else{
-            params.idSectorDistrito = sector
-            const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
-            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
-            setInfoDis(resDto.data.dis_Alias)
-            const resSec = await helpers.authAxios.get("/Sector/" + sector)
-            setInfoSec(resSec.data.sector[0].sec_Alias)
-        }
-    }
-    const loadData = async () =>{
-        const params = {
-            fechaInicial: startDate,
-            fechaFinal: endDate,
-        }
-        if(sector == null){
-            params.idSectorDistrito = dto
-            const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
-            orderData(res.data.datos)
-            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
-            setInfoDis(resDto.data.dis_Alias)
-        }else{
-            params.idSectorDistrito = sector
-            const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
-            console.log(res.data)
-            orderData(res.data.datos)
-            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
-            setInfoDis(resDto.data.dis_Alias)
-            const resSec = await helpers.authAxios.get("/Sector/" + sector)
-            setInfoSec(resSec.data.sector[0].sec_Alias)
-        }
-    }
-
-    const orderData = (trans) => {
-        setBautismos(trans.filter(t => t.ct_Codigo_Transaccion == 11001))
-        setRestituciones(trans.filter(t => t.ct_Codigo_Transaccion == 11002))
-        setAltasCambioDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 11003 || t.ct_Codigo_Transaccion == 11004 : t.ct_Codigo_Transaccion == 11004 ))
-        setDefunciones(trans.filter(t => t.ct_Codigo_Transaccion == 11101))
-        setExcomunionesTemp(trans.filter(t => t.ct_Codigo_Transaccion == 11102))
-        setExcomuniones(trans.filter(t => t.ct_Codigo_Transaccion == 11103))
-        setBajasCambiosDom(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 11104 || t.ct_Codigo_Transaccion == 11105 : t.ct_Codigo_Transaccion == 11105))
-        setActualizacionB(trans.filter(t => t.ct_Codigo_Transaccion == 11201))
-        setNuevoIngreso(trans.filter(t => t.ct_Codigo_Transaccion == 12001))
-        setAltasCambioDomNB(trans.filter(t => sector ? t.ct_Codigo_Transaccion == 12002 || t.ct_Codigo_Transaccion == 12003 : t.ct_Codigo_Transaccion == 12003))
-        setReactivaciones(trans.filter(t => t.ct_Codigo_Transaccion == 12004))
-        setDefuncionesNB(trans.filter(t => t.ct_Codigo_Transaccion == 12101))
-        setAlejamientos(trans.filter(t => t.ct_Codigo_Transaccion == 12102))
-        setBajasCambioDomNB(trans.filter(t => sector ?  t.ct_Codigo_Transaccion == 12103 || t.ct_Codigo_Transaccion == 12104 : t.ct_Codigo_Transaccion == 12104))
-        setCambiosABautizado(trans.filter(t => t.ct_Codigo_Transaccion == 12105))
-        setBajasPorPadres(trans.filter(t => t.ct_Codigo_Transaccion == 12106))
-        setActualizacionNB(trans.filter(t => t.ct_Codigo_Transaccion == 12201))
-        setMatrimonios(trans.filter(t => t.ct_Codigo_Transaccion == 21001))
-        setLegalizaciones(trans.filter(t => t.ct_Codigo_Transaccion == 21102))
-        setPresentacionesNiños(trans.filter(t => t.ct_Codigo_Transaccion == 23203))
-        setAltasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31001))
-        setBajasHogares(trans.filter(t => t.ct_Codigo_Transaccion == 31102))
-        setActualizacionHogar(trans.filter(t => t.ct_Codigo_Transaccion == 31203))
-
-
-        setLoading(false)
-
-    }
-
-    const downloadTable = () =>{
-        TableToExcel.convert(document.getElementById("table1"), {
-            name: "Reporte_Transacciones.xlsx",
-            sheet: {
-              name: "Hoja 1"
-            }
-          });
-    }
-
-    const handleStartDate = (e) =>{
-        setStartDate(moment(e.value).format("YYYY-MM-DD"))
-    }
-    const handleEndDate = (e) =>{
-        setEndDate(moment(e.value).format("YYYY-MM-DD"))
-    }
-
-
-    // const handleDownloadPDF = () =>{
-    //     // INSTANCIA NUEVO OBJETO PARA CREAR PDF
-    //     const doc = new jsPDF("p", "mm", "letter");
-    //     let yAxis = 35;
-    //     const headers = [
-    //         'Indice',
-    //         'Nombre',
-    //         'Movimiento',
-    //         'Comentario',
-    //         'Fecha'
-    //     ]
-    //     const customTable = (data, label) =>{
-    //         if(yAxis > 240){
-    //             doc.addPage()
-    //             yAxis = 5
-    //         }
-    //         if(data.length > 0){
-    //             yAxis += 3;
-    //             doc.setFillColor(245, 247, 121) // Codigos de color RGB (red, green, blue)
-    //             doc.rect(10, yAxis, 190, 4, "F");
-    //             doc.setFont("", "", "bold");
-    //             yAxis += 3;
-    //             doc.text(label, 15, yAxis);
-
-    //             yAxis += 3;
-    //             data = data.map((persona,index) => ({
-    //                 Indice: (index+1).toString(),
-    //                 Nombre: persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno,
-    //                 Movimiento: persona.ct_Tipo,
-    //                 Comentario: persona.hte_Comentario.trim() === "" ? "N/A" : persona.hte_Comentario.trim(),
-    //                 Fecha: (moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")).toString(),
-    //             }))
-    //             doc.table(10, yAxis, data, headers, {autoSize: true, fontSize: 8, padding: 1})
-    //             yAxis+= data.length * 12
-    //             console.log(yAxis);
-    //         }
-    //     }
-
-    //     doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-    //     doc.text("REPORTE DE MOVIMIENTO ESTADISTICO", 85, 10);
-    //     doc.setFontSize(8);
-    //     doc.text(`DISTRITO: ${infoDis}`, 85, 15)
-
-    //     if (sector) {
-    //         doc.text(`SECTOR: ${infoSec}`, 85, 20);
-    //         doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 25);
-    //     }
-    //     else {
-    //         doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, 20);
-    //     }
-
-    //     if(actualizacionB.length > 0 || bautismos.length > 0 || restituciones.length > 0 || altasCambioDom.length > 0
-    //     || bajasCambioDom.length > 0 ||  defunciones.length > 0 || excomunionesTemp.length > 0 || excomuniones.length > 0){
-    //         doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-    //         doc.rect(10, yAxis, 190, 4, "F");
-    //         doc.setFont("", "", "bold");
-    //         yAxis += 3;
-    //         doc.text("MEMBRESIA BAUTIZADA", 15, yAxis);
-    //     }
-
-    //     customTable(actualizacionB, "Actualizaciones")
-    //     customTable(bautismos, "Bautismos")
-    //     customTable(restituciones, "Restituciones")
-    //     customTable(altasCambioDom, "Altas Cambio de Domicilio")
-    //     customTable(bajasCambioDom, "Bajas Cambio de Domicilio")
-    //     customTable(defunciones, "Defunciones")
-    //     customTable(excomunionesTemp, "Excomuniones Temporales")
-    //     customTable(excomuniones, "Excomuniones")
-
-    //     if(altasHogares.length > 0 || bajasHogares.length > 0 || actualizacionHogar.length > 0){
-    //         doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-    //         doc.rect(10, yAxis, 190, 4, "F");
-    //         doc.setFont("", "", "bold");
-    //         yAxis += 3;
-    //         doc.text("HOGARES", 15, yAxis);
-    //     }
-
-    //     customTable(altasHogares, "Altas de Hogares")
-    //     customTable(bajasHogares, "Bajas de Hogares")
-    //     customTable(actualizacionHogar, "Actualización de Hogares")
-
-    //     if(actualizacionNB.length > 0 || nuevoIngreso.length > 0 || altasCambioDomNB.length > 0 || reactivaciones.length > 0
-    //     || bajasCambioDomNB.length > 0 ||  defuncionesNB.length > 0 || alejamientos.length > 0 || cambiosABautizado.length > 0
-    //     || bajasPorPadres.length > 0){
-    //         doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-    //         doc.rect(10, yAxis, 190, 4, "F");
-    //         doc.setFont("", "", "bold");
-    //         yAxis += 3;
-    //         console.log(yAxis);
-    //         doc.text("MEMBRESIA NO BAUTIZADA", 15, yAxis);
-    //     }
-
-    //     customTable(actualizacionNB, "Actualización No Bautizado")
-    //     customTable(nuevoIngreso, "Nuevo Ingreso")
-    //     customTable(altasCambioDomNB, "Altas Cambio de Domicilio No Bautizado")
-    //     customTable(reactivaciones, "Reactivaciones")
-    //     customTable(bajasCambioDomNB, "Bajas Cambio de Domicilio No Bautizado")
-    //     customTable(defuncionesNB, "Defunciones No Bautizado")
-    //     customTable(alejamientos, "Alejamientos")
-    //     customTable(cambiosABautizado, "Cambios a Bautizado")
-    //     customTable(bajasPorPadres, "Baja por Padres")
-
-    //     if(matrimonios.length > 0 || legalizaciones.length > 0 || presentacionesNiños.length > 0){
-    //         doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
-    //         doc.rect(10, yAxis, 190, 4, "F");
-    //         doc.setFont("", "", "bold");
-    //         yAxis += 3;
-    //         doc.text("SUCESOS", 15, yAxis);
-    //     }
-
-    //     customTable(matrimonios, "Matrimonios")
-    //     customTable(legalizaciones, "Legalizaciones")
-    //     customTable(presentacionesNiños, "Presentaciones de Niños")
-
-
-    //     if(yAxis > 240){
-    //         doc.addPage()
-    //         yAxis = 5
-    //     }
-
-    //     doc.setFontSize(8);
-    //     yAxis += 20;
-    //     doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
-    //     yAxis += 5;
-    //     doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, yAxis);
-
-    //     yAxis += 35;
-    //     doc.line(30, yAxis, 90, yAxis);
-    //     doc.line(120, yAxis, 180, yAxis);
-    //     yAxis += 3;
-    //     doc.text("SECRETARIO", 51, yAxis);
-    //     doc.text("PASTOR", 145, yAxis);
-    //     yAxis -= 5;
-    //     doc.setFont("", "", "bold");
-    //     doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
-
-
-    //     doc.save("ReporteMovimientoEstadistico.pdf");
-    // }
-
-
-    // const TableRow = (props) => {
-    //     const data = props.data
-    //     const label = props.label
-    //     const total = props.total
-
-    //     if(data.length > 0){
-    //         return(
-    //             <Fragment>
-    //                 <tr>
-    //                     <th>{label}</th>
-    //                 </tr>
-    //                 {data.map((persona, index) => (
-    //                     <tr>
-    //                         <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-    //                         <td>{persona.ct_Tipo}</td>
-    //                         <td>{persona.hte_Comentario}</td>
-    //                         <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
-    //                     </tr>
-    //                 )) }
-    //                 <tr>
-    //                     <th className="text-right" colSpan="4">Total por {label}: {total} </th>
-    //                 </tr>
-    //             </Fragment>
-    //         )
-    //     }else{
-    //         return ""
-    //     }
-
-    // }
-    return(
-        <>
-            <Container fluid>
-                <Button className="btn-success m-3 " onClick={downloadTable}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
-                {/* <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button> */}
-                {/* TABLA */}
-                <Card body id="pdf">
-                <CardTitle className="text-center" tag="h3">
-                {!loading ?
-                <Row>
-                    <Col lg="3">
-                        <img src={logo} width="100%"></img>
-                    </Col>
-                    <Col>
-                        REPORTE DE TRANSACCIONES
-                        <h5>Distrito: {infoDis}</h5>
-                        {sector ? <h5>Sector: {infoSec}</h5> : null}
-                    </Col>
-                </Row>
-                : ""
-                }
-                </CardTitle>
-                {!loading ?
-                    <CardBody>
-                    <Row className="m-3 justify-content-center">
-                            <Col lg="1" className="text-center">
-                                <h3>De</h3>
-                            </Col>
-                            <Col lg="2" className="text-center">
-                                <Input type="date" value={startDate} onInput={(e) => handleStartDate(e.target)}></Input>
-                            </Col>
-                            <Col lg="1" className="text-center">
-                                <h3>al</h3>
-                            </Col>
-                            <Col lg="2" className="text-center">
-                                <Input type="date" value={endDate} onInput={(e) => handleEndDate(e.target)}></Input>
-                            </Col>
-                            <Col lg="2" className="text-center">
-                                <Button color="info" onClick={() => loadData()}>Buscar...</Button>
-                            </Col>
-                    </Row>
-                    <Row>
-                        <Table id='table1'>
-                            <tr className="text-center">
-                                <td colspan="8">DATOS DEL ESTADO ACTUAL DE LA IGLESIA</td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="4">Numero de personal en comunión al principio del mes: </td>
-                                <td colspan="4"><u className="font-weight-normal">29</u></td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="4">ALTAS</td>
-                                <td colspan="4">BAJAS</td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Por bautismo</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Por defunción</td>
-                                <td colspan="2"><u className="font-weight-normal">5</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Por restitución a la comunión</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Por excomunión</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Por cambio de domicilio</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Por cambio de domicilio</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Total de altas</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Total de bajas</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            
-                            <tr className="text-center">
-                                <td colspan="4">Numero de personal activo No Bautizado al principio del mes: </td>
-                                <td colspan="4"><u className="font-weight-normal">29</u></td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="4">ALTAS</td>
-                                <td colspan="4">BAJAS</td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Por Nuevo Ingreso</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Por defunción</td>
-                                <td colspan="2"><u className="font-weight-normal">5</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Por reactivación</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Por alejamiento</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Por cambio de domicilio</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Por cambio de domicilio</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2"></td>
-                                <td colspan="2"></td>
-                                <td colspan="2">Por baja de padres</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Total de altas</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Total de bajas</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-center">
-                                    <td colspan="4"></td>
-                                    <td colspan="4"></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Matrimonios</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">Legalizaciones</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td colspan="2">Presentaciones de niños</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">No. de Hogares</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="4">PERSONAL BAUTIZADO</td>
-                                <td colspan="4">PERSONAL NO BAUTIZADO</td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="2">ADULTOS</td>
-                                <td colspan="2">JÓVENES</td>
-                                <td colspan="2">JÓVENES</td>
-                                <td colspan="2">NIÑOS</td>
-                            </tr>
-                            <tr className="text-left">
-                                <td>Hombres</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Hombres</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Hombres</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Niños</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td>Mujeres</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Mujeres</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Mujeres</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Niñas</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-left">
-                                <td>Total</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Total</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Total</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                                <td>Total</td>
-                                <td><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="2">No. Completo de personal bautizado</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                                <td colspan="2">No. Completo de personal no bautizado</td>
-                                <td colspan="2"><u className="font-weight-normal">3</u></td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="4">Número completo del personal que integra la iglesia</td>
-                                <td colspan="4"><u className="font-weight-normal">134</u></td>
-                            </tr>
-                            <tr className="text-center">
-                                <td colspan="8">Desglose de movimiento estadistico:</td>
-                            </tr>
-                        </Table>
-                    </Row>
-                    <h4 className="text-center m-4">Justicia y Verdad</h4>
-                    {sector ?
-                        <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias} a <Moment locale="es" format="LL"></Moment></h4> :
-                        <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).dis_Alias} a <Moment locale="es" format="LL"></Moment></h4>
+class ReporteTransacciones extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            consultaInfo: false,
+            fsd: {},
+            infoOrganizada: {
+                Altas: {
+                    Bautizados: {
+                        Bautismo: {
+                            contador: 0,
+                            registros: []
+                        },
+                        Restitucion: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioInterno: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioExterno: {
+                            contador: 0,
+                            registros: []
+                        }
+                    },
+                    NoBautizados: {
+                        Ingreso: {
+                            contador: 0,
+                            registros: []
+                        },
+                        Reactivacion: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioInterno: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioExterno: {
+                            contador: 0,
+                            registros: []
+                        }
                     }
-                    <Row className="text-center mt-5">
-                        <Col>
-                            <h5 style={{height: "1.2em"}}></h5>
-                            {/* <Input className="text-center" bsSize="sm" type="text" placeholder="Escriba nombre del secretario"></Input> */}
-                            <hr color="black"></hr>
-                            <h5>Secretario</h5>
-                        </Col>
-                        <Col cols="2"></Col>
-                        <Col>
-                            <h5>{JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}</h5>
-                            <hr color="black"></hr>
-                            {sector ? <h5>Pastor</h5> : <h5>Obispo</h5>}
-                        </Col>
-                    </Row>
-                </CardBody> : ""
+                },
+                Bajas: {
+                    Bautizados: {
+                        Defuncion: {
+                            contador: 0,
+                            registros: []
+                        },
+                        ExcomunionTemporal: {
+                            contador: 0,
+                            registros: []
+                        },
+                        Excomunion: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioInterno: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioExterno: {
+                            contador: 0,
+                            registros: []
+                        }
+                    },
+                    NoBautizados: {
+                        Defuncion: {
+                            contador: 0,
+                            registros: []
+                        },
+                        Alejamiento: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioInterno: {
+                            contador: 0,
+                            registros: []
+                        },
+                        CambioDomicilioExterno: {
+                            contador: 0,
+                            registros: []
+                        },
+                        BajaPorPadres: {
+                            contador: 0,
+                            registros: []
+                        }
+                    }
+                },
+                TotalAltasBautizados: 0,
+                TotalBajasBautizados: 0,
+                TotalAltasNoBautizados: 0,
+                TotalBajasNoBautizados: 0,
+                Matrimonios: {
+                    contador: 0,
+                    registros: []
+                },
+                Legalizaciones: {
+                    contador: 0,
+                    registros: []
+                },
+                Presentaciones: {
+                    contador: 0,
+                    registros: []
                 }
-                </Card>
-            </Container>
-        </>
-    )
+            },
+            personas: {
+                Bautizados: {
+                    Adulto_Hombre: 0,
+                    Adulto_Mujer: 0,
+                    Joven_Hombre: 0,
+                    Joven_Mujer: 0
+                },
+                NoBautizados: {
+                    Joven_Hombre: 0,
+                    Joven_Mujer: 0,
+                    Niño: 0,
+                    Niña: 0
+                },
+                AdultosBautizados: 0,
+                JovenesBautizados: 0,
+                JovenesNoBautizados: 0,
+                Niños: 0,
+                Total: 0
+            },
+            fechaInicialInvalid: false,
+            fechaFinalInvalid: false,
+            hogares: [],
+            registros: []
+        }
+    }
+    componentDidMount() {
+        this.setState({
+            fsd: {
+                ...this.state.fsd,
+                idSectorDistrito: localStorage.getItem("sector"),
+                fechaInicial: moment().startOf('month').format("YYYY-MM-DD"),
+                fechaFinal: moment().endOf('month').format("YYYY-MM-DD")
+            }
+        });
+    }
+    onChange = (e) => {
+        this.setState({
+            fsd: {
+                ...this.state.fsd,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+    organizaInfo = (info, ct_Codigo_Transaccion, objeto) => {
+        var filtro = info.filter((obj) => {
+            return obj.ct_Codigo_Transaccion === ct_Codigo_Transaccion;
+        })
+        objeto.contador = filtro.length;
+        objeto.registros = filtro;
+    }
+    /* mostrarRegistros = () => {
+        let foo = this.state.infoOrganizada;
+        let registros = [
+            foo.Altas.Bautizados.Bautismo.registros,
+            foo.Altas.Bautizados.Restitucion.registros,
+            foo.Altas.Bautizados.CambioDomicilioInterno.registros,
+            foo.Altas.Bautizados.CambioDomicilioExterno.registros,
+            foo.Altas.NoBautizados.Ingreso.registros,
+            foo.Altas.NoBautizados.Reactivacion.registros,
+            foo.Altas.NoBautizados.CambioDomicilioInterno.registros,
+            foo.Altas.NoBautizados.CambioDomicilioExterno.registros,
+
+            foo.Bajas.Bautizados.Defuncion.registros,
+            foo.Bajas.Bautizados.ExcomunionTemporal.registros,
+            foo.Bajas.Bautizados.Excomunion.registros,
+            foo.Bajas.Bautizados.CambioDomicilioInterno.registros,
+            foo.Bajas.Bautizados.CambioDomicilioExterno.registros,
+            foo.Bajas.NoBautizados.Defuncion.registros,
+            foo.Bajas.NoBautizados.Alejamiento.registros,
+            foo.Bajas.NoBautizados.CambioDomicilioInterno.registros,
+            foo.Bajas.NoBautizados.CambioDomicilioExterno.registros,
+            foo.Bajas.NoBautizados.BajaPorPadres.registros
+        ];
+        registros.forEach(subRegistros => {
+            if (subRegistros.length > 0) {
+                subRegistros.forEach(r => {
+                    return (
+                        <React.Fragment key="0">
+                            <td>{r.ct_Tipo}</td>
+                            <td>{r.ct_Subtipo}</td>
+                            <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
+                            <td>{r.sec_Sector_Alias}</td>
+                            <td>{r.hte_Fecha_Transaccion}</td>
+                        </React.Fragment>
+                    )
+                })
+            }
+        });
+    } */
+    buscarInfo = async () => {
+        let fii = this.state.fsd.fechaInicial === undefined || this.state.fsd.fechaInicial === "" ? true : false;
+        let ffi = this.state.fsd.fechaFinal === undefined || this.state.fsd.fechaFinal === "" ? true : false;
+        let fi = moment(this.state.fsd.fechaFinal) < moment(this.state.fsd.fechaInicial) ? true : false;
+
+        this.setState({
+            fechaInicialInvalid: this.state.fsd.fechaInicial === undefined || this.state.fsd.fechaInicial === "" ? true : false,
+            fechaFinalInvalid: this.state.fsd.fechaFinal === undefined || this.state.fsd.fechaFinal === "" ? true : false
+        })
+
+        if (fi) {
+            alert("Error:\nLa fecha inicial no puede ser mayor a la fecha final.");
+        }
+
+        if (fii || ffi || fi) {
+            this.setState({ consultaInfo: false });
+            return false;
+        }
+        var info = {
+            Altas: {
+                Bautizados: {
+                    Bautismo: {
+                        contador: 0,
+                        registros: []
+                    },
+                    Restitucion: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioInterno: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioExterno: {
+                        contador: 0,
+                        registros: []
+                    }
+                },
+                NoBautizados: {
+                    Ingreso: {
+                        contador: 0,
+                        registros: []
+                    },
+                    Reactivacion: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioInterno: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioExterno: {
+                        contador: 0,
+                        registros: []
+                    }
+                }
+            },
+            Bajas: {
+                Bautizados: {
+                    Defuncion: {
+                        contador: 0,
+                        registros: []
+                    },
+                    ExcomunionTemporal: {
+                        contador: 0,
+                        registros: []
+                    },
+                    Excomunion: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioInterno: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioExterno: {
+                        contador: 0,
+                        registros: []
+                    }
+                },
+                NoBautizados: {
+                    Defuncion: {
+                        contador: 0,
+                        registros: []
+                    },
+                    Alejamiento: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioInterno: {
+                        contador: 0,
+                        registros: []
+                    },
+                    CambioDomicilioExterno: {
+                        contador: 0,
+                        registros: []
+                    },
+                    BajaPorPadres: {
+                        contador: 0,
+                        registros: []
+                    }
+                }
+            },
+            TotalAltasBautizados: 0,
+            TotalBajasBautizados: 0,
+            TotalAltasNoBautizados: 0,
+            TotalBajasNoBautizados: 0,
+            Matrimonios: {
+                contador: 0,
+                registros: []
+            },
+            Legalizaciones: {
+                contador: 0,
+                registros: []
+            },
+            Presentaciones: {
+                contador: 0,
+                registros: []
+            }
+        }
+
+        await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
+            .then(res => {
+                this.setState({ hogares: res.data.domicilios });
+            })
+        await helpers.authAxios.get(`/Persona/GetBySector/${localStorage.getItem("sector")}`)
+            .then(res => {
+                let personas = {
+                    Bautizados: {
+                        Adulto_Hombre: 0,
+                        Adulto_Mujer: 0,
+                        Joven_Hombre: 0,
+                        Joven_Mujer: 0
+                    },
+                    NoBautizados: {
+                        Joven_Hombre: 0,
+                        Joven_Mujer: 0,
+                        Niño: 0,
+                        Niña: 0
+                    },
+                    AdultosBautizados: 0,
+                    JovenesBautizados: 0,
+                    JovenesNoBautizados: 0,
+                    Niños: 0,
+                    Total: 0
+                };
+                let filtro = res.data.filter((obj) => {
+                    return obj.persona.per_Activo && obj.persona.per_Vivo
+                });
+                filtro.forEach(p => {
+                    if (p.persona.per_Bautizado === true) {
+                        personas.Bautizados.Adulto_Hombre = p.persona.per_Categoria === "ADULTO_HOMBRE" ? personas.Bautizados.Adulto_Hombre + 1 : personas.Bautizados.Adulto_Hombre + 0;
+                        personas.Bautizados.Adulto_Mujer = p.persona.per_Categoria === "ADULTO_MUJER" ? personas.Bautizados.Adulto_Mujer + 1 : personas.Bautizados.Adulto_Mujer + 0;
+                        personas.Bautizados.Joven_Hombre = p.persona.per_Categoria === "Joven_Hombre" ? personas.Bautizados.Joven_Hombre + 1 : personas.Bautizados.Joven_Hombre + 0;
+                        personas.Bautizados.Joven_Mujer = p.persona.per_Categoria === "Joven_Mujer" ? personas.Bautizados.Joven_Mujer + 1 : personas.Bautizados.Joven_Mujer + 0;
+                    }
+                    else {
+                        personas.NoBautizados.Joven_Hombre = p.persona.per_Categoria === "JOVEN_HOMBRE" ? personas.NoBautizados.Joven_Hombre + 1 : personas.NoBautizados.Joven_Hombre + 0;
+                        personas.NoBautizados.Joven_Mujer = p.persona.per_Categoria === "JOVEN_MUJER" ? personas.NoBautizados.Joven_Mujer + 1 : personas.NoBautizados.Joven_Mujer + 0;
+                        personas.NoBautizados.Niño = p.persona.per_Categoria === "NIÑO" ? personas.NoBautizados.Niño + 1 : personas.NoBautizados.Niño + 0;
+                        personas.NoBautizados.Niña = p.persona.per_Categoria === "NIÑA" ? personas.NoBautizados.Niña + 1 : personas.NoBautizados.Niña + 0;
+                    }
+                    personas.AdultosBautizados = personas.Bautizados.Adulto_Hombre + personas.Bautizados.Adulto_Mujer;
+                    personas.JovenesBautizados = personas.Bautizados.Joven_Hombre + personas.Bautizados.Joven_Mujer;
+                    personas.JovenesNoBautizados = personas.NoBautizados.Joven_Hombre + personas.NoBautizados.Joven_Mujer;
+                    personas.Niños = personas.NoBautizados.Niño + personas.NoBautizados.Niña;
+                });
+                personas.Total = personas.AdultosBautizados + personas.JovenesBautizados + personas.JovenesNoBautizados + personas.Niños;
+                this.setState({ personas: personas })
+            });
+        await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/HistorialPorFechaSector`, this.state.fsd)
+            .then(res => {
+                this.organizaInfo(res.data.datos, 11001, info.Altas.Bautizados.Bautismo);
+                this.organizaInfo(res.data.datos, 11002, info.Altas.Bautizados.Restitucion);
+                this.organizaInfo(res.data.datos, 11003, info.Altas.Bautizados.CambioDomicilioInterno);
+                this.organizaInfo(res.data.datos, 11004, info.Altas.Bautizados.CambioDomicilioExterno);
+                this.organizaInfo(res.data.datos, 12001, info.Altas.NoBautizados.Ingreso);
+                this.organizaInfo(res.data.datos, 12004, info.Altas.NoBautizados.Reactivacion);
+                this.organizaInfo(res.data.datos, 12002, info.Altas.NoBautizados.CambioDomicilioInterno);
+                this.organizaInfo(res.data.datos, 12003, info.Altas.NoBautizados.CambioDomicilioExterno);
+                this.organizaInfo(res.data.datos, 11101, info.Bajas.Bautizados.Defuncion);
+                this.organizaInfo(res.data.datos, 11102, info.Bajas.Bautizados.ExcomunionTemporal);
+                this.organizaInfo(res.data.datos, 11103, info.Bajas.Bautizados.Excomunion);
+                this.organizaInfo(res.data.datos, 11104, info.Bajas.Bautizados.CambioDomicilioInterno);
+                this.organizaInfo(res.data.datos, 11105, info.Bajas.Bautizados.CambioDomicilioExterno);
+                this.organizaInfo(res.data.datos, 12101, info.Bajas.NoBautizados.Defuncion);
+                this.organizaInfo(res.data.datos, 12102, info.Bajas.NoBautizados.Alejamiento);
+                this.organizaInfo(res.data.datos, 12103, info.Bajas.NoBautizados.CambioDomicilioInterno);
+                this.organizaInfo(res.data.datos, 12104, info.Bajas.NoBautizados.CambioDomicilioExterno);
+                this.organizaInfo(res.data.datos, 12106, info.Bajas.NoBautizados.BajaPorPadres);
+                this.organizaInfo(res.data.datos, 21001, info.Matrimonios);
+                this.organizaInfo(res.data.datos, 21102, info.Legalizaciones);
+                this.organizaInfo(res.data.datos, 23203, info.Presentaciones);
+                info.TotalAltasBautizados = info.Altas.Bautizados.Bautismo.contador + info.Altas.Bautizados.Restitucion.contador + info.Altas.Bautizados.CambioDomicilioInterno.contador + info.Altas.Bautizados.CambioDomicilioExterno.contador;
+                info.TotalBajasBautizados = info.Bajas.Bautizados.Defuncion.contador + info.Bajas.Bautizados.ExcomunionTemporal.contador + info.Bajas.Bautizados.Excomunion.contador + info.Bajas.Bautizados.CambioDomicilioInterno.contador + info.Bajas.Bautizados.CambioDomicilioExterno.contador;
+                info.TotalAltasNoBautizados = info.Altas.NoBautizados.Ingreso.contador + info.Altas.NoBautizados.Reactivacion.contador + info.Altas.NoBautizados.CambioDomicilioInterno.contador + info.Altas.NoBautizados.CambioDomicilioExterno.contador;
+                info.TotalBajasNoBautizados = info.Bajas.NoBautizados.Defuncion.contador + info.Bajas.NoBautizados.Alejamiento.contador + info.Bajas.NoBautizados.CambioDomicilioInterno.contador + info.Bajas.NoBautizados.CambioDomicilioExterno.contador + info.Bajas.NoBautizados.BajaPorPadres.contador;
+                this.setState({
+                    infoOrganizada: info,
+                    consultaInfo: true,
+                    registros: res.data.datos
+                });
+            })
+    }
+    render() {
+        return (
+            <>
+                <Container fluid>
+                    <Button className="btn-success m-3 " ><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
+                    {/* <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button> */}
+                    {/* TABLA */}
+                    <Card body id="pdf">
+                        <CardTitle className="text-center" tag="h3">
+                            <Row>
+                                <Col lg="3">
+                                    <img src={logo} width="100%"></img>
+                                </Col>
+                                <Col>
+                                    REPORTE DE TRANSACCIONES
+                                    <h5>Sector:</h5>
+                                </Col>
+                            </Row>
+                        </CardTitle>
+                        <CardBody>
+                            <Row className="m-3 justify-content-center">
+                                <Col lg="1" className="text-center">
+                                    <h3>De</h3>
+                                </Col>
+                                <Col lg="3" className="text-center">
+                                    <Input
+                                        type="date"
+                                        name="fechaInicial"
+                                        value={this.state.fsd.fechaInicial}
+                                        onChange={this.onChange}
+                                        invalid={this.state.fechaInicialInvalid}
+                                    />
+                                    <FormFeedback>Fecha invalida</FormFeedback>
+                                </Col>
+                                <Col lg="1" className="text-center">
+                                    <h3>al</h3>
+                                </Col>
+                                <Col lg="3" className="text-center">
+                                    <Input
+                                        type="date"
+                                        name="fechaFinal"
+                                        value={this.state.fsd.fechaFinal}
+                                        onChange={this.onChange}
+                                        invalid={this.state.fechaFinalInvalid}
+                                    />
+                                    <FormFeedback>Fecha invalida</FormFeedback>
+                                </Col>
+                                <Col lg="2" className="text-center">
+                                    <Button
+                                        color="info"
+                                        onClick={this.buscarInfo}
+                                    >Buscar...</Button>
+                                </Col>
+                            </Row>
+                            {this.state.consultaInfo &&
+                                <>
+                                    <Row>
+                                        <Table id='table1'>
+                                            <tbody>
+                                                <tr className="text-center">
+                                                    <td colspan="8">DATOS DEL ESTADO ACTUAL DE LA IGLESIA</td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="4">ALTAS</td>
+                                                    <td colspan="4">BAJAS</td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Por bautismo</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.Bautismo.contador}</u></td>
+                                                    <td colspan="2">Por defunción</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.Defuncion.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Por restitución a la comunión</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.Restitucion.contador}</u></td>
+                                                    <td colspan="2">Por excomunión</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.ExcomunionTemporal.contador + this.state.infoOrganizada.Bajas.Bautizados.Excomunion.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Por cambio de domicilio</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioExterno.contador}</u></td>
+                                                    <td colspan="2">Por cambio de domicilio</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioExterno.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Total de altas</td>
+                                                    <td colspan="2">
+                                                        <u className="font-weight-normal">
+                                                            {this.state.infoOrganizada.TotalAltasBautizados}
+                                                        </u>
+                                                    </td>
+                                                    <td colspan="2">Total de bajas</td>
+                                                    <td colspan="2">
+                                                        <u className="font-weight-normal">
+                                                            {this.state.infoOrganizada.TotalBajasBautizados}
+                                                        </u>
+                                                    </td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="4">ALTAS</td>
+                                                    <td colspan="4">BAJAS</td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Por Nuevo Ingreso</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.Ingreso.contador}</u></td>
+                                                    <td colspan="2">Por defunción</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.Defuncion.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Por reactivación</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.Reactivacion.contador}</u></td>
+                                                    <td colspan="2">Por alejamiento</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.Alejamiento.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Por cambio de domicilio</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioExterno.contador}</u></td>
+                                                    <td colspan="2">Por cambio de domicilio</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioExterno.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2"></td>
+                                                    <td colspan="2"></td>
+                                                    <td colspan="2">Por baja de padres</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.BajaPorPadres.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Total de altas</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.TotalAltasNoBautizados}</u></td>
+                                                    <td colspan="2">Total de bajas</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.TotalBajasNoBautizados}</u></td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="4"></td>
+                                                    <td colspan="4"></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Matrimonios</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Matrimonios.contador}</u></td>
+                                                    <td colspan="2">Legalizaciones</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Legalizaciones.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colspan="2">Presentaciones de niños</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Presentaciones.contador}</u></td>
+                                                    <td colspan="2">No. de Hogares</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.hogares.length}</u></td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="4">PERSONAL BAUTIZADO</td>
+                                                    <td colspan="4">PERSONAL NO BAUTIZADO</td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="2">ADULTOS</td>
+                                                    <td colspan="2">JÓVENES</td>
+                                                    <td colspan="2">JÓVENES</td>
+                                                    <td colspan="2">NIÑOS</td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td>Hombres</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.Bautizados.Adulto_Hombre}</u></td>
+                                                    <td>Hombres</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.Bautizados.Joven_Hombre}</u></td>
+                                                    <td>Hombres</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.NoBautizados.Joven_Hombre}</u></td>
+                                                    <td>Niños</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.NoBautizados.Niño}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td>Mujeres</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.Bautizados.Adulto_Mujer}</u></td>
+                                                    <td>Mujeres</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.Bautizados.Joven_Mujer}</u></td>
+                                                    <td>Mujeres</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.NoBautizados.Joven_Mujer}</u></td>
+                                                    <td>Niñas</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.NoBautizados.Niña}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td>Total</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.AdultosBautizados}</u></td>
+                                                    <td>Total</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.JovenesBautizados}</u></td>
+                                                    <td>Total</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.JovenesNoBautizados}</u></td>
+                                                    <td>Total</td>
+                                                    <td><u className="font-weight-normal">{this.state.personas.Niños}</u></td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="2">No. Completo de personal bautizado</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.personas.AdultosBautizados + this.state.personas.JovenesBautizados}</u></td>
+                                                    <td colspan="2">No. Completo de personal no bautizado</td>
+                                                    <td colspan="2"><u className="font-weight-normal">{this.state.personas.JovenesNoBautizados + this.state.personas.Niños}</u></td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="4">Número completo del personal que integra la iglesia</td>
+                                                    <td colspan="4"><u className="font-weight-normal">{this.state.personas.Total}</u></td>
+                                                </tr>
+                                                <tr className="text-center">
+                                                    <td colspan="8">Desglose de movimiento estadistico:</td>
+                                                </tr>
+                                            </tbody>
+                                        </Table>
+                                    </Row>
+                                    <Row>
+                                        <Col xs="12">
+                                            <Table>
+                                                <tbody>
+                                                    {this.state.registros.length > 0 &&
+                                                        <>
+                                                            {this.state.registros.map(r => {
+                                                                return (
+                                                                    <React.Fragment key={r.hte_Id_Transaccion}>
+                                                                        <tr>
+                                                                            <td>{r.ct_Tipo}</td>
+                                                                            <td>{r.ct_Subtipo}</td>
+                                                                            <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
+                                                                            <td>{r.sec_Sector_Alias}</td>
+                                                                            <td>{r.hte_Fecha_Transaccion}</td>
+                                                                        </tr>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })}
+                                                        </>
+                                                    }
+                                                    {/* {this.state.infoOrganizada.Matrimonios.registros.length > 0 &&
+                                                        <>
+                                                            {this.state.infoOrganizada.Matrimonios.registros.map(r => {
+                                                                return (
+                                                                    <React.Fragment key={r.mat_Id_MatrimonioLegalizacion}>
+                                                                        <td>{r.ct_Tipo}</td>
+                                                                        <td>{r.ct_Subtipo}</td>
+                                                                        <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
+                                                                        <td>{r.sec_Sector_Alias}</td>
+                                                                        <td>{r.hte_Fecha_Transaccion}</td>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })}
+                                                        </>
+                                                    }
+                                                    {this.state.infoOrganizada.Legalizaciones.registros.length > 0 &&
+                                                        <>
+                                                            {this.state.infoOrganizada.Legalizaciones.registros.map(r => {
+                                                                return (
+                                                                    <React.Fragment key="1">
+                                                                        <tr>
+                                                                            <td>{r.ct_Tipo}</td>
+                                                                            <td>{r.ct_Subtipo}</td>
+                                                                            <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
+                                                                            <td>{r.sec_Sector_Alias}</td>
+                                                                            <td>{r.hte_Fecha_Transaccion}</td>
+                                                                        </tr>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })}
+                                                        </>
+                                                    }
+                                                    {this.state.infoOrganizada.Presentaciones.registros.length > 0 &&
+                                                        <>
+                                                            {this.state.infoOrganizada.Presentaciones.registros.map(r => {
+                                                                return (
+                                                                    <React.Fragment key="1">
+                                                                        <tr>
+                                                                            <td>{r.ct_Tipo}</td>
+                                                                            <td>{r.ct_Subtipo}</td>
+                                                                            <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
+                                                                            <td>{r.sec_Sector_Alias}</td>
+                                                                            <td>{r.hte_Fecha_Transaccion}</td>
+                                                                        </tr>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })}
+                                                        </>
+                                                    } */}
+                                                </tbody>
+                                            </Table>
+                                        </Col>
+                                    </Row>
+                                    <h4 className="text-center m-4">Justicia y Verdad</h4>
+                                    <Row className="text-center mt-5">
+                                        <Col>
+                                            <h5 style={{ height: "1.2em" }}></h5>
+                                            {/* <Input className="text-center" bsSize="sm" type="text" placeholder="Escriba nombre del secretario"></Input> */}
+                                            <hr color="black"></hr>
+                                            <h5>Secretario</h5>
+                                        </Col>
+                                        <Col cols="2"></Col>
+                                        <Col>
+                                            <h5>{JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}</h5>
+                                            <hr color="black"></hr>
+                                            <h5>Pastor</h5>
+                                        </Col>
+                                    </Row>
+                                </>
+                            }
+                        </CardBody>
+                    </Card>
+                </Container>
+            </>
+        )
+    }
 }
+export default ReporteTransacciones;
