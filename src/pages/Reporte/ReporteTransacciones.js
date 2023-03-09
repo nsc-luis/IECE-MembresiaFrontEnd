@@ -594,55 +594,6 @@ class ReporteTransacciones extends Component {
                                                             })}
                                                         </>
                                                     }
-                                                    {/* {this.state.infoOrganizada.Matrimonios.registros.length > 0 &&
-                                                        <>
-                                                            {this.state.infoOrganizada.Matrimonios.registros.map(r => {
-                                                                return (
-                                                                    <React.Fragment key={r.mat_Id_MatrimonioLegalizacion}>
-                                                                        <td>{r.ct_Tipo}</td>
-                                                                        <td>{r.ct_Subtipo}</td>
-                                                                        <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
-                                                                        <td>{r.sec_Sector_Alias}</td>
-                                                                        <td>{r.hte_Fecha_Transaccion}</td>
-                                                                    </React.Fragment>
-                                                                )
-                                                            })}
-                                                        </>
-                                                    }
-                                                    {this.state.infoOrganizada.Legalizaciones.registros.length > 0 &&
-                                                        <>
-                                                            {this.state.infoOrganizada.Legalizaciones.registros.map(r => {
-                                                                return (
-                                                                    <React.Fragment key="1">
-                                                                        <tr>
-                                                                            <td>{r.ct_Tipo}</td>
-                                                                            <td>{r.ct_Subtipo}</td>
-                                                                            <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
-                                                                            <td>{r.sec_Sector_Alias}</td>
-                                                                            <td>{r.hte_Fecha_Transaccion}</td>
-                                                                        </tr>
-                                                                    </React.Fragment>
-                                                                )
-                                                            })}
-                                                        </>
-                                                    }
-                                                    {this.state.infoOrganizada.Presentaciones.registros.length > 0 &&
-                                                        <>
-                                                            {this.state.infoOrganizada.Presentaciones.registros.map(r => {
-                                                                return (
-                                                                    <React.Fragment key="1">
-                                                                        <tr>
-                                                                            <td>{r.ct_Tipo}</td>
-                                                                            <td>{r.ct_Subtipo}</td>
-                                                                            <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
-                                                                            <td>{r.sec_Sector_Alias}</td>
-                                                                            <td>{r.hte_Fecha_Transaccion}</td>
-                                                                        </tr>
-                                                                    </React.Fragment>
-                                                                )
-                                                            })}
-                                                        </>
-                                                    } */}
                                                 </tbody>
                                             </Table>
                                         </Col>
