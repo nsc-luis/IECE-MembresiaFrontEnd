@@ -165,45 +165,6 @@ class ReporteTransacciones extends Component {
         objeto.contador = filtro.length;
         objeto.registros = filtro;
     }
-    /* mostrarRegistros = () => {
-        let foo = this.state.infoOrganizada;
-        let registros = [
-            foo.Altas.Bautizados.Bautismo.registros,
-            foo.Altas.Bautizados.Restitucion.registros,
-            foo.Altas.Bautizados.CambioDomicilioInterno.registros,
-            foo.Altas.Bautizados.CambioDomicilioExterno.registros,
-            foo.Altas.NoBautizados.Ingreso.registros,
-            foo.Altas.NoBautizados.Reactivacion.registros,
-            foo.Altas.NoBautizados.CambioDomicilioInterno.registros,
-            foo.Altas.NoBautizados.CambioDomicilioExterno.registros,
-
-            foo.Bajas.Bautizados.Defuncion.registros,
-            foo.Bajas.Bautizados.ExcomunionTemporal.registros,
-            foo.Bajas.Bautizados.Excomunion.registros,
-            foo.Bajas.Bautizados.CambioDomicilioInterno.registros,
-            foo.Bajas.Bautizados.CambioDomicilioExterno.registros,
-            foo.Bajas.NoBautizados.Defuncion.registros,
-            foo.Bajas.NoBautizados.Alejamiento.registros,
-            foo.Bajas.NoBautizados.CambioDomicilioInterno.registros,
-            foo.Bajas.NoBautizados.CambioDomicilioExterno.registros,
-            foo.Bajas.NoBautizados.BajaPorPadres.registros
-        ];
-        registros.forEach(subRegistros => {
-            if (subRegistros.length > 0) {
-                subRegistros.forEach(r => {
-                    return (
-                        <React.Fragment key="0">
-                            <td>{r.ct_Tipo}</td>
-                            <td>{r.ct_Subtipo}</td>
-                            <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
-                            <td>{r.sec_Sector_Alias}</td>
-                            <td>{r.hte_Fecha_Transaccion}</td>
-                        </React.Fragment>
-                    )
-                })
-            }
-        });
-    } */
     buscarInfo = async () => {
         let fii = this.state.fsd.fechaInicial === undefined || this.state.fsd.fechaInicial === "" ? true : false;
         let ffi = this.state.fsd.fechaFinal === undefined || this.state.fsd.fechaFinal === "" ? true : false;
