@@ -55,8 +55,11 @@ class RevinculaDomicilio extends Component {
     getPersonasParaCambioDomicilio = async () => {
         await helpers.authAxios.get(`${helpers.url_api}/Persona/GetBySector/${localStorage.getItem("sector")}`)
             .then(res => {
-                this.setState({ listaPersonas: res.data.filter((obj)=>{
-                    return obj.persona.per_Activo ==true}) })
+                this.setState({
+                    listaPersonas: res.data.filter((obj) => {
+                        return obj.persona.per_Activo === true
+                    })
+                })
             })
     }
 
@@ -273,9 +276,11 @@ class RevinculaDomicilio extends Component {
                                                     >
                                                         <option value="0">Selecciona una Persona</option>
                                                         {
-                                                            this.state.listaPersonas.map((persona) => {
+                                                            this.state.listaPersonas.map((obj) => {
                                                                 return (
-                                                                    <option key={persona.per_Id_Persona} value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
+                                                                    <React.Fragment key={obj.persona.per_Id_Persona}>
+                                                                        <option value={obj.persona.per_Id_Persona}>{obj.persona.per_Nombre} {obj.persona.per_Apellido_Paterno} {obj.persona.per_Apellido_Materno}</option>
+                                                                    </React.Fragment>
                                                                 )
                                                             })
                                                         }

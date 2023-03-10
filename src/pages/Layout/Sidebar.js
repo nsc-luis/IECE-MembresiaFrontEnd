@@ -531,10 +531,6 @@ class Sidebar extends Component {
                                     to="/ReporteTransacciones"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}
                                 >Reporte de Transacciones</Link>
-                                <Link className="collapse-item text-wrap"
-                                    to="/ReporteTransaccionesVictor"
-                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de TransaccionesVictor")}
-                                >Reporte de TransaccionesVictor</Link>
                             </div>
                         </div>
                     </li>

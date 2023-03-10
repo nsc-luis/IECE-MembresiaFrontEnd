@@ -137,7 +137,8 @@ class ReporteTransacciones extends Component {
             fechaInicialInvalid: false,
             fechaFinalInvalid: false,
             hogares: [],
-            registros: []
+            registros: [],
+            sector: {}
         }
     }
     componentDidMount() {
@@ -149,6 +150,10 @@ class ReporteTransacciones extends Component {
                 fechaFinal: moment().endOf('month').format("YYYY-MM-DD")
             }
         });
+        helpers.authAxios.get(`/Sector/${localStorage.getItem("sector")}`)
+        .then(res => {
+            this.setState({ sector: res.data.sector[0] })
+        })
     }
     onChange = (e) => {
         this.setState({
@@ -362,10 +367,15 @@ class ReporteTransacciones extends Component {
                 info.TotalBajasBautizados = info.Bajas.Bautizados.Defuncion.contador + info.Bajas.Bautizados.ExcomunionTemporal.contador + info.Bajas.Bautizados.Excomunion.contador + info.Bajas.Bautizados.CambioDomicilioInterno.contador + info.Bajas.Bautizados.CambioDomicilioExterno.contador;
                 info.TotalAltasNoBautizados = info.Altas.NoBautizados.Ingreso.contador + info.Altas.NoBautizados.Reactivacion.contador + info.Altas.NoBautizados.CambioDomicilioInterno.contador + info.Altas.NoBautizados.CambioDomicilioExterno.contador;
                 info.TotalBajasNoBautizados = info.Bajas.NoBautizados.Defuncion.contador + info.Bajas.NoBautizados.Alejamiento.contador + info.Bajas.NoBautizados.CambioDomicilioInterno.contador + info.Bajas.NoBautizados.CambioDomicilioExterno.contador + info.Bajas.NoBautizados.BajaPorPadres.contador;
+
+                let hte = res.data.datos.filter(hte => {
+                    return hte.ct_Tipo !== "EDICION"
+                });
+
                 this.setState({
                     infoOrganizada: info,
                     consultaInfo: true,
-                    registros: res.data.datos
+                    registros: hte
                 });
             })
     }
@@ -384,7 +394,7 @@ class ReporteTransacciones extends Component {
                                 </Col>
                                 <Col>
                                     REPORTE DE TRANSACCIONES
-                                    <h5>Sector:</h5>
+                                    <h5>Sector: {this.state.sector.sec_Alias}</h5>
                                 </Col>
                             </Row>
                         </CardTitle>
@@ -587,7 +597,7 @@ class ReporteTransacciones extends Component {
                                                                             <td>{r.ct_Subtipo}</td>
                                                                             <td>{r.per_Nombre} {r.per_Apellido_Paterno}</td>
                                                                             <td>{r.sec_Sector_Alias}</td>
-                                                                            <td>{r.hte_Fecha_Transaccion}</td>
+                                                                            <td>{helpers.reFormatoFecha(r.hte_Fecha_Transaccion)}</td>
                                                                         </tr>
                                                                     </React.Fragment>
                                                                 )
