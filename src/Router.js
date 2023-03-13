@@ -84,13 +84,13 @@ class Router extends Component {
                         <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
                         <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
                         <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
+                        <Route exact path="/ReporteTransacciones" component={ReporteTransacciones} />
                         {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                         <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                         <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
-                        <Route exact path="/ReporteTransacciones" component={ReporteTransacciones} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />
                 </Switch>

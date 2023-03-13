@@ -680,11 +680,12 @@ class RegistroDePersonal extends Component {
                 helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                     .then(resFoto => {
                         if (resFoto.data.status === "success") {
+                            datos.PersonaEntity.idFoto = resFoto.data.foto.idFoto
                             this.setState({
                                 mensajeDelProceso: "Procesando...",
                                 modalShow: true
                             });
-                            datos.idFoto = resFoto.data.foto.idFoto
+                            //datos.idFoto = resFoto.data.foto.idFoto
                         }
                         helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
                             .then(res => {
