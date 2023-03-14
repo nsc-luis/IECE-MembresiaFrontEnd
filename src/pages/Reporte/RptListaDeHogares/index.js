@@ -137,7 +137,7 @@ arreglarLista= () =>{
          miembros.push({
              Grupo: miembro.grupo,
              Nombre: miembro.nombre,
-             Nacimiento: moment(miembro.nacimiento).format('d/MMM/YYYY'),
+             Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
              Edad: miembro.edad,
              Celular: miembro.cel?miembro.cel:"-"
          })

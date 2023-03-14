@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import helpers from '../../components/Helpers'
 
 class Topbar extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            fotoMinistro: ""
+        };
+    }
+
+    componentDidMount() {
+        this.getfotoMinistro();
     }
 
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
@@ -13,6 +20,19 @@ class Topbar extends Component {
     handleLogoff = () => {
         localStorage.clear();
         document.location.href = '/';
+    }
+
+    getfotoMinistro = async () => {
+
+        await helpers.authAxios.get( helpers.url_api + '/Foto/FotoMinistro/' + this.infoSesion.pem_Id_Ministro)
+            .then(res => {
+                if(res.data.status !=="error"){
+                    this.setState({ fotoMinistro: helpers.url_api + "/Foto/FotoMinistro/" + this.infoSesion.pem_Id_Ministro});
+
+                }else{
+                    this.setState({ fotoMinistro: "https://source.unsplash.com/QAB-WJcbgJk/60x60"})
+                }
+            });
     }
 
     render() {
@@ -42,7 +62,7 @@ class Topbar extends Component {
                                     {this.infoSesion.pem_Nombre} <br />
                                     {localStorage.getItem('sector') === null ? '( OBISPO )' : '( PASTOR )'}
                                 </span>
-                                <img className="img-profile rounded-circle" alt="User info" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
+                                <img className="img-profile rounded-circle" alt="foto usuario" src={this.state.fotoMinistro} />
                             </a>
                             {/* Dropdown - User Information */}
                             <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
