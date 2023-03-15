@@ -30,7 +30,7 @@ export default function ReporteCumpleaños(){
                     const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
                         return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
                     })
-                    setPersonas(sortedData)
+                    setPersonas(sortedData.filter(per=>per.per_Activo===true))
                 });
                 helpers.authAxios.get("/Distrito/" + dto)
                 .then(res => {
@@ -42,7 +42,7 @@ export default function ReporteCumpleaños(){
                 const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
                     return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
                 })
-                setPersonas(sortedData)
+                setPersonas(sortedData.filter(per=>per.per_Activo===true))
             helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data.dis_Alias)

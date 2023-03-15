@@ -1,7 +1,7 @@
 import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
-    Container, Button,
+    Container, Button,FormGroup,Input,
      CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
 } from 'reactstrap';
 
@@ -17,47 +17,126 @@ import logo from '../../assets/images/IECE_LogoOficial.jpg'
 export default function ReporteOficiosProfesiones(){
     //Estados
     const [personas, setPersonas] = useState([])
-    const [infoDis, setInfoDis] = useState(null)
-    const [infoSec, setInfoSec] = useState(null)
+    const [infoDis, setInfoDis] = useState([])
+    const [infoSec, setInfoSec] = useState([])
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     const [infoSecretario, setInfoSecretario] = useState(null)
+    const [sectores, setSectores] = useState([])
+    const [lider, setLider] = useState("")
+    const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
+    const [entidadTitulo, setEntidadTitulo] = useState("")
     
     //Llamadas en render
     useEffect(() => {
-        if(sector == null){
-            helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+        if(sector == null){ //Si es Sesión de OBISPO
+                
+                getInfoDistrito()
+                getPersonasDistrito()
+                setSectorSeleccionado("todos");
+                setLider ("OBISPO")
+                setEntidadTitulo("TODOS LOS SECTORES")
+
+                helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setPersonas(res.data)
-                });
-                helpers.authAxios.get("/Distrito/" + dto)
-                .then(res => {
-                    setInfoDis(res.data.dis_Alias)
-                })
+                        setSectores (res.data.sectores)
+                    })
+
                 helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
-                })
-        }else{
-            helpers.authAxios.get("/Persona/GetBySector/" + sector)
-            .then(res => {
-                console.log(res.data)
-                setPersonas(res.data)
-            });
-            helpers.authAxios.get("/Distrito/" + dto)
-            .then(res => {
-                setInfoDis(res.data.dis_Alias)
-            })
+                });
+
+
+        }else{ //Si es Sesión de PASTOR
+            getInfoDistrito()
+            getPersonasSector(sector)
+            setLider ("PASTOR")
+
+
             helpers.authAxios.get("/Sector/" + sector)
             .then(res => {
-                setInfoSec(res.data.sector[0].sec_Alias)
+                setInfoSec(res.data.sector[0])
+                const sectores= []
+                sectores.push(res.data.sector[0])
+                console.log("sectores: ", sectores)
+                setSectores(sectores);
+                setSectorSeleccionado( sector)
+                setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
             })
+
             helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
             .then(res => {
                 setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
             })
+
+            getTitulo(sector)
         }
-    }, [personas.length])
+    }, [])
+
+const getPersonasSector = (sec)=>{
+    helpers.authAxios.get("/Persona/GetBySector/" + sec)
+    .then(res => {
+        setPersonas(res.data.filter(per=>per.persona.per_Activo===true))
+    });
+}
+
+    const getInfoDistrito =()=>{
+        helpers.authAxios.get("/Distrito/" + dto)
+        .then(res => {
+            setInfoDis(res.data)
+            
+        })
+    }
+
+
+    const getPersonasDistrito = ()=>{
+        helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+        .then(res => {
+            setPersonas(res.data
+                .filter(per=>per.persona.per_Activo===true)
+                .sort((a,b)=>{
+                    const nameA = a.persona.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.persona.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                })
+            )
+        });
+    }
+
+    const handle_sectorSeleccionado = async (e) => {
+
+            if (e.target.value !=="todos"){
+                
+                getPersonasSector(e.target.value)
+                setSectorSeleccionado(e.target.value);
+                getTitulo(e.target.value)
+            }else{
+                getPersonasDistrito();
+                setSectorSeleccionado("todos");
+                setEntidadTitulo("TODOS LOS SECTORES")
+            }
+           
+    }
+
+    const getTitulo = (sector)=>{
+        console.log("Sector: ", sectores);
+        sectores.map(sec=>{
+            
+            if (sec.sec_Id_Sector == sector){
+                setEntidadTitulo( sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+                //console.log("entidadTitulo: ",sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+            }
+        })
+    }
 
     const downloadTable = () =>{
         TableToExcel.convert(document.getElementById("table1"), {
@@ -90,14 +169,9 @@ export default function ReporteOficiosProfesiones(){
         doc.text("LISTA PROFESIONES Y OFICIOS", 135, 10, {align:"center"});
         doc.setFontSize(10);
         
-        if (sector) {
-            doc.text(`${infoSec}`, 135, 18, {align:"center"});
-            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
-        }
-        else {
-            doc.text(`${infoDis}`, 135, 18, {align:"center"})
-            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
-        }
+
+        doc.text(entidadTitulo, 135, 18, {align:"center"});
+
         doc.setFontSize(8);
         const headers = [
             'Indice',
@@ -110,14 +184,15 @@ export default function ReporteOficiosProfesiones(){
         ]
         const data = personas.map((persona,index) => ({
             Indice: String(index+1),
-            Nombre: persona.persona.per_Nombre + ' ' + persona.persona.per_Apellido_Paterno + ' ' + persona.persona.per_Apellido_Materno,
+            Nombre: persona.persona.per_Nombre + ' ' + persona.persona.per_Apellido_Paterno + ' ' + (persona.persona.per_Apellido_Materno?persona.persona.per_Apellido_Materno:""),
             Grupo: persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
             Profesion_Oficio_1: String(persona.persona.profesionOficio1[0].pro_Sub_Categoria!='OTRO'?persona.persona.profesionOficio1[0].pro_Sub_Categoria:'-'),
             Profesion_Oficio_2: String(persona.persona.profesionOficio2[0].pro_Sub_Categoria!='OTRO'?persona.persona.profesionOficio2[0].pro_Sub_Categoria:'-'),
             Tel_Celular: String(persona.persona.per_Telefono_Movil ? persona.persona.per_Telefono_Movil : '-'),
             Email: String(persona.persona.per_Email_Personal?persona.persona.per_Email_Personal:'-')
         }))
-        doc.table(10, 35, data, headers, {autoSize:true, fontSize: 6.5, padding:1})
+        //doc.table(10, 35, data, headers, {autoSize:true, fontSize: 6.5, padding:1})
+        doc.table(10, 35, data, headers, {fontSize: 6, padding:1})
 
         let yAxis = 35+ data.length * 7 + 5
         doc.setFontSize(8);
@@ -132,7 +207,7 @@ export default function ReporteOficiosProfesiones(){
         doc.line(120, yAxis, 180, yAxis);
         yAxis += 3;
         doc.text("SECRETARIO", 51, yAxis);
-        doc.text("PASTOR", 145, yAxis);
+        doc.text(lider, 145, yAxis);
         yAxis -= 5;
         doc.text(`${infoSecretario}`, 40, yAxis);
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
@@ -143,6 +218,46 @@ export default function ReporteOficiosProfesiones(){
     return(
         <>
             <Container fluid>
+            <FormGroup>
+                         <Row>
+                            <Col xs="5">
+                                <Input
+                                    type="select"
+                                    name="idDistrito"
+                                >
+                                    <option value="1">{`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`}</option>
+                                </Input>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
+                            <Col xs="5">
+                                <Input
+                                    type="select"
+                                    name="sectorSeleccionado"
+                                    value={sectorSeleccionado}
+                                    onChange={handle_sectorSeleccionado}
+                                >
+                                    <option value="0">Selecciona un sector</option>
+                                    
+                                    {sectores.map(sector => {
+                                        return (
+                                            <React.Fragment key={sector.sec_Id_Sector}>
+                                                <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                            </React.Fragment>
+                                        )
+                                    })}
+                                    {localStorage.getItem('sector') === null &&
+                                        <React.Fragment>
+                                            <option value="todos">TODOS LOS SECTORES</option>
+                                        </React.Fragment>
+                                    }
+                                </Input>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+
                 <Button className="btn-success m-3 " onClick={() => downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={() => reportePersonalBautizadoPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
 
@@ -159,7 +274,8 @@ export default function ReporteOficiosProfesiones(){
 
                         <div></div>
                         <div></div>
-                    {sector?(sector ? <h5>{infoSec}</h5> : null):(dto ? <h5>{infoDis}</h5> : null)}
+                    {/* {sector?(sector ? <h5>{infoSec.sec_Alias}</h5> : null):(dto ? <h5>{infoDis.dis_Alias}</h5> : null)} */}
+                        <h5>{entidadTitulo}</h5>
 
                     {/* {sector ? <h5>{infoSec}</h5> : null} */}
                         
@@ -186,7 +302,7 @@ export default function ReporteOficiosProfesiones(){
                                     <td>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</td>
                                     <td>{persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase()}</td>
                                     <td>{persona.persona.profesionOficio1[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
-                                    <td>{persona.persona.profesionOficio2[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio1[0].pro_Sub_Categoria}</td>
+                                    <td>{persona.persona.profesionOficio2[0].pro_Sub_Categoria == 'OTRO' ? ' ' : persona.persona.profesionOficio2[0].pro_Sub_Categoria}</td>
                                     <td>{persona.persona.per_Telefono_Movil}</td>
                                     <td>{persona.persona.per_Email_Personal}</td>
                                 </tr>
