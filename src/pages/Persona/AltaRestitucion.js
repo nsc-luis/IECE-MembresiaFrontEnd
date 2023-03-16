@@ -202,12 +202,24 @@ class AltaRestitucion extends Component {
     personaParaRestitucion = async () => {
         await helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${localStorage.getItem('sector')}/true`)
             .then(res => {
-                this.setState({ personaParaRestitucion: res.data.personas })
+                this.setState({ personaParaRestitucion: res.data.personas.sort((a,b)=>{
+                    const nameA = a.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                }) })
             });
     }
     onChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value.toUpperCase()
         })
         if (e.target.name === "per_Id_Persona" && e.target.value !== "0") {
             if (e.target.value !== "0") {
@@ -265,31 +277,37 @@ class AltaRestitucion extends Component {
         let perIdPersonaInvalida = this.state.per_Id_Persona === "0" ? true : false;
         let perCategoriaInvalida = this.state.per_Categoria === "0" ? true : false;
         let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
+
+        //Si algunos de los 3 inputs obligatorios está vacío
         if (perIdPersonaInvalida ||
             perCategoriaInvalida ||
             fechaTransaccionInvalida) {
             return false;
         }
-        else {
-            var info = {
+        else { // Si todos los campos requeridos están llenos
+            var info = { // Pobla el Objeto INFO
                 idPersona: this.state.per_Id_Persona,
                 comentario: this.state.comentario,
                 fecha: this.state.fechaTransaccion,
                 idMinistro: this.infoSesion.pem_Id_Ministro,
                 jerarquia: this.state.hogar.hp_Jerarquia
             }
-            if (this.state.mismoHogar) {
+
+            //Si se va a quedar en el MISMO HOGAR
+            if (this.state.mismoHogar) { 
                 await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaReactivacionRestitucion_HogarActual`, info)
                     .then(res => {
                         if (res.data.status === 'error') {
-                            console.log(res.data.mensaje)
+                            //console.log(res.data.mensaje)
                         }
                         else {
                             document.location.href = '/Main';
                         }
                     });
             }
-            else if (this.state.hogar.hd_Id_Hogar === "0") {
+
+            // Si va a quedar en un HOGAR NUEVO
+            else if (this.state.hogar.hd_Id_Hogar === "0") { 
                 let info = {
                     per_Id_Persona: this.state.per_Id_Persona,
                     sec_Id_Sector: localStorage.getItem("sector"),
@@ -302,20 +320,22 @@ class AltaRestitucion extends Component {
                 await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
                     .then(res => {
                         if (res.data.status === 'error') {
-                            console.log(res.data.mensaje)
+                            //console.log(res.data.mensaje)
                         }
                         else {
                             document.location.href = '/Main';
                         }
                     });
             }
-            else {
+
+            // Si va a quedar en un HOGAR EXISTENTE
+            else { 
                 info.jerarquia = this.state.hogar.hp_Jerarquia;
                 info.idDomicilio = this.state.hogar.hd_Id_Hogar;
                 await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, info)
                     .then(res => {
                         if (res.data.status === 'error') {
-                            console.log(res.data.mensaje)
+                            //console.log(res.data.mensaje)
                         }
                         else {
                             document.location.href = '/Main';

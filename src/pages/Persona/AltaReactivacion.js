@@ -202,7 +202,19 @@ class AltaRestitucion extends Component {
     personaParaRestitucion = async () => {
         await helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${localStorage.getItem('sector')}/false`)
             .then(res => {
-                this.setState({ personaParaRestitucion: res.data.personas })
+                this.setState({ personaParaRestitucion: res.data.personas.sort((a,b)=>{
+                    const nameA = a.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                }) })
             });
     }
     /* onChange = (e) => {

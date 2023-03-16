@@ -48,8 +48,22 @@ class EdicionDeDireccion extends Component {
     getListaHogares = async () => {
         await helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
-                this.setState({ listaDomicilios: res.data.domicilios })
+                this.setState({ listaDomicilios: res.data.domicilios.sort((a,b)=>{
+                    const nameA = a.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                }) })
+
             })
+            
     }
 
     handle_HogarSeleccionado = async (e) => {

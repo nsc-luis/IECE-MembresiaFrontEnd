@@ -24,7 +24,9 @@ class PersonaEncontrada extends React.Component {
         return (
             <React.Fragment>
                 <div className="alert alert-danger mt-3" role="alert">
-                    <h5><strong>AVISO: </strong>Se ha encontrado una persona con el mismo RFC: {/* {form.RFCSinHomoclave} */} (SIN homoclave), asegurese de no duplicar a la persona.</h5>
+                    <h5><strong>AVISO: </strong>Se ha encontrado una persona con la misma Clave-Persona, asegúrese de no duplicar personas.
+                        <br></br>Si es diferente persona, presione el botón <strong>'Continuar Captura'</strong>. Pero si es la misma, presione <strong>'Cancelar'</strong>.
+                    </h5>
                 </div>
                 <table className="table">
                     <thead>

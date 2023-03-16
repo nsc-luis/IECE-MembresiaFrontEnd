@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Form, FormGroup, Input, Row, Col,
+    Form, FormGroup, Input, Row, Col, CardTitle,
     Container, Card, CardBody, Alert, Button
 } from 'reactstrap'
 import './style.css'
@@ -143,17 +143,20 @@ class Login extends Component {
                                 <Form onSubmit={this.iniciarSesion}>
                                     {/* {this.state.listaDistritosPorMinistro.length > 0 && */}
                                     <React.Fragment>
+                                            <CardTitle className="text-center">
+                                                <h1 className="h4 text-gray-900 mb-4">Elija el Tipo de Sesión! </h1>
+                                            </CardTitle>
                                         <Alert color="warning" className="alertLogin">
-                                            <strong>Aviso: </strong> <br />
+                                            <strong>Tipos de Sesión: </strong> <br />
                                             <ul>
-                                                <li>Para <strong>Sesión Obispo</strong>: deberá seleccionar solo el Distrito con el que trabajará. No seleccione Sector.
+                                                <li>Para <strong>Sesión Obispo</strong>: Seleccione sólo el Distrito con el que trabajará. No seleccione Sector.
                                                     <ul>
-                                                        <li>No podrá realizar ningún tipo de movimiento estadístico. Solo consultar información del Distrito y Sectores que lo componen.</li>
+                                                        <li>No puede realizar ningún Movimiento Estadístico, sólo consultar información del Distrito y Sectores que lo componen.</li>
                                                     </ul>
                                                 </li>
                                                 <li>Para <strong>Sesión Pastor</strong>: deberá seleccionar el Distrito y el Sector con el que trabajará.
                                                 <ul>
-                                                    <li>Podrá realizar todo tipo de movimientos estadísticos y cosultas.</li>
+                                                    <li>Puede realizar todo tipo de Movimientos Estadísticos y Consultas.</li>
                                                     </ul>
                                                 </li>
                                             </ul>

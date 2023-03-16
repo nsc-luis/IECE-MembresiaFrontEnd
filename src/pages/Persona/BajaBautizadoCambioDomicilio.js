@@ -34,7 +34,19 @@ class BajaBautizadoCambioDomicilio extends Component {
     getBajaBautizadoCambioDomicilio = async () => {
         await helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas });
+                this.setState({ personas: res.data.personas.sort((a,b)=>{
+                    const nameA = a.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                }) });
             });
     }
 
@@ -54,7 +66,7 @@ class BajaBautizadoCambioDomicilio extends Component {
     }
 
     onChangeBajaBautizadoCambioDomicilio = async (e) => {
-        this.setState({
+        this.setState({ //Se va conformando el Objeto FORMBAJABAUTIZADOCAMBIO DOMICILIO cada Input que se Actualiza
             formBajaBautizadoCambioDomicilio: {
                 ...this.state.formBajaBautizadoCambioDomicilio,
                 [e.target.name]: e.target.value.toUpperCase()
@@ -89,12 +101,13 @@ class BajaBautizadoCambioDomicilio extends Component {
 
     bajaBautizadoCambioDomicilio = async (e) => {
         e.preventDefault();
+        //Si está vacío algun campo REQUERIDO
         if (this.state.formBajaBautizadoCambioDomicilio.per_Id_Persona === "0"
             || this.state.formBajaBautizadoCambioDomicilio.tipoDestino === "0"
             || this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion === "") {
             alert("Error:\nDebe ingresar todos los datos requeridos.")
         }
-        try {
+        try { //Procede a realizar la Transacción de Baja Por Cambio de Domicilio enviando el Objeto FORMBAJABAUTIZADOCAMPODOMICILIO
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
                 .then(res => {
                     if (res.data.status === "success") {
@@ -105,7 +118,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                 })
         }
         catch {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
         }
     }
 
@@ -214,8 +227,8 @@ class BajaBautizadoCambioDomicilio extends Component {
                                             <Col xs="9">
                                                 <FormGroup>
                                                     <ButtonGroup>
-                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === false}>Por cambio de domicilio</Button>
-                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === true}>Por baja de padres</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === true}>Por cambio de domicilio</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === false}>Por baja de padres</Button>
                                                     </ButtonGroup>
                                                 </FormGroup>
                                             </Col>

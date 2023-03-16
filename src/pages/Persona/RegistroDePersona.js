@@ -46,7 +46,8 @@ class RegistroDePersonal extends Component {
             foto: "",
             formDataFoto: null,
             nuevaFoto: false,
-            boolNvoEstado: false
+            boolNvoEstado: false,
+            fechaBautismoInvalida:false,
         }
     }
 
@@ -195,6 +196,31 @@ class RegistroDePersonal extends Component {
                 }
             })
         }
+    }
+
+    onChangeFechaBautismo = (e)=>{
+        this.setState({
+            form: {
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            }
+        })
+
+        if (e.target.name === "per_Fecha_Bautismo") {
+            
+            if (e.target.value === '') {
+                this.setState({ fechaBautismoInvalida: true });
+            }
+            else {
+                this.setState({
+                    fechaBautismoInvalida: false
+                });
+            }
+        }
+    }
+
+    ChangeFechaBautismoInvalida = (bol)=>{
+                this.setState({ fechaBautismoInvalida: bol });
     }
 
     handleChange = (e) => {
@@ -799,6 +825,9 @@ class RegistroDePersonal extends Component {
                     boolNvoEstado={this.state.boolNvoEstado}
                     handleChangeEstado={this.handleChangeEstado}
                     handleCampoInvalido={this.handleCampoInvalido}
+                    onChangeFechaBautismo={this.onChangeFechaBautismo}
+                    fechaBautismoInvalida={this.state.fechaBautismoInvalida}
+                    ChangeFechaBautismoInvalida={this.ChangeFechaBautismoInvalida}
                 /> 
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

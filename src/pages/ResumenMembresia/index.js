@@ -40,14 +40,16 @@ class ResumenMembresia extends Component {
             infoMinistro: {},
             infoSecretario: {},
             distrito: {},
-            gradoMinistro: ""
+            gradoMinistro: "",
+            //sec_Id_Sector:""
         }
     }
 
     componentDidMount() {
         this.getSectoresPorDistrito();
         this.getDistrito();
-
+        this.seleccionaSectorActivo();
+        window.scrollTo(0, 0);
     }
 
     getDistrito = async () => {
@@ -79,6 +81,16 @@ class ResumenMembresia extends Component {
                 });
 
         }
+    }
+
+    seleccionaSectorActivo = async()=>{
+        this.setState({ sectorSeleccionado: localStorage.getItem('sector') });
+        //this.setState({sec_Id_Sector: localStorage.getItem('sector')});
+        await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + localStorage.getItem('sector'))
+                .then(res => {
+                    // console.log(res.data.value);
+                    this.setState({ resumenDeMembresia: res.data.resumen.value })
+                });
     }
 
     handle_sectorSeleccionado = async (e) => {
@@ -285,7 +297,7 @@ class ResumenMembresia extends Component {
                                 <Input
                                     type="select"
                                     name="sectorSeleccionado"
-                                    value={this.state.sec_Id_Sector}
+                                    value={this.state.sectorSeleccionado}
                                     onChange={this.handle_sectorSeleccionado}
                                 >
                                     <option value="0">Selecciona un sector</option>
