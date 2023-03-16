@@ -47,6 +47,7 @@ class RptListaDeHogares extends Component {
         this.getListaHogares();
         this.getDistrito();
         this.getSectoresPorDistrito();
+        window.scrollTo(0, 0);
         }
 
         getDistrito = async () => {
@@ -137,7 +138,7 @@ arreglarLista= () =>{
          miembros.push({
              Grupo: miembro.grupo,
              Nombre: miembro.nombre,
-             Nacimiento: moment(miembro.nacimiento).format('d/MMM/YYYY'),
+             Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
              Edad: miembro.edad,
              Celular: miembro.cel?miembro.cel:"-"
          })

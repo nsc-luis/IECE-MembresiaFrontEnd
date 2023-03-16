@@ -72,7 +72,7 @@ class ListaDePersonal extends Component {
         this.getSector();
         this.getDistrito();
         this.getSectoresPorDistrito();
-        
+        window.scrollTo(0, 0);
     }
 
     getActivos()  {
@@ -283,9 +283,10 @@ class ListaDePersonal extends Component {
             });
         } else {
             //this.handle_BorrarFiltros();
-            this.setState({
-                personas: this.state.tempPersonas
-            })
+            // this.setState({
+            //     personas: this.state.tempPersonas
+            // })
+            this.getActivos()
         }
     }
 
@@ -343,9 +344,10 @@ class ListaDePersonal extends Component {
             });
         } else {
             //this.handle_BorrarFiltros();
-            this.setState({
-                personas: this.state.tempPersonas
-            })
+            // this.setState({
+            //     personas: this.state.tempPersonas
+            // })
+            this.getActivos()
         }
     }
 
@@ -437,7 +439,7 @@ class ListaDePersonal extends Component {
             info.primerLinea = texto.substring(0, limitePrimeraLinea)
             if (texto.length > limitePrimeraLinea) {
                 let restoDelTexto = texto.substring(limitePrimeraLinea, texto.length)
-                let siguientesLineas = restoDelTexto.match(/.{1,100}/g);
+                let siguientesLineas = restoDelTexto.match(/.{1,107}/g);
                 info.totalDeLineas = siguientesLineas.length;
                 if (info.totalDeLineas > 3) {
                     for (let i = 0; i < 3; i++) {
@@ -568,8 +570,27 @@ class ListaDePersonal extends Component {
         doc.text(`10.- Cuántos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 13, line);
         drawUnderlineTotext('10.- Cuántos hijos y sus nombres: ', 13, `${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, line);
         
-        doc.text(`${info.persona.per_Nombre_Hijos} `, 67, line);
-        drawUnderlineTotext('', 67, `${info.persona.per_Nombre_Hijos} `, line);
+        if (info.persona.per_Nombre_Hijos !== null) {
+            txt = dividirTextbox(71, info.persona.per_Nombre_Hijos);
+            doc.text(`${txt.primerLinea} `, 67, line);
+            drawUnderlineTotext('', 67, `${txt.primerLinea} `, line);
+            if (txt.textoTruncado.length > 0) {
+                i = 0;
+                for (let i = 0; i < txt.textoTruncado.length; i++) {
+                    line = line + 6;
+                    doc.text(txt.textoTruncado[i], 13, line);
+                    drawUnderlineTotext('', 13, txt.textoTruncado[i], line);
+                }
+                if (txt.totalDeLineas > 3) {
+                    line = line + 6;
+                    doc.text('. . . . . . . . . .', 13, line);
+                }
+            }
+        }
+        else {
+            doc.text(``, 67, line);
+        }
+
 
         line=line+renglon;
         doc.text(`11.- Lugar y fecha de Bautismo: ${info.persona.per_Lugar_Bautismo}, En fecha: ${info.persona.per_Fecha_Bautismo} `, 13, line);
@@ -589,7 +610,7 @@ class ListaDePersonal extends Component {
 
         line=line+renglon;
         if (info.persona.per_Cargos_Desempenados !== null) {
-            txt = dividirTextbox(67, info.persona.per_Cargos_Desempenados);
+            txt = dividirTextbox(71, info.persona.per_Cargos_Desempenados);
             doc.text(`14.- Puestos desempeñados en la iglesia: ${txt.primerLinea} `, 13, line);
             drawUnderlineTotext('14.- Puestos desempeñados en la iglesia: ', 13, `${txt.primerLinea} `, line);
             if (txt.textoTruncado.length > 0) {
@@ -611,7 +632,7 @@ class ListaDePersonal extends Component {
 
         line=line+renglon;
         if (info.persona.per_Cambios_De_Domicilio !== null) {
-            txt = dividirTextbox(79, info.persona.per_Cambios_De_Domicilio);
+            txt = dividirTextbox(82, info.persona.per_Cambios_De_Domicilio);
             doc.text(`15.- Cambios de Domicilio: ${txt.primerLinea} `, 13, line);
             drawUnderlineTotext('15.- Cambios de Domicilio: ', 13, `${txt.primerLinea} `, line);
             if (txt.textoTruncado.length > 0) {

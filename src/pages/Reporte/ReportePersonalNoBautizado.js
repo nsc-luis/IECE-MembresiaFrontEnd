@@ -23,7 +23,13 @@ export default function ReportePersonalNoBautizado(){
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     //Llamadas en render
+
     useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
+      
+    useEffect(() => {
+
         if(sector == null){
             helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
                 .then(res => {

@@ -142,6 +142,7 @@ class ReporteTransacciones extends Component {
         }
     }
     componentDidMount() {
+        window.scrollTo(0, 0);
         this.setState({
             fsd: {
                 ...this.state.fsd,

@@ -52,7 +52,19 @@ class Sidebar extends Component {
     openModalEditaPersona = async () => {
         await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas });
+                this.setState({ personas: res.data.personas.sort((a,b)=>{
+                    const nameA = a.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                }) });
             });
         this.setState({ modalEditaPersona: !this.state.modalEditaPersona })
     }
@@ -60,7 +72,19 @@ class Sidebar extends Component {
     openModalEditaPersonaNB = async () => {
         await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas });
+                this.setState({ personas: res.data.personas.sort((a,b)=>{
+                    const nameA = a.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                }) });
             });
         this.setState({ modalEditaPersonaNB: !this.state.modalEditaPersonaNB })
     }
