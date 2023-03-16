@@ -58,7 +58,19 @@ class AltaCambioDomicilio extends Component {
     GetPersonaCambioDomicilioReactivacionRestitucion = async () => {
         await helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/true")
             .then(res => {
-                this.setState({ personas: res.data.personas })
+                this.setState({ personas: res.data.personas.sort((a,b)=>{
+                    const nameA = a.per_Nombre; // ignore upper and lowercase
+                    const nameB = b.per_Nombre; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                      return -1;
+                    }
+                    if (nameA > nameB) {
+                      return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                }) })
             });
     }
     fnGetDatosDelHogar = async (id) => {

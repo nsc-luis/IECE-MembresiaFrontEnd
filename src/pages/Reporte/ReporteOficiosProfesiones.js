@@ -29,6 +29,7 @@ export default function ReporteOficiosProfesiones(){
     
     //Llamadas en render
     useEffect(() => {
+        window.scrollTo(0, 0);
         if(sector == null){ //Si es Sesión de OBISPO
                 
                 getInfoDistrito()
@@ -85,7 +86,6 @@ const getPersonasSector = (sec)=>{
         helpers.authAxios.get("/Distrito/" + dto)
         .then(res => {
             setInfoDis(res.data)
-            
         })
     }
 
@@ -124,7 +124,6 @@ const getPersonasSector = (sec)=>{
                 setSectorSeleccionado("todos");
                 setEntidadTitulo("TODOS LOS SECTORES")
             }
-           
     }
 
     const getTitulo = (sector)=>{
@@ -132,7 +131,7 @@ const getPersonasSector = (sec)=>{
         sectores.map(sec=>{
             
             if (sec.sec_Id_Sector == sector){
-                setEntidadTitulo( sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+                setEntidadTitulo( sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
                 //console.log("entidadTitulo: ",sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }
         })
@@ -166,11 +165,19 @@ const getPersonasSector = (sec)=>{
         const doc = new jsPDF("p", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("LISTA PROFESIONES Y OFICIOS", 135, 10, {align:"center"});
+        doc.text("LISTA PROFESIONES Y OFICIOS", 140, 10, {align:"center"});
         doc.setFontSize(10);
         
-
-        doc.text(entidadTitulo, 135, 18, {align:"center"});
+        if (sector) {
+            doc.text(entidadTitulo, 140, 22, {align:"center"});
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
+        }
+        else {
+            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, {align:"center"})
+            doc.text(entidadTitulo, 140, 22, {align:"center"})
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
+        }
+        doc.line(10, 32, 200, 32);
 
         doc.setFontSize(8);
         const headers = [
@@ -230,6 +237,7 @@ const getPersonasSector = (sec)=>{
                             </Col>
                         </Row>
                     </FormGroup>
+
                     <FormGroup>
                         <Row>
                             <Col xs="5">
@@ -272,8 +280,11 @@ const getPersonasSector = (sec)=>{
                         LISTA DE PROFESIONES Y OFICIOS
                         {/* <h5>Distrito: {infoDis}</h5> */}
 
-                        <div></div>
-                        <div></div>
+                        <FormGroup>
+                            <Row>
+                                <h1></h1>
+                            </Row>
+                        </FormGroup>
                     {/* {sector?(sector ? <h5>{infoSec.sec_Alias}</h5> : null):(dto ? <h5>{infoDis.dis_Alias}</h5> : null)} */}
                         <h5>{entidadTitulo}</h5>
 

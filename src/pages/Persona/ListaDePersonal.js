@@ -72,7 +72,7 @@ class ListaDePersonal extends Component {
         this.getSector();
         this.getDistrito();
         this.getSectoresPorDistrito();
-        
+        window.scrollTo(0, 0);
     }
 
     getActivos()  {
@@ -283,9 +283,10 @@ class ListaDePersonal extends Component {
             });
         } else {
             //this.handle_BorrarFiltros();
-            this.setState({
-                personas: this.state.tempPersonas
-            })
+            // this.setState({
+            //     personas: this.state.tempPersonas
+            // })
+            this.getActivos()
         }
     }
 
@@ -343,9 +344,10 @@ class ListaDePersonal extends Component {
             });
         } else {
             //this.handle_BorrarFiltros();
-            this.setState({
-                personas: this.state.tempPersonas
-            })
+            // this.setState({
+            //     personas: this.state.tempPersonas
+            // })
+            this.getActivos()
         }
     }
 

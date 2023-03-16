@@ -1,7 +1,7 @@
-/* import Layout from "../Layout"; */
+import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
-    Container, Button,
+    Container, Button,FormGroup,Input,
      CardTitle, Card, CardBody, Table, /* UncontrolledCollapse, */ Row, Col
 } from 'reactstrap';
 
@@ -17,48 +17,119 @@ import logo from '../../assets/images/IECE_LogoOficial.jpg'
 export default function ReporteCumpleaños(){
     //Estados
     const [personas, setPersonas] = useState([])
-    const [infoDis, setInfoDis] = useState(null)
-    const [infoSec, setInfoSec] = useState(null)
+    const [infoDis, setInfoDis] = useState([])
+    const [infoSec, setInfoSec] = useState([])
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     const [infoSecretario, setInfoSecretario] = useState(null)
+    const [sectores, setSectores] = useState([])
+    const [lider, setLider] = useState("")
+    const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
+    const [entidadTitulo, setEntidadTitulo] = useState("")
     //Llamadas en render
     useEffect(() => {
+        window.scrollTo(0, 0);
         if(sector == null){
-            helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
-                .then(res => {
-                    const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
-                        return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
-                    })
-                    setPersonas(sortedData.filter(per=>per.per_Activo===true))
-                });
-                helpers.authAxios.get("/Distrito/" + dto)
-                .then(res => {
-                    setInfoDis(res.data.dis_Alias)
+            getInfoDistrito()
+            getPersonasDistrito()
+            setSectorSeleccionado("todos");
+            setLider ("OBISPO")
+            setEntidadTitulo("TODOS LOS SECTORES")
+
+            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
+            .then(res => {
+                    setSectores (res.data.sectores)
                 })
+
+            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+            .then(res => {
+                setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
+            });
+
         }else{
-            helpers.authAxios.get("/Persona/GetBySector/" + sector)
-            .then(res => {
-                const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
-                    return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
-                })
-                setPersonas(sortedData.filter(per=>per.per_Activo===true))
-            helpers.authAxios.get("/Distrito/" + dto)
-            .then(res => {
-                setInfoDis(res.data.dis_Alias)
-            })
+            getInfoDistrito()
+            getPersonasSector(sector)
+            setLider ("PASTOR")
+
+
             helpers.authAxios.get("/Sector/" + sector)
             .then(res => {
-                setInfoSec(res.data.sector[0].sec_Alias)
+                setInfoSec(res.data.sector[0])
+                const sectores= []
+                sectores.push(res.data.sector[0])
+                //console.log("sectores: ", sectores)
+                setSectores(sectores);
+                setSectorSeleccionado( sector)
+                setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
             })
+
             helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
             .then(res => {
                 setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
             })
-            });
-        }
-    }, [personas.length])
 
+            getTitulo(sector)
+
+            console.log("Distrito al Final: ", infoDis)
+        }
+    },[])
+
+    const getInfoDistrito =()=>{
+        console.log("Dto: ", dto)
+        helpers.authAxios.get("/Distrito/" + dto)
+        .then(res => {
+            setInfoDis(res.data)
+            console.log("Distrito: ", res.data)
+        })
+    }
+
+    const getPersonasDistrito = ()=>{
+        helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+        .then(res => {
+            const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
+                return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
+            })
+            setPersonas(sortedData.filter(per=>per.per_Activo===true))
+        });
+    }
+
+    const getPersonasSector = (sec)=>{
+
+        helpers.authAxios.get("/Persona/GetBySector/" + sec)
+        .then(res => {
+            const sortedData = res.data.map( d => (d.persona)).sort((a,b) => {
+                return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
+            })
+            setPersonas(sortedData.filter(per=>per.per_Activo===true))
+        });
+    }
+
+    
+
+    const handle_sectorSeleccionado = async (e) => {
+
+        if (e.target.value !=="todos"){
+            
+            getPersonasSector(e.target.value)
+            setSectorSeleccionado(e.target.value);
+            getTitulo(e.target.value)
+        }else{
+            getPersonasDistrito();
+            setSectorSeleccionado("todos");
+            setEntidadTitulo("TODOS LOS SECTORES")
+        }
+}
+
+    const getTitulo = (sector)=>{
+        //console.log("Sector: ", sectores);
+        sectores.map(sec=>{
+            
+            if (sec.sec_Id_Sector == sector){
+                setEntidadTitulo( sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
+                //console.log("entidadTitulo: ",sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+            }
+        })
+    } 
     const downloadTable = () =>{
         TableToExcel.convert(document.getElementById("table1"), {
             name: "Cumpleaños_membresia.xlsx",
@@ -87,19 +158,22 @@ export default function ReporteCumpleaños(){
         const doc = new jsPDF("p", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("LISTA DE CUMPLEAÑOS", 135, 10, {align:"center"});
-        doc.setFontSize(8);
+        doc.text("LISTA DE CUMPLEAÑOS", 140, 10, {align:"center"});
+        doc.setFontSize(10);
 
         if (sector) {
-            doc.text(`${infoSec}`, 135, 18, {align:"center"});
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
+            doc.text(entidadTitulo, 140, 22, {align:"center"});
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
-            doc.text(`${infoDis}`, 135, 18, {align:"center"})
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
+            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, {align:"center"})
+            doc.text(entidadTitulo, 140, 22, {align:"center"})
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         doc.line(10, 32, 200, 32);
         
+        doc.setFontSize(8);
+
         const headers = [
             'Indice',
             'Nombre',
@@ -133,7 +207,7 @@ export default function ReporteCumpleaños(){
         doc.line(120, yAxis, 180, yAxis);
         yAxis += 3;
         doc.text("SECRETARIO", 51, yAxis);
-        doc.text("PASTOR", 145, yAxis);
+        doc.text(lider, 145, yAxis);
         yAxis -= 5;
         doc.text(`${infoSecretario}`, 41, yAxis);
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
@@ -142,8 +216,50 @@ export default function ReporteCumpleaños(){
         doc.save("ReporteCumpleaños.pdf");
     }
     return(
+
         <>
             <Container fluid>
+
+            <FormGroup>
+                         <Row>
+                            <Col xs="5">
+                                <Input
+                                    type="select"
+                                    name="idDistrito"
+                                >
+                                    <option value="1">{`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`}</option>
+                                </Input>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
+                            <Col xs="5">
+                                <Input
+                                    type="select"
+                                    name="sectorSeleccionado"
+                                    value={sectorSeleccionado}
+                                    onChange={handle_sectorSeleccionado}
+                                >
+                                    <option value="0">Selecciona un sector</option>
+                                    
+                                    {sectores.map(sector => {
+                                        return (
+                                            <React.Fragment key={sector.sec_Id_Sector}>
+                                                <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                            </React.Fragment>
+                                        )
+                                    })}
+                                    {localStorage.getItem('sector') === null &&
+                                        <React.Fragment>
+                                            <option value="todos">TODOS LOS SECTORES</option>
+                                        </React.Fragment>
+                                    }
+                                </Input>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+
                 <Button className="btn-success m-3 " onClick={() => downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={() => reportePersonalBautizadoPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
 
@@ -155,9 +271,16 @@ export default function ReporteCumpleaños(){
                         <img src={logo} width="100%"></img> 
                     </Col>
                     <Col>
-                        REPORTE DE CUMPLEAÑOS
-                        <h5>Distrito: {infoDis}</h5>
-                        {sector ? <h5>Sector: {infoSec}</h5> : null}
+                        LISTA DE PERSONAL POR FECHA DE CUMPLEAÑOS
+
+                        <FormGroup>
+                            <Row>
+                                <h1></h1>
+                            </Row>
+                        </FormGroup>
+
+                        <h5>{entidadTitulo}</h5>
+                        {/* {sector ? <h5>Sector: {infoSec}</h5> : null} */}
                     </Col>
                 </Row>
                 </CardTitle>

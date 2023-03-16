@@ -47,6 +47,7 @@ class RptListaDeHogares extends Component {
         this.getListaHogares();
         this.getDistrito();
         this.getSectoresPorDistrito();
+        window.scrollTo(0, 0);
         }
 
         getDistrito = async () => {
