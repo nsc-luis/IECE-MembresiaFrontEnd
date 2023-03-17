@@ -17,10 +17,26 @@ class BajaBautizadoCambioDomicilio extends Component {
         this.state = {
             personas: [],
             formBajaBautizadoCambioDomicilio: {},
-            rSelected: true
+            rSelected: false
         }
     }
 
+    componentDidMount() {
+        this.setState({
+            formBajaBautizadoCambioDomicilio: {
+                ...this.state.formBajaBautizadoCambioDomicilio,
+                idPersona: '0',
+                tipoDestino: '0',
+                fechaTransaccion: '',
+                idUsuario: this.infoSesion.pem_Id_Ministro,
+                bajaPorBajaDePadres: false,
+                ultimoBautizado: false
+            }
+        })
+        this.getBajaBautizadoCambioDomicilio()
+    }
+
+    //Al cambiar el estado del Botón, se actualiza el estado de rSelected y el del atributo/argumento bajaPorCambioDePadres que se envía a la API
     onRadioBtnClick(rSelected) {
         this.setState({
             rSelected,
@@ -28,6 +44,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                 ...this.state.formBajaBautizadoCambioDomicilio,
                 bajaPorBajaDePadres: rSelected,
             }
+
         });
     }
 
@@ -50,20 +67,7 @@ class BajaBautizadoCambioDomicilio extends Component {
             });
     }
 
-    componentDidMount() {
-        this.setState({
-            formBajaBautizadoCambioDomicilio: {
-                ...this.state.formBajaBautizadoCambioDomicilio,
-                idPersona: '0',
-                tipoDestino: '0',
-                fechaTransaccion: '',
-                idUsuario: this.infoSesion.pem_Id_Ministro,
-                bajaPorBajaDePadres: true,
-                ultimoBautizado: false
-            }
-        })
-        this.getBajaBautizadoCambioDomicilio()
-    }
+
 
     onChangeBajaBautizadoCambioDomicilio = async (e) => {
         this.setState({ //Se va conformando el Objeto FORMBAJABAUTIZADOCAMBIO DOMICILIO cada Input que se Actualiza
@@ -72,7 +76,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
-        if (e.target.name === "idPersona") {
+        if (e.target.name === "idPersona") { // Si el input que cambia es el Select idPersona, trae los datos del Hogar de esa persona
             await helpers.authAxios.get(`${helpers.url_api}/Hogar_Persona/GetHogarByPersona/${e.target.value}`)
                 .then(res => {
                     var cuentaMiembros = 0;
@@ -123,6 +127,7 @@ class BajaBautizadoCambioDomicilio extends Component {
     }
 
     render() {
+
         return (
             <Container>
                 <Card>
@@ -227,8 +232,8 @@ class BajaBautizadoCambioDomicilio extends Component {
                                             <Col xs="9">
                                                 <FormGroup>
                                                     <ButtonGroup>
-                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === true}>Por cambio de domicilio</Button>
-                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === false}>Por baja de padres</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(false)} active={!this.state.rSelected}>Por cambio de domicilio</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected }>Por baja de padres</Button>
                                                     </ButtonGroup>
                                                 </FormGroup>
                                             </Col>
