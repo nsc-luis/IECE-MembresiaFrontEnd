@@ -10,6 +10,7 @@ import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
+import 'moment/locale/es';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
@@ -76,8 +77,8 @@ export default function ReporteMovimientoEstadistico(){
         }else{
             params.idSectorDistrito = sector
             const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
-            console.log(res.data)
-            orderData(res.data.datos)
+            orderData(res.data.datos.sort((a,b) => {
+                return moment(a.hte_Fecha_Transaccion).dayOfYear() - moment(b.hte_Fecha_Transaccion).dayOfYear()}))
             setExcelData(res.data.datos)
             const resDto = await helpers.authAxios.get("/Distrito/" + dto)
             setInfoDis(resDto.data.dis_Alias)
@@ -294,12 +295,12 @@ export default function ReporteMovimientoEstadistico(){
 
         if(data.length > 0){
             return(
-                <Fragment>
-                    <tr>
-                        <th>{label}</th>
+            <>
+                    <tr className="border" >
+                        <th><h5>{label}</h5></th>
                     </tr>
                     {data.map((persona, index) => (
-                        <tr>
+                        <tr className="border">
                             <td>{index + 1}.- {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                             <td>{persona.ct_Tipo}</td>
                             <td>{persona.ct_Subtipo}</td>
@@ -310,7 +311,7 @@ export default function ReporteMovimientoEstadistico(){
                     <tr>
                         <th className="text-right" colSpan="4">Total por {label}: {total} </th>
                     </tr>
-                </Fragment>
+            </>
             )
         }else{
             return ""
@@ -333,8 +334,7 @@ export default function ReporteMovimientoEstadistico(){
                     <Col>
                         REPORTE DE MOVIMIENTO ESTADISTICO PERIODICO
                         
-                        {sector ? <h5>Sector: {infoSec}</h5> :
-                        <h5>Distrito: {infoDis}</h5>}
+                        {sector ? <h5>Sector: {infoSec}</h5> :<h5>Distrito: {infoDis}</h5>}
                     </Col>
                 </Row>
                 : ""
@@ -346,13 +346,13 @@ export default function ReporteMovimientoEstadistico(){
                             <Col lg="1" className="text-center">
                                 <h3>De</h3>
                             </Col>
-                            <Col lg="2" className="text-center">
+                            <Col lg="3" className="text-center">
                                 <Input type="date" value={startDate} onInput={(e) => handleStartDate(e.target)}></Input>
                             </Col>
                             <Col lg="1" className="text-center">
                                 <h3>al</h3>
                             </Col>
-                            <Col lg="2" className="text-center">
+                            <Col lg="3" className="text-center">
                                 <Input type="date" value={endDate} onInput={(e) => handleEndDate(e.target)}></Input>
                             </Col>
                             <Col lg="2" className="text-center">
@@ -364,26 +364,26 @@ export default function ReporteMovimientoEstadistico(){
                         <UncontrolledCollapse defaultOpen toggler="#altas"> */}
                             <Card>
                                 <CardBody>
-                                    <Table borderless>
-                                        <tr>
+                                    <Table borderless >
+                                        <tr >
                                             <th><h4>Nombre</h4></th>
                                             <th><h4>Tipo Movimiento</h4></th>
                                             <th><h4>Subtipo Movimiento</h4></th>
                                             <th><h4>Comentario</h4></th>
                                             <th><h4>Fecha</h4></th>
                                         </tr>
-                                        <tr className="bg-info">
-                                            <td colSpan="5">
+                                        <tr className="bg-info" >
+                                            <td colSpan="12">
                                                 <h4><strong>MEMBRESIA BAUTIZADA</strong></h4>
                                             </td>
                                         </tr>
                                         <tr className="bg-light">
-                                            <td colSpan="5">
+                                            <td colSpan="12">
                                                 <h5>ACTUALIZACIONES</h5>
                                             </td>
                                         </tr>
 
-                                        <TableRow label={'Actualizacion Bautizado'} data= {actualizacionB} total={actualizacionB ? actualizacionB.length : 0}/>
+                                        <TableRow label={'Actualización Bautizado'} data= {actualizacionB} total={actualizacionB ? actualizacionB.length : 0}/>
 
                                         <tr className="bg-light">
                                             <td colSpan="5">
@@ -418,7 +418,7 @@ export default function ReporteMovimientoEstadistico(){
                                             </td>
                                         </tr>
 
-                                        <TableRow label={'Actualizacion No Bautizado'} data= {actualizacionNB} total={actualizacionNB ? actualizacionNB.length : 0}/>
+                                        <TableRow label={'Actualización No Bautizado'} data= {actualizacionNB} total={actualizacionNB ? actualizacionNB.length : 0}/>
 
                                         <tr className="bg-light">
                                             <td colSpan="5">
@@ -440,7 +440,7 @@ export default function ReporteMovimientoEstadistico(){
                                         <TableRow label={'Cambio de Domicilio'} data= {bajasCambioDomNB} total={bajasCambioDomNB ? bajasCambioDomNB.length : 0}/>
                                         <TableRow label={'Alejamiento'} data= {alejamientos} total={alejamientos ? alejamientos.length : 0}/>
                                         <TableRow label={'Pasa a Personal Bautizado'} data= {cambiosABautizado} total={cambiosABautizado ? cambiosABautizado.length : 0}/>
-                                        <TableRow label={'Baja de Padres'} data= {bajasPorPadres} total={bajasPorPadres ? bajasPorPadres.length : 0}/>
+                                        <TableRow label={'Por Baja de Padres'} data= {bajasPorPadres} total={bajasPorPadres ? bajasPorPadres.length : 0}/>
 
                                         <tr className="bg-info">
                                             <td colSpan="5">
@@ -506,8 +506,8 @@ export default function ReporteMovimientoEstadistico(){
                             </Card>
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
                         {sector ?
-                            <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).sec_Alias} a <Moment locale="es" format="LL"></Moment></h4> :
-                            <h4 className="text-center m-4">{JSON.parse(localStorage.getItem("infoSesion")).dis_Alias} a <Moment locale="es" format="LL"></Moment></h4>
+                            <h4 className="text-center m-4"><Moment locale="es" format="LL"></Moment></h4> :
+                            <h4 className="text-center m-4"><Moment locale="es" format="LL"></Moment></h4>
                         }
                         <Row className="text-center mt-5">
                             <Col>
@@ -528,12 +528,13 @@ export default function ReporteMovimientoEstadistico(){
                 </Card>
                 <div hidden>
                             <Row>
-                                <Table id='table1' data-cols-width="10,60,40,60,40">
+                                <Table id='table1' data-cols-width="10,20,40,40,60,40">
                                     <thead>
                                         <tr>
                                             <th>Indice</th>
                                             <th>Nombre</th>
-                                            <th>Movimiento</th>
+                                            <th>Tipo</th>
+                                            <th>SubTipo</th>
                                             <th>Comentario</th>
                                             <th>Fecha</th>
                                         </tr>
@@ -547,6 +548,7 @@ export default function ReporteMovimientoEstadistico(){
                                                             <td>{index + 1}</td>
                                                             <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                                             <td>{persona.ct_Tipo}</td>
+                                                            <td>{persona.ct_Subtipo}</td>
                                                             <td>{persona.hte_Comentario}</td>
                                                             <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
                                                         </tr>

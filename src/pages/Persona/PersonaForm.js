@@ -63,6 +63,48 @@ class PersonaForm extends Component {
         }
     }
 
+    componentDidMount() {
+        this.setState({
+            hogar: { //Inicializa las variables del Objeto 'Hogar'
+                ...this.state.hogar,
+                hd_Id_Hogar: "0",
+                hp_Jerarquia: "1"
+            },
+            mensajes: { //Inicializa las variables del Objeto 'mensajes'
+                ...this.state.mensajes,
+                emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
+                fechaBautismoInvalida: 'Debe ingresar la fecha de bautismo, formato admintido: dd/mm/aaaa.',
+                fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
+                fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
+                fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
+                telMovilInvalido: 'Formatos admintidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 numeros sin espacios.',
+            }
+        })
+
+        this.getProfesionesOficios();//Trae por medio de API las prefeciones y oficios
+
+        //Para Transacciones de Edición/Actualización, inicializa .
+        if (localStorage.getItem("idPersona") !== "0") {//Manda llamar por API las personas en Comunión para mostrarlas en Imput/Select.
+            helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + localStorage.getItem("idPersona"))
+                .then(res => {
+                    this.setState({
+                        hogar: {
+                            ...this.state.hogar,
+                            hd_Id_Hogar: String(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar),
+                            hp_Jerarquia: String(res.data.datosDelHogarPorPersona.hp_Jerarquia)
+                        }
+                    })
+                    //Manda traer los datos del Hogar de la personas Seleccionada
+                    this.fnGetDatosDelHogar(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar)
+                })
+            setInterval(() => {
+                //Con cierta lógica inicializa 3 variables de Estado relacionadas al Estado Civil.
+                this.actualizaEstadoCivil();
+            }, 500);
+        }
+    };
+
+
     openModalAltaPersona = () => {
         this.setState({
             showModalAltaPersona: true
@@ -73,10 +115,12 @@ class PersonaForm extends Component {
         return <Redirect to='/ListaDePersonal' />;
     }
 
-    actualizaEstadoCivil = () => {
-        let cdv = false
-        let csh = false
-        let s = false
+    actualizaEstadoCivil = () => { //
+        let cdv = false //Para Cadao-Divorciado-Viudo
+        let csh = false //Para SolteroCOnHijos o Concubinato
+        let s = false //Soltero
+
+        //Inicia la variable de EstadoCivil Para Cadao-Divorciado-Viudo
         if (localStorage.getItem('estadoCivil') === 'CASADO(A)'
             || localStorage.getItem('estadoCivil') === 'DIVORCIADO(A)'
             || localStorage.getItem('estadoCivil') === 'VIUDO(A)') {
@@ -84,17 +128,23 @@ class PersonaForm extends Component {
             csh = false
             s = false
         }
+
+        //Inicia la variable de EstadoCivil Para SolteroCOnHijos o Concubinato
         if (localStorage.getItem('estadoCivil') === 'SOLTERO(A) CON HIJOS'
             || localStorage.getItem('estadoCivil') === 'CONCUBINATO') {
             cdv = false
             csh = true
             s = false
         }
+
+        //Inicia la variable de EstadoCivil Para Soltero
         if (localStorage.getItem('estadoCivil') === 'SOLTERO(A)') {
             cdv = false
             csh = false
             s = true
         }
+
+        //Pone en Varibles de Estado las variables recien instanciadas.
         this.setState({
             CasadoDivorciadoViudo: cdv,
             ConcubinatoSolteroConHijos: csh,
@@ -102,44 +152,7 @@ class PersonaForm extends Component {
         })
     }
 
-    componentDidMount() {
-        this.setState({
-            hogar: {
-                ...this.state.hogar,
-                hd_Id_Hogar: "0",
-                hp_Jerarquia: "1"
-            }
-        })
-        this.getProfesionesOficios();
-        this.setState({
-            mensajes: {
-                ...this.state.mensajes,
-                emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
-                fechaBautismoInvalida: 'Debe ingresar la fecha de bautismo, formato admintido: dd/mm/aaaa.',
-                fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
-                fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
-                fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
-                telMovilInvalido: 'Formatos admintidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 numeros sin espacios.',
-            }
-        });
-        if (localStorage.getItem("idPersona") !== "0") {
-            //helpers.authAxios.get(this.url + "/Hogar_Persona/" + localStorage.getItem("idPersona"))
-            helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + localStorage.getItem("idPersona"))
-                .then(res => {
-                    this.setState({
-                        hogar: {
-                            ...this.state.hogar,
-                            hd_Id_Hogar: String(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar),
-                            hp_Jerarquia: String(res.data.datosDelHogarPorPersona.hp_Jerarquia)
-                        }
-                    })
-                    this.fnGetDatosDelHogar(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar)
-                })
-            setInterval(() => {
-                this.actualizaEstadoCivil();
-            }, 500);
-        }
-    };
+
 
     getProfesionesOficios = () => {
         axios.get(this.url + "/profesion_oficio")
@@ -735,45 +748,46 @@ class PersonaForm extends Component {
                                                     </div>
                                                 </FormGroup>
 
+                                                {/* PORCION DE PANTALLA QUE SE DESPLEGA AVISANDO QUE ENCONTRO UNA PERSONA CON SIMILAR RFC */}
                                                 {bolPersonaEncontrada === true &&
-                                                 <>
-                                                    <PersonaEncontrada
-                                                        datosPersonaEncontrada={this.state.datosPersonaEncontrada}
-                                                    />
+                                                    <>
+                                                        <PersonaEncontrada
+                                                            datosPersonaEncontrada={this.state.datosPersonaEncontrada}
+                                                        />
 
-                                                    <div className="row">
-                                                    <div className="col-sm-6"></div>
-                                                    <div className="col-sm-3 ">
-                                                        <Button
-                                                            type="button"
-                                                            onClick={handleIgnorarDuplicados}
-                                                            color="success"
-                                                            className="btn-block"
-                                                        >
-                                                            <span
-                                                                className="fa fa-check fa-sm "
-                                                                style={{ paddingRight: "5px" }}>
-                                                            </span>
-                                                            <i>Continuar Captura</i>
-                                                        </Button>
-                                                    </div>
+                                                        <div className="row">
+                                                            <div className="col-sm-6"></div>
+                                                            <div className="col-sm-3 ">
+                                                                <Button
+                                                                    type="button"
+                                                                    onClick={handleIgnorarDuplicados}
+                                                                    color="success"
+                                                                    className="btn-block"
+                                                                >
+                                                                    <span
+                                                                        className="fa fa-check fa-sm "
+                                                                        style={{ paddingRight: "5px" }}>
+                                                                    </span>
+                                                                    <i>Continuar Captura</i>
+                                                                </Button>
+                                                            </div>
 
-                                                    <div className="col-sm-3 ">
-                                                        <Button
-                                                            type="button"
-                                                            onClick={() => window.location = "/ListaDePersonal"}
-                                                            color="danger"
-                                                            className="btn-block"
-                                                        >
-                                                            <span
-                                                                className="fa fa-times fa-sm "
-                                                                style={{ paddingRight: "5px" }}>
-                                                            </span>
-                                                            <i>Cancelar</i>
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                                </>
+                                                            <div className="col-sm-3 ">
+                                                                <Button
+                                                                    type="button"
+                                                                    onClick={() => window.location = "/ListaDePersonal"}
+                                                                    color="danger"
+                                                                    className="btn-block"
+                                                                >
+                                                                    <span
+                                                                        className="fa fa-times fa-sm "
+                                                                        style={{ paddingRight: "5px" }}>
+                                                                    </span>
+                                                                    <i>Cancelar</i>
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </>
                                                 }
 
                                             </CardBody>
@@ -1015,7 +1029,7 @@ class PersonaForm extends Component {
                                                                         <label>Foto</label>
                                                                     </div>
                                                                     <div className="col-sm-4 text-center">
-                                                                        <img src={foto} className="fotoFormulario" />
+                                                                        <img src={foto} alt="Foto Persona" className="fotoFormulario" />
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>

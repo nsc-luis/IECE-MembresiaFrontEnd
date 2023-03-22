@@ -122,6 +122,7 @@ class Domicilio extends React.Component {
                                 <tr>
                                     <th scope="col">Miembros del hogar</th>
                                     <th scope="col">Jerarquía</th>
+                                    <th scope="col">Activo</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -131,6 +132,7 @@ class Domicilio extends React.Component {
                                             <tr key={i}>
                                                 <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
                                                 <td>{miembro.hp_Jerarquia}</td>
+                                                <td>{miembro.per_Activo?"SI":"NO"}</td>
                                             </tr>
                                         )
                                     })

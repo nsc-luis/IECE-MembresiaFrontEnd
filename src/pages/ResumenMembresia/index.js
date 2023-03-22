@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Box, Tipography } from 'react';
 import helpers from '../../components/Helpers';
 import axios from 'axios';
 import {
-    Form, FormGroup, Input, Button, Row, Col, Label,
-    Container, FormFeedback, Card, CardBody, CardTitle, CardHeader, CardFooter
+    Form, FormGroup, Input, Button, Row, Col, Label, ResponsiveContainer,
+    Container, FormFeedback, Card, CardBody, CardTitle, CardHeader, CardFooter,
 } from 'reactstrap'
-import { Link } from 'react-router-dom';
-import Layout from '../Layout';
 import './style.css';
 import { jsPDF } from "jspdf";
 import nvologo from '../../assets/images/IECE_LogoOficial.jpg';
 import moment from 'moment';
+import { PieChart, Pie, Tooltip, Cell } from 'recharts'
 
 class ResumenMembresia extends Component {
 
@@ -41,6 +40,8 @@ class ResumenMembresia extends Component {
             infoSecretario: {},
             distrito: {},
             gradoMinistro: "",
+            resumenBautizados: [],
+            resumenNoBautizados: []
             //sec_Id_Sector:""
         }
     }
@@ -49,7 +50,18 @@ class ResumenMembresia extends Component {
         this.getSectoresPorDistrito();
         this.getDistrito();
         this.seleccionaSectorActivo();
+        //this.convertirData();
         window.scrollTo(0, 0);
+
+    }
+
+    convertirData = () => {
+        let data01 = Object.keys(this.state.resumenDeMembresia);
+        console.log("Data1: ", data01);
+        let data02 = data01.map(key => {
+            return { [key]: (this.state.resumenDeMembresia)[key] }
+        });
+        console.log("Data2: ", data02);
     }
 
     getDistrito = async () => {
@@ -67,10 +79,10 @@ class ResumenMembresia extends Component {
                 .then(res => {
                     this.setState({
                         sectores: res.data.sectores
-                        
+
                     })
                 });
-                
+
         }
         else {
             await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
@@ -83,14 +95,34 @@ class ResumenMembresia extends Component {
         }
     }
 
-    seleccionaSectorActivo = async()=>{
+    seleccionaSectorActivo = async () => {
         this.setState({ sectorSeleccionado: localStorage.getItem('sector') });
         //this.setState({sec_Id_Sector: localStorage.getItem('sector')});
         await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + localStorage.getItem('sector'))
-                .then(res => {
-                    // console.log(res.data.value);
-                    this.setState({ resumenDeMembresia: res.data.resumen.value })
-                });
+            .then(res => {
+                this.setState({ resumenDeMembresia: res.data.resumen.value });
+                let dataTodos = Object.keys(res.data.resumen.value);
+                let dataBautizados = dataTodos.filter(item => item === 'hb' || item === "mb" || item === "jhb" || item === "jmb");
+                console.log("DataBautizados: ", dataBautizados);
+                let dataNoBautizados = dataTodos.filter(item => item === "jhnb" || item === "jmnb" || item === "ninos" || item === "ninas");
+                let resumenBautizados = dataBautizados
+                    .map(key => {
+                        return {
+                            name: key,
+                            value: (res.data.resumen.value)[key]
+                        }
+                    });
+                console.log("DataB: ", resumenBautizados);
+                let resumenNoBautizados = dataNoBautizados
+                    .map(key => {
+                        return {
+                            name: key,
+                            value: (res.data.resumen.value)[key]
+                        }
+                    });
+                console.log("DataNB: ", resumenNoBautizados);
+                this.setState({ resumenBautizados, resumenNoBautizados });
+            });
     }
 
     handle_sectorSeleccionado = async (e) => {
@@ -98,8 +130,9 @@ class ResumenMembresia extends Component {
             this.setState({ sectorSeleccionado: e.target.value });
             await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
-                    // console.log(res.data.value);
+                    //console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen })
+
                 });
             // alert("ALERTA! Aqui podemos hacer 2 cosas:\n- Generar un ciclo que sume los sectores.\n- Agregar dis_Id_Distrito a la tabla de Personal (creo que esta es mejor opcion).");
         }
@@ -109,6 +142,7 @@ class ResumenMembresia extends Component {
                 .then(res => {
                     // console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen.value })
+                    console.log("{ Resumen: ", res.data.resumen.value)
                 });
         }
     }
@@ -148,7 +182,7 @@ class ResumenMembresia extends Component {
                     })
                 await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
                     .then(res => {
-                        this.setState({ 
+                        this.setState({
                             infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
                         });
                     })
@@ -171,102 +205,102 @@ class ResumenMembresia extends Component {
             let line = 7;
 
             doc.addImage(nvologo, 'JPG', 10, line, 70, 20);
-            doc.text("RESUMEN DE MEMBRESIA GENERAL", 136, 11, {align:'center'});
+            doc.text("RESUMEN DE MEMBRESIA GENERAL", 136, 11, { align: 'center' });
             doc.setFontSize(10);
 
             //Si en LocalStorage tiene Numero de Sector, significa que es Sesión Sector
             if (localStorage.getItem('sector') !== null) {
-                doc.text(`${this.state.infoSector.sec_Alias}`, 136, 18,{align:'center'});
+                doc.text(`${this.state.infoSector.sec_Alias}`, 136, 18, { align: 'center' });
                 /* doc.text(fechaTexto, 85, 25); */
             }
             else {
-                doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 136, 18,{align:'center'});
-                doc.text(`${this.state.infoSector.sec_Alias}`, 136, 24,{align:'center'});
+                doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 136, 18, { align: 'center' });
+                doc.text(`${this.state.infoSector.sec_Alias}`, 136, 24, { align: 'center' });
                 /* doc.text(fechaTexto, 85, 20); */
             }
 
-            line=line+25;
+            line = line + 25;
             doc.setFontSize(9);
             doc.line(10, line, 200, line);
 
-            line=line+7;
+            line = line + 7;
             doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
-            doc.rect(10, line-4, 190, 6, "F");
+            doc.rect(10, line - 4, 190, 6, "F");
 
             doc.setFont("", "", "bold");
             doc.text("MEMBRESÍA BAUTIZADA", 15, line);
             doc.text(`${this.state.resumenDeMembresia.totalBautizados}`, 80, line);
 
-            line=line+10;
+            line = line + 10;
             doc.setFont("", "", "normal");
             doc.text("ADULTO HOMBRE: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.hb}`, 70, line);
 
-            line=line+6;
+            line = line + 6;
             doc.text("ADULTO MUJER: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.mb}`, 70, line);
 
-            line=line+6;
+            line = line + 6;
             doc.text("JÓVEN HOMBRE: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.jhb}`, 70, line);
 
-            line=line+6;
+            line = line + 6;
             doc.text("JÓVEN MUJER: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.jmb}`, 70, line);
 
-            line=line+10;
+            line = line + 10;
             doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
-            doc.rect(10, line-4, 190, 6, "F");
+            doc.rect(10, line - 4, 190, 6, "F");
             doc.setFont("", "", "bold");
             doc.text("MEMBRESÍA NO BAUTIZADA", 15, line);
             doc.text(`${this.state.resumenDeMembresia.totalNoBautizados}`, 80, line);
 
 
-            line=line+10;
+            line = line + 10;
             doc.setFont("", "", "normal");
             doc.text("JÓVEN HOMBRE: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.jhnb}`, 70, line);
 
-            line=line+6;
+            line = line + 6;
             doc.text("JÓVEN MUJER: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.jmnb}`, 70, line);
 
-            line=line+6;
+            line = line + 6;
             doc.text("NIÑOS: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.ninos}`, 70, line);
 
-            line=line+6;
+            line = line + 6;
             doc.text("NIÑAS: ", 20, line);
             doc.text(`${this.state.resumenDeMembresia.ninas}`, 70, line);
 
-            line=line+5;
+            line = line + 5;
             doc.line(10, line, 200, line);
 
-            line=line+8;
+            line = line + 8;
             doc.setFont("", "", "bold");
             doc.setFontSize(10);
             doc.text("MEMBRESÍA GENERAL: ", 142, line);
             //doc.rect(175, line-4, 16, 6);
             doc.text(`${this.state.resumenDeMembresia.totalDeMiembros}`, 190, line);
-            doc.line(185, line+1, 200, line+1);
+            doc.line(185, line + 1, 200, line + 1);
 
             doc.setFont("", "", "normal");
             doc.setFontSize(9);
-            line=line+30;
-            doc.text(`JUSTICIA Y VERDAD`, 105, line,{align:'center'});
-            line=line+5;
-            doc.text(fechaTexto, 105, line,{align:'center'});
+            line = line + 30;
+            doc.text(`JUSTICIA Y VERDAD`, 105, line, { align: 'center' });
+            line = line + 5;
+            doc.text(fechaTexto, 105, line, { align: 'center' });
 
-            line=line+25;
+            line = line + 25;
             doc.text(`${this.state.infoSecretario}`, 38, line);
             doc.text(`${this.state.infoMinistro}`, 130, line);
 
-            line=line+1;
+            line = line + 1;
             doc.line(30, line, 90, line);
 
             doc.line(120, line, 180, line);
 
-            line=line+4;
+            line = line + 4;
             doc.text("SECRETARIO", 51, line);
             doc.text(this.state.gradoMinistro, 145, line);
 
@@ -274,10 +308,40 @@ class ResumenMembresia extends Component {
         }
     }
 
+    COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+    renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+
+        const RADIAN = Math.PI / 180;
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+
+
+        );
+    };
+
+    options = {
+        plugins: {
+            display: true,
+            position: "button"
+        },
+        title: {
+            text: "Personal Bautizado",
+            display: true,
+            fontSize: 20
+        }
+    }
+
     render() {
         return (
-            <>                
-            <Container>
+            <>
+                <Container>
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>
@@ -301,7 +365,7 @@ class ResumenMembresia extends Component {
                                     onChange={this.handle_sectorSeleccionado}
                                 >
                                     <option value="0">Selecciona un sector</option>
-                                    
+
                                     {this.state.sectores.map(sector => {
                                         return (
                                             <React.Fragment key={sector.sec_Id_Sector}>
@@ -330,9 +394,49 @@ class ResumenMembresia extends Component {
                             </Col>
                         </Row>
                     </FormGroup>
+                    <Row>
+                        <Col>
+                            <PieChart width={400} height={400}>
+                                <Pie
+                                    data={this.state.resumenBautizados}
+                                    cx="50%"
+                                    cy="50%"
+                                    labelLine={false}
+                                    label={this.renderCustomizedLabel}
+                                    outerRadius={80}
+                                    fill="#7774d8"
+                                    dataKey="value"
+                                >
+                                    {this.state.resumenBautizados.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </Col>
+                        <Col>
+                            <PieChart width={400} height={400}>
+                                <Pie
+                                    data={this.state.resumenNoBautizados}
+                                    cx="50%"
+                                    cy="50%"
+                                    labelLine={false}
+                                    label={this.renderCustomizedLabel}
+                                    outerRadius={80}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                >
+                                    {this.state.resumenNoBautizados.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </Col>
+                    </Row>
                     <FormGroup>
                         <Row>
-                            <Col xs="5">
+                            <Col xs="6">
                                 <Card>
                                     <CardHeader>
                                         <CardTitle className="negrita centrado totalesTitulos">
@@ -352,7 +456,7 @@ class ResumenMembresia extends Component {
                                     </CardFooter>
                                 </Card>
                             </Col>
-                            <Col xs="5">
+                            <Col xs="6">
                                 <Card>
                                     <CardHeader>
                                         <CardTitle className="negrita centrado totalesTitulos">

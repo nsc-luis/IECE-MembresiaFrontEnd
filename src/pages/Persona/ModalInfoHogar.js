@@ -91,8 +91,10 @@ class ModalInfoHogar extends Component {
                         <table className="table">
                             <thead>
                                 <tr>
+                                    <th className="text-center">Grupo</th>
                                     <th>Miembro</th>
-                                    <th>Jerarquía</th>
+                                    <th className="text-center">Jerarquía</th>
+                                    <th className="text-center">Activo</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,8 +103,10 @@ class ModalInfoHogar extends Component {
                                         {objPersona.miembros.map((miembro) => {
                                             return (
                                                 <tr key={miembro.per_Id_Persona}>
+                                                    <td className="text-center">{miembro.per_Bautizado?"B":"NB"}</td>
                                                     <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno} </td>
-                                                    <td> {miembro.hp_Jerarquia} </td>
+                                                    <td className="text-center"> {miembro.hp_Jerarquia} </td>
+                                                    <td className="text-center">{miembro.per_Activo?"SI":"NO"}</td>
                                                 </tr>
                                             )
                                         })

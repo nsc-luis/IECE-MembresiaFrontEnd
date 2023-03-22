@@ -434,7 +434,7 @@ class RegistroDePersonal extends Component {
             var mimeTypeValidos = ["image/png", "image/jpeg", "image/jpg"];
             if (e.target.files[0].size / 1024 / 1024 > 3
                 || !mimeTypeValidos.includes(e.target.files[0].type)) {
-                alert("Error: \nSolo se admiten archivos menores o iguales a 3MB. \nO el archivo NO es una imagen del tipo 'png' o 'jpg'.")
+                alert("Error: \nSólo se admiten archivos menores o iguales a 3MB y que sea de tipo 'png', 'jpg' o jpeg.")
 
                 this.setState({
                     form: {
@@ -648,7 +648,7 @@ class RegistroDePersonal extends Component {
                                 }
                             });
                     } catch (error) {
-                        alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                        alert("Error: Hubo un problema en la comunicacioón con el Servidor. Intente mas tarde.");
                         // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                     }
                 })
@@ -685,7 +685,7 @@ class RegistroDePersonal extends Component {
                         }
                     });
             } catch (error) {
-                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
             }
         }

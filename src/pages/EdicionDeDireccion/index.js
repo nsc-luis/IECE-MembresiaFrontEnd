@@ -276,7 +276,7 @@ class EdicionDeDireccion extends Component {
                                                         {this.state.listaDomicilios.map((domicilio) => {
                                                             return (
                                                                 <option key={domicilio.hd_Id_Hogar} value={domicilio.hd_Id_Hogar}>
-                                                                    {`${domicilio.per_Nombre} ${domicilio.per_Apellido_Paterno} ${domicilio.per_Apellido_Materno}`}
+                                                                    {`${domicilio.per_Nombre} ${domicilio.per_Apellido_Paterno} ${domicilio.per_Apellido_Materno?domicilio.per_Apellido_Materno:""}`}
                                                                 </option>
                                                             )
                                                         })

@@ -1,20 +1,18 @@
-import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button,
-     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
-import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
 
-export default function ReportePersonalNoBautizado(){
+export default function ReportePersonalNoBautizado() {
     //Estados
     const [personas, setPersonas] = useState([])
     const [infoSecretario, setInfoSecretario] = useState({})
@@ -26,64 +24,65 @@ export default function ReportePersonalNoBautizado(){
 
     useEffect(() => {
         window.scrollTo(0, 0)
-      }, [])
-      
+    }, [])
+
     useEffect(() => {
 
-        if(sector == null){
+        if (sector == null) {
             helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
                 .then(res => {
                     setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado && persona.persona.per_Activo))
                 });
 
-                helpers.authAxios.get("/Distrito/" + dto)
+            helpers.authAxios.get("/Distrito/" + dto)
                 .then(res => {
                     setInfoDis(res.data.dis_Alias)
                 })
-        }else{
+        } else {
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
-            .then(res => {
-                setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado && persona.persona.per_Activo))
-            });
+                .then(res => {
+                    setPersonas(res.data.filter(persona => !persona.persona.per_Bautizado && persona.persona.per_Activo))
+                });
 
             helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
-            .then(res => {
-                setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
-            })
+                .then(res => {
+                    setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
+                })
 
             helpers.authAxios.get("/Distrito/" + dto)
-            .then(res => {
-                setInfoDis(res.data.dis_Alias)
-            })
+                .then(res => {
+                    setInfoDis(res.data.dis_Alias)
+                })
             helpers.authAxios.get("/Sector/" + sector)
-            .then(res => {
-                setInfoSec(res.data.sector[0].sec_Alias)
-            })
+                .then(res => {
+                    setInfoSec(res.data.sector[0].sec_Alias)
+                })
         }
     }, [personas.length])
 
-    const downloadTable = () =>{
+    const downloadTable = () => {
         TableToExcel.convert(document.getElementById("table1"), {
             name: "Personal_No_Bautizado.xlsx",
             sheet: {
-              name: "Hoja 1"
+                name: "Hoja 1"
             }
-          });
+        });
     }
 
     let totalCount = 0;
 
-    const countPersons = (type) =>{
+    const countPersons = (type) => {
         let count = 0
         personas.map(persona => {
-            if(persona.persona.per_Categoria === type){
-                count+=1 
+            if (persona.persona.per_Categoria === type) {
+                count += 1
             }
+            totalCount += count;
+            return count
         })
-        totalCount += count;
-        return count
+
     }
-    const reportePersonalBautizadoPDF = () =>{
+    const reportePersonalBautizadoPDF = () => {
         totalCount = 0
         let index = 1
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
@@ -92,13 +91,13 @@ export default function ReportePersonalNoBautizado(){
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
         doc.text("REPORTE DE PERSONAL NO BAUTIZADO", 85, 10);
         doc.setFontSize(9);
-        
+
         if (sector) {
-            doc.text(`${infoSec}`, 135, 18, {align:"center"});
+            doc.text(`${infoSec}`, 135, 18, { align: "center" });
             // doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
-            doc.text(`${infoDis}`, 135, 18, {align:"center"})
+            doc.text(`${infoDis}`, 135, 18, { align: "center" })
             // doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         doc.line(10, 32, 200, 32);
@@ -112,9 +111,9 @@ export default function ReportePersonalNoBautizado(){
         doc.text(`${countPersons("JOVEN_HOMBRE")}`, 80, yAxis);
         yAxis += 7;
         personas.map((persona) => {
-            if(persona.persona.per_Categoria === "JOVEN_HOMBRE"){
+            if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-                yAxis+=5;
+                yAxis += 5;
                 index++;
             }
         })
@@ -129,9 +128,9 @@ export default function ReportePersonalNoBautizado(){
         doc.text(`${countPersons("JOVEN_MUJER")}`, 80, yAxis);
         yAxis += 7;
         personas.map((persona) => {
-            if(persona.persona.per_Categoria === "JOVEN_MUJER"){
+            if (persona.persona.per_Categoria === "JOVEN_MUJER") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-                yAxis+=5;
+                yAxis += 5;
                 index++;
             }
         })
@@ -146,9 +145,9 @@ export default function ReportePersonalNoBautizado(){
         doc.text(`${countPersons("NIÑO")}`, 80, yAxis);
         yAxis += 7;
         personas.map((persona) => {
-            if(persona.persona.per_Categoria === "NIÑO"){
+            if (persona.persona.per_Categoria === "NIÑO") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-                yAxis+=5;
+                yAxis += 5;
                 index++;
             }
         })
@@ -163,9 +162,9 @@ export default function ReportePersonalNoBautizado(){
         doc.text(`${countPersons("NIÑA")}`, 80, yAxis);
         yAxis += 7;
         personas.map((persona) => {
-            if(persona.persona.per_Categoria === "NIÑA"){
+            if (persona.persona.per_Categoria === "NIÑA") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
-                yAxis+=5;
+                yAxis += 5;
                 index++;
             }
         })
@@ -194,7 +193,7 @@ export default function ReportePersonalNoBautizado(){
 
         doc.save("ReportePersonalNoBautizado.pdf");
     }
-    return(
+    return (
         <>
             <Container>
                 <Button className="btn-success m-3 " onClick={() => downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
@@ -202,7 +201,7 @@ export default function ReportePersonalNoBautizado(){
                 <Card body>
                     <Row>
                         <Col lg="5">
-                            <img src={logo} width="100%"></img> 
+                            <img src={logo} alt="Logo" width="100%"></img>
                         </Col>
                         <Col lg="7">
                             <CardTitle className="text-center" tag="h3">
@@ -218,11 +217,11 @@ export default function ReportePersonalNoBautizado(){
                                 <CardBody>
                                     <h5>
                                         <ol type="1">
-                                        {personas.map((persona) => {
-                                            if(persona.persona.per_Categoria === "JOVEN_HOMBRE"){
-                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
-                                            }
-                                        })}
+                                            {personas.map((persona) => {
+                                                if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                } else { return null }
+                                            })}
                                         </ol>
                                     </h5>
                                 </CardBody>
@@ -234,11 +233,11 @@ export default function ReportePersonalNoBautizado(){
                                 <CardBody>
                                     <h5>
                                         <ol type="1">
-                                        {personas.map((persona) => {
-                                            if(persona.persona.per_Categoria === "JOVEN_MUJER"){
-                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
-                                            }
-                                        })}
+                                            {personas.map((persona) => {
+                                                if (persona.persona.per_Categoria === "JOVEN_MUJER") {
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                } else { return null }
+                                            })}
                                         </ol>
                                     </h5>
                                 </CardBody>
@@ -250,11 +249,11 @@ export default function ReportePersonalNoBautizado(){
                                 <CardBody>
                                     <h5>
                                         <ol type="1">
-                                        {personas.map((persona) => {
-                                            if(persona.persona.per_Categoria === "NIÑO"){
-                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
-                                            }
-                                        })}
+                                            {personas.map((persona) => {
+                                                if (persona.persona.per_Categoria === "NIÑO") {
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                } else { return null }
+                                            })}
                                         </ol>
                                     </h5>
                                 </CardBody>
@@ -266,11 +265,11 @@ export default function ReportePersonalNoBautizado(){
                                 <CardBody>
                                     <h5>
                                         <ol type="1">
-                                        {personas.map((persona) => {
-                                            if(persona.persona.per_Categoria === "NIÑA"){
-                                                return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
-                                            }
-                                        })}
+                                            {personas.map((persona) => {
+                                                if (persona.persona.per_Categoria === "NIÑA") {
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                } else { return null }
+                                            })}
                                         </ol>
                                     </h5>
                                 </CardBody>
@@ -281,7 +280,7 @@ export default function ReportePersonalNoBautizado(){
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
                         <h4 className="text-center m-4">a {moment().format('LL')}</h4>
                         <Row className="text-center mt-5">
-                        <Col xs="1"></Col>
+                            <Col xs="1"></Col>
                             <Col xs="4">
                                 {/* <h5 style={{height: "1.2em"}}></h5> */}
                                 <h5>{`${infoSecretario}`}</h5>
@@ -296,43 +295,43 @@ export default function ReportePersonalNoBautizado(){
                             </Col >
                             <Col xs="1"></Col>
                         </Row>
-                </CardBody>
+                    </CardBody>
                 </Card>
 
 
                 {/* TABLA */}
                 <Card hidden body>
-                <CardTitle className="text-center" tag="h3">
-                    Reporte de Personal Bautizado
-                    <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
-                    {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
-                </CardTitle>
-                <CardBody>
-                    <Table responsive hover id="table1" data-cols-width="10,20,20,20,20,20">
-                        <thead>
-                            <tr>
-                                <th data-f-bold>Indice</th>
-                                <th data-f-bold>Nombre(s)</th>
-                                <th data-f-bold>Apellido Paterno</th>
-                                <th data-f-bold>Apellido Materno</th>
-                                <th data-f-bold>Categoria</th>
-                                <th data-f-bold>Telefono Movil</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {personas.map((persona, index) => (
-                                <tr key={persona.persona.per_Id_Persona}>
-                                    <td>{index + 1}</td>
-                                    <td>{persona.persona.per_Nombre}</td>
-                                    <td>{persona.persona.per_Apellido_Paterno}</td>
-                                    <td>{persona.persona.per_Apellido_Materno}</td>
-                                    <td>{persona.persona.per_Categoria}</td>
-                                    <td>{persona.persona.per_Telefono_Movil}</td>
+                    <CardTitle className="text-center" tag="h3">
+                        Reporte de Personal Bautizado
+                        <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
+                        {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
+                    </CardTitle>
+                    <CardBody>
+                        <Table responsive hover id="table1" data-cols-width="10,20,20,20,20,20">
+                            <thead>
+                                <tr>
+                                    <th data-f-bold>Indice</th>
+                                    <th data-f-bold>Nombre(s)</th>
+                                    <th data-f-bold>Apellido Paterno</th>
+                                    <th data-f-bold>Apellido Materno</th>
+                                    <th data-f-bold>Categoria</th>
+                                    <th data-f-bold>Telefono Movil</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </CardBody>
+                            </thead>
+                            <tbody>
+                                {personas.map((persona, index) => (
+                                    <tr key={persona.persona.per_Id_Persona}>
+                                        <td>{index + 1}</td>
+                                        <td>{persona.persona.per_Nombre}</td>
+                                        <td>{persona.persona.per_Apellido_Paterno}</td>
+                                        <td>{persona.persona.per_Apellido_Materno}</td>
+                                        <td>{persona.persona.per_Categoria}</td>
+                                        <td>{persona.persona.per_Telefono_Movil}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </CardBody>
                 </Card>
             </Container>
         </>

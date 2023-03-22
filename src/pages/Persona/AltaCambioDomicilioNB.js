@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Button, Input, Alert, Container, Row, Col, Card, ButtonGroup, FormFeedback,
-    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter
+    Button, Input, Alert, Container, Row, Col, Card,  FormFeedback,
+    Form, FormGroup,  CardBody, CardFooter
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import HogarPersonaDomicilio from './HogarPersonaDomicilio';
@@ -58,7 +58,9 @@ class AltaCambioDomicilioNB extends Component {
     GetPersonaCambioDomicilioReactivacionRestitucion = async () => {
         await helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/false")
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
+                this.setState({ personas: res.data.personas
+                    .filter(per=>(per.sec_Id_Sector!== parseInt(localStorage.getItem("sector"))) && per.per_Activo===true) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
+                    .sort((a,b)=>{
                     const nameA = a.per_Nombre; // ignore upper and lowercase
                     const nameB = b.per_Nombre; // ignore upper and lowercase
                     if (nameA < nameB) {
@@ -183,21 +185,28 @@ class AltaCambioDomicilioNB extends Component {
             })
         }
     }
-    onRadioBtnClick = (bool) => {
-        this.setState({
-            mismoHogar: !this.state.mismoHogar
-        })
-    }
+
     onChange = (e) => {
+        //Al cambiar cualquier Input del Formulario se modifica el Estado de las Variables correspondientes a cada Input.
         this.setState({
             [e.target.name]: e.target.value
         })
+
+        //Si el input que sufre cambio es 'per_Id_Persona' se trae su procedencia y la plazma en el input de Procedencia
         if (e.target.name === "per_Id_Persona") {
             if (e.target.value !== "0") {
-                var procedencia = this.state.personas.filter((obj) => {
-                    return obj.per_Id_Persona = parseInt(e.target.value);
-                })
-                this.setState({ procedencia: `${procedencia[0].dis_Tipo_Distrito} ${procedencia[0].dis_Numero}: ${procedencia[0].sec_Alias}` })
+                // Crea el Comentario con los datos de Procedencia de la persona.
+                var proced = this.state.personas.filter(obj => obj.per_Id_Persona === parseInt(e.target.value))
+                this.setState({ procedencia: `PROCEDENCIA: ${proced[0].dis_Tipo_Distrito} ${proced[0].dis_Numero} - ${proced[0].sec_Tipo_Sector} ${proced[0].sec_Numero}, ${proced[0].sec_Alias}` })
+
+                //Si el Distrito de Procedencia es igual  al de la Sesión Activa, se trata de un Cambio de Domicilio INTERNO, si no, es EXTERNO
+                if (proced[0].dis_Id_Distrito === parseInt(localStorage.getItem("dto"))){
+                    //Código de Cambio de Domicilio INTERNO
+                    this.setState({ct_Codigo_Transaccion: 12002}) 
+                } else{
+                    //Código de Cambio de Domicilio EXTERNO
+                    this.setState({ct_Codigo_Transaccion: 12003}) 
+                }
             }
             else {
                 this.setState({ procedencia: "" })
@@ -206,15 +215,19 @@ class AltaCambioDomicilioNB extends Component {
     }
     guardarCambios = async (e) => {
         e.preventDefault();
+        //Verifica que los inputs Obligatorios tenga contenido, si no, activa estados de CAMPOS INVALIDOS
         this.setState({
             perIdPersonaInvalida: this.state.per_Id_Persona === "0" ? true : false,
             fechaTransaccionInvalida: this.state.fechaTransaccion === "" ? true : false,
         })
+        //Pone en variables a nivel Bloque los valores de los CamposInvalidos y si alguno está en True, no procede con la Transacción
         let perIdPersonaInvalida = this.state.per_Id_Persona === "0" ? true : false;
         let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
         if (fechaTransaccionInvalida || perIdPersonaInvalida) {
             return false;
         }
+
+        //Si la Persona se le vinculará a un NUEVO DOMICILIO.
         if (this.state.hogar.hd_Id_Hogar === "0") {
             if (this.state.domicilio.hd_Calle === "" ||
                 this.state.domicilio.hd_Municipio_Ciudad === "" ||
@@ -227,10 +240,10 @@ class AltaCambioDomicilioNB extends Component {
                 let info = {
                     per_Id_Persona: this.state.per_Id_Persona,
                     sec_Id_Sector: localStorage.getItem("sector"),
-                    ct_Codigo_Transaccion: 11004,
+                    ct_Codigo_Transaccion: this.state.ct_Codigo_Transaccion,
                     Usu_Usuario_Id: this.infoSesion.pem_Id_Ministro,
                     hte_Fecha_Transaccion: this.state.fechaTransaccion,
-                    hte_Comentario: this.state.comentario,
+                    hte_Comentario: this.state.procedencia,
                     HD: this.state.domicilio
                 }
                 await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
@@ -245,9 +258,12 @@ class AltaCambioDomicilioNB extends Component {
             }
         }
         else {
+            // Si la Persona se le dará de alta en Un HOGAR EXISTENTE
             var info = {
                 idPersona: this.state.per_Id_Persona,
-                comentrario: "",
+                sec_Id_Sector: localStorage.getItem("sector"),
+                ct_Codigo_Transaccion: this.state.ct_Codigo_Transaccion,
+                comentario: this.state.procedencia,
                 fecha: this.state.fechaTransaccion,
                 idMinistro: this.infoSesion.pem_Id_Ministro,
                 idDomicilio: this.state.hogar.hd_Id_Hogar,
