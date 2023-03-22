@@ -4,9 +4,8 @@ import '../../assets/css/index.css';
 import {
     Modal, ModalHeader, ModalBody, ModalFooter,
     Button, Input, Alert, Container, Row, Col, Card,
-    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter
+    Label, CardHeader, CardTitle, CardBody, CardFooter
 } from 'reactstrap';
-import Layout from '../Layout';
 import { Link } from 'react-router-dom';
 import IECELogo from '../../assets/images/IECE_logo.png'
 import ModalInfoHogar from './ModalInfoHogar';
@@ -59,7 +58,6 @@ class ListaDePersonal extends Component {
             habilitaFiltroSector: '',
             habilitaFiltroGrupo: '',
             habilitaFiltroProfesionOficio: '',
-            habilitaFiltroCategoria: '',
             habilitaFiltroActivoComunionVivo: '',
             modalInfoHogar: false,
             objPersona: {},
@@ -363,6 +361,7 @@ class ListaDePersonal extends Component {
                 case 'activo':
                     this.getActivos();
                     break;
+                default:
             }
         this.setState({ habilitaFiltroActivoComunionVivo: 'disabled' })
     }
@@ -427,7 +426,7 @@ class ListaDePersonal extends Component {
             return doc.line(bar, y+.5, bar + foo, y+.5);
         }
         var txt = "";
-        var i = 0;
+
 
         // FUNCION PARA DIVIDIR TEXTBOX LARGOS
         const dividirTextbox = (limitePrimeraLinea, texto) => {
@@ -575,7 +574,7 @@ class ListaDePersonal extends Component {
             doc.text(`${txt.primerLinea} `, 67, line);
             drawUnderlineTotext('', 67, `${txt.primerLinea} `, line);
             if (txt.textoTruncado.length > 0) {
-                i = 0;
+
                 for (let i = 0; i < txt.textoTruncado.length; i++) {
                     line = line + 6;
                     doc.text(txt.textoTruncado[i], 13, line);
@@ -614,7 +613,7 @@ class ListaDePersonal extends Component {
             doc.text(`14.- Puestos desempeñados en la iglesia: ${txt.primerLinea} `, 13, line);
             drawUnderlineTotext('14.- Puestos desempeñados en la iglesia: ', 13, `${txt.primerLinea} `, line);
             if (txt.textoTruncado.length > 0) {
-                i = 0;
+
                 for (let i = 0; i < txt.textoTruncado.length; i++) {
                     line = line + 6;
                     doc.text(txt.textoTruncado[i], 13, line);

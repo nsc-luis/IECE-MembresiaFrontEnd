@@ -13,7 +13,7 @@ class Distritos extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getDistritos()
     }
 

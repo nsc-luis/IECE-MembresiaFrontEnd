@@ -17,10 +17,26 @@ class BajaBautizadoCambioDomicilio extends Component {
         this.state = {
             personas: [],
             formBajaBautizadoCambioDomicilio: {},
-            rSelected: true
+            rSelected: false
         }
     }
 
+    componentDidMount() {
+        this.setState({
+            formBajaBautizadoCambioDomicilio: {
+                ...this.state.formBajaBautizadoCambioDomicilio,
+                idPersona: '0',
+                tipoDestino: '0',
+                fechaTransaccion: '',
+                idUsuario: this.infoSesion.pem_Id_Ministro,
+                bajaPorBajaDePadres: false,
+                ultimoBautizado: false
+            }
+        })
+        this.getBajaBautizadoCambioDomicilio()
+    }
+
+    //Al cambiar el estado del Botón, se actualiza el estado de rSelected y el del atributo/argumento bajaPorCambioDePadres que se envía a la API
     onRadioBtnClick(rSelected) {
         this.setState({
             rSelected,
@@ -50,20 +66,7 @@ class BajaBautizadoCambioDomicilio extends Component {
             });
     }
 
-    componentDidMount() {
-        this.setState({
-            formBajaBautizadoCambioDomicilio: {
-                ...this.state.formBajaBautizadoCambioDomicilio,
-                idPersona: '0',
-                tipoDestino: '0',
-                fechaTransaccion: '',
-                idUsuario: this.infoSesion.pem_Id_Ministro,
-                bajaPorBajaDePadres: true,
-                ultimoBautizado: false
-            }
-        })
-        this.getBajaBautizadoCambioDomicilio()
-    }
+
 
     onChangeBajaBautizadoCambioDomicilio = async (e) => {
         this.setState({ //Se va conformando el Objeto FORMBAJABAUTIZADOCAMBIO DOMICILIO cada Input que se Actualiza
@@ -72,22 +75,26 @@ class BajaBautizadoCambioDomicilio extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
-        if (e.target.name === "idPersona") {
+
+        //Lógica para saber si esta persona en proceso es la última bautizada para determinar si se deba de dar de baja el hogar y demás integrantes No Bautizados.
+        if (e.target.name === "idPersona") { // Si el input que cambia es el Select idPersona, trae los datos del Hogar de esa persona
             await helpers.authAxios.get(`${helpers.url_api}/Hogar_Persona/GetHogarByPersona/${e.target.value}`)
                 .then(res => {
                     var cuentaMiembros = 0;
-                    res.data.datosDelHogarPorPersona.miembros.forEach(miembro => {
+                    res.data.datosDelHogarPorPersona.miembros.forEach(miembro => { //Cuenta los miembros del Hogar
                         cuentaMiembros = cuentaMiembros + 1;
                     });
-                    if (res.data.status === "success" && res.data.datosDelHogarPorPersona.bautizadosVivos === 1) {
+
+                    //Lógica para Activar o Sesactivar el estado de la Variable "ultimoBautizado"
+                    if (res.data.status === "success" && res.data.datosDelHogarPorPersona.bautizadosVivos === 1) {//Si es el último bautizado en el Hogar
                         this.setState({
                             formBajaBautizadoCambioDomicilio: {
                                 ...this.state.formBajaBautizadoCambioDomicilio,
-                                ultimoBautizado: cuentaMiembros > 1 ? true : false
+                                ultimoBautizado: cuentaMiembros > 1 ? true : false //si solo hay 1 bautizado, pero hay mas integrantes , activa el estado de la Variable 'ultimoBautizado'
                             }
                         })
                     }
-                    else {
+                    else { //Si no es el último bautizado, DeActiva el estado de la variable 'ultimoBautizado'
                         this.setState({
                             formBajaBautizadoCambioDomicilio: {
                                 ...this.state.formBajaBautizadoCambioDomicilio,
@@ -107,7 +114,7 @@ class BajaBautizadoCambioDomicilio extends Component {
             || this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion === "") {
             alert("Error:\nDebe ingresar todos los datos requeridos.")
         }
-        try { //Procede a realizar la Transacción de Baja Por Cambio de Domicilio enviando el Objeto FORMBAJABAUTIZADOCAMPODOMICILIO
+        try { //Procede a realizar la Transacción de Baja Por Cambio de Domicilio enviando el Objeto 'formBajaBautizadoCambioDomicilio'
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
                 .then(res => {
                     if (res.data.status === "success") {
@@ -123,6 +130,7 @@ class BajaBautizadoCambioDomicilio extends Component {
     }
 
     render() {
+
         return (
             <Container>
                 <Card>
@@ -227,8 +235,8 @@ class BajaBautizadoCambioDomicilio extends Component {
                                             <Col xs="9">
                                                 <FormGroup>
                                                     <ButtonGroup>
-                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(false)} active={this.state.rSelected === true}>Por cambio de domicilio</Button>
-                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected === false}>Por baja de padres</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(false)} active={!this.state.rSelected}>Por cambio de domicilio</Button>
+                                                        <Button size="sm" color="info" onClick={() => this.onRadioBtnClick(true)} active={this.state.rSelected }>Por baja de padres</Button>
                                                     </ButtonGroup>
                                                 </FormGroup>
                                             </Col>
