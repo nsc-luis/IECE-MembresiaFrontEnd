@@ -21,6 +21,19 @@ class BajaBautizadoCambioDomicilio extends Component {
         }
     }
 
+    componentDidMount() {
+        this.setState({
+            formBajaNoBautizadoCambioDomicilio: {
+                ...this.state.formBajaNoBautizadoCambioDomicilio,
+                idPersona: '0',
+                tipoDestino: '0',
+                fechaTransaccion: '',
+                idUsuario: this.infoSesion.pem_Id_Ministro
+            },
+        })
+        this.getBajaNoBautizadoCambioDomicilio()
+    }
+
     getBajaNoBautizadoCambioDomicilio = async () => {
         await helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
             .then(res => {
@@ -40,18 +53,7 @@ class BajaBautizadoCambioDomicilio extends Component {
             });
     }
 
-    componentDidMount() {
-        this.setState({
-            formBajaNoBautizadoCambioDomicilio: {
-                ...this.state.formBajaNoBautizadoCambioDomicilio,
-                idPersona: '0',
-                tipoDestino: '0',
-                fechaTransaccion: '',
-                idUsuario: this.infoSesion.pem_Id_Ministro
-            },
-        })
-        this.getBajaNoBautizadoCambioDomicilio()
-    }
+
 
     onChangeBajaNoBautizadoCambioDomicilio = (e) => {
         this.setState({
@@ -66,7 +68,7 @@ class BajaBautizadoCambioDomicilio extends Component {
         e.preventDefault();
         if (this.state.formBajaNoBautizadoCambioDomicilio.per_Id_Persona === "0"
             || this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino === "0"
-            || this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion === "") {
+            || this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion === ""){
             alert("Error:\nDebe ingresar todos los datos requeridos.")
         }
         try {

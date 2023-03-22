@@ -20,7 +20,7 @@ class BajaBautizadoExcomunion extends Component {
         }
     }
 
-    getBajaBautizadoExcomunion = async () => {
+    getBajaBautizadoExcomunion = async () => { //Carga todas las personas del Sector que son Bautizadas y están en Comunión. Y las ordena alfabéticamente.
         await helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosComunionBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas.sort((a,b)=>{
@@ -53,7 +53,7 @@ class BajaBautizadoExcomunion extends Component {
         this.getBajaBautizadoExcomunion()
     }
 
-    onChangeBajaBautizadoExcomunion = (e) => {
+    onChangeBajaBautizadoExcomunion = (e) => { //Al cambiar los Inputs del Formulario los mete dentro del Objeto que enviará a la API
         this.setState({
             formBajaBautizadoExcomunion: {
                 ...this.state.formBajaBautizadoExcomunion,
@@ -62,10 +62,11 @@ class BajaBautizadoExcomunion extends Component {
         })
     }
 
-    bajaBautizadoExcomunion = async (e) => {
+    bajaBautizadoExcomunion = async (e) => { //Gestiona Excomunión Enviando los datos a API
         e.preventDefault();
         var datos = this.state.formBajaBautizadoExcomunion;
 
+        //Verifica que los datos Obligatorios nos estén vacíos.
         if (datos.personaSeleccionada === '0'
             || datos.tipoExcomunion === '0'
             || datos.excomunionDelito === ''
@@ -74,6 +75,7 @@ class BajaBautizadoExcomunion extends Component {
             return false;
         }
 
+        //Envío los datos del Formulario a la API
         try {
             await helpers.authAxios.post(
                 helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
@@ -148,8 +150,8 @@ class BajaBautizadoExcomunion extends Component {
                                             onChange={this.onChangeBajaBautizadoExcomunion}
                                         >
                                             <option value="0">Seleccione una Opción</option>
-                                            <option value="11102">Excomunión Temporal</option>
-                                            <option value="11103">Excomunión</option>
+                                            <option value="11102">EXCOMUNIÓN TEMPORAL</option>
+                                            <option value="11103">EXCOMUNIÓN</option>
                                         </Input>
                                     </Col>
                                 </Row>

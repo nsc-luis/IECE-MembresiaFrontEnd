@@ -21,6 +21,8 @@ class PersonaEncontrada extends React.Component {
 
         const { datosPersonaEncontrada } = this.props
 
+        console.log("Persona: ", datosPersonaEncontrada.per_Bautizado , localStorage.getItem('nvaAltaBautizado'))
+
         return (
             <React.Fragment>
                 <div className="alert alert-danger mt-3" role="alert">
@@ -47,7 +49,7 @@ class PersonaEncontrada extends React.Component {
                             <td>{datosPersonaEncontrada.dis_Tipo_Distrito} {datosPersonaEncontrada.dis_Numero}</td>
                             <td>{datosPersonaEncontrada.sec_Alias}</td>
                             <td>
-                                {datosPersonaEncontrada.per_Bautizado === false &&
+                                {datosPersonaEncontrada.per_Bautizado === false && localStorage.getItem('nvaAltaBautizado')==="true"? (
                                     <React.Fragment>
                                         <Button
                                             color="info"
@@ -55,7 +57,8 @@ class PersonaEncontrada extends React.Component {
                                             <span className="fa fa-user-check" style={{ paddingRight: "5px" }}></span>
                                             Cambiar estatus a BAUTIZADO
                                         </Button>
-                                    </React.Fragment>
+                                    </React.Fragment>)
+                                    :null
                                 }
                             </td>
                         </tr>

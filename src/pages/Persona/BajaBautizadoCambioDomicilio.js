@@ -44,7 +44,6 @@ class BajaBautizadoCambioDomicilio extends Component {
                 ...this.state.formBajaBautizadoCambioDomicilio,
                 bajaPorBajaDePadres: rSelected,
             }
-
         });
     }
 
@@ -76,22 +75,26 @@ class BajaBautizadoCambioDomicilio extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+
+        //Lógica para saber si esta persona en proceso es la última bautizada para determinar si se deba de dar de baja el hogar y demás integrantes No Bautizados.
         if (e.target.name === "idPersona") { // Si el input que cambia es el Select idPersona, trae los datos del Hogar de esa persona
             await helpers.authAxios.get(`${helpers.url_api}/Hogar_Persona/GetHogarByPersona/${e.target.value}`)
                 .then(res => {
                     var cuentaMiembros = 0;
-                    res.data.datosDelHogarPorPersona.miembros.forEach(miembro => {
+                    res.data.datosDelHogarPorPersona.miembros.forEach(miembro => { //Cuenta los miembros del Hogar
                         cuentaMiembros = cuentaMiembros + 1;
                     });
-                    if (res.data.status === "success" && res.data.datosDelHogarPorPersona.bautizadosVivos === 1) {
+
+                    //Lógica para Activar o Sesactivar el estado de la Variable "ultimoBautizado"
+                    if (res.data.status === "success" && res.data.datosDelHogarPorPersona.bautizadosVivos === 1) {//Si es el último bautizado en el Hogar
                         this.setState({
                             formBajaBautizadoCambioDomicilio: {
                                 ...this.state.formBajaBautizadoCambioDomicilio,
-                                ultimoBautizado: cuentaMiembros > 1 ? true : false
+                                ultimoBautizado: cuentaMiembros > 1 ? true : false //si solo hay 1 bautizado, pero hay mas integrantes , activa el estado de la Variable 'ultimoBautizado'
                             }
                         })
                     }
-                    else {
+                    else { //Si no es el último bautizado, DeActiva el estado de la variable 'ultimoBautizado'
                         this.setState({
                             formBajaBautizadoCambioDomicilio: {
                                 ...this.state.formBajaBautizadoCambioDomicilio,
@@ -111,7 +114,7 @@ class BajaBautizadoCambioDomicilio extends Component {
             || this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion === "") {
             alert("Error:\nDebe ingresar todos los datos requeridos.")
         }
-        try { //Procede a realizar la Transacción de Baja Por Cambio de Domicilio enviando el Objeto FORMBAJABAUTIZADOCAMPODOMICILIO
+        try { //Procede a realizar la Transacción de Baja Por Cambio de Domicilio enviando el Objeto 'formBajaBautizadoCambioDomicilio'
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
                 .then(res => {
                     if (res.data.status === "success") {

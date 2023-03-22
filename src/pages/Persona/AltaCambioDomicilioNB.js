@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Button, Input, Alert, Container, Row, Col, Card, ButtonGroup, FormFeedback,
-    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter
+    Button, Input, Alert, Container, Row, Col, Card,  FormFeedback,
+    Form, FormGroup,  CardBody, CardFooter
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import HogarPersonaDomicilio from './HogarPersonaDomicilio';
@@ -59,7 +59,7 @@ class AltaCambioDomicilioNB extends Component {
         await helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/false")
             .then(res => {
                 this.setState({ personas: res.data.personas
-                    .filter(per=>per.sec_Id_Sector!== parseInt(localStorage.getItem("sector"))) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
+                    .filter(per=>(per.sec_Id_Sector!== parseInt(localStorage.getItem("sector"))) && per.per_Activo===true) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
                     .sort((a,b)=>{
                     const nameA = a.per_Nombre; // ignore upper and lowercase
                     const nameB = b.per_Nombre; // ignore upper and lowercase

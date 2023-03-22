@@ -94,6 +94,7 @@ class Sidebar extends Component {
         this.setState({ personaSeleccionada: e.target.value });
     }
 
+    //Despues de Seleccionar a un Bautizado para Edición/Actualización
     invocaFormularioDePersona = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
@@ -102,6 +103,7 @@ class Sidebar extends Component {
         window.location = "/RegistroDePersona";
     }
 
+    //Despues de Seleccionar a un NoBautizado para Edición/Actualización
     invocaFormularioDePersonaNB = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
@@ -138,7 +140,8 @@ class Sidebar extends Component {
 
     }
 
-    handle_AltaPersonaNoBautizada = () => {
+    //Para dar de Alta a un No Bautizado por Nuevo Ingreso. Resetea algunas variables en LocalStorage y el Encabezado.
+    handle_AltaPersonaNoBautizada = () => { 
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada");
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
@@ -154,7 +157,6 @@ class Sidebar extends Component {
     handle_AltaCambioDomicilioNB = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
         //document.location.href = "/AltaCambioDomicilioNB";
-
     }
 
     estableceVisibilidadAbierta = async (e) => {
@@ -196,6 +198,9 @@ class Sidebar extends Component {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
+
+
+
     }
 
     render() {
@@ -487,6 +492,9 @@ class Sidebar extends Component {
                         </Link>
                     </li>
 
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
+
                     {/* Heading */}
                     <div className="sidebar-heading">
                         Transacciones Especiales
@@ -501,6 +509,17 @@ class Sidebar extends Component {
                         >
                             <i className="fas fa-address-book"></i>
                             <span>Habilitar Visibilidad Abierta</span>
+                        </Link>
+                    </li>
+                                        {/* Nav Item - Hogares  */}
+                                        <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            to="#"
+                            onClick={this.handleTransaccionesExtemporaneas}
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Transacciones Extemporaneas</span>
                         </Link>
                     </li>
 

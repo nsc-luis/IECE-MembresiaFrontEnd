@@ -1,13 +1,11 @@
-import Layout from '../Layout';
-import helpers from '../../components/Helpers'
 
-import { Link, Redirect } from 'react-router-dom';
+import helpers from '../../components/Helpers'
 import {
     Container, Row, Col, Form, FormGroup, Input, Button,
-    FormFeedback, CardTitle, Card, CardBody, CardHeader, CardText, Label, Alert, Table
+    CardTitle, Card, Label, Alert, Table
 } from 'reactstrap';
 
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function AltaNuevoIngreso() {
     //Estados
@@ -20,9 +18,9 @@ function AltaNuevoIngreso() {
     const [miembrosHogar, setMiembrosHogar] = useState([])
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
-    const [estados, setEstados] = useState([])
 
-    const dto = JSON.parse(localStorage.getItem("dto"))
+
+    //const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
 
     //LLamadas en renderizado
