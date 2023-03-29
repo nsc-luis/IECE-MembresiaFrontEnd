@@ -77,10 +77,9 @@ export default function ReportePersonalNoBautizado() {
             if (persona.persona.per_Categoria === type) {
                 count += 1
             }
-            totalCount += count;
-            return count
         })
-
+        totalCount += count;
+        return count
     }
     const reportePersonalBautizadoPDF = () => {
         totalCount = 0

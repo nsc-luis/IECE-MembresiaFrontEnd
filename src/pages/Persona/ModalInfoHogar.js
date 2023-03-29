@@ -20,26 +20,27 @@ class ModalInfoHogar extends Component {
         this.getDomicilio(this.props.objPersona.hogar.hd_Id_Hogar);
     }
 
-    getDomicilio = async(id) => {
+    getDomicilio = async (id) => {
         await helpers.authAxios.get(`/HogarDomicilio/${id}`)
-        .then(res => {
-            if(res.data.status === "success") {
-                this.setState({
-                    direccion: res.data.direccion,
-                    hogarDomicilio: res.data.hogardomicilio[0]
-                });
-            }
-            else {
-                this.setState({
-                    direccion: null,
-                    hogarDomicilio: null
-                });
-            }
-        });
+            .then(res => {
+                if (res.data.status === "success") {
+                    this.setState({
+                        direccion: res.data.direccion,
+                        hogarDomicilio: res.data.hogardomicilio[0]
+                    });
+                }
+                else {
+                    this.setState({
+                        direccion: null,
+                        hogarDomicilio: null
+                    });
+                }
+            });
     }
 
     render() {
         const { objPersona } = this.props
+
         return (
             <React.Fragment>
                 <Row>
@@ -103,10 +104,10 @@ class ModalInfoHogar extends Component {
                                         {objPersona.miembros.map((miembro) => {
                                             return (
                                                 <tr key={miembro.per_Id_Persona}>
-                                                    <td className="text-center">{miembro.per_Bautizado?"B":"NB"}</td>
+                                                    <td className="text-center">{miembro.per_Bautizado ? "B" : "NB"}</td>
                                                     <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno} </td>
                                                     <td className="text-center"> {miembro.hp_Jerarquia} </td>
-                                                    <td className="text-center">{miembro.per_Activo?"SI":"NO"}</td>
+                                                    <td className="text-center">{miembro.per_Activo ? "SI" : "NO"}</td>
                                                 </tr>
                                             )
                                         })

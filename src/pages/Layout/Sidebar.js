@@ -7,6 +7,7 @@ import {
 import helpers from '../../components/Helpers';
 import './style.css'
 
+
 class Sidebar extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     constructor(props) {
@@ -52,19 +53,21 @@ class Sidebar extends Component {
     openModalEditaPersona = async () => {
         await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) });
+                        // names must be equal
+                        return 0;
+                    })
+                });
             });
         this.setState({ modalEditaPersona: !this.state.modalEditaPersona })
     }
@@ -72,19 +75,21 @@ class Sidebar extends Component {
     openModalEditaPersonaNB = async () => {
         await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) });
+                        // names must be equal
+                        return 0;
+                    })
+                });
             });
         this.setState({ modalEditaPersonaNB: !this.state.modalEditaPersonaNB })
     }
@@ -141,7 +146,7 @@ class Sidebar extends Component {
     }
 
     //Para dar de Alta a un No Bautizado por Nuevo Ingreso. Resetea algunas variables en LocalStorage y el Encabezado.
-    handle_AltaPersonaNoBautizada = () => { 
+    handle_AltaPersonaNoBautizada = () => {
         this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada");
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
@@ -445,10 +450,20 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link className="nav-link"
                             to="/Matrimonio"
-                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio')}
                         >
                             <i className="fas fa-fw fa-user-friends"></i>
-                            <span>Matrimonio / Legalización</span>
+                            <span>Matrimonio</span>
+                        </Link>
+                    </li>
+                    {/* Nav Item - Matrimonios */}
+                    <li className="nav-item">
+                        <Link className="nav-link"
+                            to="/Legalizacion"
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Legalización')}
+                        >
+                            <i className="fas fa-fw fa-user-friends"></i>
+                            <span>Legalización</span>
                         </Link>
                     </li>
 
@@ -511,8 +526,8 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li>
-                                        {/* Nav Item - Hogares  */}
-                                        <li className="nav-item">
+                    {/* Nav Item - Hogares  */}
+                    <li className="nav-item">
                         <Link
                             className="nav-link"
                             to="#"

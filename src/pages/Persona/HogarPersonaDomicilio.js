@@ -106,13 +106,6 @@ class Domicilio extends React.Component {
                         {
                             DatosHogarDomicilio.map((HogarDomicilio) => {
                                 return (
-                                    // <p key={HogarDomicilio.hd_Id_Hogar}>
-                                    //     Calle: {HogarDomicilio.hd_Calle}, No.: {HogarDomicilio.hd_Numero_Exterior}, Interior: {HogarDomicilio.hd_Numero_Interior},
-                                    //     Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
-                                    //     Localidad: {HogarDomicilio.hd_Localidad}, Municipio/cuidad: {HogarDomicilio.hd_Municipio_Ciudad},
-                                    //     {HogarDomicilio.est_Nombre}, Pais: {HogarDomicilio.pais_Nombre_Corto} <br />
-                                    //     Telefono: {HogarDomicilio.hd_Telefono}
-                                    // </p>
                                     <p><h7>{direccion}</h7></p>
                                 )
                             })
@@ -132,7 +125,7 @@ class Domicilio extends React.Component {
                                             <tr key={i}>
                                                 <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
                                                 <td>{miembro.hp_Jerarquia}</td>
-                                                <td>{miembro.per_Activo?"SI":"NO"}</td>
+                                                <td>{miembro.per_Activo ? "SI" : "NO"}</td>
                                             </tr>
                                         )
                                     })
