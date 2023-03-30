@@ -38,6 +38,11 @@ export default function ReportePersonalNoBautizado() {
                 .then(res => {
                     setInfoDis(res.data.dis_Alias)
                 })
+
+            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+                .then(res => {
+                    setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
+                });
         } else {
             helpers.authAxios.get("/Persona/GetBySector/" + sector)
                 .then(res => {
@@ -199,8 +204,8 @@ export default function ReportePersonalNoBautizado() {
                 <Button className="btn-danger m-3 " onClick={() => reportePersonalBautizadoPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
                 <Card body>
                     <Row>
-                        <Col lg="5">
-                            <img src={logo} alt="Logo" width="100%"></img>
+                        <Col lg="5"  >
+                            <img src={logo} alt="Logo" width="100%" className="ml-3"></img>
                         </Col>
                         <Col lg="7">
                             <CardTitle className="text-center" tag="h3">
@@ -210,7 +215,7 @@ export default function ReportePersonalNoBautizado() {
                         </Col>
                     </Row>
                     <CardBody>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="jovenes_hombres">Jovenes hombres: {countPersons("JOVEN_HOMBRE")}</Button>
+                        <Button color="primary" size="lg" className="text-left " block id="jovenes_hombres">Jovenes hombres: {countPersons("JOVEN_HOMBRE")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
                             <Card>
                                 <CardBody>
@@ -226,7 +231,7 @@ export default function ReportePersonalNoBautizado() {
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="jovenes_mujeres">Jovenes mujeres: {countPersons("JOVEN_MUJER")}</Button>
+                        <Button color="primary" size="lg" className="text-left mt-2" block id="jovenes_mujeres">Jovenes mujeres: {countPersons("JOVEN_MUJER")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#jovenes_mujeres">
                             <Card>
                                 <CardBody>
@@ -242,7 +247,7 @@ export default function ReportePersonalNoBautizado() {
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="niños">Niños: {countPersons("NIÑO")}</Button>
+                        <Button color="primary" size="lg" className="text-left mt-2" block id="niños">Niños: {countPersons("NIÑO")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#niños">
                             <Card>
                                 <CardBody>
@@ -258,7 +263,7 @@ export default function ReportePersonalNoBautizado() {
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mb-2" block id="niñas">Niñas: {countPersons("NIÑA")}</Button>
+                        <Button color="primary" size="lg" className="text-left mt-2" block id="niñas">Niñas: {countPersons("NIÑA")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#niñas">
                             <Card>
                                 <CardBody>

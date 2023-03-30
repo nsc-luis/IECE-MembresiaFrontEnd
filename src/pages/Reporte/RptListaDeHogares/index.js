@@ -35,18 +35,18 @@ class RptListaDeHogares extends Component {
             infoSecretario: {},
             distrito: {},
             sectores: [],
-            sectorSeleccionado: localStorage.getItem('sector'),
+            sectorSeleccionado: localStorage.getItem('sector') ? localStorage.getItem('sector') : "todos",
             lider: ""
         }
     }
 
     componentDidMount() {
-        this.getPersonas();
-        this.getInfoDistrito();
-        this.getInfoSector();
-        this.getListaHogares();
-        this.getDistrito();
-        this.getSectoresPorDistrito();
+        this.getPersonas(); //Trae todas las personas del Sector o Distrito
+        this.getInfoDistrito(); //Trae los datos del Dto.
+        this.getInfoSector(); //Trae los datos del Sector
+        this.getListaHogares(); //Trae la lista de Hogares del Dto o Sector segun el tipo de Sesión.
+        this.getDistrito();//Trae los datos del Distrito
+        this.getSectoresPorDistrito();//Trae los Sectores del Distrito
         window.scrollTo(0, 0);
     }
 
@@ -57,6 +57,13 @@ class RptListaDeHogares extends Component {
                     distrito: res.data
                 })
             });
+    }
+
+    getInfoDistrito = async () => {
+        await helpers.authAxios.get(this.url + "/Distrito/" + localStorage.getItem('dto'))
+            .then(res => {
+                this.setState({ infoDistrito: res.data });
+            })
     }
 
     getSectoresPorDistrito = async () => {
@@ -82,18 +89,29 @@ class RptListaDeHogares extends Component {
     }
 
     handle_sectorSeleccionado = async (e) => {
-
-        this.setState({ sectorSeleccionado: e.target.value });
-        console.log("Sector: ", e.target.value)
-        await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
-            .then(res => {
-                // console.log(res.data.value);
-                this.setState({ infoListaHogares: res.data.listahogares })
-                console.log("Hogares: ", res.data.listahogares)
-                this.arreglarLista();
-                this.getInfoSector();
-            });
-
+        if (e.target.value === "todos") {
+            this.setState({ sectorSeleccionado: e.target.value });
+            console.log("Sector: ", e.target.value)
+            await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresByDistrito/' + localStorage.getItem('dto'))
+                .then(res => {
+                    // console.log(res.data.value);
+                    this.setState({ infoListaHogares: res.data.listahogares })
+                    console.log("Hogares: ", res.data.listahogares)
+                    this.arreglarLista();
+                    this.getInfoSector();
+                });
+        } else {
+            this.setState({ sectorSeleccionado: e.target.value });
+            console.log("Sector: ", e.target.value)
+            await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
+                .then(res => {
+                    // console.log(res.data.value);
+                    this.setState({ infoListaHogares: res.data.listahogares })
+                    console.log("Hogares: ", res.data.listahogares)
+                    this.arreglarLista();
+                    this.getInfoSector();
+                });
+        }
     }
 
 
@@ -115,55 +133,68 @@ class RptListaDeHogares extends Component {
     }
 
     getListaHogares = async () => {
+        if (localStorage.getItem('sector') === null) {
 
-        await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ infoListaHogares: res.data.listahogares });
-            })
-        console.log("Sale de la API: ", this.state.infoListaHogares)
-        this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
-        this.arreglarLista();
+            await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresByDistrito/" + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({ infoListaHogares: res.data.listahogares });
+                })
+            console.log("Sale de la API: ", this.state.infoListahogares)
+            //this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
+            this.arreglarLista();
+
+        } else {
+            await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({ infoListaHogares: res.data.listahogares });
+                })
+            console.log("Sale de la API: ", this.state.infoListahogares)
+            this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
+            this.arreglarLista();
+        }
 
     }
 
     arreglarLista = () => {
-        //Arregla la lista a manera de presentarla en Pantalla y PDF
+        //Arregla la lista para desplegarla en Pantalla y PDF
         const data2 = []
         console.log("Entra en función Arreglar Lista: ", this.state.infoListaHogares)
-        this.state.infoListaHogares.forEach((hogar, index) => {
-            const miembros = []
-            let conteo = 0
-            hogar.integrantes.forEach((miembro, i) => {
-                conteo = i
-                miembros.push({
-                    Grupo: miembro.grupo,
-                    Nombre: miembro.nombre,
-                    Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
-                    Edad: miembro.edad,
-                    Celular: miembro.cel ? miembro.cel : "-"
+        if (this.state.infoListaHogares.length > 0) { //Si el array infoListaHogares tiene por lo menos 1 hogar Arregla/Prepara la lista
+            this.state.infoListaHogares.forEach((hogar, index) => {
+                const miembros = []
+                let conteo = 0
+                hogar.integrantes.forEach((miembro, i) => {
+                    conteo = i
+                    miembros.push({
+                        Grupo: miembro.grupo,
+                        Nombre: miembro.nombre,
+                        Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
+                        Edad: miembro.edad,
+                        Celular: miembro.cel ? miembro.cel : "-"
+                    })
+
+                    data2.push({
+                        Indice: (conteo === 0) ? String(hogar.indice) : " ",
+                        Grupo: String(miembros[i].Grupo),
+                        Nombre: String(miembros[i].Nombre),
+                        Nacimiento: (miembros[i].Nacimiento),
+                        Edad: String(miembros[i].Edad),
+                        Celular: String(miembros[i].Celular),
+                        Tel_Casa: (conteo === 0) ? String(hogar.tel ? hogar.tel : "-") : " ",
+                        Domicilio: (conteo === 0) ? String(hogar.direccion) : " ",
+                    })
                 })
 
-                data2.push({
-                    Indice: (conteo == 0) ? String(hogar.indice) : " ",
-                    Grupo: String(miembros[i].Grupo),
-                    Nombre: String(miembros[i].Nombre),
-                    Nacimiento: (miembros[i].Nacimiento),
-                    Edad: String(miembros[i].Edad),
-                    Celular: String(miembros[i].Celular),
-                    Tel_Casa: (conteo == 0) ? String(hogar.tel ? hogar.tel : "-") : " ",
-                    Domicilio: (conteo == 0) ? String(hogar.direccion) : " ",
-                })
+                this.setState({ listaArreglada: data2 })
+
             })
-            this.setState({ listaArreglada: data2 })
-        })
+        } else { //Si el Sector no tiene Hogares, resetea el array 'listaArreglada'
+            this.setState({ listaArreglada: [] })
+        }
+
     }
 
-    getInfoDistrito = async () => {
-        await helpers.authAxios.get(this.url + "/distrito/" + localStorage.getItem('dto'))
-            .then(res => {
-                this.setState({ infoDistrito: res.data });
-            })
-    }
+
 
     getInfoSector = async () => {
         if (localStorage.getItem('sector') !== null) {

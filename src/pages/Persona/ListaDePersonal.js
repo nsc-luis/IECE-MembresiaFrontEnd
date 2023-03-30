@@ -731,7 +731,7 @@ class ListaDePersonal extends Component {
                                         {this.state.sectores.map(sector => {
                                             return (
                                                 <React.Fragment key={sector.sec_Id_Sector}>
-                                                    <option value={sector.sec_Id_Sector}>{sector.sec_Tipo_Sector}: {sector.sec_Alias}</option>
+                                                    <option value={sector.sec_Id_Sector}>{sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
                                                 </React.Fragment>
                                             )
                                         })
@@ -743,7 +743,7 @@ class ListaDePersonal extends Component {
                                         {this.state.sectores.map(sector => {
                                             return (
                                                 <React.Fragment key={sector.sec_Id_Sector}>
-                                                    <option value={sector.sec_Id_Sector}>{sector.sec_Tipo_Sector}: {sector.sec_Alias}</option>
+                                                    <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
                                                 </React.Fragment>
                                             )
                                         })
