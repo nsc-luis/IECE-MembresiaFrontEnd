@@ -101,6 +101,7 @@ class ModalInfoHogar extends Component {
                                 {objPersona.miembros.length > 0 &&
                                     <>
                                         {objPersona.miembros.map((miembro) => {
+                                            console.log(miembro)
                                             return (
                                                 <tr key={miembro.per_Id_Persona}>
                                                     <td className="text-center">{miembro.per_Bautizado?"B":"NB"}</td>
