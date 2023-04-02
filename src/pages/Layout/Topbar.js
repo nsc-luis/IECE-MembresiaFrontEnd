@@ -24,13 +24,13 @@ class Topbar extends Component {
 
     getfotoMinistro = async () => {
 
-        await helpers.authAxios.get( helpers.url_api + '/Foto/FotoMinistro/' + this.infoSesion.pem_Id_Ministro)
+        await helpers.authAxios.get(helpers.url_api + '/Foto/FotoMinistro/' + this.infoSesion.pem_Id_Ministro)
             .then(res => {
-                if(res.data.status !=="error"){
-                    this.setState({ fotoMinistro: helpers.url_api + "/Foto/FotoMinistro/" + this.infoSesion.pem_Id_Ministro});
+                if (res.data.status !== "error") {
+                    this.setState({ fotoMinistro: helpers.url_api + "/Foto/FotoMinistro/" + this.infoSesion.pem_Id_Ministro });
 
-                }else{
-                    this.setState({ fotoMinistro: "https://source.unsplash.com/QAB-WJcbgJk/60x60"})
+                } else {
+                    this.setState({ fotoMinistro: "https://source.unsplash.com/QAB-WJcbgJk/60x60" })
                 }
             });
     }
@@ -40,7 +40,7 @@ class Topbar extends Component {
             <React.Fragment>
                 {/* Topbar */}
                 <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <h5><span className="text-info">
+                    <h5><span className="text-TopBar">
                         {localStorage.getItem('seccion')} <br />
                         <strong>{localStorage.getItem('componente')}</strong>
                     </span></h5>
@@ -58,9 +58,9 @@ class Topbar extends Component {
                         {/* Nav Item - User Information */}
                         <li className="nav-item dropdown no-arrow">
                             <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span className="mr-2 d-none d-lg-inline text-gray-600 small">
+                                <span className="mr-2 d-none d-lg-inline text-TopBar ">
                                     {this.infoSesion.pem_Nombre} <br />
-                                    {localStorage.getItem('sector') === null ? '( OBISPO )' : '( PASTOR )'}
+                                    {localStorage.getItem('sector') === null ? 'OBISPO' : 'PASTOR'}
                                 </span>
                                 <img className="img-profile rounded-circle" alt="foto usuario" src={this.state.fotoMinistro} />
                             </a>

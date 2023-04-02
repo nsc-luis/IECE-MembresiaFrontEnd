@@ -1026,7 +1026,7 @@ class PersonaForm extends Component {
                                                                             onChange={onChange}
                                                                             className="form-control"
                                                                         />
-                                                                        <label>Foto</label>
+                                                                        <label>Foto.      Nota: La foto debe ser Tipo Credencial: De hombros hacia arriba y Mujeres sin velo.</label>
                                                                     </div>
                                                                     <div className="col-sm-4 text-center">
                                                                         <img src={foto} alt="Foto Persona" className="fotoFormulario" />
@@ -1184,7 +1184,7 @@ class PersonaForm extends Component {
                                                                                             placeholder="DD/MM/AAAA"
                                                                                             className="form-control"
                                                                                         />
-                                                                                        <label>Fecha Boda Bivil</label>
+                                                                                        <label>Fecha Boda Civil</label>
                                                                                     </div>
                                                                                 </React.Fragment>
                                                                             }

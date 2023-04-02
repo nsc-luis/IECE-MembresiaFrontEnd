@@ -2,13 +2,13 @@ import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
+    FormGroup, Input
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
-import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
@@ -18,11 +18,15 @@ import logo from '../../assets/images/IECE_LogoOficial.jpg'
 export default function ReportePersonalBautizado() {
     //Estados
     const [personas, setPersonas] = useState([])
-    const [infoDis, setInfoDis] = useState(null)
-    const [infoSec, setInfoSec] = useState(null)
+    const [infoDis, setInfoDis] = useState([])
+    const [infoSec, setInfoSec] = useState([])
     const [infoSecretario, setInfoSecretario] = useState({})
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
+    const [sectores, setSectores] = useState([])
+    const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
+    const [entidadTitulo, setEntidadTitulo] = useState("")
+    const [lider, setLider] = useState("")
     //Llamadas en render
 
     useEffect(() => {
@@ -32,14 +36,17 @@ export default function ReportePersonalBautizado() {
     useEffect(() => {
 
         if (sector == null) {
-            helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
-                .then(res => {
-                    setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
-                });
+            console.log("inicia programa")
+            getPersonasDistrito();
+            getInfoDistrito()
+            setSectorSeleccionado("todos");
+            setLider("OBISPO")
+            setEntidadTitulo("TODOS LOS SECTORES")
 
-            helpers.authAxios.get("/Distrito/" + dto)
+
+            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setInfoDis(res.data.dis_Alias)
+                    setSectores(res.data.sectores)
                 })
 
             helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
@@ -48,29 +55,84 @@ export default function ReportePersonalBautizado() {
                 });
 
         } else {
-            helpers.authAxios.get("/Persona/GetBySector/" + sector)
-                .then(res => {
-                    setPersonas(res.data.filter(persona => (
-                        persona.persona.per_Activo && persona.persona.per_Bautizado && persona.persona.per_En_Comunion)))
-                });
+            getPersonasSector(sector);
+            getInfoDistrito()
+            setLider("PASTOR")
 
-
-            helpers.authAxios.get("/Distrito/" + dto)
-                .then(res => {
-                    setInfoDis(res.data.dis_Alias)
-                })
             helpers.authAxios.get("/Sector/" + sector)
                 .then(res => {
-                    setInfoSec(res.data.sector[0].sec_Alias)
+                    setInfoSec(res.data.sector[0])
+                    const sectores = []
+                    sectores.push(res.data.sector[0])
+                    //console.log("sectores: ", sectores)
+                    setSectores(sectores);
+                    setSectorSeleccionado(sector)
+                    setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
+
                 })
 
             helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
+
+            getTitulo(sector)
+            console.log("Distrito al Final: ", infoDis)
         }
 
-    }, [personas.length])
+    }, [])
+
+    const getInfoDistrito = () => {
+        console.log("Dto: ", dto)
+        helpers.authAxios.get("/Distrito/" + dto)
+            .then(res => {
+                setInfoDis(res.data)
+                console.log("Distrito: ", res.data)
+            })
+    }
+
+    const getPersonasDistrito = () => {
+
+        helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+            .then(res => {
+                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
+            });
+    }
+
+    const getPersonasSector = (sec) => {
+
+        helpers.authAxios.get("/Persona/GetBySector/" + sec)
+            .then(res => {
+                setPersonas(res.data.filter(persona => (
+                    persona.persona.per_Activo && persona.persona.per_Bautizado && persona.persona.per_En_Comunion)))
+            });
+    }
+
+    const handle_sectorSeleccionado = async (e) => {
+
+        if (e.target.value !== "todos") {
+            console.log("Sector Seleccionado: ", e.target.value)
+            getPersonasSector(e.target.value)
+            setSectorSeleccionado(e.target.value);
+            getTitulo(e.target.value)
+        } else {
+            getPersonasDistrito();
+            setSectorSeleccionado("todos");
+            setEntidadTitulo("TODOS LOS SECTORES")
+        }
+    }
+
+    const getTitulo = (sector) => {
+        console.log("SectorParaTitulo: ", sectores);
+        sectores.map(sec => {
+
+            if (sec.sec_Id_Sector == sector) {
+                setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
+                console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+            }
+        })
+    }
+
 
     const downloadTable = () => {
         TableToExcel.convert(document.getElementById("table1"), {
@@ -105,17 +167,19 @@ export default function ReportePersonalBautizado() {
         doc.setFontSize(8);
 
         if (sector) {
-            doc.text(`${infoSec}`, 135, 18, { align: "center" });
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
+            doc.text(entidadTitulo, 140, 22, { align: "center" });
+            //doc.text(`${infoSec}`, 135, 18, { align: "center" });
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
         }
         else {
-            doc.text(`${infoDis}`, 135, 18, { align: "center" })
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
+            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, { align: "center" })
+            doc.text(entidadTitulo, 140, 22, { align: "center" })
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
         }
         doc.line(10, 32, 200, 32);
 
         let yAxis = 35
-        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
@@ -124,7 +188,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "ADULTO_HOMBRE") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
                 yAxis += 5;
                 index++;
             }
@@ -132,7 +196,7 @@ export default function ReportePersonalBautizado() {
 
         index = 1;
         yAxis += 7;
-        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
@@ -141,7 +205,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "ADULTO_MUJER") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
                 yAxis += 5;
                 index++;
             }
@@ -149,7 +213,7 @@ export default function ReportePersonalBautizado() {
 
         index = 1;
         yAxis += 7;
-        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
@@ -158,7 +222,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
                 yAxis += 5;
                 index++;
             }
@@ -166,7 +230,7 @@ export default function ReportePersonalBautizado() {
 
         index = 1;
         yAxis += 7;
-        doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
@@ -175,7 +239,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_MUJER") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
                 yAxis += 5;
                 index++;
             }
@@ -197,7 +261,7 @@ export default function ReportePersonalBautizado() {
         doc.line(120, yAxis, 180, yAxis);
         yAxis += 3;
         doc.text("SECRETARIO", 51, yAxis);
-        doc.text("PASTOR", 145, yAxis);
+        doc.text(lider, 145, yAxis);
         yAxis -= 5;
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
         doc.text(`${infoSecretario}`, 40, yAxis);
@@ -208,6 +272,45 @@ export default function ReportePersonalBautizado() {
     return (
         <>
             <Container>
+                <FormGroup>
+                    <Row>
+                        <Col xs="5">
+                            <Input
+                                type="select"
+                                name="idDistrito"
+                            >
+                                <option value="1">{`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`}</option>
+                            </Input>
+                        </Col>
+                    </Row>
+                </FormGroup>
+                <FormGroup>
+                    <Row>
+                        <Col xs="5">
+                            <Input
+                                type="select"
+                                name="sectorSeleccionado"
+                                value={sectorSeleccionado}
+                                onChange={handle_sectorSeleccionado}
+                            >
+                                <option value="0">Selecciona un sector</option>
+
+                                {sectores.map(sector => {
+                                    return (
+                                        <React.Fragment key={sector.sec_Id_Sector}>
+                                            <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                        </React.Fragment>
+                                    )
+                                })}
+                                {localStorage.getItem('sector') === null &&
+                                    <React.Fragment>
+                                        <option value="todos">TODOS LOS SECTORES</option>
+                                    </React.Fragment>
+                                }
+                            </Input>
+                        </Col>
+                    </Row>
+                </FormGroup>
                 <Button className="btn-success m-3 " onClick={() => downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={() => reportePersonalBautizadoPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
                 <Card body>
@@ -218,13 +321,19 @@ export default function ReportePersonalBautizado() {
                         <Col lg="6" >
                             <CardTitle className="text-center" tag="h3">
                                 LISTA DE PERSONAL BAUTIZADO
-                                {sector ? <h5 className="mt-3">{infoSec}</h5> : <h5 className="mt-3"><strong>Distrito: </strong>{infoDis}</h5>}
+                                <FormGroup>
+                                    <Row>
+                                        <h1></h1>
+                                    </Row>
+                                </FormGroup>
+
+                                <h5>{entidadTitulo}</h5>
                             </CardTitle>
                         </Col>
                     </Row>
                     <CardBody>
                         <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Button color="primary" size="lg" className="text-left " block id="adultos_hombres">Adultos hombres: {countPersons("ADULTO_HOMBRE")}</Button>
+                            <Button size="lg" className="text-left categoriasReportes " block id="adultos_hombres">Adultos hombres: {countPersons("ADULTO_HOMBRE")}</Button>
 
                             <Card>
                                 <CardBody>
@@ -241,7 +350,7 @@ export default function ReportePersonalBautizado() {
                             </Card>
                         </UncontrolledCollapse>
 
-                        <Button color="primary" size="lg" className="text-left mt-2" block id="adultos_mujeres">Adultos mujeres: {countPersons("ADULTO_MUJER")}</Button>
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">Adultos mujeres: {countPersons("ADULTO_MUJER")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
                             <Card>
                                 <CardBody>
@@ -258,7 +367,7 @@ export default function ReportePersonalBautizado() {
                             </Card>
                         </UncontrolledCollapse>
 
-                        <Button color="primary" size="lg" className="text-left mt-2" block id="jovenes_hombres">Jovenes hombres: {countPersons("JOVEN_HOMBRE")}</Button>
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="jovenes_hombres">Jovenes hombres: {countPersons("JOVEN_HOMBRE")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
                             <Card>
                                 <CardBody>
@@ -274,7 +383,7 @@ export default function ReportePersonalBautizado() {
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
-                        <Button color="primary" size="lg" className="text-left mt-2" block id="jovenes_mujeres">Jovenes mujeres: {countPersons("JOVEN_MUJER")}</Button>
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="jovenes_mujeres">Jovenes mujeres: {countPersons("JOVEN_MUJER")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#jovenes_mujeres">
                             <Card>
                                 <CardBody>
@@ -324,7 +433,7 @@ export default function ReportePersonalBautizado() {
                         {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
                     </CardTitle>
                     <CardBody>
-                        <Table responsive hover id="table1" data-cols-width="10,20,20,20,20,20">
+                        <Table responsive hover id="table1" data-cols-width="10,20,20,20,20,20,20">
                             <thead>
                                 <tr>
                                     <th data-f-bold>Indice</th>
@@ -333,6 +442,7 @@ export default function ReportePersonalBautizado() {
                                     <th data-f-bold>Apellido Materno</th>
                                     <th data-f-bold>Categoria</th>
                                     <th data-f-bold>Telefono Movil</th>
+                                    <th data-f-bold>Fecha Nacimiento</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -344,6 +454,8 @@ export default function ReportePersonalBautizado() {
                                         <td>{persona.persona.per_Apellido_Materno}</td>
                                         <td>{persona.persona.per_Categoria}</td>
                                         <td>{persona.persona.per_Telefono_Movil}</td>
+                                        <td>{moment(persona.persona.per_Fecha_Nacimiento).format("YYYY-MM-DD")}</td>
+
                                     </tr>
                                 ))}
                             </tbody>

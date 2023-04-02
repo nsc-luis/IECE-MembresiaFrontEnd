@@ -106,7 +106,9 @@ class RptListaDeHogares extends Component {
             await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
                 .then(res => {
                     // console.log(res.data.value);
-                    this.setState({ infoListaHogares: res.data.listahogares })
+                    this.setState({
+                        infoListaHogares: res.data.listahogares
+                    })
                     console.log("Hogares: ", res.data.listahogares)
                     this.arreglarLista();
                     this.getInfoSector();

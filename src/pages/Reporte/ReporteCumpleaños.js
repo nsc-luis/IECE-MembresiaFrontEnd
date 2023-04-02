@@ -8,7 +8,6 @@ import {
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
-/* import Moment from "react-moment"; */
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
@@ -21,7 +20,7 @@ export default function ReporteCumpleaños() {
     const [infoSec, setInfoSec] = useState([])
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
-    const [infoSecretario, setInfoSecretario] = useState(null)
+    const [infoSecretario, setInfoSecretario] = useState({})
     const [sectores, setSectores] = useState([])
     const [lider, setLider] = useState("")
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
