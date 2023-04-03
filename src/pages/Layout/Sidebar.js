@@ -7,6 +7,7 @@ import {
 import helpers from '../../components/Helpers';
 import './style.css'
 
+
 class Sidebar extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     constructor(props) {
@@ -52,19 +53,21 @@ class Sidebar extends Component {
     openModalEditaPersona = async () => {
         await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) });
+                        // names must be equal
+                        return 0;
+                    })
+                });
             });
         this.setState({ modalEditaPersona: !this.state.modalEditaPersona })
     }
@@ -72,19 +75,21 @@ class Sidebar extends Component {
     openModalEditaPersonaNB = async () => {
         await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) });
+                        // names must be equal
+                        return 0;
+                    })
+                });
             });
         this.setState({ modalEditaPersonaNB: !this.state.modalEditaPersonaNB })
     }
@@ -96,7 +101,7 @@ class Sidebar extends Component {
 
     //Despues de Seleccionar a un Bautizado para Edición/Actualización
     invocaFormularioDePersona = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona Bautizada")
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Edición de Persona Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
@@ -105,7 +110,7 @@ class Sidebar extends Component {
 
     //Despues de Seleccionar a un NoBautizado para Edición/Actualización
     invocaFormularioDePersonaNB = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Edición de Persona NO Bautizada")
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Edición de Persona NO Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
@@ -122,7 +127,7 @@ class Sidebar extends Component {
 
     // METODO PARA INVOCAR UN FORMULARIO DE PERSONA NUEVO
     handle_AltaPersonaBautizada = () => {
-        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona Bautizada");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Bautismo");
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
@@ -130,19 +135,19 @@ class Sidebar extends Component {
 
     handle_AltaRestitucion = () => {
 
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Restitución");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Restitución");
         //document.location.href = "/AltaRestitucion";
     }
 
     handle_AltaCambioDomicilio = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
         //document.location.href = "/AltaCambioDomicilio";
 
     }
 
     //Para dar de Alta a un No Bautizado por Nuevo Ingreso. Resetea algunas variables en LocalStorage y el Encabezado.
-    handle_AltaPersonaNoBautizada = () => { 
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada");
+    handle_AltaPersonaNoBautizada = () => {
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona NO Bautizada");
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
@@ -150,12 +155,12 @@ class Sidebar extends Component {
 
     handle_Reactivacion = () => {
 
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona por Reactivación");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Reactivación");
         //document.location.href = "/AltaReactivacion";
     }
 
     handle_AltaCambioDomicilioNB = () => {
-        this.handle_LinkEncabezado("Seccion: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona NO Bautizada por Cambio de Domicilio");
         //document.location.href = "/AltaCambioDomicilioNB";
     }
 
@@ -207,7 +212,7 @@ class Sidebar extends Component {
         return (
             <React.Fragment>
                 {/* Sidebar */}
-                <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                <ul className="navbar-nav bg-SideBar sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
                     <Link
@@ -234,7 +239,7 @@ class Sidebar extends Component {
                         <Link
                             className="nav-link collapsed"
                             to="/ResumenMembresia"
-                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Resumen de Membresía Actual")}
+                            onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Resumen de Membresía Actual")}
                         >
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresía Actual</span>
@@ -246,7 +251,7 @@ class Sidebar extends Component {
                         <Link
                             className="nav-link"
                             to="/ListaDePersonal"
-                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Análisis de membresía")}
+                            onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Análisis de membresía")}
                         >
                             <i className="fas fa-fw fa-home"></i>
                             <span>Análisis de Membresía</span>
@@ -445,10 +450,20 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link className="nav-link"
                             to="/Matrimonio"
-                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio / Legalización')}
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Matrimonio')}
                         >
                             <i className="fas fa-fw fa-user-friends"></i>
-                            <span>Matrimonio / Legalización</span>
+                            <span>Matrimonio</span>
+                        </Link>
+                    </li>
+                    {/* Nav Item - Matrimonios */}
+                    <li className="nav-item">
+                        <Link className="nav-link"
+                            to="/Legalizacion"
+                            onClick={() => this.handle_LinkEncabezado('Sucesos Estadisticos', 'Legalización')}
+                        >
+                            <i className="fas fa-fw fa-user-friends"></i>
+                            <span>Legalización</span>
                         </Link>
                     </li>
 
@@ -511,8 +526,8 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li>
-                                        {/* Nav Item - Hogares  */}
-                                        <li className="nav-item">
+                    {/* Nav Item - Hogares  */}
+                    <li className="nav-item">
                         <Link
                             className="nav-link"
                             to="#"
