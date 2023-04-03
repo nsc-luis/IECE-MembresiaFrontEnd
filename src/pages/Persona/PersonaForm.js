@@ -280,7 +280,9 @@ class PersonaForm extends Component {
             habilitaPerBautizado,
             onChangeFechaBautismo,
             fechaBautismoInvalida,
-            ChangeFechaBautismoInvalida
+            ChangeFechaBautismoInvalida,
+            FechaTransaccionHistorica,
+            handleFechaDeTransaccion
         } = this.props
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
@@ -736,44 +738,44 @@ class PersonaForm extends Component {
                                                 </FormGroup>
 
                                                 {bolPersonaEncontrada === true &&
-                                                 <>
-                                                    <PersonaEncontrada
-                                                        datosPersonaEncontrada={this.state.datosPersonaEncontrada}
-                                                    />
+                                                    <>
+                                                        <PersonaEncontrada
+                                                            datosPersonaEncontrada={this.state.datosPersonaEncontrada}
+                                                        />
 
-                                                    <div className="row">
-                                                    <div className="col-sm-6"></div>
-                                                    <div className="col-sm-3 ">
-                                                        <Button
-                                                            type="button"
-                                                            onClick={handleIgnorarDuplicados}
-                                                            color="success"
-                                                            className="btn-block"
-                                                        >
-                                                            <span
-                                                                className="fa fa-check fa-sm "
-                                                                style={{ paddingRight: "5px" }}>
-                                                            </span>
-                                                            <i>Continuar Captura</i>
-                                                        </Button>
-                                                    </div>
+                                                        <div className="row">
+                                                            <div className="col-sm-6"></div>
+                                                            <div className="col-sm-3 ">
+                                                                <Button
+                                                                    type="button"
+                                                                    onClick={handleIgnorarDuplicados}
+                                                                    color="success"
+                                                                    className="btn-block"
+                                                                >
+                                                                    <span
+                                                                        className="fa fa-check fa-sm "
+                                                                        style={{ paddingRight: "5px" }}>
+                                                                    </span>
+                                                                    <i>Continuar Captura</i>
+                                                                </Button>
+                                                            </div>
 
-                                                    <div className="col-sm-3 ">
-                                                        <Button
-                                                            type="button"
-                                                            onClick={() => window.location = "/ListaDePersonal"}
-                                                            color="danger"
-                                                            className="btn-block"
-                                                        >
-                                                            <span
-                                                                className="fa fa-times fa-sm "
-                                                                style={{ paddingRight: "5px" }}>
-                                                            </span>
-                                                            <i>Cancelar</i>
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                                </>
+                                                            <div className="col-sm-3 ">
+                                                                <Button
+                                                                    type="button"
+                                                                    onClick={() => window.location = "/ListaDePersonal"}
+                                                                    color="danger"
+                                                                    className="btn-block"
+                                                                >
+                                                                    <span
+                                                                        className="fa fa-times fa-sm "
+                                                                        style={{ paddingRight: "5px" }}>
+                                                                    </span>
+                                                                    <i>Cancelar</i>
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </>
                                                 }
 
                                             </CardBody>
@@ -1460,6 +1462,36 @@ class PersonaForm extends Component {
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </React.Fragment>
+                                            }
+                                            {/* FECHA DE TRANSACCION */}
+                                            {JSON.parse(localStorage.getItem("nvaAltaBautizado")) === false && boolComentarioEdicion === false &&
+                                                <React.Fragment>
+                                                    <FormGroup>
+                                                        <div className="row mx-auto mt-4">
+                                                            <div className="col-sm-12">
+                                                                <div className="card border-info acceso-directo">
+                                                                    <div className="card-header">
+                                                                        <h5><strong>Fecha de la transacción histórica</strong></h5>
+                                                                    </div>
+                                                                    <div className="card-body">
+                                                                        <div className="row">
+                                                                            <div className="col-sm-4">
+                                                                                <Input
+                                                                                    type="date"
+                                                                                    name="FechaTransaccionHistorica"
+                                                                                    onChange={handleFechaDeTransaccion}
+                                                                                    value={FechaTransaccionHistorica}
+                                                                                    placeholder="DD/MM/AAAA"
+                                                                                />
+                                                                                <label>Por defecto se toma la fecha de nacimiento.</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </FormGroup>
                                                 </React.Fragment>
                                             }
 

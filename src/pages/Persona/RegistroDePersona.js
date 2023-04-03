@@ -48,6 +48,7 @@ class RegistroDePersonal extends Component {
             nuevaFoto: false,
             boolNvoEstado: false,
             fechaBautismoInvalida:false,
+            FechaTransaccionHistorica: null
         }
     }
 
@@ -60,6 +61,7 @@ class RegistroDePersonal extends Component {
     }
 
     componentDidMount() {
+        console.log(localStorage.getItem("nvaAltaBautizado"));
         if (localStorage.getItem("idPersona") === "0") {
             this.setState({
                 foto: `${helpers.url_api}/Foto/FotoDefault`,
@@ -609,7 +611,6 @@ class RegistroDePersonal extends Component {
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : ""
         };
-
         // this.fnSolicitudNvaProfesion();
         if (this.state.nuevaFoto) {
             await helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
@@ -687,7 +688,7 @@ class RegistroDePersonal extends Component {
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-            }
+            } 
         }
     }
 
@@ -788,6 +789,12 @@ class RegistroDePersonal extends Component {
         })
     }
 
+    handleFechaDeTransaccion = (e) => {
+        this.setState({ 
+            [e.target.name]: e.target.value
+         });
+    }
+
     render() {
         return (
             <>
@@ -828,6 +835,8 @@ class RegistroDePersonal extends Component {
                     onChangeFechaBautismo={this.onChangeFechaBautismo}
                     fechaBautismoInvalida={this.state.fechaBautismoInvalida}
                     ChangeFechaBautismoInvalida={this.ChangeFechaBautismoInvalida}
+                    handleFechaDeTransaccion={this.handleFechaDeTransaccion}
+                    FechaTransaccionHistorica={this.state.FechaTransaccionHistorica}
                 /> 
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>
