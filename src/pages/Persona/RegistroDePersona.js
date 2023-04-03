@@ -485,7 +485,8 @@ class RegistroDePersonal extends Component {
             HogarDomicilioEntity: datos.HogarDomicilioEntity,
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
-            nvoEstado: this.state.domicilio.nvoEstado
+            nvoEstado: this.state.domicilio.nvoEstado,
+            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica
         }
         await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
             .then(res => {
@@ -609,7 +610,8 @@ class RegistroDePersonal extends Component {
             PersonaEntity: datos,
             ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase(),
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
-            nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : ""
+            nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
+            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica
         };
         // this.fnSolicitudNvaProfesion();
         if (this.state.nuevaFoto) {
@@ -623,7 +625,8 @@ class RegistroDePersonal extends Component {
                         });
                     }
                     try {
-                        helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                        //helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                        helpers.authAxios.post(this.url + "/persona/ActualizaPersona", info)
                             .then(res => {
                                 if (res.data.status === "success") {
                                     setTimeout(() => {
@@ -656,7 +659,9 @@ class RegistroDePersonal extends Component {
         }
         else {
             try {
-                helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                console.log(info)
+                //helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                helpers.authAxios.post(this.url + "/persona/ActualizaPersona/", info)
                     .then(res => {
                         if (res.data.status === "success") {
                             this.setState({
