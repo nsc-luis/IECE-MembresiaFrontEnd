@@ -31,7 +31,19 @@ class Domicilio extends React.Component {
         helpers.authAxios.get(this.url + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
-                    ListaHogares: res.data.domicilios
+                    ListaHogares: res.data.domicilios.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
+
+                        // names must be equal
+                        return 0;
+                    })
                 });
             });
     }
@@ -56,7 +68,9 @@ class Domicilio extends React.Component {
             <React.Fragment>
                 <div className="form-group">
                     <div className="alert alert-info mt-3" role="alert">
-                        <h5><strong>AVISO: </strong>Si es un "Nuevo Hogar / Domicilio", llene los datos del domicilio.</h5>
+                        <h5><strong>AVISO: </strong>Si selecciona "Nuevo Hogar / Domicilio", llene los datos del domicilio.
+
+                        </h5>
                     </div>
                     <div className="row">
                         <div className="col-sm-2">
