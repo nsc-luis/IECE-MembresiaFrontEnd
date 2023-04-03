@@ -48,7 +48,7 @@ class RegistroDePersonal extends Component {
             nuevaFoto: false,
             boolNvoEstado: false,
             fechaBautismoInvalida:false,
-            FechaTransaccionHistorica: null
+            FechaTransaccionHistorica: ""
         }
     }
 
@@ -704,7 +704,8 @@ class RegistroDePersonal extends Component {
             jerarquia: jerarquia,
             hdId: hdId,
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
-            nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : ""
+            nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
+            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica
         }
         //this.fnSolicitudNvaProfesion();
         try {
