@@ -10,3 +10,11 @@
 .entreBotones {
     margin-right: 5px;
 }
+.bg-SideBar{
+    background: rgb(0,105,172);
+    background: linear-gradient(90deg, rgba(0,105,172,1) 0%, rgba(4,93,163,0.9195963541666666) 36%, rgba(40,115,164,1) 100%);
+}
+
+.text-TopBar {
+    color:rgb(59, 126, 180)
+}

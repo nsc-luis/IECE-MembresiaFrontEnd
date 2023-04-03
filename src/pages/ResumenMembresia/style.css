@@ -18,3 +18,15 @@
 .fas-icon-margin {
     margin-right: 5px;
 }
+
+.categoriasReportes{
+    background-color: #54a8e0;
+}
+
+.categoriasReportes:hover{
+    background-color: #54a8e0;
+}
+
+.subCategoriasReportes{
+    background-color: #c4e5fc;
+}

@@ -31,7 +31,19 @@ class Domicilio extends React.Component {
         helpers.authAxios.get(this.url + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
-                    ListaHogares: res.data.domicilios
+                    ListaHogares: res.data.domicilios.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
+
+                        // names must be equal
+                        return 0;
+                    })
                 });
             });
     }
@@ -56,7 +68,9 @@ class Domicilio extends React.Component {
             <React.Fragment>
                 <div className="form-group">
                     <div className="alert alert-info mt-3" role="alert">
-                        <h5><strong>AVISO: </strong>Si es un "Nuevo Hogar / Domicilio", llene los datos del domicilio.</h5>
+                        <h5><strong>AVISO: </strong>Si selecciona "Nuevo Hogar / Domicilio", llene los datos del domicilio.
+
+                        </h5>
                     </div>
                     <div className="row">
                         <div className="col-sm-2">
@@ -106,13 +120,6 @@ class Domicilio extends React.Component {
                         {
                             DatosHogarDomicilio.map((HogarDomicilio) => {
                                 return (
-                                    // <p key={HogarDomicilio.hd_Id_Hogar}>
-                                    //     Calle: {HogarDomicilio.hd_Calle}, No.: {HogarDomicilio.hd_Numero_Exterior}, Interior: {HogarDomicilio.hd_Numero_Interior},
-                                    //     Tipo subdivision: {HogarDomicilio.hd_Tipo_Subdivision}, Subdivision: {HogarDomicilio.hd_Subdivision} <br />
-                                    //     Localidad: {HogarDomicilio.hd_Localidad}, Municipio/cuidad: {HogarDomicilio.hd_Municipio_Ciudad},
-                                    //     {HogarDomicilio.est_Nombre}, Pais: {HogarDomicilio.pais_Nombre_Corto} <br />
-                                    //     Telefono: {HogarDomicilio.hd_Telefono}
-                                    // </p>
                                     <p><h7>{direccion}</h7></p>
                                 )
                             })
@@ -132,7 +139,7 @@ class Domicilio extends React.Component {
                                             <tr key={i}>
                                                 <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
                                                 <td>{miembro.hp_Jerarquia}</td>
-                                                <td>{miembro.per_Activo?"SI":"NO"}</td>
+                                                <td>{miembro.per_Activo ? "SI" : "NO"}</td>
                                             </tr>
                                         )
                                     })

@@ -6,6 +6,7 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
+import '../../assets/css/index.css';
 
 class ReporteTransacciones extends Component {
     constructor(props) {
@@ -152,9 +153,9 @@ class ReporteTransacciones extends Component {
             }
         });
         helpers.authAxios.get(`/Sector/${localStorage.getItem("sector")}`)
-        .then(res => {
-            this.setState({ sector: res.data.sector[0] })
-        })
+            .then(res => {
+                this.setState({ sector: res.data.sector[0] })
+            })
     }
     onChange = (e) => {
         this.setState({
@@ -391,7 +392,7 @@ class ReporteTransacciones extends Component {
                         <CardTitle className="text-center" tag="h3">
                             <Row>
                                 <Col lg="3">
-                                    <img src={logo} width="100%"></img>
+                                    <img src={logo} alt=" Logo" width="100%"></img>
                                 </Col>
                                 <Col>
                                     REPORTE DE TRANSACCIONES
@@ -429,7 +430,7 @@ class ReporteTransacciones extends Component {
                                 </Col>
                                 <Col lg="2" className="text-center">
                                     <Button
-                                        color="info"
+                                        color="primary"
                                         onClick={this.buscarInfo}
                                     >Buscar...</Button>
                                 </Col>

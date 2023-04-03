@@ -31,164 +31,197 @@ class RptListaDeHogares extends Component {
             infoDistrito: {},
             infoSector: [],
             infoListaHogares: [],
-            listaArreglada:[],
-            infoSecretario:{},
-            distrito:{},
-            sectores:[],
-            sectorSeleccionado: localStorage.getItem('sector'),
+            listaArreglada: [],
+            infoSecretario: {},
+            distrito: {},
+            sectores: [],
+            sectorSeleccionado: localStorage.getItem('sector') ? localStorage.getItem('sector') : "todos",
             lider: ""
         }
     }
 
     componentDidMount() {
-        this.getPersonas();
-        this.getInfoDistrito();
-        this.getInfoSector();
-        this.getListaHogares();
-        this.getDistrito();
-        this.getSectoresPorDistrito();
+        this.getPersonas(); //Trae todas las personas del Sector o Distrito
+        this.getInfoDistrito(); //Trae los datos del Dto.
+        this.getInfoSector(); //Trae los datos del Sector
+        this.getListaHogares(); //Trae la lista de Hogares del Dto o Sector segun el tipo de Sesión.
+        this.getDistrito();//Trae los datos del Distrito
+        this.getSectoresPorDistrito();//Trae los Sectores del Distrito
         window.scrollTo(0, 0);
-        }
+    }
 
-        getDistrito = async () => {
-            await helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
+    getDistrito = async () => {
+        await helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
+            .then(res => {
+                this.setState({
+                    distrito: res.data
+                })
+            });
+    }
+
+    getInfoDistrito = async () => {
+        await helpers.authAxios.get(this.url + "/Distrito/" + localStorage.getItem('dto'))
+            .then(res => {
+                this.setState({ infoDistrito: res.data });
+            })
+    }
+
+    getSectoresPorDistrito = async () => {
+        if (localStorage.getItem('sector') === null) {
+            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
-                        distrito: res.data
+                        sectores: res.data.sectores
                     })
                 });
-        }
-    
-        getSectoresPorDistrito = async () => {
-            if (localStorage.getItem('sector') === null) {
-                await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
-                    .then(res => {
-                        this.setState({
-                            sectores: res.data.sectores
-                        })
-                    });
-                    this.setState ({lider:"OBISPO"})
-                    
-            }
-            else {
-                await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
-                    .then(res => {
-                        this.setState({
-                            sectores: res.data.sector
-                        })
-                    });
-                    this.setState ({lider:"PASTOR"})
-            }
-        }
+            this.setState({ lider: "OBISPO" })
 
-        handle_sectorSeleccionado = async (e) => {
-            
+        }
+        else {
+            await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({
+                        sectores: res.data.sector
+                    })
+                });
+            this.setState({ lider: "PASTOR" })
+        }
+    }
+
+    handle_sectorSeleccionado = async (e) => {
+        if (e.target.value === "todos") {
             this.setState({ sectorSeleccionado: e.target.value });
-                console.log("Sector: ", e.target.value)
-                await helpers.authAxios.get(this.url + '/HogarDomicilio/getListaHogaresBySector/' + e.target.value)
-                    .then(res => {
-                        // console.log(res.data.value);
-                        this.setState({ infoListaHogares: res.data.listahogares })
-                        console.log("Hogares: ", res.data.listahogares)
-                        this.arreglarLista();
-                        this.getInfoSector();
-                    });
-                    
-            }
+            console.log("Sector: ", e.target.value)
+            await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresByDistrito/' + localStorage.getItem('dto'))
+                .then(res => {
+                    // console.log(res.data.value);
+                    this.setState({ infoListaHogares: res.data.listahogares })
+                    console.log("Hogares: ", res.data.listahogares)
+                    this.arreglarLista();
+                    this.getInfoSector();
+                });
+        } else {
+            this.setState({ sectorSeleccionado: e.target.value });
+            console.log("Sector: ", e.target.value)
+            await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
+                .then(res => {
+                    // console.log(res.data.value);
+                    this.setState({
+                        infoListaHogares: res.data.listahogares
+                    })
+                    console.log("Hogares: ", res.data.listahogares)
+                    this.arreglarLista();
+                    this.getInfoSector();
+                });
+        }
+    }
 
 
-        
-    getPersonas = async() => {
+
+    getPersonas = async () => {
         await helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
                 //Filtro de hogares 
                 const knownElements = []
                 const filteredElements = []
-                res.data.map( element => {
-                    if(!knownElements.includes(element.hogar.hd_Id_Hogar)){
+                res.data.map(element => {
+                    if (!knownElements.includes(element.hogar.hd_Id_Hogar)) {
                         knownElements.push(element.hogar.hd_Id_Hogar)
                         filteredElements.push(element)
                     }
                 })
-                this.setState({data: filteredElements})
+                this.setState({ data: filteredElements })
             })
     }
-    
+
     getListaHogares = async () => {
-        
-        await helpers.authAxios.get(this.url + "/HogarDomicilio/getListaHogaresBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ infoListaHogares: res.data.listahogares});
-            })
-            console.log("Sale de la API: ", this.state.infoListaHogares)
+        if (localStorage.getItem('sector') === null) {
+
+            await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresByDistrito/" + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({ infoListaHogares: res.data.listahogares });
+                })
+            console.log("Sale de la API: ", this.state.infoListahogares)
+            //this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
+            this.arreglarLista();
+
+        } else {
+            await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({ infoListaHogares: res.data.listahogares });
+                })
+            console.log("Sale de la API: ", this.state.infoListahogares)
             this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
             this.arreglarLista();
-            
+        }
+
     }
 
-arreglarLista= () =>{
- //Arregla la lista a manera de presentarla en Pantalla y PDF
- const data2 = []
- console.log("Entra en función Arreglar Lista: ", this.state.infoListaHogares)
- this.state.infoListaHogares.forEach((hogar, index) => {
-     const miembros =[]
-     let conteo = 0
-     hogar.integrantes.forEach((miembro, i) => {
-         conteo = i
-         miembros.push({
-             Grupo: miembro.grupo,
-             Nombre: miembro.nombre,
-             Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
-             Edad: miembro.edad,
-             Celular: miembro.cel?miembro.cel:"-"
-         })
-        
-         data2.push({
-             Indice: (conteo==0)?String(hogar.indice):" ",
-             Grupo: String(miembros[i].Grupo),
-             Nombre: String(miembros[i].Nombre),
-             Nacimiento: (miembros[i].Nacimiento),
-             Edad: String(miembros[i].Edad),
-             Celular: String(miembros[i].Celular),
-             Tel_Casa: (conteo==0)?String(hogar.tel?hogar.tel:"-"):" ",
-             Domicilio: (conteo==0)?String(hogar.direccion):" ",
-             })
-     })
-this.setState({listaArreglada : data2})
- })
-    }
+    arreglarLista = () => {
+        //Arregla la lista para desplegarla en Pantalla y PDF
+        const data2 = []
+        console.log("Entra en función Arreglar Lista: ", this.state.infoListaHogares)
+        if (this.state.infoListaHogares.length > 0) { //Si el array infoListaHogares tiene por lo menos 1 hogar Arregla/Prepara la lista
+            this.state.infoListaHogares.forEach((hogar, index) => {
+                const miembros = []
+                let conteo = 0
+                hogar.integrantes.forEach((miembro, i) => {
+                    conteo = i
+                    miembros.push({
+                        Grupo: miembro.grupo,
+                        Nombre: miembro.nombre,
+                        Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
+                        Edad: miembro.edad,
+                        Celular: miembro.cel ? miembro.cel : "-"
+                    })
 
-    getInfoDistrito = async () => {
-        await helpers.authAxios.get(this.url + "/distrito/" + localStorage.getItem('dto'))
-            .then(res => {
-                this.setState({ infoDistrito: res.data});
+                    data2.push({
+                        Indice: (conteo === 0) ? String(hogar.indice) : " ",
+                        Grupo: String(miembros[i].Grupo),
+                        Nombre: String(miembros[i].Nombre),
+                        Nacimiento: (miembros[i].Nacimiento),
+                        Edad: String(miembros[i].Edad),
+                        Celular: String(miembros[i].Celular),
+                        Tel_Casa: (conteo === 0) ? String(hogar.tel ? hogar.tel : "-") : " ",
+                        Domicilio: (conteo === 0) ? String(hogar.direccion) : " ",
+                    })
+                })
+
+                this.setState({ listaArreglada: data2 })
+
             })
+        } else { //Si el Sector no tiene Hogares, resetea el array 'listaArreglada'
+            this.setState({ listaArreglada: [] })
+        }
+
     }
+
+
 
     getInfoSector = async () => {
-        if (localStorage.getItem('sector') !==null){
-        await helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ infoSector: res.data.sector[0]});
-            })
+        if (localStorage.getItem('sector') !== null) {
+            await helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({ infoSector: res.data.sector[0] });
+                })
 
-        await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({
-                    infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                });
-            })    
-        } else{
+            await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({
+                        infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                    });
+                })
+        } else {
             await helpers.authAxios.get(this.url + "/sector/" + this.state.sectorSeleccionado)
-            .then(res => {
-                this.setState({ infoSector: res.data.sector[0]});
-            })
-        await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem('dto'))
-            .then(res => {
-                this.setState({
-                    infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                });
-            })
+                .then(res => {
+                    this.setState({ infoSector: res.data.sector[0] });
+                })
+            await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({
+                        infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                    });
+                })
         }
 
 
@@ -198,11 +231,11 @@ this.setState({listaArreglada : data2})
         TableToExcel.convert(document.getElementById("table1"), {
             name: "Reporte_Hogeres.xlsx",
             sheet: {
-              name: "Hoja 1"
+                name: "Hoja 1"
             }
-          });
+        });
     }
-    
+
     reporteHogaresPDF = () => {
         //console.log("Lista de Hogares: " + this.state.infoListaHogares.listahogares[0])
 
@@ -211,20 +244,20 @@ this.setState({listaArreglada : data2})
         let yAxis = 20
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("landscape", "mm", "letter");
-    
+
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("LISTA DE HOGARES", 165, 10, {align:'center'});
+        doc.text("LISTA DE HOGARES", 165, 10, { align: 'center' });
 
         doc.setFontSize(8);
-        
-        
+
+
         if (sector) {
-            doc.text(`SECTOR ${this.state.infoSector.sec_Numero}, ${this.state.infoSector.sec_Alias}`, 165, 17, {align:'center'});
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 165, 22, {align:'center'});
+            doc.text(`SECTOR ${this.state.infoSector.sec_Numero}, ${this.state.infoSector.sec_Alias}`, 165, 17, { align: 'center' });
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 165, 22, { align: 'center' });
         }
         else {
-            doc.text(`DISTRITO ${this.state.infoDistrito.dis_Numero}, ${this.state.infoDistrito.dis_Alias}`, 165, 17, {align:'center'})
-            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 165, 22, {align:'center'});
+            doc.text(`DISTRITO ${this.state.infoDistrito.dis_Numero}, ${this.state.infoDistrito.dis_Alias}`, 165, 17, { align: 'center' })
+            doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 165, 22, { align: 'center' });
         }
 
         const headers = [
@@ -238,18 +271,18 @@ this.setState({listaArreglada : data2})
             'Domicilio',
         ]
 
-        doc.table(10, 35, this.state.listaArreglada, headers, {autoSize:true, fontSize: 8, padding:1, margins: {left: 0, top: 10,bottom: 10, width: 0}})
-        
+        doc.table(10, 35, this.state.listaArreglada, headers, { autoSize: true, fontSize: 8, padding: 1, margins: { left: 0, top: 10, bottom: 10, width: 0 } })
+
         doc.setFontSize(8);
 
-        if(yAxis < 220){
+        if (yAxis < 220) {
             yAxis += 3
-        }else{
+        } else {
             yAxis = 0
-        } 
+        }
 
-        
-        yAxis = 35+ this.state.listaArreglada.length * 8 + 9
+
+        yAxis = 35 + this.state.listaArreglada.length * 8 + 9
 
         doc.text(`JUSTICIA Y VERDAD`, 120, yAxis);
         yAxis += 5;
@@ -270,72 +303,72 @@ this.setState({listaArreglada : data2})
     }
     render() {
         let lista;
-        let i=1;
-        let bgcolor =  "#ddd"
+        let i = 1;
+        let bgcolor = "#ddd"
         let cambia = true
         if (this.state.listaArreglada.length >= 0) {
             return (
-               <>
-                <Container fluid>
-                    <FormGroup>
-                        <Row>
-                            <Col xs="5">
-                                <Input
-                                    type="select"
-                                    name="idDistrito"
-                                >
-                                    <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
-                                </Input>
-                            </Col>
-                        </Row>
-                    </FormGroup>
-                    <FormGroup>
-                        <Row>
-                            <Col xs="5">
-                                <Input
-                                    type="select"
-                                    name="sectorSeleccionado"
-                                    value={this.state.sectorSeleccionado}
-                                    onChange={this.handle_sectorSeleccionado}
-                                >
-                                    <option value="0">Selecciona un sector</option>
-                                    
-                                    {this.state.sectores.map(sector => {
-                                        return (
-                                            <React.Fragment key={sector.sec_Id_Sector}>
-                                                <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                <>
+                    <Container fluid>
+                        <FormGroup>
+                            <Row>
+                                <Col xs="5">
+                                    <Input
+                                        type="select"
+                                        name="idDistrito"
+                                    >
+                                        <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
+                                    </Input>
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                        <FormGroup>
+                            <Row>
+                                <Col xs="5">
+                                    <Input
+                                        type="select"
+                                        name="sectorSeleccionado"
+                                        value={this.state.sectorSeleccionado}
+                                        onChange={this.handle_sectorSeleccionado}
+                                    >
+                                        <option value="0">Selecciona un sector</option>
+
+                                        {this.state.sectores.map(sector => {
+                                            return (
+                                                <React.Fragment key={sector.sec_Id_Sector}>
+                                                    <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                                </React.Fragment>
+                                            )
+                                        })}
+                                        {localStorage.getItem('sector') === null &&
+                                            <React.Fragment>
+                                                <option value="todos">TODOS LOS SECTORES</option>
                                             </React.Fragment>
-                                        )
-                                    })}
-                                    {localStorage.getItem('sector') === null &&
-                                        <React.Fragment>
-                                            <option value="todos">TODOS LOS SECTORES</option>
-                                        </React.Fragment>
-                                    }
-                                </Input>
-                            </Col>
-                        </Row>
-                    </FormGroup>
+                                        }
+                                    </Input>
+                                </Col>
+                            </Row>
+                        </FormGroup>
 
 
 
-                 {/* Iniciaba versión anterior */}
-                    <Button className="btn-success m-3 " onClick={() => this.downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
-                <Button className="btn-danger m-3 " onClick={() => this.reporteHogaresPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
+                        {/* Iniciaba versión anterior */}
+                        <Button className="btn-success m-3 " onClick={() => this.downloadTable()}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
+                        <Button className="btn-danger m-3 " onClick={() => this.reporteHogaresPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
 
                         <Row>
                             <h1 className="text-info">Listado de hogares</h1>
                         </Row>
-                        {this.state.infoDistrito.dis_Numero || this.state.infoSector.sec_Alias ? 
+                        {this.state.infoDistrito.dis_Numero || this.state.infoSector.sec_Alias ?
                             <Row>
                                 <strong>DISTRITO:</strong> &nbsp;  {this.state.infoDistrito.dis_Numero}, {this.state.infoDistrito.dis_Alias}, &nbsp; <strong>Sector:</strong>&nbsp; {this.state.infoSector.sec_Numero} - {this.state.infoSector.sec_Alias}
                             </Row> : null
                         }
                         <Row></Row>
                         <div id="infoListaHogares">
-                        <br></br>
+                            <br></br>
                             <Row>
-                                <Table id='table1'  className="table table-sm table-bordered" data-cols-width="10,10,30,15,8,15,15,50">
+                                <Table id='table1' className="table table-sm table-bordered" data-cols-width="10,10,30,15,8,15,15,50">
                                     <thead>
                                         <tr align="center" >
                                             <th width="5">Indice</th>
@@ -345,41 +378,41 @@ this.setState({listaArreglada : data2})
                                             <th width="3%">Edad</th>
                                             <th width="15%">Celular</th>
                                             <th width="10%">Tel. Casa</th>
-                                            <th width="33%">Domicilio</th> 
+                                            <th width="33%">Domicilio</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
                                             this.state.listaArreglada.map((hogar, index) => {
-                                               
-                                                if (Number(hogar.Indice)){
-                                                    cambia=true;
-                                                } else{
-                                                    cambia=false;
+
+                                                if (Number(hogar.Indice)) {
+                                                    cambia = true;
+                                                } else {
+                                                    cambia = false;
                                                 }
 
-                                                if (cambia && bgcolor == "#f2f2f2"){
-                                                    bgcolor ="#ddd";
-                                                }else if(cambia && bgcolor == "#ddd"){
-                                                    bgcolor ="#f2f2f2";
-                                                }else if(!cambia && bgcolor == "#f2f2f2"){
-                                                    bgcolor ="#f2f2f2";
-                                                }else if(!cambia && bgcolor == "#ddd"){
-                                                    bgcolor ="#ddd";
+                                                if (cambia && bgcolor == "#f2f2f2") {
+                                                    bgcolor = "#ddd";
+                                                } else if (cambia && bgcolor == "#ddd") {
+                                                    bgcolor = "#f2f2f2";
+                                                } else if (!cambia && bgcolor == "#f2f2f2") {
+                                                    bgcolor = "#f2f2f2";
+                                                } else if (!cambia && bgcolor == "#ddd") {
+                                                    bgcolor = "#ddd";
                                                 }
 
                                                 //let bgcolor = hogar.Indice%2 == 0 && hogar.Indice? "#f2f2f2" : "#ddd"
                                                 return (
                                                     <React.Fragment key={hogar.Indice}>
-                                                        <tr style={{"background-color": bgcolor}}>
+                                                        <tr style={{ "background-color": bgcolor }}>
                                                             <td align="center" >{hogar.Indice}</td>
                                                             <td align="center">{hogar.Grupo}</td>
-                                                            <td >{hogar.Nombre}</td>   
+                                                            <td >{hogar.Nombre}</td>
                                                             <td >{hogar.Nacimiento}</td>
-                                                            <td  align="center">{hogar.Edad}</td>
+                                                            <td align="center">{hogar.Edad}</td>
                                                             <td >{hogar.Celular}</td>
                                                             <td >{hogar.Tel_Casa}</td>
-                                                            <td >{hogar.Domicilio}</td> 
+                                                            <td >{hogar.Domicilio}</td>
                                                         </tr>
                                                     </React.Fragment>
                                                 )

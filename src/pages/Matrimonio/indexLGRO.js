@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import {
-    Container, Row, Col, Card, CardHeader,
-    CardBody, CardFooter, Form, Input, Label,
-    Button, FormFeedback, Table, FormGroup,
+    Container, Row, Col, Button, Table,
     Modal, ModalFooter, ModalBody, ModalHeader
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
-import Layout from '../Layout';
 import './style.css';
 import FrmMatrimonioLegalizacion from './FrmMatrimonioLegalizacion';
 
@@ -41,7 +38,7 @@ class Matrimonio extends Component {
 
     handle_frmMatrimonioLegalizacion = () => {
         localStorage.setItem("mat_Id_MatrimonioLegalizacion", "0")
-        this.setState({ 
+        this.setState({
             enableFrmRegistroMatLegal: true,
             mat_Id_MatrimonioLegalizacion: "0"
         })
@@ -49,7 +46,7 @@ class Matrimonio extends Component {
 
     editarMatrimonioLegalizacion = (id) => {
         localStorage.setItem("mat_Id_MatrimonioLegalizacion", id)
-        this.setState({ 
+        this.setState({
             enableFrmRegistroMatLegal: true,
             mat_Id_MatrimonioLegalizacion: id
         })
@@ -73,7 +70,7 @@ class Matrimonio extends Component {
         });
     }
 
-    eliminaMatrimonio = async(id) => {
+    eliminaMatrimonio = async (id) => {
         console.log(id);
         try {
             await helpers.authAxios.delete(helpers.url_api + "/Matrimonio_Legalizacion/" + id)
@@ -118,11 +115,12 @@ class Matrimonio extends Component {
     }
 
     render() {
-        if (this.state.listaMatrimoniosLegalizaciones.length > 0) {
+
+        if (this.state.listaMatrimoniosLegalizaciones.length > 0) { // Si ya hay registros de Matrimonios/Legalizaciones
             return (
                 <>
                     <Container>
-                        {!this.state.enableFrmRegistroMatLegal &&
+                        {!this.state.enableFrmRegistroMatLegal && // Muestra la pantalla de Lista de Registro de Matrimonios y Legalizaciones
                             <React.Fragment>
                                 {/* <Row>
                                     <h1 className="text-info">Matrimonios y legalizaciones</h1>
@@ -135,7 +133,7 @@ class Matrimonio extends Component {
                                             color="primary"
                                             size="sm"
                                             className="btnNuevoRegistro">
-                                            Registrar nuevo matrimonio/legalización
+                                            Registrar Nuevo Matrimonio/Legalización
                                         </Button>
                                     </Col>
                                 </Row>
@@ -144,9 +142,9 @@ class Matrimonio extends Component {
                                         <Table>
                                             <thead>
                                                 <tr>
-                                                    <th>Conyuge hombre</th>
-                                                    <th>Conyuge mujer</th>
-                                                    <th>Tipo de enlace</th>
+                                                    <th>Cónyuge Hombre</th>
+                                                    <th>Cónyuge mujer</th>
+                                                    <th>Tipo de Enlace</th>
                                                     <th>Sector</th>
                                                     <th></th>
                                                 </tr>
@@ -191,7 +189,7 @@ class Matrimonio extends Component {
                                         <h4>Borrar enlace conyugal</h4>
                                     </ModalHeader>
                                     <ModalBody>
-                                        A continuación se borrara el enlace: {this.state.currentMatrimonioLegalizacion.mat_Tipo_Enlace}, entre: <br />
+                                        A continuación se borrará el enlace: {this.state.currentMatrimonioLegalizacion.mat_Tipo_Enlace}, entre: <br />
                                         {this.state.currentMatrimonioLegalizacion.mat_NombreConyugeHombre} y {this.state.currentMatrimonioLegalizacion.mat_NombreConyugeMujer}. <br />
                                         ¿Desea continuar?
                                     </ModalBody>
@@ -212,7 +210,7 @@ class Matrimonio extends Component {
                                 </Modal>
                             </React.Fragment>
                         }
-                        {this.state.enableFrmRegistroMatLegal &&
+                        {this.state.enableFrmRegistroMatLegal && //Si esta Variable de estado está en True se abre el Formulario para Registro de Matrimonios/Leg.
                             <FrmMatrimonioLegalizacion
                                 handle_CancelaCaptura={this.handle_CancelaCaptura}
                                 mat_Id_MatrimonioLegalizacion={this.state.mat_Id_MatrimonioLegalizacion}
@@ -227,7 +225,7 @@ class Matrimonio extends Component {
                 </>
             )
         }
-        else {
+        else { // Si aun No hay registros de Matrimonios/Legalizaciones
             return (
                 <>
                     <Container>
@@ -244,14 +242,14 @@ class Matrimonio extends Component {
                                             color="primary"
                                             size="sm"
                                             className="btnNuevoRegistro">
-                                            Registrar nuevo matrimonio/legalización
+                                            Registrar Nuevo Matrimonio/Legalización
                                         </Button>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col sm="12">
                                         <h3>Aun no hay matrimonios/legalizaciones registrados!</h3>
-                                        <p>Haga clic en el boton Registrar para registrar un nuevo matrimonio/legalizacion.</p>
+                                        <p>Haga clic en el botón 'Registrar nuevo Matrimonio/Legalización' para registrar uno.</p>
                                     </Col>
                                 </Row>
                             </React.Fragment>

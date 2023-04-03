@@ -9,7 +9,7 @@ import './style.css';
 import { jsPDF } from "jspdf";
 import nvologo from '../../assets/images/IECE_LogoOficial.jpg';
 import moment from 'moment';
-import { PieChart, Pie, Tooltip, Cell } from 'recharts'
+import { PieChart, Pie, Tooltip, Cell, Legend } from 'recharts'
 
 class ResumenMembresia extends Component {
 
@@ -50,7 +50,6 @@ class ResumenMembresia extends Component {
         this.getSectoresPorDistrito();
         this.getDistrito();
         this.seleccionaSectorActivo();
-        //this.convertirData();
         window.scrollTo(0, 0);
 
     }
@@ -78,8 +77,7 @@ class ResumenMembresia extends Component {
             await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
-                        sectores: res.data.sectores
-
+                        sectores: res.data.sectores,
                     })
                 });
 
@@ -95,34 +93,81 @@ class ResumenMembresia extends Component {
         }
     }
 
-    seleccionaSectorActivo = async () => {
-        this.setState({ sectorSeleccionado: localStorage.getItem('sector') });
-        //this.setState({sec_Id_Sector: localStorage.getItem('sector')});
-        await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + localStorage.getItem('sector'))
-            .then(res => {
-                this.setState({ resumenDeMembresia: res.data.resumen.value });
-                let dataTodos = Object.keys(res.data.resumen.value);
-                let dataBautizados = dataTodos.filter(item => item === 'hb' || item === "mb" || item === "jhb" || item === "jmb");
-                console.log("DataBautizados: ", dataBautizados);
-                let dataNoBautizados = dataTodos.filter(item => item === "jhnb" || item === "jmnb" || item === "ninos" || item === "ninas");
-                let resumenBautizados = dataBautizados
-                    .map(key => {
-                        return {
-                            name: key,
-                            value: (res.data.resumen.value)[key]
-                        }
-                    });
-                console.log("DataB: ", resumenBautizados);
-                let resumenNoBautizados = dataNoBautizados
-                    .map(key => {
-                        return {
-                            name: key,
-                            value: (res.data.resumen.value)[key]
-                        }
-                    });
-                console.log("DataNB: ", resumenNoBautizados);
-                this.setState({ resumenBautizados, resumenNoBautizados });
+    conviertePersonasParaGraph = (dataPersonas) => {
+        let dataTodos = Object.keys(dataPersonas);
+        let dataBautizados = dataTodos.filter(item => item === 'hb' || item === "mb" || item === "jhb" || item === "jmb");
+        console.log("DataBautizados: ", dataBautizados);
+        let dataNoBautizados = dataTodos.filter(item => item === "jhnb" || item === "jmnb" || item === "ninos" || item === "ninas");
+        let a = "";
+        let b = "";
+        let resumenBautizados = dataBautizados
+            .map(key => {
+
+                switch (key) {
+                    case "hb":
+                        a = "Adultos Hombres Bautizados"
+                        break
+                    case "mb":
+                        a = "Adultos Mujeres Bautizadas"
+                        break
+                    case "jhb":
+                        a = "Jovenes Hombres Bautizados"
+                        break
+                    case "jmb":
+                        a = "Jovenes Mujeres Bautizadas"
+                        break
+                    default:
+                }
+                return {
+                    name: a,
+                    value: (dataPersonas)[key]
+                }
             });
+        console.log("DataB: ", resumenBautizados);
+        let resumenNoBautizados = dataNoBautizados
+            .map(key => {
+                switch (key) {
+                    case "jhnb":
+                        b = "Jovenes Hombres No Bautizados"
+                        break
+                    case "jmnb":
+                        b = "Jovenes Mujeres No Bautizadas"
+                        break
+                    case "ninos":
+                        b = "Niños"
+                        break
+                    case "ninas":
+                        b = "Niñas"
+                        break
+                    default:
+                }
+                return {
+                    name: b,
+                    value: (dataPersonas)[key]
+                }
+            });
+        console.log("DataNB: ", resumenNoBautizados);
+        this.setState({ resumenBautizados, resumenNoBautizados });
+    }
+
+    seleccionaSectorActivo = async () => {
+        if (localStorage.getItem('sector') === null) {
+            this.setState({ sectorSeleccionado: "todos" });
+            await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
+                .then(res => {
+                    //console.log(res.data.value);
+                    this.setState({ resumenDeMembresia: res.data.resumen })
+                    this.conviertePersonasParaGraph(res.data.resumen);//Ejecuta fn que convierte la data para uso en Gráfica.
+                });
+        } else {
+            this.setState({ sectorSeleccionado: localStorage.getItem('sector') });
+            //this.setState({sec_Id_Sector: localStorage.getItem('sector')});
+            await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({ resumenDeMembresia: res.data.resumen.value });
+                    this.conviertePersonasParaGraph(res.data.resumen.value);//Ejecuta fn que convierte la data para uso en Gráfica.
+                });
+        }
     }
 
     handle_sectorSeleccionado = async (e) => {
@@ -132,7 +177,7 @@ class ResumenMembresia extends Component {
                 .then(res => {
                     //console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen })
-
+                    this.conviertePersonasParaGraph(res.data.resumen);//Ejecuta fn que convierte la data para uso en Gráfica.
                 });
             // alert("ALERTA! Aqui podemos hacer 2 cosas:\n- Generar un ciclo que sume los sectores.\n- Agregar dis_Id_Distrito a la tabla de Personal (creo que esta es mejor opcion).");
         }
@@ -142,7 +187,7 @@ class ResumenMembresia extends Component {
                 .then(res => {
                     // console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen.value })
-                    console.log("{ Resumen: ", res.data.resumen.value)
+                    this.conviertePersonasParaGraph(res.data.resumen.value);//Ejecuta fn que convierte la data para uso en Gráfica.
                 });
         }
     }
@@ -308,7 +353,7 @@ class ResumenMembresia extends Component {
         }
     }
 
-    COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    COLORS = ['#4d9473', '#a23eab', '#58a1e0', '#e39aed'];
 
     renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
 
@@ -321,22 +366,8 @@ class ResumenMembresia extends Component {
             <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
                 {`${(percent * 100).toFixed(0)}%`}
             </text>
-
-
         );
     };
-
-    options = {
-        plugins: {
-            display: true,
-            position: "button"
-        },
-        title: {
-            text: "Personal Bautizado",
-            display: true,
-            fontSize: 20
-        }
-    }
 
     render() {
         return (
@@ -394,94 +425,108 @@ class ResumenMembresia extends Component {
                             </Col>
                         </Row>
                     </FormGroup>
+
                     <Row>
-                        <Col>
-                            <PieChart width={400} height={400}>
-                                <Pie
-                                    data={this.state.resumenBautizados}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={this.renderCustomizedLabel}
-                                    outerRadius={80}
-                                    fill="#7774d8"
-                                    dataKey="value"
-                                >
-                                    {this.state.resumenBautizados.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
+                        <Col >
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="negrita centrado totalesTitulos">
+                                        Personal Bautizado
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardBody className="mx-auto d-block">
+                                    <PieChart width={400} height={180} >
+                                        <Pie
+                                            data={this.state.resumenBautizados}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            label={this.renderCustomizedLabel}
+                                            outerRadius={80}
+                                            fill="#7774d8"
+                                            dataKey="value"
+                                        >
+                                            {this.state.resumenBautizados.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Legend layout="vertical" align="right" verticalAlign="middle" />
+                                        <Tooltip />
+                                    </PieChart>
+                                </CardBody>
+                            </Card>
                         </Col>
                         <Col>
-                            <PieChart width={400} height={400}>
-                                <Pie
-                                    data={this.state.resumenNoBautizados}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={this.renderCustomizedLabel}
-                                    outerRadius={80}
-                                    fill="#8884d8"
-                                    dataKey="value"
-                                >
-                                    {this.state.resumenNoBautizados.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="negrita centrado totalesTitulos">
+                                        Personal No Bautizado
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardBody className="mx-auto d-block">
+                                    <PieChart width={400} height={180}>
+                                        <Pie
+                                            data={this.state.resumenNoBautizados}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            label={this.renderCustomizedLabel}
+                                            outerRadius={80}
+                                            fill="#8884d8"
+                                            dataKey="value"
+                                        >
+                                            {this.state.resumenNoBautizados.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Legend layout="vertical" align="right" verticalAlign="middle" />
+                                        <Tooltip />
+                                    </PieChart>
+                                </CardBody>
+                            </Card>
+
                         </Col>
                     </Row>
                     <FormGroup>
                         <Row>
                             <Col xs="6">
                                 <Card>
-                                    <CardHeader>
-                                        <CardTitle className="negrita centrado totalesTitulos">
-                                            Personal Bautizado
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <ul>
-                                            <li><span className="liWidth">Adultos Hombres: </span>{this.state.resumenDeMembresia.hb}</li>
-                                            <li><span className="liWidth">Adultos Mujeres: </span>{this.state.resumenDeMembresia.mb}</li>
-                                            <li><span className="liWidth">Jóvenes Hombres: </span>{this.state.resumenDeMembresia.jhb}</li>
-                                            <li><span className="liWidth">Jóvenes Mujeres: </span>{this.state.resumenDeMembresia.jmb}</li>
+
+                                    <CardBody className="mx-auto d-block">
+                                        <ul >
+                                            <li><span className="liWidth">Adultos Hombres: </span><u>&nbsp;{this.state.resumenDeMembresia.hb}&nbsp;</u></li>
+                                            <li><span className="liWidth">Adultos Mujeres: </span><u>&nbsp;{this.state.resumenDeMembresia.mb}&nbsp;</u></li>
+                                            <li><span className="liWidth">Jóvenes Hombres: </span><u>&nbsp;{this.state.resumenDeMembresia.jhb}&nbsp;</u></li>
+                                            <li><span className="liWidth">Jóvenes Mujeres: </span><u>&nbsp;{this.state.resumenDeMembresia.jmb}&nbsp;</u></li>
                                         </ul>
                                     </CardBody>
-                                    <CardFooter className="negrita">
-                                        <span className='totalWidth'>Total de Personal Bautizado: </span> {this.state.resumenDeMembresia.totalBautizados}
+                                    <CardFooter className="negrita text-right">
+                                        <span className='totalWidth'>Total de Personal Bautizado: </span> <u>&nbsp;{this.state.resumenDeMembresia.totalBautizados}&nbsp;</u>
                                     </CardFooter>
                                 </Card>
                             </Col>
                             <Col xs="6">
                                 <Card>
-                                    <CardHeader>
-                                        <CardTitle className="negrita centrado totalesTitulos">
-                                            Personal No Bautizado
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardBody>
+
+                                    <CardBody className="mx-auto d-block">
                                         <ul>
-                                            <li><span className="liWidth">Jóvenes Hombres: </span>{this.state.resumenDeMembresia.jhnb}</li>
-                                            <li><span className="liWidth">Jóvenes Mujeres: </span>{this.state.resumenDeMembresia.jmnb}</li>
-                                            <li><span className="liWidth">Niños: </span>{this.state.resumenDeMembresia.ninos}</li>
-                                            <li><span className="liWidth">Niñas: </span>{this.state.resumenDeMembresia.ninas}</li>
+                                            <li><span className="liWidth">Jóvenes Hombres: </span><u>&nbsp;{this.state.resumenDeMembresia.jhnb}&nbsp;</u></li>
+                                            <li><span className="liWidth">Jóvenes Mujeres: </span><u>&nbsp;{this.state.resumenDeMembresia.jmnb}&nbsp;</u></li>
+                                            <li><span className="liWidth">Niños: </span><u>&nbsp;{this.state.resumenDeMembresia.ninos}&nbsp;</u></li>
+                                            <li><span className="liWidth">Niñas: </span><u>&nbsp;{this.state.resumenDeMembresia.ninas}&nbsp;</u></li>
                                         </ul>
                                     </CardBody>
-                                    <CardFooter className="negrita">
-                                        <span className='totalWidth'>Total de Personal No Bautizado: </span> {this.state.resumenDeMembresia.totalNoBautizados}
+                                    <CardFooter className="negrita text-right">
+                                        <span className='totalWidth '>Total de Personal No Bautizado: </span> <u>&nbsp;{this.state.resumenDeMembresia.totalNoBautizados}&nbsp;</u>
                                     </CardFooter>
                                 </Card>
                             </Col>
                         </Row>
                     </FormGroup>
                     <FormGroup>
-                        <Row>
-                            <Col xs="12" className='negrita totalesTitulos'>
-                                Número completo de personal que integra la Iglesia: <u>  {this.state.resumenDeMembresia.totalDeMiembros}  </u>
+                        <Row className="p-3">
+                            <Col xs="12" className='negrita totalesTitulos text-center'>
+                                Número completo de personal que integra la Iglesia: <u>  &nbsp;{this.state.resumenDeMembresia.totalDeMiembros}&nbsp;  </u>
                             </Col>
                         </Row>
                     </FormGroup>

@@ -47,7 +47,7 @@ class SidebarObispo extends Component {
                         <Link
                             className="nav-link collapsed"
                             to="/ResumenMembresia"
-                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Resumen de membresía actual")}
+                            onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Resumen de membresía actual")}
                         >
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresía Actual</span>
@@ -59,7 +59,7 @@ class SidebarObispo extends Component {
                         <Link
                             className="nav-link"
                             to="/ListaDePersonal"
-                            onClick={() => this.handle_LinkEncabezado("Seccion: Monitoreo", "Análisis de membresía")}
+                            onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Análisis de membresía")}
                         >
                             <i className="fas fa-fw fa-home"></i>
                             <span>Análisis de Membresía</span>
@@ -116,34 +116,34 @@ class SidebarObispo extends Component {
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReportePersonalBautizado"
-                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Bautizado")}>
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Bautizado")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de Personal Bautizado</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReportePersonalNoBautizado"
-                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal No Bautizado")}>
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal No Bautizado")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de Personal No Bautizado</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/RptListaDeHogares"
-                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de hogares")}>
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de hogares")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista de hogares</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReporteOficiosProfesiones"
-                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Profesiones/Oficios")}>
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Profesiones/Oficios")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Lista por Profesiones/Oficios</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" 
+                        <Link className="nav-link"
                             to="/ReporteCumpleaños"
                             onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Fecha de Cumpleaños")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
@@ -152,14 +152,14 @@ class SidebarObispo extends Component {
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReporteMovimientoEstadistico"
-                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}>
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Reporte de Movimientos Estadísticos</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReporteTransacciones"
-                                onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}>
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
                             <span>Reporte de Transacciones</span>
                         </Link>
@@ -189,8 +189,8 @@ class SidebarObispo extends Component {
                     </li> */}
 
                     {/* Divider */}
-                        <hr className="sidebar-divider d-none d-md-block" />
-                        
+                    <hr className="sidebar-divider d-none d-md-block" />
+
 
                     {/* Sidebar Toggler (Sidebar) */}
                     <div className="text-center d-none d-md-inline">

@@ -37,7 +37,7 @@ class AnalisisPersonal extends Component {
         })
 
         //Se trae la Data de la Persona que se le pasó desde el Componente Padre
-        const {persona} = this.props.location
+        const { persona } = this.props.location
         this.getDireccion(persona.hogar.hd_Id_Hogar);
     }
 
@@ -79,10 +79,10 @@ class AnalisisPersonal extends Component {
                         </Row>
                         <Row>
                             <Col className="negrita" xs="1">Nombre:</Col>
-                            <Col xs="7" className="border border-dark"> 
-                                {this.objPersona.persona.per_Nombre} 
+                            <Col xs="7" className="border border-dark">
+                                {this.objPersona.persona.per_Nombre}
                                 {this.objPersona.persona.per_Apellido_Paterno}
-                                {this.objPersona.persona.per_Apellido_Materno} 
+                                {this.objPersona.persona.per_Apellido_Materno}
                             </Col>
                             <Col className="negrita campoVivo" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
@@ -106,24 +106,6 @@ class AnalisisPersonal extends Component {
                             <Col className="negrita" xs="2"></Col>
                             <Col className="negrita" xs="1">Categoria:</Col>
                             <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Categoria} </Col>
-                            <Col className="negrita" xs="2">
-                                {this.objPersona.persona.per_En_Comunion &&
-                                    <span className="fa fa-check faIconMarginRight"></span>
-                                }
-                                {!this.objPersona.persona.per_En_Comunion &&
-                                    <span className="fa fa-times faIconMarginRight"></span>
-                                }
-                                En comunión
-                            </Col>
-                        </Row>
-                    </FormGroup>
-                    <FormGroup>
-                        <Row>
-                            <Col className="negrita" xs="1">Edad:</Col>
-                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.edad} </Col>
-                            <Col className="negrita" xs="2"></Col>
-                            <Col className="negrita" xs="1">Est. Civil:</Col>
-                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Estado_Civil} </Col>
                             <Col className="negrita" xs="1">
                                 {this.objPersona.persona.per_Activo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -133,6 +115,28 @@ class AnalisisPersonal extends Component {
                                 }
                                 Activo
                             </Col>
+
+
+                        </Row>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
+                            <Col className="negrita" xs="1">Edad:</Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.edad} </Col>
+                            <Col className="negrita" xs="2"></Col>
+                            <Col className="negrita" xs="1">Est. Civil:</Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Estado_Civil} </Col>
+                            <Col className="negrita" xs="2">
+                                {this.objPersona.persona.per_Bautizado &&
+                                    <span className="fa fa-check faIconMarginRight"></span>
+                                }
+                                {!this.objPersona.persona.per_Bautizado &&
+                                    <span className="fa fa-times faIconMarginRight"></span>
+                                }
+                                Bautizado
+                            </Col>
+
+
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -151,14 +155,15 @@ class AnalisisPersonal extends Component {
                                 }
                             </Col>
                             <Col className="negrita" xs="2">
-                                {this.objPersona.persona.per_Bautizado &&
+                                {this.objPersona.persona.per_En_Comunion &&
                                     <span className="fa fa-check faIconMarginRight"></span>
                                 }
-                                {!this.objPersona.persona.per_Bautizado &&
+                                {!this.objPersona.persona.per_En_Comunion &&
                                     <span className="fa fa-times faIconMarginRight"></span>
                                 }
-                                Bautizado
+                                En comunión
                             </Col>
+
                         </Row>
                     </FormGroup>
                     {/* <FormGroup>
@@ -187,7 +192,7 @@ class AnalisisPersonal extends Component {
                                 }
                                 {this.state.domicilioLocalizado && this.objPersona.domicilio[0].hd_Telefono !== null &&
                                     <>
-                                     Casa: {this.objPersona.domicilio[0].hd_Telefono}
+                                        Casa: {this.objPersona.domicilio[0].hd_Telefono}
                                     </>
                                 }
                             </Col>
