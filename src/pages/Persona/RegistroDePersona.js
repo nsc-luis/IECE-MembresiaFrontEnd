@@ -611,7 +611,6 @@ class RegistroDePersonal extends Component {
             ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase(),
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
-            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica
         };
         // this.fnSolicitudNvaProfesion();
         if (this.state.nuevaFoto) {
@@ -625,8 +624,7 @@ class RegistroDePersonal extends Component {
                         });
                     }
                     try {
-                        //helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
-                        helpers.authAxios.post(this.url + "/persona/ActualizaPersona", info)
+                        helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                             .then(res => {
                                 if (res.data.status === "success") {
                                     setTimeout(() => {
@@ -659,9 +657,7 @@ class RegistroDePersonal extends Component {
         }
         else {
             try {
-                console.log(info)
-                //helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
-                helpers.authAxios.post(this.url + "/persona/ActualizaPersona/", info)
+                helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                     .then(res => {
                         if (res.data.status === "success") {
                             this.setState({
