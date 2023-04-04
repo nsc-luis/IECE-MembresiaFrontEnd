@@ -1486,7 +1486,7 @@ class PersonaForm extends Component {
                                                             <div className="col-sm-12">
                                                                 <div className="card border-info acceso-directo">
                                                                     <div className="card-header">
-                                                                        <h5><strong>Fecha de la transacción histórica</strong></h5>
+                                                                        <h5><strong>Fecha del Nuevo Ingreso</strong></h5>
                                                                     </div>
                                                                     <div className="card-body">
                                                                         <div className="row">
@@ -1498,7 +1498,7 @@ class PersonaForm extends Component {
                                                                                     value={FechaTransaccionHistorica}
                                                                                     placeholder="DD/MM/AAAA"
                                                                                 />
-                                                                                <label>Por defecto se toma la fecha de nacimiento.</label>
+                                                                                <label>Si no se especifica una fecha, por defecto se registrará con la Fecha de Nacimiento.</label>
                                                                             </div>
                                                                         </div>
                                                                     </div>
