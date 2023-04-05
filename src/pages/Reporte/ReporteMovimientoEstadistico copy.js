@@ -8,7 +8,6 @@ import {
 import React, { Fragment, useEffect, useState } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'
 import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
 import 'moment/locale/es';
@@ -192,6 +191,7 @@ export default function ReporteMovimientoEstadistico() {
             }
         }
 
+
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
         doc.text("REPORTE DE MOVIMIENTO ESTADISTICO", 140, 10, { align: "center" });
         doc.setFontSize(8);
@@ -201,7 +201,82 @@ export default function ReporteMovimientoEstadistico() {
             doc.text(`SECTOR: ${infoSec}`, 140, 24, { align: "center" });
         }
 
+
+        // if (sector) {
+        //     doc.text(entidadTitulo, 140, 22, { align: "center" });
+        //     //doc.text(`${infoSec}`, 135, 18, { align: "center" });
+        //     //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
+        // }
+        // else {
+        //     doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, { align: "center" })
+        //     doc.text(entidadTitulo, 140, 22, { align: "center" })
+        //     //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
+        // }
         doc.line(10, 32, 200, 32);
+
+        // if (actualizacionB.length > 0 || bautismos.length > 0 || restituciones.length > 0 || altasCambioDom.length > 0
+        //     || bajasCambioDom.length > 0 || defunciones.length > 0 || excomunionesTemp.length > 0 || excomuniones.length > 0) {
+        //     doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        //     doc.rect(10, yAxis, 190, 4, "F");
+        //     doc.setFont("", "", "bold");
+        //     yAxis += 3;
+        //     doc.text("MEMBRESIA BAUTIZADA", 15, yAxis);
+        // }
+
+        // customTable(actualizacionB, "Actualizaciones")
+        // customTable(bautismos, "Bautismos")
+        // customTable(restituciones, "Restituciones")
+        // customTable(altasCambioDom, "Altas Cambio de Domicilio")
+        // customTable(bajasCambioDom, "Bajas Cambio de Domicilio")
+        // customTable(defunciones, "Defunciones")
+        // customTable(excomunionesTemp, "Excomuniones Temporales")
+        // customTable(excomuniones, "Excomuniones")
+
+        // if (altasHogares.length > 0 || bajasHogares.length > 0 || actualizacionHogar.length > 0) {
+        //     doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        //     doc.rect(10, yAxis, 190, 4, "F");
+        //     doc.setFont("", "", "bold");
+        //     yAxis += 3;
+        //     doc.text("HOGARES", 15, yAxis);
+        // }
+
+        // customTable(altasHogares, "Altas de Hogares")
+        // customTable(bajasHogares, "Bajas de Hogares")
+        // customTable(actualizacionHogar, "Actualización de Hogares")
+
+        // if (actualizacionNB.length > 0 || nuevoIngreso.length > 0 || altasCambioDomNB.length > 0 || reactivaciones.length > 0
+        //     || bajasCambioDomNB.length > 0 || defuncionesNB.length > 0 || alejamientos.length > 0 || cambiosABautizado.length > 0
+        //     || bajasPorPadres.length > 0) {
+        //     doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        //     doc.rect(10, yAxis, 190, 4, "F");
+        //     doc.setFont("", "", "bold");
+        //     yAxis += 3;
+        //     console.log(yAxis);
+        //     doc.text("MEMBRESIA NO BAUTIZADA", 15, yAxis);
+        // }
+
+        // customTable(actualizacionNB, "Actualización No Bautizado")
+        // customTable(nuevoIngreso, "Nuevo Ingreso")
+        // customTable(altasCambioDomNB, "Altas Cambio de Domicilio No Bautizado")
+        // customTable(reactivaciones, "Reactivaciones")
+        // customTable(bajasCambioDomNB, "Bajas Cambio de Domicilio No Bautizado")
+        // customTable(defuncionesNB, "Defunciones No Bautizado")
+        // customTable(alejamientos, "Alejamientos")
+        // customTable(cambiosABautizado, "Cambios a Bautizado")
+        // customTable(bajasPorPadres, "Baja por Padres")
+
+        // if (matrimonios.length > 0 || legalizaciones.length > 0 || presentacionesNiños.length > 0) {
+        //     doc.setFillColor(137, 213, 203) // Codigos de color RGB (red, green, blue)
+        //     doc.rect(10, yAxis, 190, 4, "F");
+        //     doc.setFont("", "", "bold");
+        //     yAxis += 3;
+        //     doc.text("SUCESOS", 15, yAxis);
+        // }
+
+        // customTable(matrimonios, "Matrimonios")
+        // customTable(legalizaciones, "Legalizaciones")
+        // customTable(presentacionesNiños, "Presentaciones de Niños")
+
 
         const dataUnida = (data) => {
             if (yAxis > 230) {
@@ -212,18 +287,17 @@ export default function ReporteMovimientoEstadistico() {
                 yAxis += 3;
             }
 
-            data = data.map((persona, index) => ([
+            data = data.map((persona, index) => ({
 
-                (index + 1).toString(),
-                persona.ct_Tipo,
-                persona.ct_Subtipo,
-                persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ""),
-                typeof persona.hte_Comentario?.trim() !== "string" || persona.hte_Comentario?.trim() === "" ? "-" : persona.hte_Comentario?.trim(),
-                (moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")).toString(),
-            ]))
-            console.log("data: ", data)
-            //doc.table(10, yAxis, data, headers, { autoSize: false, fontSize: 8, padding: 1, margins: { left: 5, top: 10, bottom: 10, width: 200 } })
-            autoTable(doc, { head: [headers], body: data, theme: "striped", startY: yAxis })
+                Indice: (index + 1).toString(),
+                Movimiento: persona.ct_Tipo,
+                Subtipo: persona.ct_Subtipo,
+                Nombre: persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ""),
+                Comentario: typeof persona.hte_Comentario?.trim() !== "string" || persona.hte_Comentario?.trim() === "" ? "-" : persona.hte_Comentario?.trim(),
+                Fecha: (moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")).toString(),
+            }))
+            console.log({ data })
+            doc.table(10, yAxis, data, headers, { autoSize: false, fontSize: 8, padding: 1, margins: { left: 5, top: 10, bottom: 10, width: 200 } })
             yAxis += data.length * 8
         }
 

@@ -58,6 +58,10 @@ class AnalisisPersonal extends Component {
             })
     }
 
+
+
+
+
     render() {
 
         return (

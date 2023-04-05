@@ -47,7 +47,7 @@ class RegistroDePersonal extends Component {
             formDataFoto: null,
             nuevaFoto: false,
             boolNvoEstado: false,
-            fechaBautismoInvalida:false,
+            fechaBautismoInvalida: false,
             FechaTransaccionHistorica: ""
         }
     }
@@ -61,8 +61,8 @@ class RegistroDePersonal extends Component {
     }
 
     componentDidMount() {
-        console.log(localStorage.getItem("nvaAltaBautizado"));
-        if (localStorage.getItem("idPersona") === "0") {
+
+        if (localStorage.getItem("idPersona") === "0") {//Si se trata de un Nuevo Registro , No Edición
             this.setState({
                 foto: `${helpers.url_api}/Foto/FotoDefault`,
                 form: {
@@ -121,7 +121,7 @@ class RegistroDePersonal extends Component {
                     nvaProf2: ""
                 }
             })
-        } else {
+        } else {//Si se trata de una Edición.
             helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : null;
@@ -165,7 +165,7 @@ class RegistroDePersonal extends Component {
 
     const_regex = {
         alphaSpaceRequired: /^[a-zA-Z]{1}[a-zA-ZÑ\d\s]{0,37}$/,
-        alphaSpace:/^[a-zA-ZÑ\s]{0,37}$/,
+        alphaSpace: /^[a-zA-ZÑ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
     }
 
@@ -200,7 +200,7 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    onChangeFechaBautismo = (e)=>{
+    onChangeFechaBautismo = (e) => {
         this.setState({
             form: {
                 ...this.state.form,
@@ -209,7 +209,7 @@ class RegistroDePersonal extends Component {
         })
 
         if (e.target.name === "per_Fecha_Bautismo") {
-            
+
             if (e.target.value === '') {
                 this.setState({ fechaBautismoInvalida: true });
             }
@@ -221,12 +221,12 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    ChangeFechaBautismoInvalida = (bol)=>{
-                this.setState({ fechaBautismoInvalida: bol });
+    ChangeFechaBautismoInvalida = (bol) => {
+        this.setState({ fechaBautismoInvalida: bol });
     }
 
     handleChange = (e) => {
-        
+
         this.setState({
             form: {
                 ...this.state.form,
@@ -246,12 +246,12 @@ class RegistroDePersonal extends Component {
                 default:
                     this.setState({
                         categoriaSeleccionada: false,
-                        msjCategoriaSeleccionada: "Debes seleccionar una Categoría.",
+                        msjCategoriaSeleccionada: "Debe seleccionar una Categoría.",
                         habilitaPerBautizado: false,
                         form: {
                             ...this.state.form,
                             // per_Bautizado: false,
-                            [e.target.name]: e.target.value.toUpperCase()
+                            [e.target.name]: e.target.value1 != 0 ? e.target.value.toUpperCase() : "0"
                         }
                     });
                     break;
@@ -387,20 +387,20 @@ class RegistroDePersonal extends Component {
                 });
             }
         }
-        
+
         if (e.target.name === "per_Apellido_Materno") {
             if (!this.const_regex.alphaSpace.test(e.target.value)) {
                 this.setState({
                     per_Apellido_Materno_OK: false
-                    
+
                 });
-            } else if(e.target.value==='' || this.const_regex.alphaSpace.test(e.target.value)){
+            } else if (e.target.value === '' || this.const_regex.alphaSpace.test(e.target.value)) {
 
                 this.setState({
                     per_Apellido_Materno_OK: true
                 });
             }
-            
+
         }
         if (e.target.name === "per_Fecha_Nacimiento") {
             if (e.target.value === '') {
@@ -693,7 +693,7 @@ class RegistroDePersonal extends Component {
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-            } 
+            }
         }
     }
 
@@ -790,21 +790,22 @@ class RegistroDePersonal extends Component {
     }
 
     handleCampoInvalido = (elementoState, bool) => {
+
         this.setState({
             [elementoState]: bool
         })
     }
 
     handleFechaDeTransaccion = (e) => {
-        this.setState({ 
+        this.setState({
             [e.target.name]: e.target.value
-         });
+        });
     }
 
     render() {
         return (
             <>
-                
+
                 <PersonaForm
                     onChange={this.handleChange}
                     FrmValidaPersona={this.state.FrmValidaPersona}
@@ -843,7 +844,7 @@ class RegistroDePersonal extends Component {
                     ChangeFechaBautismoInvalida={this.ChangeFechaBautismoInvalida}
                     handleFechaDeTransaccion={this.handleFechaDeTransaccion}
                     FechaTransaccionHistorica={this.state.FechaTransaccionHistorica}
-                /> 
+                />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>
                     {/* <ModalHeader>

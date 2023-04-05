@@ -230,7 +230,6 @@ class PersonaForm extends Component {
                 await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
                     .then(res => {
                         this.setState({ direccion: res.data.direccion });
-                        console.log("direccion" + this.state.direccion)
                     });
             }
             getDireccion(idHogar);
@@ -369,25 +368,32 @@ class PersonaForm extends Component {
         // FUNCION QUE REVISA DUPLICADOS DEACUERDO A RFC (SIN HOMOCLAVE)
         const handle_verificarDuplicados = (e) => {
 
-            if (form.per_Categoria === 0) {
+            if (form.per_Categoria == 0) {
                 handleCampoInvalido("categoriaSeleccionada", false);
+                return false
             }
             if (!alphaSpaceRequired.test(form.per_Nombre) || form.per_Nombre === undefined) {
                 handleCampoInvalido("per_Nombre_NoValido", true)
+                return false
             }
             if (!alphaSpaceRequired.test(form.per_Apellido_Paterno) || form.per_Apellido_Paterno === undefined) {
                 handleCampoInvalido("per_Apellido_Paterno_NoValido", true)
+                return false
             }
             if (!alphaSpace.test(form.per_Apellido_Materno)) {
                 handleCampoInvalido("per_Apellido_Materno_OK", false)
+                return false
             }
 
             if (form.per_Fecha_Nacimiento === undefined || form.per_Fecha_Nacimiento === "") {
                 handleCampoInvalido("per_Fecha_Nacimiento_NoValido", true)
+                return false
             }
             else if (!helpers.regex.formatoFecha.test(helpers.fnFormatoFecha3(form.per_Fecha_Nacimiento))) {
                 handleCampoInvalido("per_Fecha_Nacimiento_NoValido", true)
+                return false
             }
+            //Si todos los campos obligatorios están llenos.
             if (categoriaSeleccionada
                 && !per_Nombre_NoValido
                 && !per_Apellido_Paterno_NoValido
