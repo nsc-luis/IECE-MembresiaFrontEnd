@@ -692,7 +692,7 @@ class ListaDePersonal extends Component {
 
     render() {
         /*  if (this.state.personas.length >= 1) { */
-        console.log("Personas: ", this.state.personas);
+        /* console.log("Personas: ", this.state.personas); */
         return (
             <>
                 {/* <h1 className="text-info">Listado de personal</h1> */}

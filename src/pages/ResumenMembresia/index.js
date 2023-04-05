@@ -56,11 +56,11 @@ class ResumenMembresia extends Component {
 
     convertirData = () => {
         let data01 = Object.keys(this.state.resumenDeMembresia);
-        console.log("Data1: ", data01);
+        /* console.log("Data1: ", data01); */
         let data02 = data01.map(key => {
             return { [key]: (this.state.resumenDeMembresia)[key] }
         });
-        console.log("Data2: ", data02);
+        /* console.log("Data2: ", data02); */
     }
 
     getDistrito = async () => {
@@ -96,7 +96,7 @@ class ResumenMembresia extends Component {
     conviertePersonasParaGraph = (dataPersonas) => {
         let dataTodos = Object.keys(dataPersonas);
         let dataBautizados = dataTodos.filter(item => item === 'hb' || item === "mb" || item === "jhb" || item === "jmb");
-        console.log("DataBautizados: ", dataBautizados);
+        /* console.log("DataBautizados: ", dataBautizados); */
         let dataNoBautizados = dataTodos.filter(item => item === "jhnb" || item === "jmnb" || item === "ninos" || item === "ninas");
         let a = "";
         let b = "";
@@ -123,7 +123,7 @@ class ResumenMembresia extends Component {
                     value: (dataPersonas)[key]
                 }
             });
-        console.log("DataB: ", resumenBautizados);
+        /* console.log("DataB: ", resumenBautizados); */
         let resumenNoBautizados = dataNoBautizados
             .map(key => {
                 switch (key) {
@@ -146,7 +146,7 @@ class ResumenMembresia extends Component {
                     value: (dataPersonas)[key]
                 }
             });
-        console.log("DataNB: ", resumenNoBautizados);
+        /* console.log("DataNB: ", resumenNoBautizados); */
         this.setState({ resumenBautizados, resumenNoBautizados });
     }
 
