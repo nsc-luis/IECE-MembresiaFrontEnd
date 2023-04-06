@@ -41,7 +41,8 @@ class ResumenMembresia extends Component {
             distrito: {},
             gradoMinistro: "",
             resumenBautizados: [],
-            resumenNoBautizados: []
+            resumenNoBautizados: [],
+            hogares: 0
             //sec_Id_Sector:""
         }
     }
@@ -167,6 +168,11 @@ class ResumenMembresia extends Component {
                     this.setState({ resumenDeMembresia: res.data.resumen.value });
                     this.conviertePersonasParaGraph(res.data.resumen.value);//Ejecuta fn que convierte la data para uso en Gráfica.
                 });
+
+            await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
+                .then(res => {
+                    this.setState({ hogares: res.data.domicilios });
+                })
         }
     }
 
@@ -523,10 +529,16 @@ class ResumenMembresia extends Component {
                             </Col>
                         </Row>
                     </FormGroup>
-                    <FormGroup>
-                        <Row className="p-3">
-                            <Col xs="12" className='negrita totalesTitulos text-center'>
+                    <FormGroup >
+                        <Row className=" card p-2 m-0 mb-2">
+                            <Col xs="12" className='negrita totalesTitulos text-right'>
                                 Número completo de personal que integra la Iglesia: <u>  &nbsp;{this.state.resumenDeMembresia.totalDeMiembros}&nbsp;  </u>
+                            </Col>
+                        </Row>
+
+                        <Row className="card p-2 m-0">
+                            <Col xs="12" className='negrita totalesTitulos text-right'>
+                                Número de Hogares: <u>  &nbsp;{this.state.hogares.length}&nbsp;  </u>
                             </Col>
                         </Row>
                     </FormGroup>
