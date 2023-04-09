@@ -73,15 +73,15 @@ class PersonaForm extends Component {
             mensajes: { //Inicializa las variables del Objeto 'mensajes'
                 ...this.state.mensajes,
                 emailInvalido: 'Formato incorrecto. Ej: buzon@dominio.com.',
-                fechaBautismoInvalida: 'Debe ingresar la fecha de bautismo, formato admintido: dd/mm/aaaa.',
-                fechaBodaCivilInvalida: 'Formato admintido: dd/mm/aaaa.',
-                fechaEspitiruSantoInvalida: 'Formato admintido: dd/mm/aaaa.',
-                fechaBodaEclesiasticaInvalida: 'Formato admintido: dd/mm/aaaa.',
-                telMovilInvalido: 'Formatos admintidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 numeros sin espacios.',
+                fechaBautismoInvalida: 'Debe ingresar la fecha de Bautismo, formato admitido: dd/mm/aaaa.',
+                fechaBodaCivilInvalida: 'Formato admitido: dd/mm/aaaa.',
+                fechaEspitiruSantoInvalida: 'Formato admitido: dd/mm/aaaa.',
+                fechaBodaEclesiasticaInvalida: 'Formato admitido: dd/mm/aaaa.',
+                telMovilInvalido: 'Formatos admitidos: +521234567890, +52(123)4567890, (123)4567890, 1234567890. Hasta 25 números sin espacios.',
             }
         })
 
-        this.getProfesionesOficios();//Trae por medio de API las prefeciones y oficios
+        this.getProfesionesOficios();//Trae por medio de API las profeciones y oficios
 
         //Para Transacciones de Edición/Actualización, inicializa .
         if (localStorage.getItem("idPersona") !== "0") {//Manda llamar por API las personas en Comunión para mostrarlas en Imput/Select.
@@ -207,7 +207,8 @@ class PersonaForm extends Component {
 
     handle_hd_Id_Hogar = async (e) => {
         let idHogar = e.target.value;
-        if (idHogar !== "0") {
+
+        if (idHogar !== "0") { //Si se selecciona un Hogar Existente
             await helpers.authAxios.get(this.url + '/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
                     this.setState({
@@ -235,7 +236,7 @@ class PersonaForm extends Component {
             getDireccion(idHogar);
 
         }
-        else {
+        else { //Si el id_Hogar es 0, 
             this.setState({
                 hogar: {
                     ...this.state.hogar,
@@ -255,6 +256,14 @@ class PersonaForm extends Component {
                 hp_Jerarquia: e.target.value
             }
         })
+    }
+
+    handleKeyPress = (e) => {
+        console.log("Tecla: ", e.key)
+        if (e.key === 'Enter') {
+            alert("No se permiten saltos de linea en este campo. Escriba a Renglón seguido.");
+            e.preventDefault();
+        }
     }
 
     render() {
@@ -859,6 +868,7 @@ class PersonaForm extends Component {
                                                                             type="date"
                                                                             className="form-control"
                                                                             value={form.per_Fecha_Nacimiento}
+                                                                            placeholder="DD/MM/AAAA"
                                                                             disabled
                                                                         />
                                                                         <label>Fecha de Nacimiento</label>
@@ -1257,6 +1267,7 @@ class PersonaForm extends Component {
                                                                                                     onChange={onChange}
                                                                                                     value={form.per_Fecha_Boda_Eclesiastica}
                                                                                                     placeholder="DD/MM/AAAA"
+                                                                                                    className="form-control"
                                                                                                     invalid={this.state.fechaBodaEclesiasticaInvalida}
                                                                                                 />
                                                                                                 <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiástica</label>
@@ -1282,6 +1293,7 @@ class PersonaForm extends Component {
                                                                                                 onChange={onChange}
                                                                                                 className="form-control"
                                                                                                 value={form.per_Cantidad_Hijos}
+
                                                                                             />
                                                                                             <label>Número de hijos</label>
                                                                                         </div>
@@ -1295,7 +1307,8 @@ class PersonaForm extends Component {
                                                                                             name="per_Nombre_Hijos"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Nombre_Hijos}
-                                                                                            className="form-control" ></textarea>
+                                                                                            className="form-control"
+                                                                                            onKeyPress={this.handleKeyPress} ></textarea>
                                                                                         <label>Nombre de los hijos</label>
                                                                                     </div>
                                                                                 </div>
@@ -1338,7 +1351,8 @@ class PersonaForm extends Component {
                                                                                                 name="per_Nombre_Hijos"
                                                                                                 onChange={onChange}
                                                                                                 value={form.per_Nombre_Hijos}
-                                                                                                className="form-control" ></textarea>
+                                                                                                className="form-control"
+                                                                                                onKeyPress={this.handleKeyPress}></textarea>
                                                                                             <label>Nombre de Hijos</label>
                                                                                         </div>
                                                                                     </div>
@@ -1396,6 +1410,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChangeFechaBautismo}
                                                                                             value={form.per_Fecha_Bautismo}
                                                                                             placeholder="DD/MM/AAAA"
+                                                                                            className="form-control"
                                                                                             invalid={fechaBautismoInvalida}
                                                                                         />
                                                                                         <label>Fecha de bautismo</label>
@@ -1417,9 +1432,10 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     value={form.per_Fecha_Recibio_Espiritu_Santo}
                                                                                     placeholder="DD/MM/AAAA"
+                                                                                    className="form-control"
                                                                                     invalid={this.state.fechaEspitiruSantoInvalida}
                                                                                 />
-                                                                                <label>Fecha en que recibió Espíritu Santo</label>
+                                                                                <label>Fecha en que recibió el Espíritu Santo</label>
                                                                                 <FormFeedback>{this.state.mensajes.fechaEspitiruSantoInvalida}</FormFeedback>
                                                                             </FormGroup>
                                                                         </div>
@@ -1432,7 +1448,7 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Bajo_Imposicion_De_Manos}
                                                                                     className="form-control"
                                                                                 />
-                                                                                <label>Bajo imposición de manos de</label>
+                                                                                <label>Bajo imposición de manos de:</label>
                                                                             </FormGroup>
                                                                         </div>
                                                                         {/* <div className="col-sm-4">
@@ -1460,7 +1476,8 @@ class PersonaForm extends Component {
                                                                                     name="per_Cambios_De_Domicilio"
                                                                                     onChange={onChange}
                                                                                     value={form.per_Cambios_De_Domicilio}
-                                                                                    className="form-control"></textarea>
+                                                                                    className="form-control"
+                                                                                    onKeyPress={this.handleKeyPress}></textarea>
                                                                                 <label>Cambios de domicilio en la IECE</label>
                                                                             </div>
                                                                         </div>
@@ -1473,6 +1490,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     className="form-control"
                                                                                     value={form.per_Cargos_Desempenados}
+                                                                                    onKeyPress={this.handleKeyPress}
                                                                                 ></textarea>
                                                                                 <label>Cargos desempeñados en la IECE</label>
                                                                             </div>
@@ -1503,6 +1521,7 @@ class PersonaForm extends Component {
                                                                                     onChange={handleFechaDeTransaccion}
                                                                                     value={FechaTransaccionHistorica}
                                                                                     placeholder="DD/MM/AAAA"
+                                                                                    className="form-control"
                                                                                 />
                                                                                 <label>Si no se especifica una fecha, por defecto se registrará con la Fecha de Nacimiento.</label>
                                                                             </div>

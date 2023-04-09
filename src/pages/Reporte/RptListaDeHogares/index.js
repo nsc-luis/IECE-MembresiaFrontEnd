@@ -399,10 +399,10 @@ class RptListaDeHogares extends Component {
                         <div id="infoListaHogares">
                             <br></br>
                             <Row>
-                                <Table id='table1' className="table table-sm table-bordered" >
+                                <Table id='table1' className="table table-sm table-bordered" data-cols-width="5,7,35,15,6,15,15,15,50" >
                                     <thead>
                                         <tr align="center" >
-                                            <th width="5">Hogar</th>
+                                            <th width="5%">Hogar</th>
                                             <th width="3.5%">Grupo</th>
                                             <th width="21.5%">Nombre</th>
                                             <th width="7%">Nacimiento</th>

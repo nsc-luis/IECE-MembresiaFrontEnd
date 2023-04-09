@@ -88,7 +88,7 @@ class Domicilio extends React.Component {
                                     <option value="0">Nuevo hogar / Domicilio</option>
                                 }
                                 {!habilitaPerBautizado &&
-                                    <option value="0">Selecciona un hogar</option>
+                                    <option value="0">Selecciona un Hogar</option>
                                 }
                                 {
                                     this.state.ListaHogares.map((h) => {
@@ -111,7 +111,7 @@ class Domicilio extends React.Component {
                             <h5>ATENCIÓN: </h5>
                             <ul>
                                 <li>Debe establecer una jerarquía para la persona que está registrando, siendo la jerarquía 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia que esté entre la jerarquía 1 y la mas baja registrada.</li>
+                                <li>Sólo puede seleccionar una jerarquia que esté entre la jerarquía 1 y la mas baja registrada.</li>
                                 {/* <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquía mas baja a la establecida.</li> */}
                             </ul>
                         </div>

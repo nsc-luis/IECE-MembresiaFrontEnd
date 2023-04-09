@@ -160,12 +160,17 @@ class ReporteTransacciones extends Component {
     }
 
     downloadTable() {
-        TableToExcel.convert(document.getElementById("table1"), {
-            name: "ResumenMovimientosEstadisticos.xlsx",
-            sheet: {
-                name: "Hoja 1"
-            }
-        });
+        console.log("contenido: ", document.getElementById("table1"))
+        if (document.getElementById("table1") != null) {
+            TableToExcel.convert(document.getElementById("table1"), {
+                name: "ResumenMovimientosEstadisticos.xlsx",
+                sheet: {
+                    name: "Hoja 1"
+                }
+            });
+        } else {
+            alert("Debe primeramente Seleccionar el periodo y generar el reporte")
+        }
     }
 
     onChange = (e) => {
@@ -457,7 +462,7 @@ class ReporteTransacciones extends Component {
                                         <div className="text-center container-fluid font-weight-bold">
                                             <h5>RESUMEN DE MOVIMIENTOS ESTADÍSTICOS Y MEMBRESÍA ACTUAL</h5>
                                         </div>
-                                        <Table id='table1'>
+                                        <Table id='table1' data-cols-width="30,7,12,7,30,7,12,7">
                                             <tbody>
 
                                                 <tr className="text-center font-weight-bold categoriasReportes">

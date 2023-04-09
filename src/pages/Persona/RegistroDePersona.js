@@ -107,12 +107,15 @@ class RegistroDePersonal extends Component {
                     dis_Id_Distrito: localStorage.getItem("dto"),
                     pais_Id_Pais: "0",
                     hd_Calle: "",
-                    hd_Localidad: "",
                     hd_Numero_Exterior: "",
-                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
-                    hd_Activo: true,
+                    hd_Numero_Interior: "",
+                    hd_Localidad: "",
+                    hd_Municipio_Ciudad: "",
                     est_Id_Estado: 0,
-                    nvoEstado: ""
+                    hd_Telefono: "",
+                    hd_Activo: true,
+                    nvoEstado: "",
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                 },
                 habilitaPerBautizado: true,
                 descNvaProfesion: {
@@ -233,6 +236,7 @@ class RegistroDePersonal extends Component {
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+
         if (e.target.name === "per_Email_Personal") {
             this.setState({
                 form: {

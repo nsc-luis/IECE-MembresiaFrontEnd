@@ -58,16 +58,16 @@ class RevinculaDomicilio extends Component {
                 this.setState({
                     listaPersonas: res.data.filter((obj) => {
                         return obj.persona.per_Activo === true
-                    }).sort((a,b)=>{
+                    }).sort((a, b) => {
                         const nameA = a.per_Nombre; // ignore upper and lowercase
                         const nameB = b.per_Nombre; // ignore upper and lowercase
                         if (nameA < nameB) {
-                          return -1;
+                            return -1;
                         }
                         if (nameA > nameB) {
-                          return 1;
+                            return 1;
                         }
-    
+
                         // names must be equal
                         return 0;
                     })
@@ -170,6 +170,7 @@ class RevinculaDomicilio extends Component {
                     contador = contador + 1;
                 });
             })
+
         if (contador > 0) {
             this.setState({
                 domicilio: {

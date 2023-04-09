@@ -371,14 +371,14 @@ export default function ReporteMovimientoEstadistico() {
                         <UncontrolledCollapse defaultOpen toggler="#altas"> */}
                             <Card>
                                 <CardBody>
-                                    <Table size="sm">
-                                        <tr className="text-center">
-                                            <th><h5>No. </h5></th>
-                                            <th><h5>Tipo Mov.</h5></th>
-                                            <th><h5>Subtipo Mov.</h5></th>
-                                            <th><h5>Nombre </h5></th>
-                                            <th><h5>Comentario</h5></th>
-                                            <th><h5>Fecha</h5></th>
+                                    <Table size="sm" className="border">
+                                        <tr className="text-center border">
+                                            <th width="5%"><h5>No. </h5></th>
+                                            <th width="10%"><h5>Tipo Mov.</h5></th>
+                                            <th width="15%"><h5>Subtipo Mov.</h5></th>
+                                            <th width="25%"><h5>Nombre </h5></th>
+                                            <th width="35%"><h5>Comentario</h5></th>
+                                            <th width="10%"><h5>Fecha</h5></th>
                                         </tr>
                                     </Table>
                                     <Table size="sm">
