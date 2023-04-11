@@ -493,7 +493,7 @@ class PersonaForm extends Component {
 
             if (objPersona.per_Bautizado === true
                 && objPersona.per_Fecha_Bautismo === "") {
-                alert("Error: \nSe requiere la fecha de bautismo.");
+                alert("Error: \nSe requiere la Fecha de Bautismo.");
                 ChangeFechaBautismoInvalida(true)
                 return false;
             }

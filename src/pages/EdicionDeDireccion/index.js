@@ -38,6 +38,7 @@ class EdicionDeDireccion extends Component {
                 hd_Localidad: "",
                 hd_Municipio_Ciudad: "",
                 est_Id_Estado: "0",
+                hd_CP: "",
                 hd_Telefono: "",
                 nvoEstado: ""
             }
@@ -94,6 +95,7 @@ class EdicionDeDireccion extends Component {
                     hd_Municipio_Ciudad: "",
                     est_Id_Estado: "0",
                     pais_Id_Pais: "0",
+                    hd_CP: "",
                     hd_Telefono: ""
                 },
                 boolHabilitaEdicion: false
@@ -146,6 +148,7 @@ class EdicionDeDireccion extends Component {
                 hd_Municipio_Ciudad: "",
                 est_Id_Estado: "0",
                 pais_Id_Pais: "0",
+                hd_CP: "",
                 hd_Telefono: ""
             },
             hogarSeleccionado: "0",
@@ -155,7 +158,7 @@ class EdicionDeDireccion extends Component {
 
     guardarEdicion = async (e) => {
         e.preventDefault();
-        if (this.state.domicilio.est_Id_Estado === "0") {//Si el Estado_Id = Ceroosea que seleccionó un Nuevo País. 
+        if (this.state.domicilio.est_Id_Estado === "0") {//Si el Estado_Id = Cero, indica que seleccionó un País diferente al que tenía la Dirección. 
             if (this.state.domicilio.nvoEstado === "" || this.state.domicilio.nvoEstado === undefined) { //Si el País no tiene registrado algun Estado.
                 alert("Error:\nEl País seleccionado no tiene Estados relacionados, por lo tanto, debe ingresar un nombre de Estado.")
             }
@@ -207,7 +210,7 @@ class EdicionDeDireccion extends Component {
                 }
             }
         }
-        else { //Si seleccionó un Domicilio a Editar, lo manda editar con el verbo PUT
+        else { //Si no seleccionó un País diferente al que tenía la Dirección, manda editar con el verbo PUT los nuevos datos del Domicilio.
             try {
                 await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
                     .then(res => {
@@ -356,7 +359,7 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Nombre de Asentamiento</Label>
+                                                            <Label>Nombre del Asentamiento</Label>
                                                         </Col>
                                                         <Col xs="4">
                                                             <Input
@@ -391,6 +394,16 @@ class EdicionDeDireccion extends Component {
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Row>
+                                                        <Col xs="4">
+                                                            <Input
+                                                                type="text"
+                                                                name="hd_CP"
+                                                                value={this.state.domicilio.hd_CP}
+                                                                onChange={this.onChangeDomicilio}
+                                                                readOnly={this.state.boolHabilitaEdicion}
+                                                            />
+                                                            <Label>Código Postal</Label>
+                                                        </Col>
                                                         <Col xs="4">
                                                             <Input
                                                                 type="text"

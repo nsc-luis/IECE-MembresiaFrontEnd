@@ -79,6 +79,7 @@ class Matrimonio extends Component {
                 est_Id_Estado: "0",
                 hd_Calle: "",
                 hd_Localidad: "",
+                hd_CP: "",
                 hd_Numero_Exterior: "",
                 usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                 hd_Activo: true,
@@ -518,6 +519,15 @@ class Matrimonio extends Component {
             }
         }
     }
+
+    handleKeyPress = (e) => {
+        console.log("Tecla: ", e.key)
+        if (e.key === 'Enter') {
+            alert("No se permiten saltos de linea en este campo. Escriba a Renglón seguido.");
+            e.preventDefault();
+        }
+    }
+
     render() {
         // const {
         //     handle_CancelaCaptura,
@@ -608,7 +618,7 @@ class Matrimonio extends Component {
                                                                         value={this.state.matLegal.mat_Nombre_Contrayente_Hombre_Foraneo}
                                                                         invalid={this.state.matNombreContrayenteHombreForaneoInvalid}
                                                                     />
-                                                                    <FormFeedback>Este campo no puede quedar vacio.</FormFeedback>
+                                                                    <FormFeedback>Este campo no puede quedar vacío.</FormFeedback>
                                                                 </Col>
                                                             </Row>
                                                         </FormGroup>
@@ -795,6 +805,7 @@ class Matrimonio extends Component {
                                                     onChange={this.onChange}
                                                     type="textarea"
                                                     value={this.state.matLegal.mat_Nombre_Hijos}
+                                                    onKeyPress={this.handleKeyPress}
                                                 />
                                                 <FormFeedback></FormFeedback>
                                             </FormGroup>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Button, Input, Alert, Container, Row, Col, Card,  FormFeedback,
+    Button, Input, Alert, Container, Row, Col, Card, FormFeedback,
     Form, FormGroup, CardBody, CardFooter
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -43,6 +43,7 @@ class AltaCambioDomicilio extends Component {
                 hd_Calle: "",
                 hd_Localidad: "",
                 est_Id_Estado: "0",
+                hd_CP: "",
                 hd_Numero_Exterior: "",
                 usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                 hd_Activo: true,
@@ -59,21 +60,23 @@ class AltaCambioDomicilio extends Component {
     GetPersonaCambioDomicilioReactivacionRestitucion = async () => {
         await helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/true")
             .then(res => {
-                this.setState({ personas: res.data.personas
-                    .filter(per=>(per.sec_Id_Sector!== parseInt(localStorage.getItem("sector"))) && per.per_Activo===true) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
-                    .sort((a,b)=>{ // Que las ordene alfabeticamente
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas
+                        .filter(per => (per.sec_Id_Sector !== parseInt(localStorage.getItem("sector"))) && per.per_Activo === true) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
+                        .sort((a, b) => { // Que las ordene alfabeticamente
+                            const nameA = a.per_Nombre; // ignore upper and lowercase
+                            const nameB = b.per_Nombre; // ignore upper and lowercase
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
 
-                    // names must be equal
-                    return 0;
-                }) })
+                            // names must be equal
+                            return 0;
+                        })
+                })
             });
     }
 
@@ -204,12 +207,12 @@ class AltaCambioDomicilio extends Component {
                 this.setState({ procedencia: `PROCEDENCIA: ${proced[0].dis_Tipo_Distrito} ${proced[0].dis_Numero} - ${proced[0].sec_Tipo_Sector} ${proced[0].sec_Numero}, ${proced[0].sec_Alias}` })
 
                 //Si el Distrito de Procedencia es igual  al de la Sesión Activa, se trata de un Cambio de Domicilio INTERNO, si no, es EXTERNO
-                if (proced[0].dis_Id_Distrito === parseInt(localStorage.getItem("dto"))){
+                if (proced[0].dis_Id_Distrito === parseInt(localStorage.getItem("dto"))) {
                     //Código de Cambio de Domicilio INTERNO
-                    this.setState({ct_Codigo_Transaccion: 11003}) 
-                } else{
+                    this.setState({ ct_Codigo_Transaccion: 11003 })
+                } else {
                     //Código de Cambio de Domicilio EXTERNO
-                    this.setState({ct_Codigo_Transaccion: 11004}) 
+                    this.setState({ ct_Codigo_Transaccion: 11004 })
                 }
             }
             else {

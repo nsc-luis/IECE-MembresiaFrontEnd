@@ -112,6 +112,7 @@ class RegistroDePersonal extends Component {
                     hd_Localidad: "",
                     hd_Municipio_Ciudad: "",
                     est_Id_Estado: 0,
+                    hd_CP: "",
                     hd_Telefono: "",
                     hd_Activo: true,
                     nvoEstado: "",
@@ -482,7 +483,7 @@ class RegistroDePersonal extends Component {
         })
     }
 
-    fnGuardaPersona = async (datos) => {
+    fnGuardaPersona = async (datos) => { //Graba persona en un Hogar Nuevo
         // this.fnSolicitudNvaProfesion();
         var info = {
             PersonaEntity: datos.PersonaEntity,
@@ -499,13 +500,13 @@ class RegistroDePersonal extends Component {
                     res.data.estados.forEach(element => {
                         contador = contador + 1
                     })
-                    if (contador < 1 && this.state.domicilio.nvoEstado == "") {
+                    if (contador < 1 && this.state.domicilio.nvoEstado == "") {//Si detecta que No hay Estados para ese País y que no trae indicado un Estado
                         alert("Error: \nEl País seleccionado no tiene Estados para mostrar, por lo tanto, debe ingresar un nombre de Estado.")
                         return false
                     }
-                    else {
+                    else { //Si detecta que Sí hay Estados para ese País
                         try {
-                            if (this.state.nuevaFoto) {
+                            if (this.state.nuevaFoto) { //Si trae Foto
                                 helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                                     .then(resFoto => {
                                         if (resFoto.data.status === "success") {
@@ -579,7 +580,7 @@ class RegistroDePersonal extends Component {
                             }
                         }
                         catch (error) {
-                            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                            alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                         }
                     }
@@ -697,7 +698,7 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => {
+    fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => { //Graba persona en un HogarExistente
         var PersonaEntity = datos;
         datos = {
             PersonaEntity,
