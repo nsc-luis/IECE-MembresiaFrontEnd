@@ -111,7 +111,7 @@ class RegistroDePersonal extends Component {
                     hd_Numero_Interior: "",
                     hd_Localidad: "",
                     hd_Municipio_Ciudad: "",
-                    est_Id_Estado: 0,
+                    est_Id_Estado: "0",
                     hd_CP: "",
                     hd_Telefono: "",
                     hd_Activo: true,
@@ -174,16 +174,30 @@ class RegistroDePersonal extends Component {
     }
 
     handleChangeDomicilio = (e) => {
-        this.setState({
-            domicilio: {
-                ...this.state.domicilio,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
+        if (e.target.name === "pais_Id_Pais") { //Si el campo que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: "0",
+                    pais_Id_Pais: e.target.value.toUpperCase(),
+                },
+                boolNvoEstado: false,
+            })
+        } else {
+
+            this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
+                domicilio: {
+                    ...this.state.domicilio,
+                    [e.target.name]: e.target.value.toUpperCase(),
+                }
+            })
+        }
     }
 
-    handleChangeEstado = (e) => {
-        if (e.target.value === "999") {
+    handleChangeEstado = (e) => { //Al cambiar el input est_Id_Estado
+
+        if (e.target.value === "999") { //Si el valor del nuevo estado es 999 significa que elegió 'Otro Estado' porque quiere registrar uno Nuevo
             this.setState({
                 boolNvoEstado: true,
                 domicilio: {
@@ -192,9 +206,9 @@ class RegistroDePersonal extends Component {
                 }
             })
         }
-        else {
+        else { //Si no es 999, significa que eligió un Estadó Existente
             this.setState({
-                boolNvoEstado: false,
+                boolNvoEstado: false, //Quita el input de registro de un Nuevo Estado
                 domicilio: {
                     ...this.state.domicilio,
                     nvoEstado: "",

@@ -21,6 +21,8 @@ class EdicionDeDireccion extends Component {
             boolHabilitaEdicion: false,
             modalShow: false,
             mensajeDelProceso: "",
+            boolNvoEstado: false,
+            usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
         }
     }
 
@@ -79,7 +81,7 @@ class EdicionDeDireccion extends Component {
             })
             seleccion[0].usu_Id_Usuario = this.infoSesion.pem_Id_Ministro
             this.setState({ domicilio: seleccion[0] }) //Coloca en la Variable de Estado 'domicilio' el Hogar Seleccionado.
-
+            console.log("CargaDirección: ", seleccion[0])
         }
         else { //Si el Hogar= Cero, resetea todas los campos del objeto 'domicilio', significa que deseleccionó el Select "hogarSeleccionado"
             this.setState({
@@ -96,7 +98,8 @@ class EdicionDeDireccion extends Component {
                     est_Id_Estado: "0",
                     pais_Id_Pais: "0",
                     hd_CP: "",
-                    hd_Telefono: ""
+                    hd_Telefono: "",
+                    nvoEstado: ""
                 },
                 boolHabilitaEdicion: false
             })
@@ -104,12 +107,14 @@ class EdicionDeDireccion extends Component {
     }
 
     onChangeDomicilio = async (e) => {
+        //console.log("input: ", e.target.name, e.target.value.toUpperCase())
         this.setState({
             domicilio: {
                 ...this.state.domicilio,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+
         if (e.target.name === "pais_Id_Pais") { //Si el campo que edita es País, manda traer los Estados de ese País.
             await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
                 .then(res => {
@@ -120,13 +125,38 @@ class EdicionDeDireccion extends Component {
 
                     if (contador > 0) { //Si detecta que hay Estados para ese País, resetea el campo Estado para que elija un Estado nuevo.
                         this.setState({
+                            boolNvoEstado: false,
                             domicilio: {
                                 ...this.state.domicilio,
-                                est_Id_Estado: "0"
+                                est_Id_Estado: "0",
                             }
                         })
                     }
                 })
+        }
+    }
+
+
+    handleChangeEstado = (e) => {
+        //console.log("Estado: ", e.target.name, e.target.value)
+        if (e.target.value === "999") { //Si selecciona 'OTRO ESTADO'
+            this.setState({
+                boolNvoEstado: true,
+                domicilio: {
+                    ...this.state.domicilio,
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+        else { //Si se selecciona un Estado con Id valido
+            this.setState({
+                boolNvoEstado: false,
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: e.target.value
+                }
+            })
         }
     }
 
@@ -157,8 +187,9 @@ class EdicionDeDireccion extends Component {
     }
 
     guardarEdicion = async (e) => {
+
         e.preventDefault();
-        if (this.state.domicilio.est_Id_Estado === "0") {//Si el Estado_Id = Cero, indica que seleccionó un País diferente al que tenía la Dirección. 
+        if (this.state.domicilio.est_Id_Estado === "0") {//Si el Estado_Id = Cero, indica que no seleccionó Estado aun. 
             if (this.state.domicilio.nvoEstado === "" || this.state.domicilio.nvoEstado === undefined) { //Si el País no tiene registrado algun Estado.
                 alert("Error:\nEl País seleccionado no tiene Estados relacionados, por lo tanto, debe ingresar un nombre de Estado.")
             }
@@ -172,7 +203,7 @@ class EdicionDeDireccion extends Component {
                                     est_Id_Estado: res.data.estado.est_Id_Estado
                                 }
                             })
-                            helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+                            helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                                 .then(res => {
                                     if (res.data.status === "success") {
                                         // alert(res.data.mensaje);
@@ -210,9 +241,12 @@ class EdicionDeDireccion extends Component {
                 }
             }
         }
-        else { //Si no seleccionó un País diferente al que tenía la Dirección, manda editar con el verbo PUT los nuevos datos del Domicilio.
+        else { //Si seleccionó un País que tenía Estados ya existentes, manda editar con el verbo PUT los nuevos datos del Domicilio.
+            console.log("domicilio: ", this.state.domicilio)
             try {
-                await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+                //console.log("Datos a API con EstadoId: ", `${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
+                await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
+
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -385,15 +419,6 @@ class EdicionDeDireccion extends Component {
                                                             />
                                                             <Label>Municipio/Ciudad *</Label>
                                                         </Col>
-                                                        <PaisEstado
-                                                            domicilio={this.state.domicilio}
-                                                            onChangeDomicilio={this.onChangeDomicilio}
-                                                            readOnly={this.state.boolHabilitaEdicion}
-                                                        />
-                                                    </Row>
-                                                </FormGroup>
-                                                <FormGroup>
-                                                    <Row>
                                                         <Col xs="4">
                                                             <Input
                                                                 type="text"
@@ -423,6 +448,17 @@ class EdicionDeDireccion extends Component {
                                                             />
                                                             <Label>Activo</Label>
                                                         </Col> */}
+                                                    </Row>
+                                                </FormGroup>
+                                                <FormGroup>
+                                                    <Row>
+                                                        <PaisEstado
+                                                            domicilio={this.state.domicilio}
+                                                            onChangeDomicilio={this.onChangeDomicilio}
+                                                            boolNvoEstado={this.state.boolNvoEstado}
+                                                            handleChangeEstado={this.handleChangeEstado}
+                                                            readOnly={this.state.boolHabilitaEdicion}
+                                                        />
                                                     </Row>
                                                 </FormGroup>
                                             </React.Fragment>

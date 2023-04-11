@@ -216,7 +216,7 @@ class Domicilio extends React.Component {
                                             <option value="FRACC.">FRACCIONAMIENTO</option>
                                             <option value="EJ.">EJIDO</option>
                                             <option value="SUBDIV.">SUBDIVICIÓN</option>
-                                            <option value="BRGY">BRGY</option>
+                                            <option value="BRGY.">BRGY</option>
                                             <option value="RANCHO">RANCHO</option>
                                             <option value="MANZANA">MANZANA</option>
                                             <option value="RESIDENCIAL">RESIDENCIAL</option>

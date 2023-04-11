@@ -258,16 +258,14 @@ class PersonaForm extends Component {
         })
     }
 
-    handleKeyPress = (e) => {
-        console.log("Tecla: ", e.key)
+    handleKeyPress = (e) => { //No permite que presione la tecla enter en los campos de TextArea como Nombre de Hijos, Cambios de Domicilio, etc.
         if (e.key === 'Enter') {
-            alert("No se permiten saltos de linea en este campo. Escriba a Renglón seguido.");
+            alert("No se permiten saltos de línea en este campo. Escriba a Renglón seguido.");
             e.preventDefault();
         }
     }
 
     render() {
-
         const {
             onChange,
             form,

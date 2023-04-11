@@ -52,7 +52,7 @@ class PaisEstado extends React.Component {
     };
 
     render() {
-
+        console.log("DomicilioPE: ", this.props.domicilio)
         const {
             domicilio,
             onChangeDomicilio,
@@ -60,9 +60,9 @@ class PaisEstado extends React.Component {
             handleChangeEstado
         } = this.props
 
-        const handle_pais_Id_Pais = (e) => {
-            this.getEstados(e.target.value)
-            onChangeDomicilio(e)
+        const handle_pais_Id_Pais = (e) => {// Cuando cambia el País
+            this.getEstados(e.target.value) //Trae los Estados disponibles
+            onChangeDomicilio(e) //Pasa los datos del evento a la función Origen
         }
 
         return (
