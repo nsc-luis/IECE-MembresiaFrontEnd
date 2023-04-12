@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
-    Container, Button, Input, Modal, ModalBody, Label,
+    Container, Button, Input, Modal, ModalBody, Label, Alert,
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup
 } from 'reactstrap';
 
@@ -16,7 +16,8 @@ class RegistrarTransaccionesHistoricas extends Component {
             per_Id_Persona: "0",
             ct_Id_Codigo: "0",
             fechaTransaccion: null,
-            comentarioTransaccion: ""
+            comentarioTransaccion: "",
+            historial: null
         }
     }
     componentDidMount() {
@@ -31,14 +32,33 @@ class RegistrarTransaccionesHistoricas extends Component {
     }
     getTransacciones = async () => {
         await helpers.authAxios.get(`${helpers.url_api}/Codigo_Transacciones_Estadisticas/`)
-        .then(res => {
-            this.setState({ transacciones: res.data.resultado });
-        })
+            .then(res => {
+                this.setState({ transacciones: res.data.resultado });
+            })
     }
-    onChange = (e) => {
+    onChange = async (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
+        if (e.target.name === "per_Id_Persona" && e.target.value !== "0") {
+            await helpers.authAxios.get(`${helpers.url_api}/Historial_Transacciones_Estadisticas/` + e.target.value)
+                .then(res => {
+                    this.setState({ historial: res.data.info });
+                })
+        }
+        else if (e.target.name === "per_Id_Persona" && e.target.value === "0") {
+            this.setState({ historial: null })
+        }
+    }
+    guardarRegistroHistorico = async (e) => {
+        e.preventDefault();
+        if (this.state.per_Id_Persona === "0"
+            && this.state.ct_Id_Codigo === "0"
+            && (this.state.fechaTransaccion === null || this.state.fechaTransaccion === "")) {
+            alert("Error:\nLos campos marcados con * son requeridos.");
+            return false;
+        }
+        alert("Aun no se pueden guardar registros historicos extemporaneos.");
     }
 
     render() {
@@ -48,11 +68,18 @@ class RegistrarTransaccionesHistoricas extends Component {
                     <Col xs="12">
                         <Card>
                             <CardBody>
-                                <Form>
+                                <Form onSubmit={this.guardarRegistroHistorico}>
                                     <FormGroup>
                                         <Row>
+                                            <Col xs="12">
+                                                <Alert color="warning">
+                                                    <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                                </Alert>
+                                            </Col>
+                                        </Row>
+                                        <Row>
                                             <Col xs="3">
-                                                <Label>Persona:</Label>
+                                                <Label>* Persona:</Label>
                                             </Col>
                                             <Col xs="9">
                                                 <Input
@@ -76,7 +103,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="3">
-                                                <Label>Transacción:</Label>
+                                                <Label>* Transacción:</Label>
                                             </Col>
                                             <Col xs="9">
                                                 <Input
@@ -100,7 +127,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="3">
-                                                <Label>Fecha:</Label>
+                                                <Label>* Fecha:</Label>
                                             </Col>
                                             <Col xs="3">
                                                 <Input
@@ -115,7 +142,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="3">
-                                                <Label>Persona:</Label>
+                                                <Label>Comentario:</Label>
                                             </Col>
                                             <Col xs="9">
                                                 <Input
@@ -131,11 +158,14 @@ class RegistrarTransaccionesHistoricas extends Component {
                                         <Row>
                                             <Button
                                                 color="secondary"
+                                                type="button"
+                                                style={{ marginRight: "1em" }}
                                             >
                                                 Cancelar
                                             </Button>
                                             <Button
                                                 color="success"
+                                                type="submit"
                                             >
                                                 Aceptar
                                             </Button>
@@ -146,6 +176,42 @@ class RegistrarTransaccionesHistoricas extends Component {
                         </Card>
                     </Col>
                 </Row>
+                {this.state.historial !== null &&
+                    <Row>
+                        <Col xs="12">
+                            <table className="table table-striped border bt-0">
+                                <thead className="bg-info">
+                                    <tr>
+                                        <th style={{ width: "10%" }}>Fecha</th>
+                                        <th style={{ width: "12%" }}>Tipo_Mov</th>
+                                        <th style={{ width: "15%" }}>SubTipo_Mov</th>
+                                        <th style={{ width: "12%" }}>Comentarios</th>
+                                        <th style={{ width: "25%" }}>Sector</th>
+                                        <th style={{ width: "25%" }}>Distrito</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.state.historial.map((registro) => {
+                                            return (
+                                                <React.Fragment>
+                                                    <tr key={registro.hte_Id_Transaccion}>
+                                                        <td>{helpers.reFormatoFecha(registro.hte_Fecha_Transaccion)}</td>
+                                                        <td>{registro.ct_Tipo}</td>
+                                                        <td>{registro.ct_Subtipo}</td>
+                                                        <td>{registro.hte_Comentario}</td>
+                                                        <td>{registro.sec_Alias}</td>
+                                                        <td>{registro.dis_Tipo_Distrito} {registro.dis_Numero}, {registro.dis_Alias}</td>
+                                                    </tr>
+                                                </React.Fragment>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </Col>
+                    </Row>
+                }
             </Container>
         )
     }
