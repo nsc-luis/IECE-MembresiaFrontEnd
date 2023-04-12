@@ -35,6 +35,7 @@ import BajaNoBautizadoDefuncion from './pages/Persona/BajaNoBautizadoDefuncion';
 import BajaBautizadoCambioDomicilio from './pages/Persona/BajaBautizadoCambioDomicilio';
 import BajaNoBautizadoCambioDomicilio from './pages/Persona/BajaNoBautizadoCambioDomicilio';
 import BajaNoBautizadoAlejamiento from './pages/Persona/BajaNoBautizadoAlejamiento';
+import RegistrarTransaccionesHistoricas from './pages/RegistrarTransaccionesHistoricas';
 import Layout from './pages/Layout';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -87,6 +88,7 @@ class Router extends Component {
                         <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
                         <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
                         <Route exact path="/ReporteTransacciones" component={ReporteTransacciones} />
+                        <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
                         {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />

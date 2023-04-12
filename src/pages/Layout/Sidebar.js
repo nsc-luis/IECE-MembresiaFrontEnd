@@ -530,14 +530,12 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link
                             className="nav-link"
-                            to="#"
-                            onClick={this.handleTransaccionesExtemporaneas}
+                            to="/RegistrarTransaccionesHistoricas"
                         >
                             <i className="fas fa-address-book"></i>
                             <span>Transacciones Extemporaneas</span>
                         </Link>
                     </li>
-
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />

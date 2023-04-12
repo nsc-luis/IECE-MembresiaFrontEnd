@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
-    Container, Button, Input,
+    Container, Button, Input, Modal, ModalBody,
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback
 } from 'reactstrap';
 import moment from 'moment';
@@ -139,7 +139,8 @@ class ReporteTransacciones extends Component {
             fechaFinalInvalid: false,
             hogares: [],
             registros: [],
-            sector: {}
+            sector: {},
+            modal: false
         }
     }
     componentDidMount() {
@@ -381,11 +382,96 @@ class ReporteTransacciones extends Component {
                 });
             })
     }
+    showModal = () => {
+        this.setState({ modal: !this.state.modal })
+    }
+    ReporteTransaccionesToPDF = async () => {
+        if (this.state.consultaInfo === false) {
+            alert("Error:\nAntes de generar el documento PDF debe ejecutar la búsqueda por rango de fechas.");
+            return false;
+        }
+        var transacciones = "";
+        this.state.registros.forEach(r => {
+            transacciones += `<${r.ct_Tipo} (${r.ct_Subtipo}) ${r.per_Nombre} ${r.per_Apellido_Paterno} ${r.sec_Sector_Alias} ${helpers.reFormatoFecha(r.hte_Fecha_Transaccion)}> `
+        });
+
+        var datos = {
+            "FechaInicial": this.state.fsd.fechaInicial,
+            "FechaFinal": this.state.fsd.fechaFinal,
+            "AdultosBautizados": this.state.personas.AdultosBautizados,
+            "AltasBautizadosBautismo": this.state.infoOrganizada.Altas.Bautizados.Bautismo.contador,
+            "AltasBautizadosCambioDomicilio": this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioExterno.contador + this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioInterno.contador,
+            "AltasBautizadosRestitucion": this.state.infoOrganizada.Altas.Bautizados.Restitucion.contador,
+            "AltasNoBautizadosCambioDomicilio": this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioExterno.contador + this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioInterno.contador,
+            "AltasNoBautizadosNuevoIngreso": this.state.infoOrganizada.Altas.NoBautizados.Ingreso.contador,
+            "AltasNoBautizadosReactivacion": this.state.infoOrganizada.Altas.NoBautizados.Reactivacion.contador,
+            "BajasBautizadosCambioDomicilio": this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioExterno.contador + this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioInterno.contador,
+            "BajasBautizadosDefuncion": this.state.infoOrganizada.Bajas.Bautizados.Defuncion.contador,
+            "BajasBautizadosExcomunion": this.state.infoOrganizada.Bajas.Bautizados.Excomunion.contador,
+            "BajasNoBautizadosAlejamiento": this.state.infoOrganizada.Bajas.NoBautizados.Alejamiento.contador,
+            "BajasNoBautizadosCambioDomicilio": this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioExterno.contador + this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioInterno.contador,
+            "BajasNoBautizadosDefuncion": this.state.infoOrganizada.Bajas.NoBautizados.Defuncion.contador,
+            "BautizadosAdultoHombre": this.state.personas.Bautizados.Adulto_Hombre,
+            "BautizadosAdultoMujer": this.state.personas.Bautizados.Adulto_Mujer,
+            "BautizadosJovenHombre": this.state.personas.Bautizados.Joven_Hombre,
+            "BautizadosJovenMujer": this.state.personas.Bautizados.Joven_Mujer,
+            "JovenesBautizados": this.state.personas.JovenesBautizados,
+            "JovenesNoBautizados": this.state.personas.JovenesNoBautizados,
+            "Legalizaciones": this.state.infoOrganizada.Legalizaciones.contador,
+            "Matrimonios": this.state.infoOrganizada.Matrimonios.contador,
+            "Ninas": this.state.personas.NoBautizados.Niña,
+            "Ninos": this.state.personas.NoBautizados.Niño,
+            "NoBautizadosJovenHombre": this.state.personas.NoBautizados.Joven_Hombre,
+            "NoBautizadosJovenMujer": this.state.personas.NoBautizados.Joven_Mujer,
+            "Presentaciones": this.state.infoOrganizada.Presentaciones.contador,
+            "Total": this.state.personas.Total,
+            "TotalAltasBautizados": this.state.infoOrganizada.TotalAltasBautizados,
+            "TotalAltasNoBautizados": this.state.infoOrganizada.TotalAltasNoBautizados,
+            "TotalBajasBautizados": this.state.infoOrganizada.TotalBajasBautizados,
+            "TotalBajasNoBautizados": this.state.infoOrganizada.TotalBajasNoBautizados,
+            "NoDeHogares": this.state.hogares.length,
+            "Secretario": "",
+            "Ministro": JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre,
+            "Transacciones": transacciones
+        }
+
+        var request = new Request(
+            `${helpers.url_api}/DocumentosPDF/ReporteMovimientosEstadisticos`,
+            {
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    'Content-Type': 'application/json'
+                },
+                mode: "cors",
+                cache: "default",
+            });
+
+        this.showModal();
+
+        fetch(request)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const file = window.URL.createObjectURL(blob);
+                this.showModal();
+                window.open(file);
+            })
+            .catch((err) => {
+                alert(err);
+            })
+    }
     render() {
         return (
             <>
                 <Container fluid>
-                    <Button className="btn-success m-3 " ><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
+                    <Button
+                        className="btn-danger m-3"
+                        onClick={this.ReporteTransaccionesToPDF}
+                    >
+                        <span className="fas fa-file-pdf mr-2"></span>
+                        Descargar PDF
+                    </Button>
                     {/* <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button> */}
                     {/* TABLA */}
                     <Card body id="pdf">
@@ -630,6 +716,11 @@ class ReporteTransacciones extends Component {
                         </CardBody>
                     </Card>
                 </Container>
+                <Modal isOpen={this.state.modal}>
+                    <ModalBody>
+                        Procesando...
+                    </ModalBody>
+                </Modal>
             </>
         )
     }
