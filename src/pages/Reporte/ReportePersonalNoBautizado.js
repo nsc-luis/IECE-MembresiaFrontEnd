@@ -127,6 +127,7 @@ export default function ReportePersonalNoBautizado() {
     }
 
     const downloadTable = () => {
+
         TableToExcel.convert(document.getElementById("table1"), {
             name: "Personal_No_Bautizado.xlsx",
             sheet: {

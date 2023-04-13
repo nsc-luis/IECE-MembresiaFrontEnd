@@ -403,7 +403,10 @@ class ListaDePersonal extends Component {
     }
 
     hojaDatosEstadisticosPDF = async (info) => {
-
+        if (!info.persona.per_Bautizado) {
+            alert("Esta opción solo está disponible para Personal Bautizado!")
+            return false
+        }
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter")
         doc.lineHeightProportion = 5;
@@ -502,7 +505,11 @@ class ListaDePersonal extends Component {
         let line = 40;
         let renglon = 8;
         // FOTO DE LA PERSONA
-        doc.addImage(`${helpers.url_api}/Foto/${info.persona.per_Id_Persona}`, 'PNG', 169, line - 5);
+        doc.addImage(`${helpers.url_api}/Foto/${info.persona.per_Id_Persona}`, 'PNG', 169, line - 5, 30, 30);
+        doc.line(169, line - 5, 199, line - 5)
+        doc.line(169, line - 5, 169, line - 5 + 30)
+        doc.line(169, line - 5 + 30, 199, line - 5 + 30)
+        doc.line(199, line - 5, 199, line - 5 + 30)
         //doc.addImage(`http://iece-tpr.ddns.net/webapi/api/Foto/${info.persona.per_Id_Persona}`, 'PNG', 169, line-5);
 
         doc.setFontSize(9)
@@ -682,7 +689,7 @@ class ListaDePersonal extends Component {
                     doc.text(`${res.data.infoSecretario[0].pem_Nombre}`, 130, 249);
                 }
                 else {
-                    doc.text("No hay secretario asignado.", 135, 249);
+                    doc.text("", 135, 249);
                 }
             })
         doc.line(120, 250, 180, 250);
@@ -1119,7 +1126,7 @@ class ListaDePersonal extends Component {
                                     <Alert color="warning">
                                         <strong>Advertencia: </strong><br />
                                         Al eliminar una persona serán reorganizadas las jerarquías dentro del hogar y
-                                        si la persona es la última del hogar, entonces, el hogar también será dado de baja.
+                                        si la persona es la última del hogar, el hogar también será dado de baja.
                                     </Alert>
                                     ¿Esta seguro de querer eliminar a la persona: <strong>{this.state.currentPersona.per_Nombre} {this.state.currentPersona.per_Apellido_Paterno} {this.state.currentPersona.per_Apellido_Materno}</strong>?
                                 </ModalBody>

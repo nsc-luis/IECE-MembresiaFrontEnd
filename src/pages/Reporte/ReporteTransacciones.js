@@ -7,6 +7,7 @@ import {
 import moment from 'moment';
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 import '../../assets/css/index.css';
+import TableToExcel from "@linways/table-to-excel";
 
 class ReporteTransacciones extends Component {
     constructor(props) {
@@ -158,6 +159,21 @@ class ReporteTransacciones extends Component {
                 this.setState({ sector: res.data.sector[0] })
             })
     }
+
+    downloadTable() {
+        console.log("contenido: ", document.getElementById("table1"))
+        if (document.getElementById("table1") != null) {
+            TableToExcel.convert(document.getElementById("table1"), {
+                name: "ResumenMovimientosEstadisticos.xlsx",
+                sheet: {
+                    name: "Hoja 1"
+                }
+            });
+        } else {
+            alert("Debe primeramente Seleccionar el periodo y generar el reporte")
+        }
+    }
+
     onChange = (e) => {
         this.setState({
             fsd: {
@@ -382,6 +398,7 @@ class ReporteTransacciones extends Component {
                 });
             })
     }
+<<<<<<< HEAD
     showModal = () => {
         this.setState({ modal: !this.state.modal })
     }
@@ -461,10 +478,16 @@ class ReporteTransacciones extends Component {
                 alert(err);
             })
     }
+=======
+
+
+
+>>>>>>> c68f7a91d8f43bfc38edddf5168af909cf9d3057
     render() {
         return (
             <>
                 <Container fluid>
+<<<<<<< HEAD
                     <Button
                         className="btn-danger m-3"
                         onClick={this.ReporteTransaccionesToPDF}
@@ -472,6 +495,9 @@ class ReporteTransacciones extends Component {
                         <span className="fas fa-file-pdf mr-2"></span>
                         Descargar PDF
                     </Button>
+=======
+                    <Button className="btn-success m-3 " onClick={this.downloadTable} ><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
+>>>>>>> c68f7a91d8f43bfc38edddf5168af909cf9d3057
                     {/* <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button> */}
                     {/* TABLA */}
                     <Card body id="pdf">
@@ -520,120 +546,137 @@ class ReporteTransacciones extends Component {
                                         onClick={this.buscarInfo}
                                     >Buscar...</Button>
                                 </Col>
+
                             </Row>
+                            <hr />
                             {this.state.consultaInfo &&
                                 <>
                                     <Row>
-                                        <Table id='table1'>
+                                        <div className="text-center container-fluid font-weight-bold">
+                                            <h5>RESUMEN DE MOVIMIENTOS ESTADÍSTICOS Y MEMBRESÍA ACTUAL</h5>
+                                        </div>
+                                        <Table id='table1' data-cols-width="30,7,12,7,30,7,12,7">
                                             <tbody>
-                                                <tr className="text-center">
-                                                    <td colspan="8">DATOS DEL ESTADO ACTUAL DE LA IGLESIA</td>
+
+                                                <tr className="text-center font-weight-bold categoriasReportes">
+                                                    <td colSpan="8">PERSONAL BAUTIZADO</td>
                                                 </tr>
-                                                <tr className="text-center">
-                                                    <td colspan="4">ALTAS</td>
-                                                    <td colspan="4">BAJAS</td>
+                                                <tr className="text-center font-weight-bold ">
+                                                    <td colSpan="4">ALTAS</td>
+
+                                                    <td colSpan="4">BAJAS</td>
                                                 </tr>
-                                                <tr className="text-left">
-                                                    <td colspan="2">Por bautismo</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.Bautismo.contador}</u></td>
-                                                    <td colspan="2">Por defunción</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.Defuncion.contador}</u></td>
-                                                </tr>
-                                                <tr className="text-left">
-                                                    <td colspan="2">Por restitución a la comunión</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.Restitucion.contador}</u></td>
-                                                    <td colspan="2">Por excomunión</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.ExcomunionTemporal.contador + this.state.infoOrganizada.Bajas.Bautizados.Excomunion.contador}</u></td>
+                                                <tr className="text-left ">
+                                                    <td colSpan="2">Por Bautismo</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.Bautismo.contador}</u></td>
+                                                    <td colSpan="2">Por Defunción</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.Defuncion.contador}</u></td>
                                                 </tr>
                                                 <tr className="text-left">
-                                                    <td colspan="2">Por cambio de domicilio</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioExterno.contador}</u></td>
-                                                    <td colspan="2">Por cambio de domicilio</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioExterno.contador}</u></td>
+                                                    <td colSpan="2">Por Restitución a la comunión</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.Restitucion.contador}</u></td>
+                                                    <td colSpan="2">Por Excomunión</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.ExcomunionTemporal.contador + this.state.infoOrganizada.Bajas.Bautizados.Excomunion.contador}</u></td>
                                                 </tr>
                                                 <tr className="text-left">
-                                                    <td colspan="2">Total de altas</td>
-                                                    <td colspan="2">
+                                                    <td colSpan="2">Por Cambio de Domicilio</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Altas.Bautizados.CambioDomicilioExterno.contador}</u></td>
+                                                    <td colSpan="2">Por Cambio de Domicilio</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioExterno.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left font-weight-bold">
+                                                    <td colSpan="2">Total de altas</td>
+                                                    <td colSpan="2">
                                                         <u className="font-weight-normal">
                                                             {this.state.infoOrganizada.TotalAltasBautizados}
                                                         </u>
                                                     </td>
-                                                    <td colspan="2">Total de bajas</td>
-                                                    <td colspan="2">
+                                                    <td colSpan="2">Total de bajas</td>
+                                                    <td colSpan="2">
                                                         <u className="font-weight-normal">
                                                             {this.state.infoOrganizada.TotalBajasBautizados}
                                                         </u>
                                                     </td>
                                                 </tr>
-                                                <tr className="text-center">
-                                                    <td colspan="4">ALTAS</td>
-                                                    <td colspan="4">BAJAS</td>
+                                                <tr className="text-center font-weight-bold categoriasReportes">
+                                                    <td colSpan="8">PERSONAL NO BAUTIZADO</td>
+                                                </tr>
+                                                <tr className="text-center font-weight-bold">
+                                                    <td colSpan="4">ALTAS</td>
+                                                    <td colSpan="4">BAJAS</td>
                                                 </tr>
                                                 <tr className="text-left">
-                                                    <td colspan="2">Por Nuevo Ingreso</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.Ingreso.contador}</u></td>
-                                                    <td colspan="2">Por defunción</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.Defuncion.contador}</u></td>
+                                                    <td colSpan="2">Por Nuevo Ingreso</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.Ingreso.contador}</u></td>
+                                                    <td colSpan="2">Por Defunción</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.Defuncion.contador}</u></td>
                                                 </tr>
                                                 <tr className="text-left">
-                                                    <td colspan="2">Por reactivación</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.Reactivacion.contador}</u></td>
-                                                    <td colspan="2">Por alejamiento</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.Alejamiento.contador}</u></td>
+                                                    <td colSpan="2">Por Reactivación</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.Reactivacion.contador}</u></td>
+                                                    <td colSpan="2">Por Alejamiento</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.Alejamiento.contador}</u></td>
                                                 </tr>
                                                 <tr className="text-left">
-                                                    <td colspan="2">Por cambio de domicilio</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioExterno.contador}</u></td>
-                                                    <td colspan="2">Por cambio de domicilio</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioExterno.contador}</u></td>
+                                                    <td colSpan="2">Por Cambio de Domicilio</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Altas.NoBautizados.CambioDomicilioExterno.contador}</u></td>
+                                                    <td colSpan="2">Por Cambio de Domicilio</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioInterno.contador + this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioExterno.contador}</u></td>
                                                 </tr>
                                                 <tr className="text-left">
-                                                    <td colspan="2"></td>
-                                                    <td colspan="2"></td>
-                                                    <td colspan="2">Por baja de padres</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.BajaPorPadres.contador}</u></td>
+                                                    <td colSpan="2"></td>
+                                                    <td colSpan="2"></td>
+                                                    <td colSpan="2">Por Baja de Padres</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Bajas.NoBautizados.BajaPorPadres.contador}</u></td>
                                                 </tr>
-                                                <tr className="text-left">
-                                                    <td colspan="2">Total de altas</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.TotalAltasNoBautizados}</u></td>
-                                                    <td colspan="2">Total de bajas</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.TotalBajasNoBautizados}</u></td>
-                                                </tr>
-                                                <tr className="text-center">
-                                                    <td colspan="4"></td>
-                                                    <td colspan="4"></td>
-                                                </tr>
-                                                <tr className="text-left">
-                                                    <td colspan="2">Matrimonios</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Matrimonios.contador}</u></td>
-                                                    <td colspan="2">Legalizaciones</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Legalizaciones.contador}</u></td>
-                                                </tr>
-                                                <tr className="text-left">
-                                                    <td colspan="2">Presentaciones de niños</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Presentaciones.contador}</u></td>
-                                                    <td colspan="2">No. de Hogares</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.hogares.length}</u></td>
+                                                <tr className="text-left font-weight-bold">
+                                                    <td colSpan="2">Total de Altas</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.TotalAltasNoBautizados}</u></td>
+                                                    <td colSpan="2">Total de Bajas</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.TotalBajasNoBautizados}</u></td>
                                                 </tr>
                                                 <tr className="text-center">
-                                                    <td colspan="4">PERSONAL BAUTIZADO</td>
-                                                    <td colspan="4">PERSONAL NO BAUTIZADO</td>
+                                                    <td colSpan="4"></td>
+                                                    <td colSpan="4"></td>
                                                 </tr>
-                                                <tr className="text-center">
-                                                    <td colspan="2">ADULTOS</td>
-                                                    <td colspan="2">JÓVENES</td>
-                                                    <td colspan="2">JÓVENES</td>
-                                                    <td colspan="2">NIÑOS</td>
+                                                <tr className="text-center font-weight-bold categoriasReportes">
+                                                    <td colSpan="8">SUCESOS ECLESÍASTICOS Y HOGARES</td>
                                                 </tr>
                                                 <tr className="text-left">
-                                                    <td>Hombres</td>
-                                                    <td><u className="font-weight-normal">{this.state.personas.Bautizados.Adulto_Hombre}</u></td>
-                                                    <td>Hombres</td>
-                                                    <td><u className="font-weight-normal">{this.state.personas.Bautizados.Joven_Hombre}</u></td>
-                                                    <td>Hombres</td>
-                                                    <td><u className="font-weight-normal">{this.state.personas.NoBautizados.Joven_Hombre}</u></td>
-                                                    <td>Niños</td>
-                                                    <td><u className="font-weight-normal">{this.state.personas.NoBautizados.Niño}</u></td>
+                                                    <td colSpan="2">Matrimonios</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Matrimonios.contador}</u></td>
+                                                    <td colSpan="2">Legalizaciones</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Legalizaciones.contador}</u></td>
+                                                </tr>
+                                                <tr className="text-left">
+                                                    <td colSpan="2">Presentaciones de Niños</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Presentaciones.contador}</u></td>
+                                                    <td colSpan="2">No. de Hogares</td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.hogares.length}</u></td>
+                                                </tr>
+                                                <tr className="text-center font-weight-bold categoriasReportes">
+                                                    <td colSpan="8">DESGLOSE DE MEMBRESÍA ACTUAL</td>
+                                                </tr>
+                                                <tr className="text-center font-weight-bold ">
+                                                    <td colSpan="4">PERSONAL BAUTIZADO</td>
+                                                    <td colSpan="4">PERSONAL NO BAUTIZADO</td>
+                                                </tr>
+                                                <tr className="justify-content-around text-center font-weight-bold">
+                                                    <td colSpan="2">ADULTOS</td>
+                                                    <td colSpan="2">JÓVENES</td>
+                                                    <td colSpan="2">JÓVENES</td>
+                                                    <td colSpan="2">NIÑOS</td>
+                                                </tr>
+                                                <tr className="justify-content-around">
+                                                    <td className="col-sm-1">Hombres</td>
+                                                    <td className="col-sm-1"><u className="font-weight-normal">{this.state.personas.Bautizados.Adulto_Hombre}</u></td>
+                                                    <td className="col-sm-1">Hombres</td>
+                                                    <td className="col-sm-1"><u className="font-weight-normal">{this.state.personas.Bautizados.Joven_Hombre}</u></td>
+
+                                                    <td className="col-sm-1">Hombres</td>
+                                                    <td className="col-sm-1"><u className="font-weight-normal">{this.state.personas.NoBautizados.Joven_Hombre}</u></td>
+                                                    <td className="col-sm-1">Niños</td>
+                                                    <td className="col-sm-1"><u className="font-weight-normal">{this.state.personas.NoBautizados.Niño}</u></td>
                                                 </tr>
                                                 <tr className="text-left">
                                                     <td>Mujeres</td>
@@ -645,7 +688,7 @@ class ReporteTransacciones extends Component {
                                                     <td>Niñas</td>
                                                     <td><u className="font-weight-normal">{this.state.personas.NoBautizados.Niña}</u></td>
                                                 </tr>
-                                                <tr className="text-left">
+                                                <tr className="text-left justify-content-around">
                                                     <td>Total</td>
                                                     <td><u className="font-weight-normal">{this.state.personas.AdultosBautizados}</u></td>
                                                     <td>Total</td>
@@ -655,18 +698,23 @@ class ReporteTransacciones extends Component {
                                                     <td>Total</td>
                                                     <td><u className="font-weight-normal">{this.state.personas.Niños}</u></td>
                                                 </tr>
-                                                <tr className="text-center">
-                                                    <td colspan="2">No. Completo de personal bautizado</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.personas.AdultosBautizados + this.state.personas.JovenesBautizados}</u></td>
-                                                    <td colspan="2">No. Completo de personal no bautizado</td>
-                                                    <td colspan="2"><u className="font-weight-normal">{this.state.personas.JovenesNoBautizados + this.state.personas.Niños}</u></td>
+                                                <tr className="text-center font-weight-bold">
+
+                                                    <td colSpan="2">No. Compl. de Personal Bautizado</td>
+                                                    <td colSpan="1"><u className="font-weight-normal">{this.state.personas.AdultosBautizados + this.state.personas.JovenesBautizados}</u></td>
+                                                    <td colSpan="2"></td>
+                                                    <td colSpan="2">No. Compl. de Personal No Bautizado</td>
+                                                    <td colSpan="1"><u className="font-weight-normal">{this.state.personas.JovenesNoBautizados + this.state.personas.Niños}</u></td>
+
                                                 </tr>
-                                                <tr className="text-center">
-                                                    <td colspan="4">Número completo del personal que integra la iglesia</td>
-                                                    <td colspan="4"><u className="font-weight-normal">{this.state.personas.Total}</u></td>
+                                                <tr className="text-center font-weight-bold">
+                                                    <td colSpan="2"></td>
+                                                    <td colSpan="3">Número Completo del Personal que Integra la Iglesia</td>
+                                                    <td colSpan="1"><u className="font-weight-normal">{this.state.personas.Total}</u></td>
+                                                    <td colSpan="2"></td>
                                                 </tr>
-                                                <tr className="text-center">
-                                                    <td colspan="8">Desglose de movimiento estadistico:</td>
+                                                <tr className="text-center font-weight-bold categoriasReportes">
+                                                    <td colSpan="8">DESGLOSE DE MOVIMIENTO ESTADÍSTICO</td>
                                                 </tr>
                                             </tbody>
                                         </Table>

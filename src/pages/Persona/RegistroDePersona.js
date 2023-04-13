@@ -47,7 +47,7 @@ class RegistroDePersonal extends Component {
             formDataFoto: null,
             nuevaFoto: false,
             boolNvoEstado: false,
-            fechaBautismoInvalida:false,
+            fechaBautismoInvalida: false,
             FechaTransaccionHistorica: ""
         }
     }
@@ -61,8 +61,8 @@ class RegistroDePersonal extends Component {
     }
 
     componentDidMount() {
-        console.log(localStorage.getItem("nvaAltaBautizado"));
-        if (localStorage.getItem("idPersona") === "0") {
+
+        if (localStorage.getItem("idPersona") === "0") {//Si se trata de un Nuevo Registro , No Edición
             this.setState({
                 foto: `${helpers.url_api}/Foto/FotoDefault`,
                 form: {
@@ -107,12 +107,16 @@ class RegistroDePersonal extends Component {
                     dis_Id_Distrito: localStorage.getItem("dto"),
                     pais_Id_Pais: "0",
                     hd_Calle: "",
-                    hd_Localidad: "",
                     hd_Numero_Exterior: "",
-                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
+                    hd_Numero_Interior: "",
+                    hd_Localidad: "",
+                    hd_Municipio_Ciudad: "",
+                    est_Id_Estado: "0",
+                    hd_CP: "",
+                    hd_Telefono: "",
                     hd_Activo: true,
-                    est_Id_Estado: 0,
-                    nvoEstado: ""
+                    nvoEstado: "",
+                    usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                 },
                 habilitaPerBautizado: true,
                 descNvaProfesion: {
@@ -121,7 +125,7 @@ class RegistroDePersonal extends Component {
                     nvaProf2: ""
                 }
             })
-        } else {
+        } else {//Si se trata de una Edición.
             helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : null;
@@ -165,21 +169,35 @@ class RegistroDePersonal extends Component {
 
     const_regex = {
         alphaSpaceRequired: /^[a-zA-Z]{1}[a-zA-ZÑ\d\s]{0,37}$/,
-        alphaSpace:/^[a-zA-ZÑ\s]{0,37}$/,
+        alphaSpace: /^[a-zA-ZÑ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
     }
 
     handleChangeDomicilio = (e) => {
-        this.setState({
-            domicilio: {
-                ...this.state.domicilio,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
+        if (e.target.name === "pais_Id_Pais") { //Si el campo que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: "0",
+                    pais_Id_Pais: e.target.value.toUpperCase(),
+                },
+                boolNvoEstado: false,
+            })
+        } else {
+
+            this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
+                domicilio: {
+                    ...this.state.domicilio,
+                    [e.target.name]: e.target.value.toUpperCase(),
+                }
+            })
+        }
     }
 
-    handleChangeEstado = (e) => {
-        if (e.target.value === "999") {
+    handleChangeEstado = (e) => { //Al cambiar el input est_Id_Estado
+
+        if (e.target.value === "999") { //Si el valor del nuevo estado es 999 significa que elegió 'Otro Estado' porque quiere registrar uno Nuevo
             this.setState({
                 boolNvoEstado: true,
                 domicilio: {
@@ -188,9 +206,9 @@ class RegistroDePersonal extends Component {
                 }
             })
         }
-        else {
+        else { //Si no es 999, significa que eligió un Estadó Existente
             this.setState({
-                boolNvoEstado: false,
+                boolNvoEstado: false, //Quita el input de registro de un Nuevo Estado
                 domicilio: {
                     ...this.state.domicilio,
                     nvoEstado: "",
@@ -200,7 +218,7 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    onChangeFechaBautismo = (e)=>{
+    onChangeFechaBautismo = (e) => {
         this.setState({
             form: {
                 ...this.state.form,
@@ -209,7 +227,7 @@ class RegistroDePersonal extends Component {
         })
 
         if (e.target.name === "per_Fecha_Bautismo") {
-            
+
             if (e.target.value === '') {
                 this.setState({ fechaBautismoInvalida: true });
             }
@@ -221,18 +239,19 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    ChangeFechaBautismoInvalida = (bol)=>{
-                this.setState({ fechaBautismoInvalida: bol });
+    ChangeFechaBautismoInvalida = (bol) => {
+        this.setState({ fechaBautismoInvalida: bol });
     }
 
     handleChange = (e) => {
-        
+
         this.setState({
             form: {
                 ...this.state.form,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
+
         if (e.target.name === "per_Email_Personal") {
             this.setState({
                 form: {
@@ -246,12 +265,12 @@ class RegistroDePersonal extends Component {
                 default:
                     this.setState({
                         categoriaSeleccionada: false,
-                        msjCategoriaSeleccionada: "Debes seleccionar una Categoría.",
+                        msjCategoriaSeleccionada: "Debe seleccionar una Categoría.",
                         habilitaPerBautizado: false,
                         form: {
                             ...this.state.form,
                             // per_Bautizado: false,
-                            [e.target.name]: e.target.value.toUpperCase()
+                            [e.target.name]: e.target.value1 != 0 ? e.target.value.toUpperCase() : "0"
                         }
                     });
                     break;
@@ -387,20 +406,20 @@ class RegistroDePersonal extends Component {
                 });
             }
         }
-        
+
         if (e.target.name === "per_Apellido_Materno") {
             if (!this.const_regex.alphaSpace.test(e.target.value)) {
                 this.setState({
                     per_Apellido_Materno_OK: false
-                    
+
                 });
-            } else if(e.target.value==='' || this.const_regex.alphaSpace.test(e.target.value)){
+            } else if (e.target.value === '' || this.const_regex.alphaSpace.test(e.target.value)) {
 
                 this.setState({
                     per_Apellido_Materno_OK: true
                 });
             }
-            
+
         }
         if (e.target.name === "per_Fecha_Nacimiento") {
             if (e.target.value === '') {
@@ -478,7 +497,7 @@ class RegistroDePersonal extends Component {
         })
     }
 
-    fnGuardaPersona = async (datos) => {
+    fnGuardaPersona = async (datos) => { //Graba persona en un Hogar Nuevo
         // this.fnSolicitudNvaProfesion();
         var info = {
             PersonaEntity: datos.PersonaEntity,
@@ -495,13 +514,13 @@ class RegistroDePersonal extends Component {
                     res.data.estados.forEach(element => {
                         contador = contador + 1
                     })
-                    if (contador < 1 && this.state.domicilio.nvoEstado == "") {
+                    if (contador < 1 && this.state.domicilio.nvoEstado == "") {//Si detecta que No hay Estados para ese País y que no trae indicado un Estado
                         alert("Error: \nEl País seleccionado no tiene Estados para mostrar, por lo tanto, debe ingresar un nombre de Estado.")
                         return false
                     }
-                    else {
+                    else { //Si detecta que Sí hay Estados para ese País
                         try {
-                            if (this.state.nuevaFoto) {
+                            if (this.state.nuevaFoto) { //Si trae Foto
                                 helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                                     .then(resFoto => {
                                         if (resFoto.data.status === "success") {
@@ -575,7 +594,7 @@ class RegistroDePersonal extends Component {
                             }
                         }
                         catch (error) {
-                            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                            alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                         }
                     }
@@ -689,11 +708,11 @@ class RegistroDePersonal extends Component {
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
-            } 
+            }
         }
     }
 
-    fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => {
+    fnGuardaPersonaEnHogar = async (datos, jerarquia, hdId) => { //Graba persona en un HogarExistente
         var PersonaEntity = datos;
         datos = {
             PersonaEntity,
@@ -786,21 +805,22 @@ class RegistroDePersonal extends Component {
     }
 
     handleCampoInvalido = (elementoState, bool) => {
+
         this.setState({
             [elementoState]: bool
         })
     }
 
     handleFechaDeTransaccion = (e) => {
-        this.setState({ 
+        this.setState({
             [e.target.name]: e.target.value
-         });
+        });
     }
 
     render() {
         return (
             <>
-                
+
                 <PersonaForm
                     onChange={this.handleChange}
                     FrmValidaPersona={this.state.FrmValidaPersona}
@@ -839,7 +859,7 @@ class RegistroDePersonal extends Component {
                     ChangeFechaBautismoInvalida={this.ChangeFechaBautismoInvalida}
                     handleFechaDeTransaccion={this.handleFechaDeTransaccion}
                     FechaTransaccionHistorica={this.state.FechaTransaccionHistorica}
-                /> 
+                />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>
                     {/* <ModalHeader>

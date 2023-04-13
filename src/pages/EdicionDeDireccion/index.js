@@ -21,6 +21,8 @@ class EdicionDeDireccion extends Component {
             boolHabilitaEdicion: false,
             modalShow: false,
             mensajeDelProceso: "",
+            boolNvoEstado: false,
+            usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
         }
     }
 
@@ -29,15 +31,16 @@ class EdicionDeDireccion extends Component {
             ...this.state.domicilio,
             domicilio: {
                 hd_Id_Hogar: 0,
+                hd_Tipo_Subdivision: "COL.",
+                pais_Id_Pais: "0",
                 hd_Calle: "",
                 hd_Numero_Exterior: "",
                 hd_Numero_Interior: "",
-                hd_Tipo_Subdivision: "COL",
                 hd_Subdivision: "",
                 hd_Localidad: "",
                 hd_Municipio_Ciudad: "",
                 est_Id_Estado: "0",
-                pais_Id_Pais: "0",
+                hd_CP: "",
                 hd_Telefono: "",
                 nvoEstado: ""
             }
@@ -48,53 +51,55 @@ class EdicionDeDireccion extends Component {
     getListaHogares = async () => {
         await helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
-                this.setState({ listaDomicilios: res.data.domicilios.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    listaDomicilios: res.data.domicilios.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) })
+                        // names must be equal
+                        return 0;
+                    })
+                })
 
             })
-            
+
     }
 
-    handle_HogarSeleccionado = async (e) => {
+    handle_HogarSeleccionado = async (e) => { //Al seleccionar el Hogar que se desea Editar
         this.setState({
             [e.target.name]: e.target.value
         })
-        if (e.target.value !== "0") {
+        if (e.target.value !== "0") { //Si el Hogar_Id es diferente de Cero, filtra la Lista y graba en "selección" la lista con el Hogar seleccionado.
             let seleccion = this.state.listaDomicilios.filter((obj) => {
                 return obj.hd_Id_Hogar === parseInt(e.target.value)
             })
-            console.log("seleccion inicial:", seleccion);
             seleccion[0].usu_Id_Usuario = this.infoSesion.pem_Id_Ministro
-            console.log("seleccion final:", seleccion);
-            this.setState({ domicilio: seleccion[0] })
-            
+            this.setState({ domicilio: seleccion[0] }) //Coloca en la Variable de Estado 'domicilio' el Hogar Seleccionado.
+            console.log("CargaDirección: ", seleccion[0])
         }
-        else {
+        else { //Si el Hogar= Cero, resetea todas los campos del objeto 'domicilio', significa que deseleccionó el Select "hogarSeleccionado"
             this.setState({
                 ...this.state.domicilio,
-                domicilio: { 
+                domicilio: {
                     hd_Id_Hogar: 0,
                     hd_Calle: "",
                     hd_Numero_Exterior: "",
                     hd_Numero_Interior: "",
-                    hd_Tipo_Subdivision: "COL",
+                    hd_Tipo_Subdivision: "COL.",
                     hd_Subdivision: "",
                     hd_Localidad: "",
                     hd_Municipio_Ciudad: "",
                     est_Id_Estado: "0",
                     pais_Id_Pais: "0",
-                    hd_Telefono: ""
+                    hd_CP: "",
+                    hd_Telefono: "",
+                    nvoEstado: ""
                 },
                 boolHabilitaEdicion: false
             })
@@ -102,28 +107,56 @@ class EdicionDeDireccion extends Component {
     }
 
     onChangeDomicilio = async (e) => {
+        //console.log("input: ", e.target.name, e.target.value.toUpperCase())
         this.setState({
             domicilio: {
                 ...this.state.domicilio,
                 [e.target.name]: e.target.value.toUpperCase()
             }
         })
-        if (e.target.name === "pais_Id_Pais") {
+
+        if (e.target.name === "pais_Id_Pais") { //Si el campo que edita es País, manda traer los Estados de ese País.
             await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
                 .then(res => {
                     let contador = 0;
                     res.data.estados.forEach(estado => {
                         contador = contador + 1;
                     });
-                    if (contador > 0) {
+
+                    if (contador > 0) { //Si detecta que hay Estados para ese País, resetea el campo Estado para que elija un Estado nuevo.
                         this.setState({
+                            boolNvoEstado: false,
                             domicilio: {
                                 ...this.state.domicilio,
-                                est_Id_Estado: "0"
+                                est_Id_Estado: "0",
                             }
                         })
                     }
                 })
+        }
+    }
+
+
+    handleChangeEstado = (e) => {
+        //console.log("Estado: ", e.target.name, e.target.value)
+        if (e.target.value === "999") { //Si selecciona 'OTRO ESTADO'
+            this.setState({
+                boolNvoEstado: true,
+                domicilio: {
+                    ...this.state.domicilio,
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+        else { //Si se selecciona un Estado con Id valido
+            this.setState({
+                boolNvoEstado: false,
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: e.target.value
+                }
+            })
         }
     }
 
@@ -139,12 +172,13 @@ class EdicionDeDireccion extends Component {
                 hd_Calle: "",
                 hd_Numero_Exterior: "",
                 hd_Numero_Interior: "",
-                hd_Tipo_Subdivision: "COL",
+                hd_Tipo_Subdivision: "COL.",
                 hd_Subdivision: "",
                 hd_Localidad: "",
                 hd_Municipio_Ciudad: "",
                 est_Id_Estado: "0",
                 pais_Id_Pais: "0",
+                hd_CP: "",
                 hd_Telefono: ""
             },
             hogarSeleccionado: "0",
@@ -153,12 +187,13 @@ class EdicionDeDireccion extends Component {
     }
 
     guardarEdicion = async (e) => {
+
         e.preventDefault();
-        if (this.state.domicilio.est_Id_Estado === "0") {
-            if (this.state.domicilio.nvoEstado === "" || this.state.domicilio.nvoEstado === undefined) {
-                alert("Error:\nEl pais seleccionado no tiene estados relacionados, por lo tanto, debe ingresar un nombre de estado.")
+        if (this.state.domicilio.est_Id_Estado === "0") {//Si el Estado_Id = Cero, indica que no seleccionó Estado aun. 
+            if (this.state.domicilio.nvoEstado === "" || this.state.domicilio.nvoEstado === undefined) { //Si el País no tiene registrado algun Estado.
+                alert("Error:\nEl País seleccionado no tiene Estados relacionados, por lo tanto, debe ingresar un nombre de Estado.")
             }
-            else {
+            else { //Si nvoEstado trae algun Estado nuevo para Registrar, lo manda grabar
                 try {
                     await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
                         .then(res => {
@@ -168,7 +203,7 @@ class EdicionDeDireccion extends Component {
                                     est_Id_Estado: res.data.estado.est_Id_Estado
                                 }
                             })
-                            helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+                            helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                                 .then(res => {
                                     if (res.data.status === "success") {
                                         // alert(res.data.mensaje);
@@ -202,13 +237,16 @@ class EdicionDeDireccion extends Component {
                         })
                 }
                 catch {
-                    alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                    alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 }
             }
         }
-        else {
+        else { //Si seleccionó un País que tenía Estados ya existentes, manda editar con el verbo PUT los nuevos datos del Domicilio.
+            console.log("domicilio: ", this.state.domicilio)
             try {
-                await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}`, this.state.domicilio)
+                //console.log("Datos a API con EstadoId: ", `${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
+                await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
+
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -256,7 +294,7 @@ class EdicionDeDireccion extends Component {
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>
-                                            <h3>Selecciona el Titular del Hogar/Domicilio a editar </h3>
+                                            <h3>Seleccione el Titular del Hogar/Domicilio a editar</h3>
                                         </CardTitle>
                                     </CardHeader>
                                     <CardBody>
@@ -276,7 +314,7 @@ class EdicionDeDireccion extends Component {
                                                         {this.state.listaDomicilios.map((domicilio) => {
                                                             return (
                                                                 <option key={domicilio.hd_Id_Hogar} value={domicilio.hd_Id_Hogar}>
-                                                                    {`${domicilio.per_Nombre} ${domicilio.per_Apellido_Paterno} ${domicilio.per_Apellido_Materno?domicilio.per_Apellido_Materno:""}`}
+                                                                    {`${domicilio.per_Nombre} ${domicilio.per_Apellido_Paterno} ${domicilio.per_Apellido_Materno ? domicilio.per_Apellido_Materno : ""}`}
                                                                 </option>
                                                             )
                                                         })
@@ -297,7 +335,7 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Calle</Label>
+                                                            <Label>Calle *</Label>
                                                         </Col>
                                                         <Col xs="4">
                                                             <Input
@@ -307,7 +345,7 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Numero exterior</Label>
+                                                            <Label>Número Exterior</Label>
                                                         </Col>
                                                         <Col xs="4">
                                                             <Input
@@ -317,7 +355,7 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Numero interior</Label>
+                                                            <Label>Número Interior</Label>
                                                         </Col>
                                                     </Row>
                                                 </FormGroup>
@@ -331,21 +369,21 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             >
-                                                                <option value="COL">COLONIA</option>
-                                                                <option value="FRACC">FRACC</option>
-                                                                <option value="EJ">EJIDO</option>
-                                                                <option value="SUBDIV">SUBDIV</option>
-                                                                <option value="BRGY">BRGY</option>
+                                                                <option value="COL.">COLONIA</option>
+                                                                <option value="FRACC.">FRACC</option>
+                                                                <option value="EJ.">EJIDO</option>
+                                                                <option value="SUBDIV.">SUBDIV</option>
+                                                                <option value="BRGY.">BRGY</option>
                                                                 <option value="RANCHO">RANCHO</option>
                                                                 <option value="MANZANA">MANZANA</option>
                                                                 <option value="RESIDENCIAL">RESIDENCIAL</option>
                                                                 <option value="SECTOR">SECTOR</option>
-                                                                <option value="SECCIÓN">SECCIÓN</option>
+                                                                <option value="SECC.">SECCIÓN</option>
                                                                 <option value="UNIDAD">UNIDAD</option>
                                                                 <option value="BARRIO">BARRIO</option>
                                                                 <option value="ZONA">ZONA</option>
                                                             </Input>
-                                                            <Label>Tipo subdivision</Label>
+                                                            <Label>Tipo de Asentamiento</Label>
                                                         </Col>
                                                         <Col xs="4">
                                                             <Input
@@ -355,7 +393,7 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Subdivision</Label>
+                                                            <Label>Nombre del Asentamiento</Label>
                                                         </Col>
                                                         <Col xs="4">
                                                             <Input
@@ -365,7 +403,7 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Localidad</Label>
+                                                            <Label>Localidad/Poblado</Label>
                                                         </Col>
                                                     </Row>
                                                 </FormGroup>
@@ -379,17 +417,18 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Municipio/Cuidad</Label>
+                                                            <Label>Municipio/Ciudad *</Label>
                                                         </Col>
-                                                        <PaisEstado
-                                                            domicilio={this.state.domicilio}
-                                                            onChangeDomicilio={this.onChangeDomicilio}
-                                                            readOnly={this.state.boolHabilitaEdicion}
-                                                        />
-                                                    </Row>
-                                                </FormGroup>
-                                                <FormGroup>
-                                                    <Row>
+                                                        <Col xs="4">
+                                                            <Input
+                                                                type="text"
+                                                                name="hd_CP"
+                                                                value={this.state.domicilio.hd_CP}
+                                                                onChange={this.onChangeDomicilio}
+                                                                readOnly={this.state.boolHabilitaEdicion}
+                                                            />
+                                                            <Label>Código Postal</Label>
+                                                        </Col>
                                                         <Col xs="4">
                                                             <Input
                                                                 type="text"
@@ -398,7 +437,7 @@ class EdicionDeDireccion extends Component {
                                                                 onChange={this.onChangeDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
-                                                            <Label>Telefono</Label>
+                                                            <Label>Teléfono de Casa</Label>
                                                         </Col>
                                                         {/* <Col xs="4">
                                                             <Input
@@ -409,6 +448,17 @@ class EdicionDeDireccion extends Component {
                                                             />
                                                             <Label>Activo</Label>
                                                         </Col> */}
+                                                    </Row>
+                                                </FormGroup>
+                                                <FormGroup>
+                                                    <Row>
+                                                        <PaisEstado
+                                                            domicilio={this.state.domicilio}
+                                                            onChangeDomicilio={this.onChangeDomicilio}
+                                                            boolNvoEstado={this.state.boolNvoEstado}
+                                                            handleChangeEstado={this.handleChangeEstado}
+                                                            readOnly={this.state.boolHabilitaEdicion}
+                                                        />
                                                     </Row>
                                                 </FormGroup>
                                             </React.Fragment>

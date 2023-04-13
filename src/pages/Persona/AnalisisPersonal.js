@@ -6,6 +6,8 @@ import {
 } from 'reactstrap';
 import Layout from '../Layout';
 import './style.css'
+import moment from 'moment/min/moment-with-locales';
+import 'moment/dist/locale/es'
 
 class AnalisisPersonal extends Component {
 
@@ -56,6 +58,10 @@ class AnalisisPersonal extends Component {
             })
     }
 
+
+
+
+
     render() {
 
         return (
@@ -79,11 +85,14 @@ class AnalisisPersonal extends Component {
                         </Row>
                         <Row>
                             <Col className="negrita" xs="1">Nombre:</Col>
-                            <Col xs="7" className="border border-dark">
+                            <Col xs="3" className="border border-dark">
                                 {this.objPersona.persona.per_Nombre}
                                 {this.objPersona.persona.per_Apellido_Paterno}
                                 {this.objPersona.persona.per_Apellido_Materno}
                             </Col>
+                            <Col className="negrita" xs="1"></Col>
+                            <Col className="negrita" xs="1">F. Nacim.:</Col>
+                            <Col xs="2" className="border border-dark"> {String(moment(this.objPersona.persona.per_Fecha_Nacimiento).format("LL"))} </Col>
                             <Col className="negrita campoVivo" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -104,8 +113,8 @@ class AnalisisPersonal extends Component {
                             <Col className="negrita" xs="1">Grupo:</Col>
                             <Col xs="2" className="border border-dark"> {this.bautizado.toUpperCase()} </Col>
                             <Col className="negrita" xs="2"></Col>
-                            <Col className="negrita" xs="1">Categoria:</Col>
-                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Categoria} </Col>
+                            <Col className="negrita" xs="1">Edad:</Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.edad} </Col>
                             <Col className="negrita" xs="1">
                                 {this.objPersona.persona.per_Activo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -121,8 +130,9 @@ class AnalisisPersonal extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <Col className="negrita" xs="1">Edad:</Col>
-                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.edad} </Col>
+                            <Col className="negrita" xs="1">Categoría:</Col>
+                            <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Categoria} </Col>
+
                             <Col className="negrita" xs="2"></Col>
                             <Col className="negrita" xs="1">Est. Civil:</Col>
                             <Col xs="2" className="border border-dark"> {this.objPersona.persona.per_Estado_Civil} </Col>

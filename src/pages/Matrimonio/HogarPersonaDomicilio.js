@@ -142,7 +142,7 @@ class Domicilio extends React.Component {
                                             <option value="BARRIO">BARRIO</option>
                                             <option value="ZONA">ZONA</option>
                                         </select>
-                                        <label>Tipo subdivision</label>
+                                        <label>Tipo de Asentamiento</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -152,7 +152,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Subdivision}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Subdivision</label>
+                                        <label>Nombre del Asentamiento</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -179,28 +179,39 @@ class Domicilio extends React.Component {
                                         />
                                         <label>Municipio/Cuidad *</label>
                                     </div>
-                                    <PaisEstado
-                                        domicilio={domicilio}
-                                        onChangeDomicilio={onChangeDomicilio}
-                                        boolNvoEstado={boolNvoEstado}
-                                        handleChangeEstado={handleChangeEstado}
-                                    />
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
+                                            name="hd_CP"
+                                            className="form-control"
+                                            value={domicilio.hd_CP}
+                                            onChange={onChangeDomicilio}
+                                        />
+                                        <label>Código Postal</label>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
+                                            name="hd_Telefono"
+                                            className="form-control"
+                                            value={domicilio.hd_Telefono}
+                                            onChange={onChangeDomicilio}
+                                        />
+                                        <label>Telefono</label>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
 
                         <div className="form-group">
                             <div className="row">
-                                <div className="col-sm-4">
-                                    <input
-                                        type="text"
-                                        name="hd_Telefono"
-                                        className="form-control"
-                                        value={domicilio.hd_Telefono}
-                                        onChange={onChangeDomicilio}
-                                    />
-                                    <label>Telefono</label>
-                                </div>
+                                <PaisEstado
+                                    domicilio={domicilio}
+                                    onChangeDomicilio={onChangeDomicilio}
+                                    boolNvoEstado={boolNvoEstado}
+                                    handleChangeEstado={handleChangeEstado}
+                                />
                             </div>
                         </div>
                     </React.Fragment>

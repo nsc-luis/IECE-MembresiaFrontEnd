@@ -13,6 +13,7 @@ import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
 
 moment.locale('es')
 
@@ -172,7 +173,9 @@ class RptListaDeHogares extends Component {
                         Nombre: miembro.nombre,
                         Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
                         Edad: miembro.edad,
+                        Bautismo: moment(miembro.bautismo).format('D/MMM/YYYY'),
                         Celular: miembro.cel ? miembro.cel : "-"
+
                     })
 
                     data2.push({
@@ -181,6 +184,7 @@ class RptListaDeHogares extends Component {
                         Nombre: String(miembros[i].Nombre),
                         Nacimiento: (miembros[i].Nacimiento),
                         Edad: String(miembros[i].Edad),
+                        Bautismo: (miembros[i].Bautismo) ? (miembros[i].Bautismo) : " ",
                         Celular: String(miembros[i].Celular),
                         Tel_Casa: (conteo === 0) ? String(hogar.tel ? hogar.tel : "-") : " ",
                         Domicilio: (conteo === 0) ? String(hogar.direccion) : " ",
@@ -259,19 +263,45 @@ class RptListaDeHogares extends Component {
             doc.text(`DISTRITO ${this.state.infoDistrito.dis_Numero}, ${this.state.infoDistrito.dis_Alias}`, 165, 17, { align: 'center' })
             doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 165, 22, { align: 'center' });
         }
-
+        yAxis = 28;
         const headers = [
-            'Indice',
+            'Hogar',
             'Grupo',
             'Nombre',
             'Nacimiento',
             'Edad',
+            'Bautismo',
             'Celular',
             'Tel_Casa',
             'Domicilio',
         ]
+        console.log(this.state.listaArreglada);
+        let listaUnida = []
+        this.state.listaArreglada.forEach(per => {
+            //console.log(per);
+            //console.log(Object.values(per))
+            listaUnida.push(Object.values(per))
+            return listaUnida
+        })
+        //doc.table(10, 35, this.state.listaArreglada, headers, { autoSize: true, fontSize: 8, padding: 1, margins: { left: 0, top: 10, bottom: 10, width: 0 } })
 
-        doc.table(10, 35, this.state.listaArreglada, headers, { autoSize: true, fontSize: 8, padding: 1, margins: { left: 0, top: 10, bottom: 10, width: 0 } })
+        console.log({ listaUnida });
+        autoTable(doc,
+            {
+                head: [headers],
+                body: listaUnida,
+                theme: "plain",
+                startY: yAxis,
+                margin: { left: 10 },
+                styles: {
+                    lineColor: [44, 62, 80],
+                    lineWidth: .1,
+                },
+                headStyles: { fillColor: [196, 229, 252], halign: "center" },
+                bodyStyles: { fontSize: 6 },
+            })
+        //yAxis += data.length * 8
+        yAxis = doc.previousAutoTable.finalY;
 
         doc.setFontSize(8);
 
@@ -281,8 +311,7 @@ class RptListaDeHogares extends Component {
             yAxis = 0
         }
 
-
-        yAxis = 35 + this.state.listaArreglada.length * 8 + 9
+        //yAxis = 35 + this.state.listaArreglada.length * 8 + 9
 
         doc.text(`JUSTICIA Y VERDAD`, 120, yAxis);
         yAxis += 5;
@@ -301,6 +330,8 @@ class RptListaDeHogares extends Component {
 
         doc.save("ReporteHogares.pdf");
     }
+
+
     render() {
         let lista;
         let i = 1;
@@ -368,15 +399,16 @@ class RptListaDeHogares extends Component {
                         <div id="infoListaHogares">
                             <br></br>
                             <Row>
-                                <Table id='table1' className="table table-sm table-bordered" data-cols-width="10,10,30,15,8,15,15,50">
+                                <Table id='table1' className="table table-sm table-bordered" data-cols-width="5,7,35,15,6,15,15,15,50" >
                                     <thead>
                                         <tr align="center" >
-                                            <th width="5">Indice</th>
+                                            <th width="5%">Hogar</th>
                                             <th width="3.5%">Grupo</th>
-                                            <th width="26%">Nombre</th>
+                                            <th width="21.5%">Nombre</th>
                                             <th width="7%">Nacimiento</th>
                                             <th width="3%">Edad</th>
-                                            <th width="15%">Celular</th>
+                                            <th width="7%">Bautismo</th>
+                                            <th width="10%">Celular</th>
                                             <th width="10%">Tel. Casa</th>
                                             <th width="33%">Domicilio</th>
                                         </tr>
@@ -410,6 +442,7 @@ class RptListaDeHogares extends Component {
                                                             <td >{hogar.Nombre}</td>
                                                             <td >{hogar.Nacimiento}</td>
                                                             <td align="center">{hogar.Edad}</td>
+                                                            <td align="center">{hogar.Bautismo}</td>
                                                             <td >{hogar.Celular}</td>
                                                             <td >{hogar.Tel_Casa}</td>
                                                             <td >{hogar.Domicilio}</td>

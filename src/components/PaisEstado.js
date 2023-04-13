@@ -52,16 +52,17 @@ class PaisEstado extends React.Component {
     };
 
     render() {
-
-        const { 
-            domicilio, 
-            onChangeDomicilio, 
+        console.log("DomicilioPE: ", this.props.domicilio)
+        const {
+            domicilio,
+            onChangeDomicilio,
             boolNvoEstado,
             handleChangeEstado
         } = this.props
-        const handle_pais_Id_Pais = (e) => {
-            this.getEstados(e.target.value)
-            onChangeDomicilio(e)
+
+        const handle_pais_Id_Pais = (e) => {// Cuando cambia el País
+            this.getEstados(e.target.value) //Trae los Estados disponibles
+            onChangeDomicilio(e) //Pasa los datos del evento a la función Origen
         }
 
         return (
@@ -73,7 +74,7 @@ class PaisEstado extends React.Component {
                         onChange={handle_pais_Id_Pais}
                         value={domicilio.pais_Id_Pais}
                     >
-                        <option value="0">Selecciona un pais</option>
+                        <option value="0">Seleccione un País</option>
                         {
                             this.state.paises.map((pais) => {
                                 return (
@@ -91,7 +92,7 @@ class PaisEstado extends React.Component {
                         value={domicilio.est_Id_Estado}
                         onChange={handleChangeEstado}
                     >
-                        <option value="0">Selecciona un estado</option>
+                        <option value="0">Seleccione un Estado</option>
                         {
                             this.state.estados.map((estado) => {
                                 return (
@@ -99,7 +100,7 @@ class PaisEstado extends React.Component {
                                 )
                             })
                         }
-                        <option value="999">Otro estado</option>
+                        <option value="999">Otro Estado</option>
                     </select>
                     <label>Estado/Provincia *</label>
                 </div>
@@ -113,7 +114,7 @@ class PaisEstado extends React.Component {
                             value={domicilio.nvoEstado}
                             onChange={onChangeDomicilio}
                         />
-                        <label>Otro estado *</label>
+                        <label>Nuevo Estado *</label>
                     </div>
                 }
             </React.Fragment>

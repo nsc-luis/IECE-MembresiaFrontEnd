@@ -88,7 +88,7 @@ class Domicilio extends React.Component {
                                     <option value="0">Nuevo hogar / Domicilio</option>
                                 }
                                 {!habilitaPerBautizado &&
-                                    <option value="0">Selecciona un hogar</option>
+                                    <option value="0">Selecciona un Hogar</option>
                                 }
                                 {
                                     this.state.ListaHogares.map((h) => {
@@ -111,7 +111,7 @@ class Domicilio extends React.Component {
                             <h5>ATENCIÓN: </h5>
                             <ul>
                                 <li>Debe establecer una jerarquía para la persona que está registrando, siendo la jerarquía 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia que esté entre la jerarquía 1 y la mas baja registrada.</li>
+                                <li>Sólo puede seleccionar una jerarquia que esté entre la jerarquía 1 y la mas baja registrada.</li>
                                 {/* <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquía mas baja a la establecida.</li> */}
                             </ul>
                         </div>
@@ -190,7 +190,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Exterior}
                                         onChange={onChangeDomicilio}
                                     />
-                                    <label>Número exterior</label>
+                                    <label>Número Exterior</label>
                                 </div>
                                 <div className="col-sm-4">
                                     <input
@@ -200,7 +200,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Interior}
                                         onChange={onChangeDomicilio}
                                     />
-                                    <label>Número interior</label>
+                                    <label>Número Interior</label>
                                 </div>
                             </div>
                             <div className="form-group">
@@ -216,7 +216,7 @@ class Domicilio extends React.Component {
                                             <option value="FRACC.">FRACCIONAMIENTO</option>
                                             <option value="EJ.">EJIDO</option>
                                             <option value="SUBDIV.">SUBDIVICIÓN</option>
-                                            <option value="BRGY">BRGY</option>
+                                            <option value="BRGY.">BRGY</option>
                                             <option value="RANCHO">RANCHO</option>
                                             <option value="MANZANA">MANZANA</option>
                                             <option value="RESIDENCIAL">RESIDENCIAL</option>
@@ -226,7 +226,7 @@ class Domicilio extends React.Component {
                                             <option value="BARRIO">BARRIO</option>
                                             <option value="ZONA">ZONA</option>
                                         </select>
-                                        <label>Tipo Subdivisión</label>
+                                        <label>Tipo de Asentamiento</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -236,7 +236,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Subdivision}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Nombre de Subdivisión</label>
+                                        <label>Nombre del Asentamiento</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -266,6 +266,16 @@ class Domicilio extends React.Component {
                                     <div className="col-sm-4">
                                         <input
                                             type="text"
+                                            name="hd_CP"
+                                            className="form-control"
+                                            value={domicilio.hd_CP}
+                                            onChange={onChangeDomicilio}
+                                        />
+                                        <label>Código Postal</label>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
                                             name="hd_Telefono"
                                             className="form-control"
                                             value={domicilio.hd_Telefono}
@@ -273,6 +283,7 @@ class Domicilio extends React.Component {
                                         />
                                         <label>Teléfono de Casa</label>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

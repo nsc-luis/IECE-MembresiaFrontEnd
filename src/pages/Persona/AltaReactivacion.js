@@ -44,6 +44,8 @@ class AltaRestitucion extends Component {
                 pais_Id_Pais: "0",
                 hd_Calle: "",
                 hd_Localidad: "",
+                est_Id_Estado: "0",
+                hd_CP: "",
                 hd_Numero_Exterior: "",
                 usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                 hd_Activo: true,
@@ -57,7 +59,7 @@ class AltaRestitucion extends Component {
         })
         this.personaParaRestitucion();
     }
-    
+
     //Trae datos del Hogar, Domicilio, Integrantes del Hogar de una Persona.
     fnGetDatosDelHogar = async (id) => {
         if (id !== "0") {
@@ -211,29 +213,31 @@ class AltaRestitucion extends Component {
     personaParaRestitucion = async () => {// Trae a las personas que estan Inactivas y Excomulgadas del sector y Aquellas excomulgadas pero con VisibilidadAbierta de otro Lugar
         await helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${localStorage.getItem('sector')}/false`)
             .then(res => {
-                this.setState({ personaParaRestitucion: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personaParaRestitucion: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) })
+                        // names must be equal
+                        return 0;
+                    })
+                })
             });
     }
 
     onChange = (e) => {// Al Cambiar cualquier Input del Formulario (Id_Persona, Categoria, Comentario y Fecha )
-        
+
         this.setState({//Cambia el estado de cada variable del Formulario que conformará el Objeto a enviar por API
             [e.target.name]: e.target.value.toUpperCase()
         })
 
-         //Si el Input es el de la Persona
+        //Si el Input es el de la Persona
         if (e.target.name === "per_Id_Persona" && e.target.value !== "0") {
             //Si se Restituirá al Mismo Hogar trae los datos de la Persona
             if (this.state.mismoHogar) {
@@ -290,9 +294,9 @@ class AltaRestitucion extends Component {
         })
         //Guarda en variables los datos de los Inputs.
         let perIdPersonaInvalida = this.state.per_Id_Persona === "0" ? true : false;
-        let perCategoriaInvalida =  this.state.per_Categoria === "0" ? true : false;
+        let perCategoriaInvalida = this.state.per_Categoria === "0" ? true : false;
         let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
-        
+
         //Si algunos de los 3 inputs obligatorios está vacío se cancela Transacción
         if (perIdPersonaInvalida ||
             perCategoriaInvalida ||
@@ -326,7 +330,7 @@ class AltaRestitucion extends Component {
                     comentario: this.state.comentario,
                     fecha: this.state.fechaTransaccion,
                     idMinistro: this.infoSesion.pem_Id_Ministro,
-                    jerarquia : this.state.hogar.hp_Jerarquia,
+                    jerarquia: this.state.hogar.hp_Jerarquia,
                     sec_Id_Sector: localStorage.getItem("sector"),
                     ct_Codigo_Transaccion: 12004,
                     IdDomicilio: this.state.hogar.hd_Id_Hogar
