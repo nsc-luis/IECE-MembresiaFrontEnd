@@ -398,7 +398,6 @@ class ReporteTransacciones extends Component {
                 });
             })
     }
-<<<<<<< HEAD
     showModal = () => {
         this.setState({ modal: !this.state.modal })
     }
@@ -478,16 +477,10 @@ class ReporteTransacciones extends Component {
                 alert(err);
             })
     }
-=======
-
-
-
->>>>>>> c68f7a91d8f43bfc38edddf5168af909cf9d3057
     render() {
         return (
             <>
                 <Container fluid>
-<<<<<<< HEAD
                     <Button
                         className="btn-danger m-3"
                         onClick={this.ReporteTransaccionesToPDF}
@@ -495,9 +488,6 @@ class ReporteTransacciones extends Component {
                         <span className="fas fa-file-pdf mr-2"></span>
                         Descargar PDF
                     </Button>
-=======
-                    <Button className="btn-success m-3 " onClick={this.downloadTable} ><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
->>>>>>> c68f7a91d8f43bfc38edddf5168af909cf9d3057
                     {/* <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button> */}
                     {/* TABLA */}
                     <Card body id="pdf">
