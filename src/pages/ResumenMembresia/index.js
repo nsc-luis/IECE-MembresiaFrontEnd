@@ -171,7 +171,11 @@ class ResumenMembresia extends Component {
 
             await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
                 .then(res => {
-                    this.setState({ hogares: res.data.domicilios });
+                    let contador = 0;
+                    res.data.domicilios.forEach(element => {
+                        contador = contador + 1;
+                    });
+                    this.setState({ hogares: contador });
                 })
         }
     }
@@ -538,7 +542,7 @@ class ResumenMembresia extends Component {
 
                         <Row className="card p-2 m-0">
                             <Col xs="12" className='negrita totalesTitulos text-right'>
-                                Número de Hogares: <u>  &nbsp;{this.state.hogares.length}&nbsp;  </u>
+                                Número de Hogares: <u>  &nbsp;{this.state.hogares}&nbsp;  </u>
                             </Col>
                         </Row>
                     </FormGroup>

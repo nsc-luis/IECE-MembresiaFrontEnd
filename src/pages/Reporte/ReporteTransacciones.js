@@ -138,7 +138,7 @@ class ReporteTransacciones extends Component {
             },
             fechaInicialInvalid: false,
             fechaFinalInvalid: false,
-            hogares: [],
+            hogares: 0,
             registros: [],
             sector: {},
             modal: false
@@ -157,6 +157,14 @@ class ReporteTransacciones extends Component {
         helpers.authAxios.get(`/Sector/${localStorage.getItem("sector")}`)
             .then(res => {
                 this.setState({ sector: res.data.sector[0] })
+            })
+        helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
+            .then(res => {
+                let contador = 0;
+                res.data.domicilios.forEach(element => {
+                    contador = contador + 1;
+                });
+                this.setState({ hogares: contador });
             })
     }
 
@@ -310,10 +318,6 @@ class ReporteTransacciones extends Component {
             }
         }
 
-        await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
-            .then(res => {
-                this.setState({ hogares: res.data.domicilios });
-            })
         await helpers.authAxios.get(`/Persona/GetBySector/${localStorage.getItem("sector")}`)
             .then(res => {
                 let personas = {
@@ -445,7 +449,7 @@ class ReporteTransacciones extends Component {
             "TotalAltasNoBautizados": this.state.infoOrganizada.TotalAltasNoBautizados,
             "TotalBajasBautizados": this.state.infoOrganizada.TotalBajasBautizados,
             "TotalBajasNoBautizados": this.state.infoOrganizada.TotalBajasNoBautizados,
-            "NoDeHogares": this.state.hogares.length,
+            "NoDeHogares": this.state.hogares,
             "Secretario": "",
             "Ministro": JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre,
             "Transacciones": transacciones
@@ -642,7 +646,7 @@ class ReporteTransacciones extends Component {
                                                     <td colSpan="2">Presentaciones de Niños</td>
                                                     <td colSpan="2"><u className="font-weight-normal">{this.state.infoOrganizada.Presentaciones.contador}</u></td>
                                                     <td colSpan="2">No. de Hogares</td>
-                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.hogares.length}</u></td>
+                                                    <td colSpan="2"><u className="font-weight-normal">{this.state.hogares}</u></td>
                                                 </tr>
                                                 <tr className="text-center font-weight-bold categoriasReportes">
                                                     <td colSpan="8">DESGLOSE DE MEMBRESÍA ACTUAL</td>
