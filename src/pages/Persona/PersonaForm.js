@@ -246,7 +246,7 @@ class PersonaForm extends Component {
             })
         }
 
-        this.fnGetDatosDelHogar(idHogar);
+        this.fnGetDatosDelHogar(idHogar);//Pone en variables de Estado los datos de los Mimebros del hogar seleccionado y del Domicilio
     }
 
     handle_hp_Jerarquia = (e) => {

@@ -7,8 +7,12 @@ import {
 } from 'reactstrap';
 import HogarPersonaDomicilio from '../Persona/HogarPersonaDomicilio';
 import './style.css';
+import axios from 'axios';
 
 class RevinculaDomicilio extends Component {
+
+    url = helpers.url_api;
+    fechaNoIngresada = "";
 
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     constructor(props) {
@@ -23,7 +27,9 @@ class RevinculaDomicilio extends Component {
             personaSeleccionada: "0",
             modalShow: false,
             mensajeDelProceso: "",
-            habilitaPerBautizado: true
+            habilitaPerBautizado: true,
+            direccion: "",
+            boolNvoEstado: false,
         }
     }
 
@@ -43,8 +49,9 @@ class RevinculaDomicilio extends Component {
                 hd_Numero_Exterior: "",
                 hd_Numero_Interior: "",
                 hd_Subdivision: "",
-                hd_Tipo_Subdivision: "COL",
+                hd_Tipo_Subdivision: "COL.",
                 hd_Telefono: "",
+                hd_CP: "",
                 pais_Id_Pais: "0",
                 nvoEstado: ""
             }
@@ -109,19 +116,32 @@ class RevinculaDomicilio extends Component {
     }
 
     onChangeDomicilio = (e) => {
-        this.setState({
-            domicilio: {
-                ...this.state.domicilio,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
+        if (e.target.name === "pais_Id_Pais") { //Si el campo que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: "0",
+                    pais_Id_Pais: e.target.value.toUpperCase(),
+                },
+                boolNvoEstado: false,
+            })
+        } else {
+
+            this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
+                domicilio: {
+                    ...this.state.domicilio,
+                    [e.target.name]: e.target.value.toUpperCase(),
+                }
+            })
+        }
     }
 
     handle_hd_Id_Hogar = async (e) => {
         let idHogar = e.target.value;
-        this.fnGetDatosDelHogar(idHogar);
-        this.setState({ hd_Id_Hogar: e.target.value });
-        if (idHogar !== "0") {
+
+        //this.setState({ hd_Id_Hogar: e.target.value });
+        if (idHogar !== "0") { //Si se selecciona un Hogar Existente
             await helpers.authAxios.get(helpers.url_api + '/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
                     this.setState({
@@ -137,8 +157,19 @@ class RevinculaDomicilio extends Component {
                     hd_Id_Hogar: idHogar
                 }
             })
+
+            //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
+            let getDireccion = async (id) => {
+                console.log("busca direccion: ", this.url + "/HogarDomicilio/" + id);
+                await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+                    .then(res => {
+                        this.setState({ direccion: res.data.direccion });
+                        console.log("Domicilio: ", res.data.direccion);
+                    });
+            }
+            getDireccion(idHogar);
         }
-        else {
+        else { //Si el id_Hogar es 0, 
             this.setState({
                 hogar: {
                     ...this.state.hogar,
@@ -147,6 +178,8 @@ class RevinculaDomicilio extends Component {
                 }
             })
         }
+
+        this.fnGetDatosDelHogar(idHogar); //Pone en variables de Estado los datos de los Mimebros del hogar seleccionado y del Domicilio
     }
 
     handle_hp_Jerarquia = (e) => {
@@ -158,7 +191,7 @@ class RevinculaDomicilio extends Component {
         })
     }
 
-    handle_personaSeleccionada = (e) => {
+    handle_personaSeleccionada = (e) => { // Guarda en 'personaSeleccionada' el valor del Id_Persona.
         this.setState({ [e.target.name]: e.target.value })
     }
 
@@ -184,9 +217,47 @@ class RevinculaDomicilio extends Component {
         }
     }
 
+    handleChangeEstado = (e) => { //Al cambiar el input est_Id_Estado
+
+        if (e.target.value === "999") { //Si el valor del nuevo estado es 999 significa que elegió 'Otro Estado' porque quiere registrar uno Nuevo
+            this.setState({
+                boolNvoEstado: true,
+                domicilio: {
+                    ...this.state.domicilio,
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+        else { //Si no es 999, significa que eligió un Estadó Existente
+            this.setState({
+                boolNvoEstado: false, //Quita el input de registro de un Nuevo Estado
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: e.target.value
+                }
+            })
+        }
+    }
+
+
+
     GuardaCambioDomicilio = async (e) => {
         e.preventDefault();
-        if (this.state.hogar.hd_Id_Hogar === "0") {
+        if (this.state.personaSeleccionada === "0") {
+            alert("Error: \nSe requiere que seleccione una Persona.");
+            return false;
+        }
+
+        if (this.state.hogar.hd_Id_Hogar === "0"
+            && (this.state.domicilio.pais_Id_Pais === "0"
+                || this.state.domicilio.hd_Calle === ""
+                || this.state.domicilio.hd_Municipio_Ciudad === "")) {
+            alert("Error!. Debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
+            return false;
+        }
+
+        if (this.state.hogar.hd_Id_Hogar === "0") { //Si es un Nuevo Domicilio
             this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais);
             try {
                 await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaNvoHogar/${this.state.personaSeleccionada}/${this.infoSesion.pem_Id_Ministro}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
@@ -222,10 +293,10 @@ class RevinculaDomicilio extends Component {
             }
             catch {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
-                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+
             }
         }
-        else {
+        else { //Si es un Hogar Existente
             try {
                 await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
                     .then(res => {
@@ -259,7 +330,7 @@ class RevinculaDomicilio extends Component {
                     })
             }
             catch {
-                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
             }
         }
@@ -278,7 +349,7 @@ class RevinculaDomicilio extends Component {
                                         <FormGroup>
                                             <Row>
                                                 <Col xs="2">
-                                                    Persona *:
+                                                    Seleccione la Persona que se asignará a Otro Hogar*:
                                                 </Col>
                                                 <Col xs="10">
                                                     <Input
@@ -287,7 +358,7 @@ class RevinculaDomicilio extends Component {
                                                         value={this.state.personaSeleccionada}
                                                         onChange={this.handle_personaSeleccionada}
                                                     >
-                                                        <option value="0">Selecciona una Persona</option>
+                                                        <option value="0">Seleccione una Persona</option>
                                                         {
                                                             this.state.listaPersonas.map((obj) => {
                                                                 return (
@@ -307,7 +378,7 @@ class RevinculaDomicilio extends Component {
                                             <Row>
                                                 <Col xs="12">
                                                     <HogarPersonaDomicilio
-                                                        domicilio={this.state.domicilio}
+                                                        domicilio={this.state.domicilio} //Trae los datos del Domicilio elegido
                                                         onChangeDomicilio={this.onChangeDomicilio}
                                                         handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
                                                         handle_hp_Jerarquia={this.handle_hp_Jerarquia}
@@ -315,8 +386,11 @@ class RevinculaDomicilio extends Component {
                                                         DatosHogarDomicilio={this.state.DatosHogarDomicilio}
                                                         MiembrosDelHogar={this.state.MiembrosDelHogar}
                                                         JerarquiasDisponibles={this.state.JerarquiasDisponibles}
-                                                        listaPersonas={this.state.listaPersonas}
+                                                        listaPersonas={this.state.listaPersonas} //Manda la Lista de Personas que trae la API
                                                         habilitaPerBautizado={this.state.habilitaPerBautizado}
+                                                        direccion={this.state.direccion}
+                                                        handleChangeEstado={this.handleChangeEstado}
+                                                        boolNvoEstado={this.state.boolNvoEstado}
                                                     />
                                                 </Col>
                                             </Row>
