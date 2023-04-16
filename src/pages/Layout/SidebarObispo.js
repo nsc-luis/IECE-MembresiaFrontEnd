@@ -13,7 +13,7 @@ class SidebarObispo extends Component {
         return (
             <React.Fragment>
                 {/* Sidebar */}
-                <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                <ul className="navbar-nav bg-SideBar sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
                     <Link

@@ -1013,7 +1013,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf1}
                                                                             />
-                                                                            <label>Nueva profesión u oficio No.1</label>
+                                                                            <label>Nueva profesión u oficio No.1 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
                                                                     </div>
                                                                 }
@@ -1026,7 +1026,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf2}
                                                                             />
-                                                                            <label>Nueva profesión u oficio No. 2</label>
+                                                                            <label>Nueva profesión u oficio No. 2 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
                                                                     </div>
 
@@ -1042,7 +1042,7 @@ class PersonaForm extends Component {
                                                                             onChange={onChange}
                                                                             className="form-control"
                                                                         />
-                                                                        <label>Foto.      Nota: La foto debe ser Tipo Credencial: De hombros hacia arriba y Mujeres sin velo.</label>
+                                                                        <label>Foto. &nbsp;&nbsp;     &#40;La foto debe ser Tipo Credencial: De hombros hacia arriba y Mujeres sin velo&#41;</label>
                                                                     </div>
                                                                     <div className="col-sm-4 text-center">
                                                                         <img src={foto} alt="Foto Persona" className="fotoFormulario" />

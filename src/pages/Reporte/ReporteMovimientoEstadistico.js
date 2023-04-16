@@ -2,7 +2,7 @@ import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button, Input,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, FormGroup
 } from 'reactstrap';
 
 import React, { Fragment, useEffect, useState } from 'react';
@@ -44,8 +44,8 @@ export default function ReporteMovimientoEstadistico() {
 
     const [excelData, setExcelData] = useState([])
 
-    const [infoDis, setInfoDis] = useState(null)
-    const [infoSec, setInfoSec] = useState(null)
+    const [infoDis, setInfoDis] = useState([])
+    const [infoSec, setInfoSec] = useState([])
     const [infoSecretario, setInfoSecretario] = useState("")
     const [loading, setLoading] = useState(true)
 
@@ -55,7 +55,10 @@ export default function ReporteMovimientoEstadistico() {
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     const [dataGeneral, setDataGeneral] = useState(null)
-
+    const [sectores, setSectores] = useState([])
+    const [lider, setLider] = useState("")
+    const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
+    const [entidadTitulo, setEntidadTitulo] = useState("")
 
 
     //Llamadas en render
@@ -64,42 +67,98 @@ export default function ReporteMovimientoEstadistico() {
         loadData()
     }, [])
 
+    const params = {
+        fechaInicial: startDate,
+        fechaFinal: endDate,
+    }
+
     const loadData = async () => {
         // const codes = [11001, 11002, 11004, 11101, 11102,11103,11105,21001, 21102,23203,31001,31102]
-        const params = {
-            fechaInicial: startDate,
-            fechaFinal: endDate,
-        }
+
         if (sector === null) {
-            params.idSectorDistrito = dto
-            const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
-            orderData(res.data.datos)
-            setExcelData(res.data.datos)
+            getDataDistrito();
             const resDto = await helpers.authAxios.get("/Distrito/" + dto)
-            setInfoDis(resDto.data.dis_Alias)
+            setInfoDis(resDto.data)
+
+            setSectorSeleccionado("todos");
+            setLider("OBISPO")
+            setEntidadTitulo("TODOS LOS SECTORES")
+
             helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 });
+
+            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
+                .then(res => {
+                    setSectores(res.data.sectores)
+                })
         } else {
-            params.idSectorDistrito = sector
-            const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
-            setDataGeneral(res.data.datos)
-            console.log("DatosApi: ", res.data.datos)
-            orderData(res.data.datos)
-            setExcelData(res.data.datos)
+            getDataSector(sector);
             const resDto = await helpers.authAxios.get("/Distrito/" + dto)
-            setInfoDis(resDto.data.dis_Alias)
+            console.log("InfoDis: ", resDto.data);
+            setInfoDis(resDto.data)
             const resSec = await helpers.authAxios.get("/Sector/" + sector)
-            setInfoSec(resSec.data.sector[0].sec_Alias)
+            setInfoSec(resSec.data.sector[0])
+            const sectores = []
+            sectores.push(resSec.data.sector[0])
+
             helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
 
+            setLider("PASTOR")
+            setSectores(sectores);
+            setSectorSeleccionado(sector)
+            setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
         }
     }
 
+    const getDataSector = async (sec) => {
+        params.idSectorDistrito = sec
+        const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
+        setDataGeneral(res.data.datos)
+        console.log("DatosApi: ", res.data.datos)
+        orderData(res.data.datos)
+
+        setExcelData(res.data.datos)
+
+        console.log("res-data-datos: ", res.data.datos);
+
+    }
+
+    const getDataDistrito = async () => {
+        params.idSectorDistrito = dto
+        const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
+        orderData(res.data.datos)
+        setExcelData(res.data.datos)
+    }
+
+    const handle_sectorSeleccionado = async (e) => {
+
+        if (e.target.value !== "todos") {
+
+            getDataSector(e.target.value)
+            setSectorSeleccionado(e.target.value);
+            getTitulo(e.target.value)
+        } else {
+            getDataDistrito();
+            setSectorSeleccionado("todos");
+            setEntidadTitulo("TODOS LOS SECTORES")
+        }
+    }
+
+    const getTitulo = (sector) => {
+        console.log("Sector: ", sectores);
+        sectores.map(sec => {
+
+            if (sec.sec_Id_Sector == sector) {
+                setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
+                //console.log("entidadTitulo: ",sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+            }
+        })
+    }
     const orderData = (trans) => {
         setBautismos(trans.filter(t => t.ct_Codigo_Transaccion === 11001))
         setRestituciones(trans.filter(t => t.ct_Codigo_Transaccion === 11002))
@@ -146,18 +205,6 @@ export default function ReporteMovimientoEstadistico() {
         setEndDate(moment(e.value).format("YYYY-MM-DD"))
     }
 
-
-    // const countPersons = (type) =>{
-    //     let count = 0
-    //     personas.map(persona => {
-    //         if(persona.persona.per_Categoria === type){
-    //             count+=1
-    //         }
-    //     })
-    //     totalCount += count;
-    //     return count
-    // }
-
     const handleDownloadPDF = () => {
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
@@ -170,44 +217,22 @@ export default function ReporteMovimientoEstadistico() {
             'Comentario',
             'Fecha'
         ]
-        // const customTable = (data, label) => {
-        //     if (yAxis > 240) {
-        //         doc.addPage()
-        //         yAxis = 5
-        //     }
-        //     if (data.length > 0) {
-        //         yAxis += 3;
-        //         doc.setFillColor(245, 247, 121) // Codigos de color RGB (red, green, blue)
-        //         doc.rect(10, yAxis, 190, 4, "F");
-        //         doc.setFont("", "", "bold");
-        //         yAxis += 3;
-        //         doc.text(label, 15, yAxis);
 
-        //         yAxis += 3;
-        //         data = data.map((persona, index) => ({
-        //             Indice: (index + 1).toString(),
-        //             Movimiento: persona.ct_Tipo,
-        //             Subtipo: persona.ct_Subtipo,
-        //             Nombre: persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + persona.per_Apellido_Materno,
-        //             Comentario: persona.hte_Comentario === null ? "N/A" : persona.hte_Comentario,
-        //             Fecha: (moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")).toString(),
-        //         }))
-
-        //         doc.table(10, yAxis, data, headers,
-        //             { autoSize: true, fontSize: 8, padding: 1, width: 190 })
-        //         yAxis += data.length * 10
-        //         console.log(yAxis);
-        //     }
-        // }
-
+        doc.setFontSize(14);
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
         doc.text("REPORTE DE MOVIMIENTO ESTADISTICO", 140, 10, { align: "center" });
         doc.setFontSize(8);
-        doc.text(`DISTRITO: ${infoDis}`, 140, 17, { align: "center" })
 
         if (sector) {
-            doc.text(`SECTOR: ${infoSec}`, 140, 24, { align: "center" });
+            doc.text(entidadTitulo, 140, 18, { align: "center" });
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
+        else {
+            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 16, { align: "center" })
+            doc.text(entidadTitulo, 140, 22, { align: "center" })
+            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
+        }
+        doc.line(10, 32, 200, 32);
 
         doc.line(10, 28, 200, 28);
 
@@ -258,6 +283,8 @@ export default function ReporteMovimientoEstadistico() {
             altasHogares, bajasHogares, actualizacionHogar
         )
 
+        console.log("categorias-ordenadas: ", categoriaTodas);
+
         dataUnida(categoriaTodas);
 
         if (yAxis > 230) {
@@ -276,7 +303,7 @@ export default function ReporteMovimientoEstadistico() {
         doc.line(120, yAxis, 180, yAxis);
         yAxis += 3;
         doc.text("SECRETARIO", 51, yAxis);
-        doc.text("PASTOR", 145, yAxis);
+        doc.text(lider, 145, yAxis);
         yAxis -= 5;
         doc.setFont("", "", "bold");
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
@@ -294,23 +321,27 @@ export default function ReporteMovimientoEstadistico() {
         if (data.length > 0) {
             return (
                 <>
-                    <tr className="border" >
-                        <th colSpan={8}><h5>{label}</h5></th>
-                    </tr>
-                    {data.map((persona, index) => (
-                        <tr className="border">
-                            <td width="5%">{index + 1}</td>
-                            <td width="10%">{persona.ct_Tipo}</td>
-                            <td width="15%">{persona.ct_Subtipo}</td>
-                            <td width="25%">{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
-                            <td width="35%">{persona.hte_Comentario}</td>
-                            <td width="10%">{moment(persona.hte_Fecha_Transaccion).format("DD/MMM/YYYY")}</td>
+                    <tbody>
+                        <tr className="border" >
+                            <th colSpan={8}><h5>{label}</h5></th>
                         </tr>
+                    </tbody>
+                    {data.map((persona, index) => (
+                        <tbody>
+                            <tr className="border">
+                                <td width="5%">{index + 1}</td>
+                                <td width="10%">{persona.ct_Tipo}</td>
+                                <td width="15%">{persona.ct_Subtipo}</td>
+                                <td width="25%">{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                <td width="35%">{persona.hte_Comentario}</td>
+                                <td width="10%">{moment(persona.hte_Fecha_Transaccion).format("DD/MMM/YYYY")}</td>
+                            </tr>
+                        </tbody>
                     ))}
                     <tr className="border">
                         <th className="text-right" colSpan="12 mr-3" >Total por {label}: {total} </th>
                     </tr>
-                    <tr> <br></br></tr>
+                    <tr><br></br></tr>
                 </>
             )
         } else {
@@ -319,7 +350,6 @@ export default function ReporteMovimientoEstadistico() {
                     <tr className="border">
                         <th className="text-right mr-3" colSpan="12 ">Total por {label}: {total} </th>
                     </tr>
-                    <tr> </tr>
                 </>
             )
         }
@@ -328,6 +358,46 @@ export default function ReporteMovimientoEstadistico() {
     return (
         <>
             <Container fluid>
+                <FormGroup>
+                    <Row>
+                        <Col xs="5">
+                            <Input
+                                type="select"
+                                name="idDistrito"
+                            >
+                                <option value="1">{`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`}</option>
+                            </Input>
+                        </Col>
+                    </Row>
+                </FormGroup>
+                <FormGroup>
+                    <Row>
+                        <Col xs="5">
+                            <Input
+                                type="select"
+                                name="sectorSeleccionado"
+                                value={sectorSeleccionado}
+                                onChange={handle_sectorSeleccionado}
+                            >
+                                <option value="0">Selecciona un sector</option>
+
+                                {sectores.map(sector => {
+                                    return (
+                                        <React.Fragment key={sector.sec_Id_Sector}>
+                                            <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                        </React.Fragment>
+                                    )
+                                })}
+                                {localStorage.getItem('sector') === null &&
+                                    <React.Fragment>
+                                        <option value="todos">TODOS LOS SECTORES</option>
+                                    </React.Fragment>
+                                }
+                            </Input>
+                        </Col>
+                    </Row>
+                </FormGroup>
+
                 <Button className="btn-success m-3 " onClick={downloadTable}><i className="fas fa-file-excel mr-2"></i>Descargar Excel</Button>
                 <Button className="btn-danger m-3 " onClick={handleDownloadPDF}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
                 {/* TABLA */}
@@ -341,7 +411,7 @@ export default function ReporteMovimientoEstadistico() {
                                 <Col>
                                     REPORTE DE MOVIMIENTO ESTADISTICO PERIÓDICO
 
-                                    {sector ? <h5>Sector: {infoSec}</h5> : <h5>Distrito: {infoDis}</h5>}
+                                    {sector ? <h5>Sector: {infoSec.sec_Alias}</h5> : <h5>Distrito: {infoDis.dis_Alias}</h5>}
                                 </Col>
                             </Row>
                             : ""

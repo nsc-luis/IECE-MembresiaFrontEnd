@@ -173,7 +173,7 @@ class RptListaDeHogares extends Component {
                         Nombre: miembro.nombre,
                         Nacimiento: moment(miembro.nacimiento).format('D/MMM/YYYY'),
                         Edad: miembro.edad,
-                        Bautismo: moment(miembro.bautismo).format('D/MMM/YYYY'),
+                        Bautismo: miembro.bautismo ? (moment(miembro.bautismo).format('D/MMM/YYYY')) : "-",
                         Celular: miembro.cel ? miembro.cel : "-"
 
                     })
