@@ -61,7 +61,10 @@ class ListaDePersonal extends Component {
             habilitaFiltroActivoComunionVivo: '',
             modalInfoHogar: false,
             objPersona: {},
-            direccion: ""
+            direccion: "",
+            modalShow: false,
+            mensajeDelProceso: ""
+
         };
     }
 
@@ -129,13 +132,18 @@ class ListaDePersonal extends Component {
     }
 
     getPersonas = async () => {
+        this.setState({
+            mensajeDelProceso: "Procesando...",
+            modalShow: true
+        })
         if (localStorage.getItem("sector") !== null) {
             await helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         personasTodas: res.data,
                         status: 'success',
-                        tempPersonas: res.data
+                        tempPersonas: res.data,
+                        modalShow: false
                     });
                     this.getActivos();
                 });
@@ -146,7 +154,8 @@ class ListaDePersonal extends Component {
                     this.setState({
                         personasTodas: res.data,
                         status: 'success',
-                        tempPersonas: res.data
+                        tempPersonas: res.data,
+                        modalShow: false
                     });
                     this.getActivos();
                 });
@@ -1145,6 +1154,18 @@ class ListaDePersonal extends Component {
                     }
 
                 </Container>
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    {/* <ModalHeader>
+                        Solo prueba.
+                    </ModalHeader> */}
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                    {/* <ModalFooter>
+                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
+                    </ModalFooter> */}
+                </Modal>
             </>
         )
 
