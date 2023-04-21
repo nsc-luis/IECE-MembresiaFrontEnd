@@ -416,8 +416,108 @@ class ListaDePersonal extends Component {
             alert("Esta opción solo está disponible para Personal Bautizado!")
             return false
         }
+
+        // ELIMINA TEXTO null
+        Object.keys(info.persona).forEach((key) => {
+            info.persona[key] = info.persona[key] === null ? '' : info.persona[key];
+        });
+
+
+        if (info.domicilio.length > 0) {
+            Object.keys(info.domicilio[0]).forEach((key) => {
+                info.domicilio[0][key] = info.domicilio[0][key] === null ? '' : info.domicilio[0][key];
+            });
+        }
+        else {
+            info.domicilio.push({
+                est_Nombre: "",
+                hd_Calle: "Sin información para mostrar. Revíselo con Soporte Técnico.",
+                hd_Localidad: "",
+                hd_Municipio_Ciudad: "",
+                hd_Numero_Exterior: "",
+                hd_Numero_Interior: "",
+                hd_Subdivision: "",
+                hd_Telefono: "Sin información para mostrar. Revíselo con Soporte Técnico.",
+                hd_Tipo_Subdivision: "",
+                pais_Nombre_Corto: ""
+            })
+        }
+
+        await helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
+            .then(res => {
+                if (res.data.status === "success") {
+                    this.setState({
+                        direccion: res.data.direccion
+                    })
+                }
+            })
+
+        var datos = {
+            "NombreCompleto": `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`,
+            "edad": info.persona.edad,
+            "Nacionalidad": info.persona.per_Nacionalidad,
+            "LugarNacimiento": info.persona.per_Lugar_De_Nacimiento,
+            "FechaNacimiento": info.persona.per_Fecha_Nacimiento,
+            "NombreDePadres": `${info.persona.per_Nombre_Padre} ${info.persona.per_Nombre_Madre}`,
+            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno} ${info.persona.per_Nombre_Abuela_Paterno}`,
+            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno} ${info.persona.per_Nombre_Abuela_Materna}`,
+            "EstadoCivil": info.persona.per_Estado_Civil,
+            "FechaBodaCivil": info.persona.per_Fecha_Boda_Civil,
+            "Acta": info.persona.per_Num_Acta_Boda_Civil,
+            "Libro": info.persona.per_Libro_Acta_Boda_Civil,
+            "Oficialia": info.persona.per_Oficialia_Boda_Civil,
+            "RegistroCivil": info.persona.per_Registro_Civil,
+            "FechaBodaEclesiastica": info.persona.per_Fecha_Boda_Eclesiastica,
+            "LugarBodaEclesiastica": info.persona.per_Lugar_Boda_Eclesiastica,
+            "NombreConyugue": info.persona.per_Nombre_Conyuge,
+            "CantidadHijos": info.persona.per_Cantidad_Hijos,
+            "NombreHijos": info.persona.per_Nombre_Hijos,
+            "LugarBautismo": info.persona.per_Lugar_Bautismo,
+            "FechaBautismo": info.persona.per_Fecha_Bautismo,
+            "QuienBautizo": info.persona.per_Ministro_Que_Bautizo,
+            "FechaPromesaEspiritu": info.persona.per_Bajo_Imposicion_De_Manos,
+            "BajoImposicionDeManos": info.persona.per_Bajo_Imposicion_De_Manos,
+            "Puestos": info.persona.per_Cargos_Desempenados,
+            "CambiosDomicilio": info.persona.per_Cambios_De_Domicilio,
+            "Domicilio": this.state.direccion,
+            "Telefonos": `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`,
+            "Oficio1": `${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`,
+            "Oficio2": `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`
+        }
+
+        var request = new Request(
+            `${helpers.url_api}/DocumentosPDF/HojaDatosEstadisticos`,
+            {
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    'Content-Type': 'application/json'
+                },
+                mode: "cors",
+                cache: "default",
+            });
+
+        this.setState({
+            mensajeDelProceso: "Procesando...",
+            modalShow: true
+        })
+
+        fetch(request)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const file = window.URL.createObjectURL(blob);
+                this.setState({
+                    mensajeDelProceso: "",
+                    modalShow: false
+                })
+                window.open(file);
+            })
+            .catch((err) => {
+                alert(err);
+            })
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
-        const doc = new jsPDF("p", "mm", "letter")
+        /* const doc = new jsPDF("p", "mm", "letter")
         doc.lineHeightProportion = 5;
 
 
@@ -666,12 +766,12 @@ class ListaDePersonal extends Component {
             doc.text(`15.- Cambios de domicilio: `, 13, line);
         }
 
-        line = line + renglon;
+        line = line + renglon; */
         /* doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, ${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
         drawUnderlineTotext('16. - Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
         drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 13, `${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line); */
 
-        doc.text(`16. - Domicilio actual: ${this.state.direccion}`, 13, line);
+        /* doc.text(`16. - Domicilio actual: ${this.state.direccion}`, 13, line);
         drawUnderlineTotext('16.- Domicilio actual: ', 13, `${this.state.direccion} `, line);
 
         line = line + renglon;
@@ -703,7 +803,7 @@ class ListaDePersonal extends Component {
             })
         doc.line(120, 250, 180, 250);
         doc.text("LA COMISIÓN", 142, 255);
-        doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`);
+        doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`); */
     }
 
     render() {
