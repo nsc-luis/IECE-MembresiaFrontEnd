@@ -452,7 +452,9 @@ class ListaDePersonal extends Component {
                 }
             })
 
+        let fechaActual = new Date();
         var datos = {
+            "idPersona": info.persona.per_Id_Persona,
             "NombreCompleto": `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`,
             "edad": info.persona.edad,
             "Nacionalidad": info.persona.per_Nacionalidad,
@@ -475,14 +477,23 @@ class ListaDePersonal extends Component {
             "LugarBautismo": info.persona.per_Lugar_Bautismo,
             "FechaBautismo": info.persona.per_Fecha_Bautismo,
             "QuienBautizo": info.persona.per_Ministro_Que_Bautizo,
-            "FechaPromesaEspiritu": info.persona.per_Bajo_Imposicion_De_Manos,
+            "FechaPromesaEspiritu": info.persona.per_Fecha_Recibio_Espiritu_Santo,
             "BajoImposicionDeManos": info.persona.per_Bajo_Imposicion_De_Manos,
             "Puestos": info.persona.per_Cargos_Desempenados,
             "CambiosDomicilio": info.persona.per_Cambios_De_Domicilio,
             "Domicilio": this.state.direccion,
             "Telefonos": `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`,
             "Oficio1": `${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`,
-            "Oficio2": `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`
+            "Oficio2": `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`,
+            "Fecha": `${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`,
+            "Secretario":
+                await helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
+                    .then(res => {
+                        if (res.data.status === "success" && res.data.infoSecretario.length > 0) {
+                            return `${res.data.infoSecretario[0].pem_Nombre}`;
+                        }
+                    }),
+            "Foto": `${helpers.url_api}/Foto/${info.persona.per_Id_Persona}`
         }
 
         var request = new Request(
