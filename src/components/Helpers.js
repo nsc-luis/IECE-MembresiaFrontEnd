@@ -4,6 +4,16 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import moment from 'moment';
 
+let timestampNow = moment(new Date()).unix();
+let tokenExpires = jwt_decode(localStorage.getItem("token")).exp;
+console.log(timestampNow > tokenExpires);
+if (timestampNow > tokenExpires) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('infoSesion');
+    alert("Alerta!\nSu sesion a expirado, debe volver a iniciar sesión.");
+    window.location = "/";
+}
+
 const helpers = {
     // EXPRESIONES REGULARES
     regex: {
@@ -67,15 +77,6 @@ const helpers = {
 
     // METODO PARA VERIFICAR SI SE HA INICIADO SESION
     isLoggedIn: () => {
-        let timestampNow = moment(new Date()).unix();
-        let tokenExpires = jwt_decode(localStorage.getItem("token")).exp;
-        console.log(timestampNow > tokenExpires);
-        if (timestampNow > tokenExpires) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('infoSesion');
-            alert("Alerta!\nSu sesion a expirado, debe volver a iniciar sesión.");
-            window.location = "/";
-        }
         if (localStorage.getItem('LoginValido')) { return true }
         else {
             localStorage.clear();
