@@ -137,7 +137,7 @@ class ListaDePersonal extends Component {
             modalShow: true
         })
         if (localStorage.getItem("sector") !== null) {
-            await helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
+            await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
                         personasTodas: res.data,
@@ -146,7 +146,7 @@ class ListaDePersonal extends Component {
                         modalShow: false
                     });
                     this.getActivos();
-                });
+                }));
         }
         else {
             await helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))

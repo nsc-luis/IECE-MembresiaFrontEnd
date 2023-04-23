@@ -83,7 +83,7 @@ class RegistrarTransaccionesHistoricas extends Component {
     }
     guardarRegistroHistorico = async (e) => {
         e.preventDefault();
-        
+
         this.setState({//Si algun Input veiene vacío, se Activa las Variables de 'Invaliciones'
             ctIdCodigoInvalid: this.state.ct_Id_Codigo === "0" ? true : false,
             perIdPersonaInvalid: this.state.per_Id_Persona === "0" ? true : false,
@@ -98,22 +98,25 @@ class RegistrarTransaccionesHistoricas extends Component {
         let secIdSectorInvalid = this.state.sec_Id_Sector === "0" ? true : false;
         let fechaTransaccionInvalid = this.state.fechaTransaccion === null || this.state.fechaTransaccion === "" ? true : false;
 
-        if (ctIdCodigoInvalid || perIdPersonaInvalid  || secIdSectorInvalid
+        if (ctIdCodigoInvalid || perIdPersonaInvalid || secIdSectorInvalid
             || disIdDistritoInvalid || fechaTransaccionInvalid) {
             return false;
         }
         else {
-            await helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/RegistroHistorico/${this.state.per_Id_Persona}/${this.state.sec_Id_Sector}/${this.state.ct_Id_Codigo}/${this.state.comentarioTransaccion}/${this.state.fechaTransaccion}/${this.infoSesion.pem_Id_Ministro}`)
-            .then(res => {
-                if(res.data.status === "success") {
-                    window.location = "/ListaDePersonal";
-                }
-                else {
-                    alert(res.data.mensaje);
-                }
-            });
+            let comentarioTransaccion = this.state.comentarioTransaccion == "" ? "-" : this.state.comentarioTransaccion; 
+            await helpers.validaToken()
+                .then(helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/RegistroHistorico/${this.state.per_Id_Persona}/${this.state.sec_Id_Sector}/${this.state.ct_Id_Codigo}/${comentarioTransaccion}/${this.state.fechaTransaccion}/${this.infoSesion.pem_Id_Ministro}`)
+                    .then(res => {
+                        if (res.data.status === "success") {
+                            window.location = "/ListaDePersonal";
+                        }
+                        else {
+                            alert(res.data.mensaje);
+                        }
+                    })
+                );
         }
-        
+
     }
 
     render() {
