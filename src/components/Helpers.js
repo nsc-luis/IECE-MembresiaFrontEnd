@@ -1,6 +1,8 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import moment from 'moment';
 
 const helpers = {
     // EXPRESIONES REGULARES
@@ -42,8 +44,8 @@ const helpers = {
     },
 
     // URLs PARA PRUEBA
-    //url_api: "http://" + window.location.hostname + ":59239/api",
-    url_api: "http://" + window.location.hostname + ":81/webapi/api",
+    url_api: "http://" + window.location.hostname + ":59239/api",
+    //url_api: "http://" + window.location.hostname + ":81/webapi/api",
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
@@ -55,8 +57,8 @@ const helpers = {
     },
 
     authAxios: axios.create({
-    //baseURL: "http://" + window.location.hostname + ":59239/api",
-    baseURL: "http://" + window.location.hostname + ":81/webapi/api",
+        baseURL: "http://" + window.location.hostname + ":59239/api",
+        //baseURL: "http://" + window.location.hostname + ":81/webapi/api",
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             contentType: 'application/json'
@@ -64,7 +66,16 @@ const helpers = {
     }),
 
     // METODO PARA VERIFICAR SI SE HA INICIADO SESION
-    isLoggedIn: function () {
+    isLoggedIn: () => {
+        let timestampNow = moment(new Date()).unix();
+        let tokenExpires = jwt_decode(localStorage.getItem("token")).exp;
+        console.log(timestampNow > tokenExpires);
+        if (timestampNow > tokenExpires) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('infoSesion');
+            alert("Alerta!\nSu sesion a expirado, debe volver a iniciar sesión.");
+            window.location = "/";
+        }
         if (localStorage.getItem('LoginValido')) { return true }
         else {
             localStorage.clear();
@@ -132,18 +143,18 @@ const helpers = {
         localStorage.setItem('componente', componente);
     },
 
-    getDomicilio: async function(id) {
+    getDomicilio: async function (id) {
         let direccion = "";
         let hogarDomicilio = {};
         await this.authAxios.get(`/HogarDomicilio/${id}`)
-        .then(res => {
-            if(res.data.status === "success") {
-                return (
-                    direccion = res.data.direccion,
-                    hogarDomicilio = res.data.hogardomicilio[0]
-                );
-            }
-        });
+            .then(res => {
+                if (res.data.status === "success") {
+                    return (
+                        direccion = res.data.direccion,
+                        hogarDomicilio = res.data.hogardomicilio[0]
+                    );
+                }
+            });
     }
 }
 

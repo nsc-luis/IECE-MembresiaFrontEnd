@@ -152,8 +152,6 @@ class PersonaForm extends Component {
         })
     }
 
-
-
     getProfesionesOficios = () => {
         axios.get(this.url + "/profesion_oficio")
             .then(res => {

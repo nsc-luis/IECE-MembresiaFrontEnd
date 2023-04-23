@@ -862,15 +862,9 @@ class RegistroDePersonal extends Component {
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>
-                    {/* <ModalHeader>
-                        Solo prueba.
-                    </ModalHeader> */}
                     <ModalBody>
                         {this.state.mensajeDelProceso}
                     </ModalBody>
-                    {/* <ModalFooter>
-                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
-                    </ModalFooter> */}
                 </Modal>
             </>
         )

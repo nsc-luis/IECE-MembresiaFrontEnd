@@ -417,15 +417,15 @@ class ListaDePersonal extends Component {
             return false
         }
 
-        // ELIMINA TEXTO null
+        // ELIMINA TEXTO null o undefined
         Object.keys(info.persona).forEach((key) => {
-            info.persona[key] = info.persona[key] === null ? '' : info.persona[key];
+            info.persona[key] = info.persona[key] === null || info.persona[key] === undefined ? '' : info.persona[key];
         });
 
 
         if (info.domicilio.length > 0) {
             Object.keys(info.domicilio[0]).forEach((key) => {
-                info.domicilio[0][key] = info.domicilio[0][key] === null ? '' : info.domicilio[0][key];
+                info.domicilio[0][key] = info.domicilio[0][key] === null || info.domicilio[0][key] === undefined ? '' : info.domicilio[0][key];
             });
         }
         else {
@@ -460,9 +460,9 @@ class ListaDePersonal extends Component {
             "Nacionalidad": info.persona.per_Nacionalidad,
             "LugarNacimiento": info.persona.per_Lugar_De_Nacimiento,
             "FechaNacimiento": info.persona.per_Fecha_Nacimiento,
-            "NombreDePadres": `${info.persona.per_Nombre_Padre} ${info.persona.per_Nombre_Madre}`,
-            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno} ${info.persona.per_Nombre_Abuela_Paterno}`,
-            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno} ${info.persona.per_Nombre_Abuela_Materna}`,
+            "NombreDePadres": `${info.persona.per_Nombre_Padre}, ${info.persona.per_Nombre_Madre}`,
+            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno}, ${info.persona.per_Nombre_Abuela_Paterno}`,
+            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno}, ${info.persona.per_Nombre_Abuela_Materna}`,
             "EstadoCivil": info.persona.per_Estado_Civil,
             "FechaBodaCivil": info.persona.per_Fecha_Boda_Civil,
             "Acta": info.persona.per_Num_Acta_Boda_Civil,
@@ -818,8 +818,6 @@ class ListaDePersonal extends Component {
     }
 
     render() {
-        /*  if (this.state.personas.length >= 1) { */
-        /* console.log("Personas: ", this.state.personas); */
         return (
             <>
                 {/* <h1 className="text-info">Listado de personal</h1> */}
