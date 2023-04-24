@@ -119,10 +119,10 @@ class Topbar extends Component {
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
-                            <div className="modal-body">Selecciona "Cerrar sesión" si quieres finalizar la sesión actual.</div>
+                            <div className="modal-body">Seleccione "Cerrar Sesión" si quiere finalizar la Sesión actual.</div>
                             <div className="modal-footer">
                                 <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                                <button className="btn btn-primary" onClick={this.handleLogoff}>Cerrar sesión</button>
+                                <button className="btn btn-primary" onClick={this.handleLogoff}>Cerrar Sesión</button>
                             </div>
                         </div>
                     </div>

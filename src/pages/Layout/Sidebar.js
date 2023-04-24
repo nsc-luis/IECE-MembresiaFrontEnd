@@ -51,6 +51,7 @@ class Sidebar extends Component {
     }
 
     openModalEditaPersona = async () => {
+        //Trae los nombres de todo el Personal Activo para seleccionar a quien se desea Actualizar
         await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({
@@ -142,7 +143,6 @@ class Sidebar extends Component {
     handle_AltaCambioDomicilio = () => {
         this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Alta de Persona por Cambio de Domicilio");
         //document.location.href = "/AltaCambioDomicilio";
-
     }
 
     //Para dar de Alta a un No Bautizado por Nuevo Ingreso. Resetea algunas variables en LocalStorage y el Encabezado.

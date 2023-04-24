@@ -14,10 +14,10 @@ class RegistroDePersonal extends Component {
 
     constructor(props) {
         super(props);
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('token')) { //Si No trae toquen lo envía al pantalla de Login
             document.location.href = '/';
         }
-        if (!localStorage.getItem("idPersona")) {
+        if (!localStorage.getItem("idPersona")) { // Si No trae valor en idPersona, significa que es un Registro Nuevo. No es edición.
             localStorage.setItem("idPersona", "0");
             localStorage.setItem("nvaAltaBautizado", "false");
             localStorage.setItem("nvaAltaComunion", "false");
@@ -52,17 +52,10 @@ class RegistroDePersonal extends Component {
         }
     }
 
-    setFrmValidaPersona = (bol) => {
-        this.setState({ FrmValidaPersona: bol })
-    }
-
-    setBolPersonaEncontrada = (bol) => {
-        this.setState({ bolPersonaEncontrada: bol })
-    }
 
     componentDidMount() {
 
-        if (localStorage.getItem("idPersona") === "0") {//Si se trata de un Nuevo Registro , No Edición
+        if (localStorage.getItem("idPersona") === "0") {//Si se trata de un Nuevo Registro , No Edición Ni de un No Bautizado que pasa a Bautizado
             this.setState({
                 foto: `${helpers.url_api}/Foto/FotoDefault`,
                 form: {
@@ -125,14 +118,14 @@ class RegistroDePersonal extends Component {
                     nvaProf2: ""
                 }
             })
-        } else {//Si se trata de una Edición.
+        } else {//si trae un Id significa que se trata de una Edición o de un Cambio de estatus de No Bautizado a Bautizado
             helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
-                    res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : null;
-                    res.data.per_Fecha_Bautismo = res.data.per_Fecha_Bautismo != null ? helpers.reFormatoFecha(res.data.per_Fecha_Bautismo) : null;
-                    res.data.per_Fecha_Boda_Civil = res.data.per_Fecha_Boda_Civil != null ? helpers.reFormatoFecha(res.data.per_Fecha_Boda_Civil) : null;
-                    res.data.per_Fecha_Boda_Eclesiastica = res.data.per_Fecha_Boda_Eclesiastica != null ? helpers.reFormatoFecha(res.data.per_Fecha_Boda_Eclesiastica) : null;
-                    res.data.per_Fecha_Recibio_Espiritu_Santo = res.data.per_Fecha_Recibio_Espiritu_Santo != null ? helpers.reFormatoFecha(res.data.per_Fecha_Recibio_Espiritu_Santo) : null;
+                    res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : "";
+                    res.data.per_Fecha_Bautismo = res.data.per_Fecha_Bautismo != null ? helpers.reFormatoFecha(res.data.per_Fecha_Bautismo) : "";
+                    res.data.per_Fecha_Boda_Civil = res.data.per_Fecha_Boda_Civil != null ? helpers.reFormatoFecha(res.data.per_Fecha_Boda_Civil) : "";
+                    res.data.per_Fecha_Boda_Eclesiastica = res.data.per_Fecha_Boda_Eclesiastica != null ? helpers.reFormatoFecha(res.data.per_Fecha_Boda_Eclesiastica) : "";
+                    res.data.per_Fecha_Recibio_Espiritu_Santo = res.data.per_Fecha_Recibio_Espiritu_Santo != null ? helpers.reFormatoFecha(res.data.per_Fecha_Recibio_Espiritu_Santo) : "";
                     res.data.per_Bautizado = JSON.parse(localStorage.getItem("nvaAltaBautizado"));
                     res.data.per_En_Comunion = JSON.parse(localStorage.getItem("nvaAltaComunion"));
                     res.data.per_Categoria = localStorage.getItem("categoria") ? localStorage.getItem("categoria") : res.data.per_Categoria;
@@ -166,6 +159,16 @@ class RegistroDePersonal extends Component {
             });
         }
     }
+
+    setFrmValidaPersona = (bol) => {
+        this.setState({ FrmValidaPersona: bol })
+    }
+
+    setBolPersonaEncontrada = (bol) => {
+        this.setState({ bolPersonaEncontrada: bol })
+    }
+
+
 
     const_regex = {
         alphaSpaceRequired: /^[a-zA-Z]{1}[a-zA-ZÑ\d\s]{0,37}$/,
@@ -219,6 +222,7 @@ class RegistroDePersonal extends Component {
     }
 
     onChangeFechaBautismo = (e) => {
+        console.log("fecha: ", e.target.value)
         this.setState({
             form: {
                 ...this.state.form,
@@ -653,7 +657,7 @@ class RegistroDePersonal extends Component {
                                     }, 1500);
                                     setTimeout(() => {
                                         document.location.href = '/ListaDePersonal'
-                                    }, 2000);
+                                    }, 1500);
                                 } else {
                                     this.setState({
                                         mensajeDelProceso: "Procesando...",
@@ -690,7 +694,7 @@ class RegistroDePersonal extends Component {
                             }, 1500);
                             setTimeout(() => {
                                 document.location.href = '/ListaDePersonal'
-                            }, 3500);
+                            }, 1500);
                         } else {
                             this.setState({
                                 mensajeDelProceso: "Procesando...",
@@ -775,7 +779,7 @@ class RegistroDePersonal extends Component {
             }
 
         } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
         }
     }

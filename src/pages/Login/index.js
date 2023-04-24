@@ -22,7 +22,7 @@ class Login extends Component {
             obispo: false,
             idSector: 0
         }
-        if(!localStorage.getItem("infoSesion")) {
+        if (!localStorage.getItem("infoSesion")) {
             return document.location.href = "/";
         }
     }
@@ -60,12 +60,12 @@ class Login extends Component {
 
     getListaSectoresPorDistritoMinistro = async (idDistrito, idMinistro) => {
         await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
-        .then(res => {
-            this.setState({ 
-                listaSectoresPorDistrito: res.data.sectores,
-                obispo: res.data.obispo
-            });
-        })
+            .then(res => {
+                this.setState({
+                    listaSectoresPorDistrito: res.data.sectores,
+                    obispo: res.data.obispo
+                });
+            })
     }
 
     onChangeDistrito = (e) => {
@@ -76,7 +76,7 @@ class Login extends Component {
         // Almacenar Distrito en LocalStorage
         localStorage.setItem('dto', e.target.value)
         if (e.target.value === "0") {
-            this.setState({ 
+            this.setState({
                 listaSectoresPorDistrito: [],
                 obispo: false
             })
@@ -143,9 +143,9 @@ class Login extends Component {
                                 <Form onSubmit={this.iniciarSesion}>
                                     {/* {this.state.listaDistritosPorMinistro.length > 0 && */}
                                     <React.Fragment>
-                                            <CardTitle className="text-center">
-                                                <h1 className="h4 text-gray-900 mb-4">Elija el Tipo de Sesión! </h1>
-                                            </CardTitle>
+                                        <CardTitle className="text-center">
+                                            <h1 className="h4 text-gray-900 mb-4">Elija el Tipo de Sesión! </h1>
+                                        </CardTitle>
                                         <Alert color="warning" className="alertLogin">
                                             <strong>Tipos de Sesión: </strong> <br />
                                             <ul>
@@ -155,15 +155,15 @@ class Login extends Component {
                                                     </ul>
                                                 </li>
                                                 <li>Para <strong>Sesión Pastor</strong>: deberá seleccionar el Distrito y el Sector con el que trabajará.
-                                                <ul>
-                                                    <li>Puede realizar todo tipo de Movimientos Estadísticos y Consultas.</li>
+                                                    <ul>
+                                                        <li>Puede realizar todo tipo de Movimientos Estadísticos y Consultas.</li>
                                                     </ul>
                                                 </li>
                                             </ul>
                                         </Alert>
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="2">
+                                                <Col sm="2" className="h5">
                                                     Distrito:
                                                 </Col>
                                                 <Col sm="10">
@@ -194,7 +194,7 @@ class Login extends Component {
                                     {this.state.distritoSeleccionado !== "0" &&
                                         <FormGroup>
                                             <Row>
-                                                <Col sm="2">
+                                                <Col sm="2" className="h5">
                                                     Sector:
                                                 </Col>
                                                 <Col sm="10">
@@ -231,7 +231,7 @@ class Login extends Component {
                                                     Cancelar
                                                 </Button>
                                                 <Button
-                                                    
+
                                                     type="submit"
                                                     color="primary"
                                                 >

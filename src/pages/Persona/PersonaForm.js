@@ -350,12 +350,21 @@ class PersonaForm extends Component {
 
         // RECUPERA INFO DE PERSONA DUPLICADA DE ACUERDO AL RFC (SIN HOMOCLAVE)
         const getPersonaByRFCSinHomo = async (str) => {
+            //Verifica que la Clave-Persona que se le pasa por parámetro no se encuentre en la BBDD
             await helpers.authAxios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
                 .then(res => {
-                    if (res.data.status) {
-                        setFrmValidaPersona(true)
-                        setBolPersonaEncontrada(true)
-                        this.setState({ datosPersonaEncontrada: res.data.persona[0] })
+
+                    if (res.data.status) {//Si encuentra por lo menos una coincidencia.
+                        if (res.data.persona[0].per_Id_Persona != localStorage.getItem("idPersona")) { //Si es una persona diferente a la que se está editando.
+                            setFrmValidaPersona(true)
+                            setBolPersonaEncontrada(true)
+                            this.setState({ datosPersonaEncontrada: res.data.persona[0] })
+                        } else {
+                            setFrmValidaPersona(false)
+                            setBolPersonaEncontrada(false)
+                            this.setState({ datosPersonaEncontrada: [] })
+                        }
+
                     } else {
                         setFrmValidaPersona(false)
                         setBolPersonaEncontrada(false)
@@ -514,12 +523,11 @@ class PersonaForm extends Component {
             if (boolAgregarNvaPersona) {
                 /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
                 if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
-                    alert("ERROR! \nUna persona NO BAUTAZADA no puede dar de alta un Nuevo Hogar/Domicilio.");
+                    alert("LO SENTIMOS! \nUna persona NO BAUTAZADA no puede dar de alta un Nuevo Hogar/Domicilio. Favor de asignarla a un Hogar Existente.");
                     return false;
                 }
 
-                // Si el Registro es de Persona y de Hogar
-                if (this.state.hogar.hd_Id_Hogar === "0") {
+                if (this.state.hogar.hd_Id_Hogar === "0") {// Si el Registro es de Persona y de Hogar
                     let PersonaDomicilioHogar = {
                         id: 1,
                         PersonaEntity: objPersona,
@@ -532,8 +540,7 @@ class PersonaForm extends Component {
                         return false;
                     }
                     await fnGuardaPersona(PersonaDomicilioHogar)
-                } else {
-                    //Si el Registro es de una Persona que se asignará a un Hogar Existente
+                } else {//Si el Registro es de una Persona que se asignará a un Hogar Existente
                     await fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
                 }
             }
@@ -1011,7 +1018,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf1}
                                                                             />
-                                                                            <label>Nueva profesión u oficio No.1 &#40;Opcional&#41;</label>
+                                                                            <label>Registrar Nueva profesión u oficio No.1 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
                                                                     </div>
                                                                 }
@@ -1024,7 +1031,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf2}
                                                                             />
-                                                                            <label>Nueva profesión u oficio No. 2 &#40;Opcional&#41;</label>
+                                                                            <label>Registrar Nueva profesión u oficio No. 2 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
                                                                     </div>
 
@@ -1406,7 +1413,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChangeFechaBautismo}
                                                                                             value={form.per_Fecha_Bautismo}
                                                                                             placeholder="DD/MM/AAAA"
-                                                                                            className="form-control"
+
                                                                                             invalid={fechaBautismoInvalida}
                                                                                         />
                                                                                         <label>Fecha de bautismo</label>
@@ -1463,21 +1470,6 @@ class PersonaForm extends Component {
                                             </React.Fragment>
                                         } */}
                                                                     </div>
-
-
-                                                                    <FormGroup>
-                                                                        <div className="row">
-                                                                            <div className="col-sm-12">
-                                                                                <textarea
-                                                                                    name="per_Cambios_De_Domicilio"
-                                                                                    onChange={onChange}
-                                                                                    value={form.per_Cambios_De_Domicilio}
-                                                                                    className="form-control"
-                                                                                    onKeyPress={this.handleKeyPress}></textarea>
-                                                                                <label>Cambios de domicilio en la IECE</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </FormGroup>
                                                                     <FormGroup>
                                                                         <div className="row">
                                                                             <div className="col-sm-12">
@@ -1488,7 +1480,20 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Cargos_Desempenados}
                                                                                     onKeyPress={this.handleKeyPress}
                                                                                 ></textarea>
-                                                                                <label>Cargos desempeñados en la IECE</label>
+                                                                                <label>Puestos que ha desempeñado en la IECE</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </FormGroup>
+                                                                    <FormGroup>
+                                                                        <div className="row">
+                                                                            <div className="col-sm-12">
+                                                                                <textarea
+                                                                                    name="per_Cambios_De_Domicilio"
+                                                                                    onChange={onChange}
+                                                                                    value={form.per_Cambios_De_Domicilio}
+                                                                                    className="form-control"
+                                                                                    onKeyPress={this.handleKeyPress}></textarea>
+                                                                                <label>Cambios de domicilio en la IECE</label>
                                                                             </div>
                                                                         </div>
                                                                     </FormGroup>
