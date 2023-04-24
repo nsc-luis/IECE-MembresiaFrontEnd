@@ -44,8 +44,8 @@ const helpers = {
     },
 
     // URLs PARA PRUEBA
-    //url_api: "http://" + window.location.hostname + ":59239/api",
-    url_api: "http://" + window.location.hostname + ":81/webapi/api",
+    url_api: "http://" + window.location.hostname + ":59239/api",
+    //url_api: "http://" + window.location.hostname + ":81/webapi/api",
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
@@ -57,8 +57,8 @@ const helpers = {
     },
 
     authAxios: axios.create({
-        //baseURL: "http://" + window.location.hostname + ":59239/api",
-        baseURL: "http://" + window.location.hostname + ":81/webapi/api",
+        baseURL: "http://" + window.location.hostname + ":59239/api",
+        //baseURL: "http://" + window.location.hostname + ":81/webapi/api",
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             contentType: 'application/json'
@@ -68,11 +68,10 @@ const helpers = {
     validaToken: () => {
         let timestampNow = moment(new Date()).unix();
         let tokenExpires = jwt_decode(localStorage.getItem("token")).exp;
-        console.log(timestampNow > tokenExpires);
         if (timestampNow > tokenExpires) {
             localStorage.removeItem('token');
             localStorage.removeItem('infoSesion');
-            alert("Alerta!\nSu sesion a expirado, debe volver a iniciar sesión.");
+            alert("Alerta!\nSu sesion ha expirado, debe volver a iniciar sesión.");
             window.location = "/";
         }
         return new Promise((resolve) => {

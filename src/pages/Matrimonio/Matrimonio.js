@@ -106,9 +106,8 @@ class Matrimonio extends Component {
         this.getMujeres(localStorage.getItem("sector"));//Trae Candidatas a Matrimonio
     }
 
-
     getHombres = async (str) => {//Trae a los Hombres del Sector que esten Activas y que su estado civil sea diferente a 'Casado(a)' o 'Concubinato'
-        await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaMatrimonio/" + localStorage.getItem("sector"))
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaMatrimonio/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     hombres: res.data.hombresParaMatrimonio.sort((a, b) => {
@@ -127,13 +126,15 @@ class Matrimonio extends Component {
 
                 })
             })
+        )
     }
 
     getSector = async (id) => { //Trae los datos del Sector y los graba en la Variable de Estado 'sector'
-        await helpers.authAxios.get(`/Sector/${id}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`/Sector/${id}`)
             .then(res => {
                 this.setState({ sector: res.data.sector[0] })
             })
+        )
     }
 
     handleChangeEstado = (e) => {
@@ -159,7 +160,7 @@ class Matrimonio extends Component {
     }
 
     getMujeres = async (str) => {//Trae a las Mujeres del Sector que esten Activas y que su estado civil sea diferente a 'Casado(a)' o 'Concubinato'
-        await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaMatrimonio/" + localStorage.getItem("sector"))
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaMatrimonio/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     mujeres: res.data.mujeresParaMatrimonio.sort((a, b) => {
@@ -177,6 +178,7 @@ class Matrimonio extends Component {
                     })
                 })
             })
+        )
     }
 
     onChangeForeaneos = (e) => {
@@ -241,7 +243,7 @@ class Matrimonio extends Component {
         //Si es persona Local, trae sus datos de Hogar para conformar la Posible Lista de Hogares Existentes
         if (e.target.name === "per_Id_Persona_Mujer" || e.target.name === "per_Id_Persona_Hombre") {
 
-            helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + e.target.value)
+            helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + e.target.value)
                 .then(res => {
 
                     //Si en el hogar de este conyuge, él o ella es el único bautizado, lo toma en cuenta para conformar la Lista de Hogares
@@ -251,9 +253,8 @@ class Matrimonio extends Component {
                         });
                         console.log("Datos-Hogar: ", res.data.datosDelHogarPorPersona);
                     }
-                });
-
-
+                })
+            );
         }
 
     }
@@ -270,14 +271,16 @@ class Matrimonio extends Component {
     /// METODOS PARA HOGAR - DOMICILIO ///
     fnGetDatosDelHogar = async (id) => {
         if (id !== "0") {
-            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
                 })
-            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+            )
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ domicilio: res.data })
                 })
+            )
 
             let jerarquias = [];
             for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
@@ -321,7 +324,7 @@ class Matrimonio extends Component {
         let idHogar = e.target.value;
 
         if (idHogar !== "0") {//Si es un Hogar Existente trae los Datos de los Miembros y datos del Hogar
-            await helpers.authAxios.get(this.url + '/Hogar_Persona/GetMiembros/' + idHogar)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
                     this.setState({
                         hogar: {
@@ -329,7 +332,8 @@ class Matrimonio extends Component {
                             hp_Jerarquia: res.data.length
                         }
                     })
-                });
+                })
+            );
             this.setState({
                 hogar: {
                     ...this.state.hogar,
@@ -338,11 +342,12 @@ class Matrimonio extends Component {
             })
             //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
             let getDireccion = async (id) => {
-                await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
                     .then(res => {
                         this.setState({ direccion: res.data.direccion });
                         console.log("direccion" + this.state.direccion)
-                    });
+                    })
+                );
             }
             getDireccion(idHogar);
         }
@@ -443,7 +448,7 @@ class Matrimonio extends Component {
             }
 
             try {
-                helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatrimonio`, matLegalDom)
+                helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaMatrimonio`, matLegalDom)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -473,7 +478,8 @@ class Matrimonio extends Component {
                                 });
                             }, 1500);
                         }
-                    });
+                    })
+                );
             }
             catch (error) {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -482,7 +488,7 @@ class Matrimonio extends Component {
         }
         else { //Si es una Edición y trae el numero de Id de un Registro de Matrimonio/Leg.
             try {
-                helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
+                helpers.validaToken().then(helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -512,7 +518,8 @@ class Matrimonio extends Component {
                                 });
                             }, 1500);
                         }
-                    });
+                    })
+                );
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);

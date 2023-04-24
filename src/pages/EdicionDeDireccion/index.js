@@ -49,7 +49,7 @@ class EdicionDeDireccion extends Component {
     }
 
     getListaHogares = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     listaDomicilios: res.data.domicilios.sort((a, b) => {
@@ -68,7 +68,7 @@ class EdicionDeDireccion extends Component {
                 })
 
             })
-
+        )
     }
 
     handle_HogarSeleccionado = async (e) => { //Al seleccionar el Hogar que se desea Editar
@@ -116,7 +116,7 @@ class EdicionDeDireccion extends Component {
         })
 
         if (e.target.name === "pais_Id_Pais") { //Si el campo que edita es País, manda traer los Estados de ese País.
-            await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
                 .then(res => {
                     let contador = 0;
                     res.data.estados.forEach(estado => {
@@ -133,6 +133,7 @@ class EdicionDeDireccion extends Component {
                         })
                     }
                 })
+            )
         }
     }
 
@@ -195,7 +196,7 @@ class EdicionDeDireccion extends Component {
             }
             else { //Si nvoEstado trae algun Estado nuevo para Registrar, lo manda grabar
                 try {
-                    await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
+                    await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
                         .then(res => {
                             this.setState({
                                 domicilio: {
@@ -203,7 +204,7 @@ class EdicionDeDireccion extends Component {
                                     est_Id_Estado: res.data.estado.est_Id_Estado
                                 }
                             })
-                            helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
+                            helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                                 .then(res => {
                                     if (res.data.status === "success") {
                                         // alert(res.data.mensaje);
@@ -234,7 +235,9 @@ class EdicionDeDireccion extends Component {
                                         }, 1000);
                                     }
                                 })
+                            )
                         })
+                    )
                 }
                 catch {
                     alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
@@ -245,8 +248,7 @@ class EdicionDeDireccion extends Component {
             console.log("domicilio: ", this.state.domicilio)
             try {
                 //console.log("Datos a API con EstadoId: ", `${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
-                await helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
-
+                await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -277,6 +279,7 @@ class EdicionDeDireccion extends Component {
                             }, 1000);
                         }
                     })
+                )
             }
             catch {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");

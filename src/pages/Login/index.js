@@ -50,22 +50,24 @@ class Login extends Component {
     }
 
     getListaDistritosPorMinistro = async () => {
-        await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetDistritosByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + '/PersonalMinisterial/GetDistritosByMinistro/' + this.infoSesion.mu_pem_Id_Pastor)
             .then(res => {
                 this.setState({
                     listaDistritosPorMinistro: res.data.distritos
                 })
-            });
+            })
+        )
     }
 
     getListaSectoresPorDistritoMinistro = async (idDistrito, idMinistro) => {
-        await helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
             .then(res => {
                 this.setState({
                     listaSectoresPorDistrito: res.data.sectores,
                     obispo: res.data.obispo
-                });
+                })
             })
+        )
     }
 
     onChangeDistrito = (e) => {

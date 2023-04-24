@@ -108,7 +108,7 @@ class Legalizacion extends Component {
 
 
     getHombres = async (str) => {//Trae a los Hombres del Sector que esten Activas y que su estado civil sea diferente a 'Casado(a)' o 'Concubinato'
-        await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaLegalizacion/" + localStorage.getItem("sector"))
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaLegalizacion/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     hombres: res.data.hombresParaLegalizacion.sort((a, b) => {
@@ -127,13 +127,15 @@ class Legalizacion extends Component {
 
                 })
             })
+        )
     }
 
     getSector = async (id) => { //Trae los datos del Sector y los graba en la Variable de Estado 'sector'
-        await helpers.authAxios.get(`/Sector/${id}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`/Sector/${id}`)
             .then(res => {
                 this.setState({ sector: res.data.sector[0] })
             })
+        )
     }
 
     handleChangeEstado = (e) => {
@@ -159,7 +161,7 @@ class Legalizacion extends Component {
     }
 
     getMujeres = async (str) => {//Trae a las Mujeres del Sector que esten Activas y que su estado civil sea diferente a 'Casado(a)' o 'Concubinato'
-        await helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaLegalizacion/" + localStorage.getItem("sector"))
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetMujeresPorSectorParaLegalizacion/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     mujeres: res.data.mujeresParaLegalizacion.sort((a, b) => {
@@ -177,6 +179,7 @@ class Legalizacion extends Component {
                     })
                 })
             })
+        )
     }
 
     onChange = (e) => {
@@ -190,7 +193,7 @@ class Legalizacion extends Component {
         //Si es persona Local, trae sus datos de Hogar para conformar la Posible Lista de Hogares Existentes
         if (e.target.name === "per_Id_Persona_Mujer" || e.target.name === "per_Id_Persona_Hombre") {
 
-            helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + e.target.value)
+            helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + e.target.value)
                 .then(res => {
 
                     //Si en el hogar de este conyuge, él o ella es el único bautizado, lo toma en cuenta para conformar la Lista de Hogares
@@ -200,7 +203,8 @@ class Legalizacion extends Component {
                         });
                         console.log("Datos-Hogar: ", res.data.datosDelHogarPorPersona);
                     }
-                });
+                })
+            );
 
 
         }
@@ -276,7 +280,7 @@ class Legalizacion extends Component {
             }
 
             try {
-                helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaLegalizacion`, matLegalDom)
+                helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaLegalizacion`, matLegalDom)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -306,7 +310,8 @@ class Legalizacion extends Component {
                                 });
                             }, 1500);
                         }
-                    });
+                    })
+                );
             }
             catch (error) {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -315,7 +320,7 @@ class Legalizacion extends Component {
         }
         else { //Si es una Edición y trae el numero de Id de un Registro de Matrimonio/Leg.
             try {
-                helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
+                helpers.validaToken().then(helpers.authAxios.put(helpers.url_api + "/Matrimonio_Legalizacion/" + localStorage.getItem("mat_Id_MatrimonioLegalizacion"), this.state.matLegal)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -345,7 +350,8 @@ class Legalizacion extends Component {
                                 });
                             }, 1500);
                         }
-                    });
+                    })
+                );
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);

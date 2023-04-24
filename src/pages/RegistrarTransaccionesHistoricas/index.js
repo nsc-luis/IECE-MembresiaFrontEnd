@@ -150,7 +150,6 @@ class RegistrarTransaccionesHistoricas extends Component {
                                                     invalid={this.state.ctIdCodigoInvalid}
                                                 >
                                                     <option value="0">Selecciona una transacción</option>
-                                                    <option value="11001">ALTA POR BAUTISMO</option>
                                                     <option value="11002">ALTA POR RESTITUCIÓN</option>
                                                     <option value="11003">ALTA POR CAMBIO DE DOMICILIO INTERNO</option>
                                                     <option value="11004">SALTA POR CAMBIO DE DOMICILIO EXTERNO</option>

@@ -52,7 +52,7 @@ class Sidebar extends Component {
 
     openModalEditaPersona = async () => {
         //Trae los nombres de todo el Personal Activo para seleccionar a quien se desea Actualizar
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({
                     personas: res.data.personas.sort((a, b) => {
@@ -69,12 +69,13 @@ class Sidebar extends Component {
                         return 0;
                     })
                 });
-            });
+            })
+        );
         this.setState({ modalEditaPersona: !this.state.modalEditaPersona })
     }
 
     openModalEditaPersonaNB = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({
                     personas: res.data.personas.sort((a, b) => {
@@ -91,7 +92,8 @@ class Sidebar extends Component {
                         return 0;
                     })
                 });
-            });
+            })
+        );
         this.setState({ modalEditaPersonaNB: !this.state.modalEditaPersonaNB })
     }
 
@@ -119,10 +121,11 @@ class Sidebar extends Component {
     }
 
     openModalVisibilidadAbierta = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetVivoNoActivoBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/persona/GetVivoNoActivoBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas });
-            });
+            })
+        );
         this.setState({ modalEstableceVisibilidadAbierta: !this.state.modalEstableceVisibilidadAbierta })
     }
 
@@ -167,7 +170,7 @@ class Sidebar extends Component {
     estableceVisibilidadAbierta = async (e) => {
         e.preventDefault();
         try {
-            await helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/CambiarVisibilidad/${this.state.formEstableceVisibilidadAbierta.idPersona}/${this.state.formEstableceVisibilidadAbierta.idUsuario}`)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/CambiarVisibilidad/${this.state.formEstableceVisibilidadAbierta.idPersona}/${this.state.formEstableceVisibilidadAbierta.idUsuario}`)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -198,6 +201,7 @@ class Sidebar extends Component {
                         }, 1500);
                     }
                 })
+            )
         }
         catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
@@ -530,6 +534,7 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link
                             className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Transacciones extemporaneas.')}
                             to="/RegistrarTransaccionesHistoricas"
                         >
                             <i className="fas fa-address-book"></i>

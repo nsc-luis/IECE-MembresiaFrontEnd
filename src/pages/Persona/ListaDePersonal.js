@@ -77,7 +77,6 @@ class ListaDePersonal extends Component {
         window.scrollTo(0, 0);
     }
 
-
     handle_LinkEncabezado = (seccion, componente) => {
         localStorage.setItem('seccion', seccion);
         localStorage.setItem('componente', componente);
@@ -467,9 +466,9 @@ class ListaDePersonal extends Component {
             "Nacionalidad": info.persona.per_Nacionalidad,
             "LugarNacimiento": info.persona.per_Lugar_De_Nacimiento,
             "FechaNacimiento": info.persona.per_Fecha_Nacimiento,
-            "NombreDePadres": `${info.persona.per_Nombre_Padre}, ${info.persona.per_Nombre_Madre}`,
-            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno}, ${info.persona.per_Nombre_Abuela_Paterno}`,
-            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno}, ${info.persona.per_Nombre_Abuela_Materna}`,
+            "NombreDePadres": `${info.persona.per_Nombre_Padre} ${info.persona.per_Nombre_Madre != "" ? `, ${info.persona.per_Nombre_Madre}` : ""}`,
+            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno} ${info.persona.per_Nombre_Abuela_Paterna != "" ? `, ${info.persona.per_Nombre_Abuela_Paterna}` : ""}`,
+            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno} ${info.persona.per_Nombre_Abuela_Materna != "" ? `, ${info.persona.per_Nombre_Abuela_Materna}` : ""}`,
             "EstadoCivil": info.persona.per_Estado_Civil,
             "FechaBodaCivil": info.persona.per_Fecha_Boda_Civil,
             "Acta": info.persona.per_Num_Acta_Boda_Civil,
@@ -789,7 +788,7 @@ class ListaDePersonal extends Component {
         drawUnderlineTotext('16. - Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
         drawUnderlineTotext(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}`, 13, `${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, line); */
 
-        doc.text(`16. - Domicilio actual: ${this.state.direccion}`, 11, line);
+        /* doc.text(`16. - Domicilio actual: ${this.state.direccion}`, 11, line);
         drawUnderlineTotext('16.- Domicilio actual: ', 11, `${this.state.direccion} `, line);
 
         line = line + renglon;
@@ -804,7 +803,6 @@ class ListaDePersonal extends Component {
         doc.text(`Profesión / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 17, line);
         drawUnderlineTotext('Profesión / Oficio2: ', 17, `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
 
-        let fechaActual = new Date();
         doc.text(`${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`, 52, 249);
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
@@ -821,7 +819,7 @@ class ListaDePersonal extends Component {
             })
         doc.line(120, 250, 180, 250);
         doc.text("LA COMISIÓN", 142, 255);
-        doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`); * /
+        doc.save(`${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}.pdf`); */
     }
 
     render() {

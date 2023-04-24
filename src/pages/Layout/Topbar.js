@@ -24,7 +24,7 @@ class Topbar extends Component {
 
     getfotoMinistro = async () => {
 
-        await helpers.authAxios.get(helpers.url_api + '/Foto/FotoMinistro/' + this.infoSesion.pem_Id_Ministro)
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + '/Foto/FotoMinistro/' + this.infoSesion.pem_Id_Ministro)
             .then(res => {
                 if (res.data.status !== "error") {
                     this.setState({ fotoMinistro: helpers.url_api + "/Foto/FotoMinistro/" + this.infoSesion.pem_Id_Ministro });
@@ -32,7 +32,8 @@ class Topbar extends Component {
                 } else {
                     this.setState({ fotoMinistro: "https://source.unsplash.com/QAB-WJcbgJk/60x60" })
                 }
-            });
+            })
+        );
     }
 
     render() {

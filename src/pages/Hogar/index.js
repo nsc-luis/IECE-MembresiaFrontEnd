@@ -54,10 +54,11 @@ class Hogar extends Component {
     }
 
     getListaHogares = () => {
-        helpers.authAxios.get(this.url_api + "/HogarDomicilio/GetBySector/" + this.infoSesion.sec_Id_Sector)
+        helpers.validaToken().then(helpers.authAxios.get(this.url_api + "/HogarDomicilio/GetBySector/" + this.infoSesion.sec_Id_Sector)
             .then(res => {
                 this.setState({ listaDeHogares: res.data.domicilios });
             })
+        )
     }
 
     getInfoDistrito = () => {
@@ -88,13 +89,14 @@ class Hogar extends Component {
     }
 
     handle_EditaHogar = async (info) => {
-        await helpers.authAxios.get(this.url_api + "/HogarDomicilio/" + info)
+        await helpers.validaToken().then(helpers.authAxios.get(this.url_api + "/HogarDomicilio/" + info)
             .then(res => {
                 this.setState({
                     domicilio: res.data,
                     modalInfoHogar: true
                 });
-            });
+            })
+        );
     }
 
     modalInfoHogarClose = () => {
@@ -105,7 +107,7 @@ class Hogar extends Component {
     }
 
     handle_guardarDomicilio = async (info) => {
-        await helpers.authAxios.put(this.url_api + "/HogarDomicilio/" + info.hd_Id_Hogar, info)
+        await helpers.validaToken().then(helpers.authAxios.put(this.url_api + "/HogarDomicilio/" + info.hd_Id_Hogar, info)
             .then(res => {
                 if (res.data.status === "success") {
                     // alert(res.data.mensaje);
@@ -136,6 +138,7 @@ class Hogar extends Component {
                     }, 1500);
                 }
             })
+        )
     }
 
     render() {
