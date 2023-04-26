@@ -299,7 +299,10 @@ class PersonaForm extends Component {
             fechaBautismoInvalida,
             ChangeFechaBautismoInvalida,
             FechaTransaccionHistorica,
-            handleFechaDeTransaccion
+            handleFechaDeTransaccion,
+            buscarLugarDeBautismo,
+            listaResultadoBusquedaLugarBautismo,
+            seleccionaLugarDeBautismo
         } = this.props
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
@@ -1379,49 +1382,77 @@ class PersonaForm extends Component {
                                                                     {/* Bautismo */}
                                                                     {form.per_Bautizado &&
                                                                         <React.Fragment>
-
-                                                                            <div className="row">
-                                                                                <div className="col-sm-4">
-                                                                                    <FormGroup>
-                                                                                        <Input
-                                                                                            type="text"
-                                                                                            name="per_Lugar_Bautismo"
-                                                                                            onChange={onChange}
-                                                                                            value={form.per_Lugar_Bautismo}
-                                                                                            className="form-control"
-                                                                                        />
-                                                                                        <label>Lugar de bautismo</label>
-                                                                                    </FormGroup>
+                                                                            <div style={{ position: 'relative' }}>
+                                                                                <div className="row">
+                                                                                    <div className="col-sm-4">
+                                                                                        <FormGroup>
+                                                                                            <Input
+                                                                                                type="text"
+                                                                                                name="per_Lugar_Bautismo"
+                                                                                                onChange={onChange}
+                                                                                                value={form.per_Lugar_Bautismo}
+                                                                                                className="form-control"
+                                                                                            />
+                                                                                            <label>Lugar de bautismo</label>
+                                                                                        </FormGroup>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <FormGroup>
+                                                                                            <Input
+                                                                                                type="text"
+                                                                                                name="per_Ministro_Que_Bautizo"
+                                                                                                onChange={onChange}
+                                                                                                value={form.per_Ministro_Que_Bautizo}
+                                                                                                className="form-control"
+                                                                                            />
+                                                                                            <label>Ministro que le bautizó</label>
+                                                                                        </FormGroup>
+                                                                                    </div>
+                                                                                    <div className="col-sm-4">
+                                                                                        <FormGroup>
+                                                                                            <Input
+                                                                                                type="date"
+                                                                                                name="per_Fecha_Bautismo"
+                                                                                                onChange={onChangeFechaBautismo}
+                                                                                                value={form.per_Fecha_Bautismo}
+                                                                                                placeholder="DD/MM/AAAA"
+                                                                                                invalid={fechaBautismoInvalida}
+                                                                                            />
+                                                                                            <label>Fecha de bautismo</label>
+                                                                                            <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
+                                                                                        </FormGroup>
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="col-sm-4">
-                                                                                    <FormGroup>
-                                                                                        <Input
-                                                                                            type="text"
-                                                                                            name="per_Ministro_Que_Bautizo"
-                                                                                            onChange={onChange}
-                                                                                            value={form.per_Ministro_Que_Bautizo}
-                                                                                            className="form-control"
-                                                                                        />
-                                                                                        <label>Ministro que le bautizó</label>
-                                                                                    </FormGroup>
-                                                                                </div>
-                                                                                <div className="col-sm-4">
-                                                                                    <FormGroup>
-                                                                                        <Input
-                                                                                            type="date"
-                                                                                            name="per_Fecha_Bautismo"
-                                                                                            onChange={onChangeFechaBautismo}
-                                                                                            value={form.per_Fecha_Bautismo}
-                                                                                            placeholder="DD/MM/AAAA"
-
-                                                                                            invalid={fechaBautismoInvalida}
-                                                                                        />
-                                                                                        <label>Fecha de bautismo</label>
-                                                                                        <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
-                                                                                    </FormGroup>
+                                                                                <div>
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-12">
+                                                                                            <div
+                                                                                                hidden={buscarLugarDeBautismo}
+                                                                                                style={{
+                                                                                                    position: 'absolute',
+                                                                                                    zIndex: '10',
+                                                                                                    backgroundColor: 'white',
+                                                                                                    border: '1px solid black',
+                                                                                                    height: '150px',
+                                                                                                    overflow: 'scroll'
+                                                                                                }}
+                                                                                            >
+                                                                                                <ul>
+                                                                                                    {listaResultadoBusquedaLugarBautismo.length > 0 &&
+                                                                                                        listaResultadoBusquedaLugarBautismo.map((lugar) => {
+                                                                                                            return (
+                                                                                                                <React.Fragment>
+                                                                                                                    <li onClick={() => seleccionaLugarDeBautismo(lugar)} key={lugar.sec_Id_Sector}><strong>Distrito:</strong> {lugar.dis_Alias}, <strong>Sector:</strong> {lugar.sec_Alias}</li>
+                                                                                                                </React.Fragment>
+                                                                                                            )
+                                                                                                        })
+                                                                                                    }
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-
                                                                         </React.Fragment>
                                                                     }
 

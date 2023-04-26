@@ -48,7 +48,9 @@ class RegistroDePersonal extends Component {
             nuevaFoto: false,
             boolNvoEstado: false,
             fechaBautismoInvalida: false,
-            FechaTransaccionHistorica: ""
+            FechaTransaccionHistorica: "",
+            buscarLugarDeBautismo: true,
+            listaResultadoBusquedaLugarBautismo: []
         }
     }
 
@@ -167,8 +169,6 @@ class RegistroDePersonal extends Component {
     setBolPersonaEncontrada = (bol) => {
         this.setState({ bolPersonaEncontrada: bol })
     }
-
-
 
     const_regex = {
         alphaSpaceRequired: /^[a-zA-Z]{1}[a-zA-ZÑ\d\s]{0,37}$/,
@@ -480,6 +480,33 @@ class RegistroDePersonal extends Component {
                 })
             }
         }
+        if(e.target.name === "per_Lugar_Bautismo") {
+            if (e.target.value.length > 2) {
+                axios.get(`${helpers.url_api}/Sector/BuscarPorTexto/${e.target.value}`)
+                .then(res => {
+                    this.setState({ 
+                        buscarLugarDeBautismo: res.data.query.length > 0 ? false : true,
+                        listaResultadoBusquedaLugarBautismo: res.data.query
+                     })
+                })
+            }
+            else {
+                this.setState({
+                    buscarLugarDeBautismo: true,
+                    listaResultadoBusquedaLugarBautismo: []
+                })
+            }
+        }
+    }
+
+    seleccionaLugarDeBautismo = (info) => {
+        this.setState({
+            buscarLugarDeBautismo: true,
+            form: {
+                ...this.state.form,
+                per_Lugar_Bautismo: info.sec_Alias
+            }
+        })
     }
 
     changeRFCSinHomo = (str) => {
@@ -863,6 +890,9 @@ class RegistroDePersonal extends Component {
                     ChangeFechaBautismoInvalida={this.ChangeFechaBautismoInvalida}
                     handleFechaDeTransaccion={this.handleFechaDeTransaccion}
                     FechaTransaccionHistorica={this.state.FechaTransaccionHistorica}
+                    buscarLugarDeBautismo={this.state.buscarLugarDeBautismo}
+                    listaResultadoBusquedaLugarBautismo={this.state.listaResultadoBusquedaLugarBautismo}
+                    seleccionaLugarDeBautismo={this.seleccionaLugarDeBautismo}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>
