@@ -28,7 +28,7 @@ class Domicilio extends React.Component {
     } */
 
     getListaHogares = () => {
-        helpers.authAxios.get(this.url + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
+        helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     ListaHogares: res.data.domicilios.sort((a, b) => {
@@ -45,7 +45,8 @@ class Domicilio extends React.Component {
                         return 0;
                     })
                 });
-            });
+            })
+        );
     }
 
     render() {

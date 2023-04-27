@@ -35,7 +35,7 @@ class BajaBautizadoCambioDomicilio extends Component {
     }
 
     getBajaNoBautizadoCambioDomicilio = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({
                     personas: res.data.personas.sort((a, b) => {
@@ -52,7 +52,8 @@ class BajaBautizadoCambioDomicilio extends Component {
                         return 0;
                     })
                 });
-            });
+            })
+        );
     }
 
 
@@ -78,7 +79,7 @@ class BajaBautizadoCambioDomicilio extends Component {
             return false;
         }
         try {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -108,6 +109,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                         }, 1000);
                     }
                 })
+            )
         }
         catch {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");

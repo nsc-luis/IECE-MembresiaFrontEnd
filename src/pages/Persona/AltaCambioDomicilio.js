@@ -59,7 +59,7 @@ class AltaCambioDomicilio extends Component {
     }
 
     GetPersonaCambioDomicilioReactivacionRestitucion = async () => {
-        await helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/true")
+        await helpers.validaToken().then(helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/true")
             .then(res => {
                 this.setState({
                     personas: res.data.personas
@@ -78,20 +78,22 @@ class AltaCambioDomicilio extends Component {
                             return 0;
                         })
                 })
-            });
+            })
+        );
     }
 
     fnGetDatosDelHogar = async (id) => {
         if (id !== "0") {
-            await helpers.authAxios.get("/Hogar_Persona/GetMiembros/" + id)
+            await helpers.validaToken().then(helpers.authAxios.get("/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
                 })
-            await helpers.authAxios.get("/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+            )
+            await helpers.validaToken().then(helpers.authAxios.get("/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
-
+            )
             let jerarquias = [];
             for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
                 jerarquias.push(<option value={i}>{i}</option>)
@@ -126,7 +128,7 @@ class AltaCambioDomicilio extends Component {
         let idHogar = e.target.value;
         this.fnGetDatosDelHogar(idHogar);
         if (idHogar !== "0") {
-            await helpers.authAxios.get('/Hogar_Persona/GetMiembros/' + idHogar)
+            await helpers.validaToken().then(helpers.authAxios.get('/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
                     this.setState({
                         hogar: {
@@ -134,7 +136,8 @@ class AltaCambioDomicilio extends Component {
                             hp_Jerarquia: res.data.length
                         }
                     })
-                });
+                })
+            );
 
             this.setState({
                 hogar: {
@@ -145,10 +148,11 @@ class AltaCambioDomicilio extends Component {
 
             //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
             let getDireccion = async (id) => {
-                await helpers.authAxios.get("/HogarDomicilio/" + id)
+                await helpers.validaToken().then(helpers.authAxios.get("/HogarDomicilio/" + id)
                     .then(res => {
                         this.setState({ direccion: res.data.direccion });
-                    });
+                    })
+                );
             }
 
             getDireccion(idHogar);
@@ -257,7 +261,7 @@ class AltaCambioDomicilio extends Component {
                     HD: this.state.domicilio
                 }
 
-                await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
+                await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
                     .then(res => {
                         console.log("Respuesta: ", res.data.status);
                         if (res.data.status === 'error') {
@@ -266,7 +270,8 @@ class AltaCambioDomicilio extends Component {
                         else {
                             document.location.href = '/Main';
                         }
-                    });
+                    })
+                );
             }
         }
         // Si la Persona se le dará de alta en Un HOGAR EXISTENTE
@@ -281,7 +286,7 @@ class AltaCambioDomicilio extends Component {
                 idDomicilio: this.state.hogar.hd_Id_Hogar,
                 jerarquia: this.state.hogar.hp_Jerarquia
             }
-            await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, info)
+            await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, info)
                 .then(res => {
                     if (res.data.status === 'error') {
                         console.log(res.data.mensaje)
@@ -289,7 +294,8 @@ class AltaCambioDomicilio extends Component {
                     else {
                         document.location.href = '/Main';
                     }
-                });
+                })
+            );
         }
     }
 

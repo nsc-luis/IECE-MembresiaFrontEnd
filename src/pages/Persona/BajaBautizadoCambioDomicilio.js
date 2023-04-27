@@ -48,7 +48,7 @@ class BajaBautizadoCambioDomicilio extends Component {
     }
 
     getBajaBautizadoCambioDomicilio = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({
                     personas: res.data.personas.sort((a, b) => {
@@ -65,7 +65,8 @@ class BajaBautizadoCambioDomicilio extends Component {
                         return 0;
                     })
                 });
-            });
+            })
+        );
     }
 
 
@@ -80,7 +81,7 @@ class BajaBautizadoCambioDomicilio extends Component {
 
         //Lógica para saber si esta persona en proceso es la última bautizada para determinar si se deba de dar de baja el hogar y demás integrantes No Bautizados.
         if (e.target.name === "idPersona") { // Si el input que cambia es el Select idPersona, trae los datos del Hogar de esa persona
-            await helpers.authAxios.get(`${helpers.url_api}/Hogar_Persona/GetHogarByPersona/${e.target.value}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Hogar_Persona/GetHogarByPersona/${e.target.value}`)
                 .then(res => {
                     var cuentaMiembros = 0;
                     res.data.datosDelHogarPorPersona.miembros.forEach(miembro => { //Cuenta los miembros del Hogar
@@ -105,6 +106,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                         })
                     }
                 })
+            )
         }
     }
 
@@ -118,7 +120,7 @@ class BajaBautizadoCambioDomicilio extends Component {
             return false;
         }
         try { //Procede a realizar la Transacción de Baja Por Cambio de Domicilio enviando el Objeto 'formBajaBautizadoCambioDomicilio'
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
                 .then(res => {
                     if (res.data.status === "success") {
                         document.location.href = '/ListaDePersonal'
@@ -126,6 +128,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                         alert(res.data.mensaje);
                     }
                 })
+            )
         }
         catch {
             alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");

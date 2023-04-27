@@ -85,7 +85,7 @@ class PersonaForm extends Component {
 
         //Para Transacciones de Edición/Actualización, inicializa .
         if (localStorage.getItem("idPersona") !== "0") {//Manda llamar por API las personas en Comunión para mostrarlas en Imput/Select.
-            helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + localStorage.getItem("idPersona"))
+            helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     this.setState({
                         hogar: {
@@ -97,6 +97,7 @@ class PersonaForm extends Component {
                     //Manda traer los datos del Hogar de la personas Seleccionada
                     this.fnGetDatosDelHogar(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar)
                 })
+            )
             setInterval(() => {
                 //Con cierta lógica inicializa 3 variables de Estado relacionadas al Estado Civil.
                 this.actualizaEstadoCivil();
@@ -173,15 +174,16 @@ class PersonaForm extends Component {
     /// METODOS PARA HOGAR - DOMICILIO ///
     fnGetDatosDelHogar = async (id) => {
         if (id !== "0") {
-            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
                 })
-            await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+            )
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
-
+            )
             let jerarquias = [];
             for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
                 jerarquias.push(<option value={i}>{i}</option>)
@@ -207,7 +209,7 @@ class PersonaForm extends Component {
         let idHogar = e.target.value;
 
         if (idHogar !== "0") { //Si se selecciona un Hogar Existente
-            await helpers.authAxios.get(this.url + '/Hogar_Persona/GetMiembros/' + idHogar)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
                     this.setState({
                         hogar: {
@@ -215,7 +217,8 @@ class PersonaForm extends Component {
                             hp_Jerarquia: res.data.length
                         }
                     })
-                });
+                })
+            );
 
             this.setState({
                 hogar: {
@@ -226,10 +229,11 @@ class PersonaForm extends Component {
 
             //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
             let getDireccion = async (id) => {
-                await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
                     .then(res => {
                         this.setState({ direccion: res.data.direccion });
-                    });
+                    })
+                );
             }
             getDireccion(idHogar);
 
@@ -355,7 +359,7 @@ class PersonaForm extends Component {
         // RECUPERA INFO DE PERSONA DUPLICADA DE ACUERDO AL RFC (SIN HOMOCLAVE)
         const getPersonaByRFCSinHomo = async (str) => {
             //Verifica que la Clave-Persona que se le pasa por parámetro no se encuentre en la BBDD
-            await helpers.authAxios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/persona/GetByRFCSinHomo/" + str)
                 .then(res => {
 
                     if (res.data.status) {//Si encuentra por lo menos una coincidencia.
@@ -375,6 +379,7 @@ class PersonaForm extends Component {
                         this.setState({ datosPersonaEncontrada: [] })
                     }
                 })
+            )
         }
 
         const handleIgnorarDuplicados = () => {
@@ -1394,7 +1399,7 @@ class PersonaForm extends Component {
                                                                                                 value={form.per_Lugar_Bautismo}
                                                                                                 className="form-control"
                                                                                             />
-                                                                                            <label>Lugar de bautismo (Distrito 101 Sector 101)</label>
+                                                                                            <label>Lugar de bautismo</label>
                                                                                             &nbsp;
                                                                                             <span
                                                                                                 onClick={borrarSeleccionLugarBautismo}

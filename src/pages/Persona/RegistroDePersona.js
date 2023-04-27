@@ -120,7 +120,7 @@ class RegistroDePersonal extends Component {
                 }
             })
         } else {//si trae un Id significa que se trata de una Edición o de un Cambio de estatus de No Bautizado a Bautizado
-            helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
+            helpers.validaToken().then(helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : "";
                     res.data.per_Fecha_Bautismo = res.data.per_Fecha_Bautismo != null ? helpers.reFormatoFecha(res.data.per_Fecha_Bautismo) : "";
@@ -137,7 +137,7 @@ class RegistroDePersonal extends Component {
                     })
                     localStorage.setItem('estadoCivil', res.data.per_Estado_Civil);
                 })
-
+            )
             this.setState({
                 categoriaSeleccionada: true,
                 per_Nombre_NoValido: false,
@@ -546,7 +546,7 @@ class RegistroDePersonal extends Component {
             nvoEstado: this.state.domicilio.nvoEstado,
             FechaTransaccionHistorica: this.state.FechaTransaccionHistorica
         }
-        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
             .then(res => {
                 if (res.data.status === true) {
                     let contador = 0
@@ -560,7 +560,7 @@ class RegistroDePersonal extends Component {
                     else { //Si detecta que Sí hay Estados para ese País
                         try {
                             if (this.state.nuevaFoto) { //Si trae Foto
-                                helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
+                                helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                                     .then(resFoto => {
                                         if (resFoto.data.status === "success") {
                                             info.PersonaEntity.idFoto = resFoto.data.foto.idFoto
@@ -570,7 +570,7 @@ class RegistroDePersonal extends Component {
                                             });
                                         }
 
-                                        helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar`, info)
+                                        helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar`, info)
                                             .then(res => {
                                                 if (res.data.status === "success") {
                                                     setTimeout(() => {
@@ -595,11 +595,13 @@ class RegistroDePersonal extends Component {
                                                     }, 1500);
                                                     alert(`Error: \n${res.data.mensaje}`);
                                                 }
-                                            });
+                                            })
+                                        );
                                     })
+                                )
                             }
                             else {
-                                helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar`, info)
+                                helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AddPersonaDomicilioHogar`, info)
                                     .then(res => {
                                         if (res.data.status === "success") {
                                             //alert("Datos guardados satisfactoriamente");
@@ -629,7 +631,8 @@ class RegistroDePersonal extends Component {
                                             }, 1500);
                                             alert(`Error: \n${res.data.mensaje}`);
                                         }
-                                    });
+                                    })
+                                )
                             }
                         }
                         catch (error) {
@@ -638,7 +641,8 @@ class RegistroDePersonal extends Component {
                         }
                     }
                 }
-            });
+            })
+        );
     }
 
     fnEditaPersona = async (datos) => {
@@ -672,7 +676,7 @@ class RegistroDePersonal extends Component {
         };
         // this.fnSolicitudNvaProfesion();
         if (this.state.nuevaFoto) {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                 .then(res => {
                     if (res.data.status === "success") {
                         info.PersonaEntity.idFoto = res.data.foto.idFoto
@@ -682,7 +686,7 @@ class RegistroDePersonal extends Component {
                         });
                     }
                     try {
-                        helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                        helpers.validaToken().then(helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                             .then(res => {
                                 if (res.data.status === "success") {
                                     setTimeout(() => {
@@ -706,16 +710,18 @@ class RegistroDePersonal extends Component {
                                     }, 1500);
                                     alert(`Error: \n${res.data.mensaje}`);
                                 }
-                            });
+                            })
+                        );
                     } catch (error) {
                         alert("Error: Hubo un problema en la comunicacioón con el Servidor. Intente mas tarde.");
                         // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                     }
                 })
+            )
         }
         else {
             try {
-                helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
+                helpers.validaToken().then(helpers.authAxios.put(this.url + "/persona/" + localStorage.getItem("idPersona"), info)
                     .then(res => {
                         if (res.data.status === "success") {
                             this.setState({
@@ -743,7 +749,8 @@ class RegistroDePersonal extends Component {
                             }, 1500);
                             alert(`Error: \n${res.data.mensaje}`);
                         }
-                    });
+                    })
+                );
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
@@ -764,7 +771,7 @@ class RegistroDePersonal extends Component {
         //this.fnSolicitudNvaProfesion();
         try {
             if (this.state.nuevaFoto) {
-                helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
+                helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                     .then(resFoto => {
                         if (resFoto.data.status === "success") {
                             datos.PersonaEntity.idFoto = resFoto.data.foto.idFoto
@@ -774,7 +781,7 @@ class RegistroDePersonal extends Component {
                             });
                             //datos.idFoto = resFoto.data.foto.idFoto
                         }
-                        helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
+                        helpers.validaToken().then(helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
                             .then(res => {
                                 if (res.data.status === "success") {
                                     setTimeout(() => {
@@ -789,10 +796,12 @@ class RegistroDePersonal extends Component {
                                     alert("Error: No se pudo guardar. Revise los datos ingresados");
                                 }
                             })
+                        )
                     })
+                )
             }
             else {
-                helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
+                helpers.validaToken().then(helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
                     .then(res => {
                         if (res.data.status === "success") {
                             this.setState({
@@ -811,6 +820,7 @@ class RegistroDePersonal extends Component {
                             alert("Error: No se pudo guardar. Revise los datos ingresados");
                         }
                     })
+                )
             }
 
         } catch (error) {

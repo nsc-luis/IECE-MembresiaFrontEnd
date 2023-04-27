@@ -44,18 +44,20 @@ class AnalisisPersonal extends Component {
     }
 
     getHistorial = async (id) => {
-        await helpers.authAxios.get(this.url + "/Historial_Transacciones_Estadisticas/" + id)
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Historial_Transacciones_Estadisticas/" + id)
             .then(res => {
                 this.setState({ historial: res.data.info });
             })
+        )
     }
 
     //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
     getDireccion = async (id) => {
-        await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
             .then(res => {
                 this.setState({ direccion: res.data.direccion });
             })
+        )
     }
 
 

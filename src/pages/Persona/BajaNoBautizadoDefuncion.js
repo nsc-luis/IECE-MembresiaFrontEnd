@@ -22,7 +22,7 @@ class BajaBautizadoDefuncion extends Component {
     }
 
     getBajaNoBautizadoDefuncion = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosDefuncionBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosDefuncionBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas.sort((a,b)=>{
                     const nameA = a.per_Nombre; // ignore upper and lowercase
@@ -37,7 +37,8 @@ class BajaBautizadoDefuncion extends Component {
                     // names must be equal
                     return 0;
                 }) });
-            });
+            })
+        );
     }
 
     componentDidMount() {
@@ -72,7 +73,7 @@ class BajaBautizadoDefuncion extends Component {
             return false;
         }
         try {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoDefuncion`, datos)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoDefuncion`, datos)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -102,7 +103,8 @@ class BajaBautizadoDefuncion extends Component {
                             });
                         }, 1000);
                     }
-                });
+                })
+            );
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);

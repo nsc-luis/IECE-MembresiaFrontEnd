@@ -66,16 +66,17 @@ class AltaRestitucion extends Component {
     fnGetDatosDelHogar = async (id) => {
         if (id !== "0") {
             //Trae los datos de los Integrantes de un Hogar y los pone en la variable 'MiembrosDelHogar
-            await helpers.authAxios.get("/Hogar_Persona/GetMiembros/" + id)
+            await helpers.validaToken().then(helpers.authAxios.get("/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
                 })
+            )
             //Trae los datos del Titular y del Domicilio de una Hogar y los pone en la variable 'DatosHogarDomicilio    
-            await helpers.authAxios.get("/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+            await helpers.validaToken().then(helpers.authAxios.get("/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
-
+            )
             //En base a la cantidad de Integrantes de Hogar, genera el rango de Posbiles Jerarquías para seleccionar    
             let jerarquias = [];
             for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
@@ -110,7 +111,7 @@ class AltaRestitucion extends Component {
         let idHogar = e.target.value;
         this.fnGetDatosDelHogar(idHogar);
         if (idHogar !== "0") {
-            await helpers.authAxios.get('/Hogar_Persona/GetMiembros/' + idHogar)
+            await helpers.validaToken().then(helpers.authAxios.get('/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
                     this.setState({
                         hogar: {
@@ -118,7 +119,8 @@ class AltaRestitucion extends Component {
                             hp_Jerarquia: res.data.length
                         }
                     })
-                });
+                })
+            );
 
             this.setState({
                 hogar: {
@@ -129,11 +131,12 @@ class AltaRestitucion extends Component {
 
             //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
             let getDireccion = async (id) => {
-                await helpers.authAxios.get("/HogarDomicilio/" + id)
+                await helpers.validaToken().then(helpers.authAxios.get("/HogarDomicilio/" + id)
                     .then(res => {
                         this.setState({ direccion: res.data.direccion });
                         console.log("direccion" + this.state.direccion)
-                    });
+                    })
+                );
             }
 
             getDireccion(idHogar);
@@ -194,7 +197,7 @@ class AltaRestitucion extends Component {
         }
         else {//Si selecciona al Mismo Hogar 
             if (this.state.per_Id_Persona !== "0") {
-                helpers.authAxios.get(`Hogar_Persona/GetHogarByPersona/${this.state.per_Id_Persona}`)
+                helpers.validaToken().then(helpers.authAxios.get(`Hogar_Persona/GetHogarByPersona/${this.state.per_Id_Persona}`)
                     .then(res => {
                         this.fnGetDatosDelHogar(res.data.datosDelHogarPorPersona.hogarPersona.hd_Id_Hogar);
                         this.setState({
@@ -206,6 +209,7 @@ class AltaRestitucion extends Component {
                             mostrarJerarquias: true//Desplega el Componente del Hogar de la Persona para seleccionar nueva Jerarquía.
                         });
                     })
+                )
             }
         }
         //Si se Restituirá al Mismo Hogar cambia la Variable mismoHogar a True, si será a Diferente Hogar cambia a False.
@@ -213,7 +217,7 @@ class AltaRestitucion extends Component {
     }
 
     personaParaRestitucion = async () => {// Trae a las personas que estan Inactivas y Excomulgadas del sector y Aquellas excomulgadas pero con VisibilidadAbierta de otro Lugar
-        await helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${localStorage.getItem('sector')}/false`)
+        await helpers.validaToken().then(helpers.authAxios.get(`/Persona/GetPersonaRestitucion/${localStorage.getItem('sector')}/false`)
             .then(res => {
                 this.setState({
                     personaParaRestitucion: res.data.personas.sort((a, b) => {
@@ -230,7 +234,8 @@ class AltaRestitucion extends Component {
                         return 0;
                     })
                 })
-            });
+            })
+        );
     }
 
     onChange = (e) => {// Al Cambiar cualquier Input del Formulario (Id_Persona, Categoria, Comentario y Fecha )
@@ -316,7 +321,7 @@ class AltaRestitucion extends Component {
 
             //Si se va a quedar en el MISMO HOGAR
             if (this.state.mismoHogar) {
-                await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaReactivacionRestitucion_HogarActual`, info)
+                await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaReactivacionRestitucion_HogarActual`, info)
                     .then(res => {
                         if (res.data.status === 'error') {
                         }
@@ -334,7 +339,8 @@ class AltaRestitucion extends Component {
                                 document.location.href = '/ListaDePersonal'
                             }, 2000);
                         }
-                    });
+                    })
+                );
             }
             // Si va a quedar en un HOGAR EXISTENTE
             else {
@@ -350,7 +356,7 @@ class AltaRestitucion extends Component {
                 }
 
                 //Envía los datos para ejecutar la Transacción en el BackEnd
-                await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, info)
+                await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, info)
                     .then(res => {
                         if (res.data.status === 'error') {
                             //console.log(res.data.mensaje)
@@ -369,7 +375,8 @@ class AltaRestitucion extends Component {
                                 document.location.href = '/ListaDePersonal'
                             }, 2000);
                         }
-                    });
+                    })
+                );
             }
         }
     }

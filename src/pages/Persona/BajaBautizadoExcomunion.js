@@ -21,7 +21,7 @@ class BajaBautizadoExcomunion extends Component {
     }
 
     getBajaBautizadoExcomunion = async () => { //Carga todas las personas del Sector que son Bautizadas y están en Comunión. Y las ordena alfabéticamente.
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosComunionBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosComunionBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas.sort((a,b)=>{
                     const nameA = a.per_Nombre; // ignore upper and lowercase
@@ -37,7 +37,8 @@ class BajaBautizadoExcomunion extends Component {
                     return 0;
                     }) 
                 });
-            });
+            })
+        );
     }
 
     componentDidMount() {
@@ -77,7 +78,7 @@ class BajaBautizadoExcomunion extends Component {
 
         //Envío los datos del Formulario a la API
         try {
-            await helpers.authAxios.post(
+            await helpers.validaToken().then(helpers.authAxios.post(
                 helpers.url_api + "/Persona/BajaBautizadoExcomunion/" + datos.personaSeleccionada +
                 "/" + datos.tipoExcomunion +
                 "/" + datos.excomunionDelito +
@@ -90,7 +91,8 @@ class BajaBautizadoExcomunion extends Component {
                     } else {
                         alert(res.data.mensaje);
                     }
-                });
+                })
+            );
         } catch (error) {
             alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
         }

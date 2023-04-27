@@ -277,6 +277,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                                                 color="secondary"
                                                 type="button"
                                                 style={{ marginRight: "1em" }}
+                                                onClick={() => { window.location = "/ListaDePersonal" }}
                                             >
                                                 Cancelar
                                             </Button>

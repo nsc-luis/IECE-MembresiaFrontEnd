@@ -22,7 +22,7 @@ class BajaBautizadoExcomunion extends Component {
     }
 
     getBajaNoBautizadoAlejamiento = async () => {
-        await helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
             .then(res => {
                 this.setState({ personas: res.data.personas.sort((a,b)=>{
                     const nameA = a.per_Nombre; // ignore upper and lowercase
@@ -37,7 +37,8 @@ class BajaBautizadoExcomunion extends Component {
                     // names must be equal
                     return 0;
                 }) });
-            });
+            })
+        );
         this.setState({ modalBajaNoBautizadoAlejamiento: !this.state.modalBajaNoBautizadoAlejamiento })
     }
 
@@ -74,7 +75,7 @@ class BajaBautizadoExcomunion extends Component {
             return false;
         }
         try {
-            await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoAlejamiento`, datos)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoAlejamiento`, datos)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -104,7 +105,8 @@ class BajaBautizadoExcomunion extends Component {
                             });
                         }, 1000);
                     }
-                });
+                })
+            );
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
         }

@@ -101,7 +101,7 @@ class ListaDePersonal extends Component {
     }
 
     getDomicilio = async (id) => {
-        await helpers.authAxios.get(`/HogarDomicilio/${id}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${id}`)
             .then(res => {
                 if (res.data.status === "success") {
                     this.setState({
@@ -115,25 +115,28 @@ class ListaDePersonal extends Component {
                         hogarDomicilio: null
                     });
                 }
-            });
+            })
+        );
     }
 
     getSectoresPorDistrito = async () => {
         if (localStorage.getItem('sector') === null) {
-            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         sectores: res.data.sectores
                     })
-                });
+                })
+            );
         }
         else {
-            await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
                         sectores: res.data.sector
                     })
-                });
+                })
+            );
         }
     }
 
@@ -158,10 +161,11 @@ class ListaDePersonal extends Component {
                     alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                     setTimeout(() => { document.location.href = '/'; }, 3000);
                     this.setState({ modalShow: false })
-                }));
+                })
+            );
         }
         else {
-            await helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         personasTodas: res.data,
@@ -176,6 +180,7 @@ class ListaDePersonal extends Component {
                     setTimeout(() => { document.location.href = '/'; }, 3000);
                     this.setState({ modalShow: false })
                 })
+            )
         }
     };
 
@@ -186,9 +191,10 @@ class ListaDePersonal extends Component {
     }
 
     fnEliminaPersona = async (persona) => {
-        await helpers.authAxios.delete(this.url + "/persona/" + persona.per_Id_Persona)
+        await helpers.validaToken().then(helpers.authAxios.delete(this.url + "/persona/" + persona.per_Id_Persona)
             .then(res => res.data)
-            .catch(error => error);
+            .catch(error => error)
+        );
         window.location.reload();
     }
 
@@ -207,23 +213,25 @@ class ListaDePersonal extends Component {
 
     getSector = async () => {
         if (localStorage.getItem('sector') !== null) {
-            await helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
                         sector: res.data.sector[0]
                     });
-                });
+                })
+            );
         }
     }
 
     getDistrito = async () => {
         if (localStorage.getItem('dto') !== null) {
-            await helpers.authAxios.get(this.url + "/distrito/" + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/distrito/" + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         distrito: res.data
                     });
-                });
+                })
+            );
         }
     }
 
@@ -252,15 +260,17 @@ class ListaDePersonal extends Component {
             currentPersona: persona
         });
 
-        let getHogar = await helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
-            .then(res => res.data);
+        let getHogar = await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetHogarByPersona/" + persona.per_Id_Persona)
+            .then(res => res.data)
+        );
 
-        await helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + getHogar.hd_Id_Hogar)
             .then(res => {
                 this.setState({
                     DatosHogarDomicilio: res.data[0]
                 });
-            });
+            })
+        );
     }
 
     handle_modalInfoPersonaClose = () => {
@@ -462,7 +472,7 @@ class ListaDePersonal extends Component {
             })
         }
 
-        await helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
             .then(res => {
                 if (res.data.status === "success") {
                     this.setState({
@@ -470,6 +480,7 @@ class ListaDePersonal extends Component {
                     })
                 }
             })
+        )
 
         let fechaActual = new Date();
         var datos = {
@@ -506,12 +517,13 @@ class ListaDePersonal extends Component {
             "Oficio2": `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`,
             "Fecha": `${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`,
             "Secretario":
-                await helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
+                await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
                     .then(res => {
                         if (res.data.status === "success" && res.data.infoSecretario.length > 0) {
                             return `${res.data.infoSecretario[0].pem_Nombre}`;
                         }
-                    }),
+                    })
+                ),
             "Foto": `${helpers.url_api}/Foto/${info.persona.per_Id_Persona}`
         }
 
@@ -551,7 +563,7 @@ class ListaDePersonal extends Component {
         doc.lineHeightProportion = 5;
 
 
-        await helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
             .then(res => {
                 if (res.data.status === "success") {
                     this.setState({
@@ -820,7 +832,7 @@ class ListaDePersonal extends Component {
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
 
-        await helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
             .then(res => {
                 //console.log(res.data.infoSecretario[0].pem_Nombre)
                 if (res.data.status === "success" && res.data.infoSecretario.length > 0) {

@@ -21,7 +21,7 @@ class ModalInfoHogar extends Component {
     }
 
     getDomicilio = async (id) => {
-        await helpers.authAxios.get(`/HogarDomicilio/${id}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${id}`)
             .then(res => {
                 if (res.data.status === "success") {
                     this.setState({
@@ -35,7 +35,8 @@ class ModalInfoHogar extends Component {
                         hogarDomicilio: null
                     });
                 }
-            });
+            })
+        );
     }
 
     render() {
