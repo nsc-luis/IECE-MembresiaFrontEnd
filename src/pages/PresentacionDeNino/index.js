@@ -100,7 +100,7 @@ class PresentacionDeNino extends Component {
 
     handle_OtroMinistro = (e) => { //Al cambiar el Input de Otro Mnistro, se graba en la varibale el Nombre del Ministro que se escribió
         this.setState({ otroMinistro: e.target.value.toUpperCase() });
-        console.log("NuevoMinistro: ",e.target.value.toUpperCase())
+        console.log("NuevoMinistro: ", e.target.value.toUpperCase())
     }
 
     validaFormatos = (formato, campo, estado) => {
@@ -119,13 +119,13 @@ class PresentacionDeNino extends Component {
         e.preventDefault();
 
         if (this.state.bolAgregarPresentacion) {
-            
-                this.setState({ //Verifica que los Inputs Obligatorios no vengan vacíos.
-                    ministroOficianteInvalido: this.state.currentPresentacion.pdn_Ministro_Oficiante === '' ? true : false,
-                    ninoSelectInvalido: this.state.currentPresentacion.per_Id_Persona === '0' ? true : false,
-                    fechaPresentacionInvalida: this.state.currentPresentacion.pdn_Fecha_Presentacion === '' || this.state.currentPresentacion.pdn_Fecha_Presentacion === null ? true : false
-                })
-            
+
+            this.setState({ //Verifica que los Inputs Obligatorios no vengan vacíos.
+                ministroOficianteInvalido: this.state.currentPresentacion.pdn_Ministro_Oficiante === '' ? true : false,
+                ninoSelectInvalido: this.state.currentPresentacion.per_Id_Persona === '0' ? true : false,
+                fechaPresentacionInvalida: this.state.currentPresentacion.pdn_Fecha_Presentacion === '' || this.state.currentPresentacion.pdn_Fecha_Presentacion === null ? true : false
+            })
+
             if (this.state.currentPresentacion.per_Id_Persona === "0") return false;
             if (this.state.currentPresentacion.pdn_Fecha_Presentacion === "" || this.state.currentPresentacion.pdn_Fecha_Presentacion === null) return false;
             if (this.state.currentPresentacion.pdn_Ministro_Oficiante === "") return false;
@@ -139,7 +139,6 @@ class PresentacionDeNino extends Component {
                 helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
                     .then(res => {
                         if (res.data.status === "success") {
-                            console.log("Exito1: ")
                             setTimeout(() => {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente.",
@@ -148,7 +147,7 @@ class PresentacionDeNino extends Component {
                             }, 1000);
                             setTimeout(() => {
                                 document.location.href = '/ListaDePersonal'
-                            }, 2000);
+                            }, 1500);
                         } else {
                             // alert(res.data.mensaje);
                             alert("Error: No se pudo guardar. Revise los datos ingresados");
@@ -156,19 +155,19 @@ class PresentacionDeNino extends Component {
                     });
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
-                // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+                //setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
             }
         }
     }
 
     render() {
 
-            return (
-                <>
-                    <Container>
-                        <Container isOpen={this.state.modalFrmPresentacion}>
-                            <Form onSubmit={this.guardarPresentacion}>
-                                <Card>
+        return (
+            <>
+                <Container>
+                    <Container isOpen={this.state.modalFrmPresentacion}>
+                        <Form onSubmit={this.guardarPresentacion}>
+                            <Card>
                                 <CardHeader className="text-center">
                                     <h1>{this.state.tituloModalFrmPresentacion}</h1>
                                 </CardHeader>
@@ -271,7 +270,7 @@ class PresentacionDeNino extends Component {
                                 </CardBody>
                                 <CardFooter>
                                     <Link
-                                    to="/ListaDePersonal"
+                                        to="/ListaDePersonal"
                                     >
                                         <Button type="button" color="secondary" className="entreBotones" >
                                             Cancelar
@@ -280,14 +279,14 @@ class PresentacionDeNino extends Component {
                                     <Button
                                         color="success"
                                         type="submit"
-                                        >
+                                    >
                                         <span className="fas fa-save  entreBotones"></span>Guardar
                                     </Button>
                                 </CardFooter>
-                                </Card>
-                            </Form>
-                        </Container>
+                            </Card>
+                        </Form>
                     </Container>
+                </Container>
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>
                     {/* <ModalHeader>
@@ -300,9 +299,9 @@ class PresentacionDeNino extends Component {
                         <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
                     </ModalFooter> */}
                 </Modal>
-                </ >
-            )
-        }
+            </ >
+        )
+    }
 }
 
 export default PresentacionDeNino;

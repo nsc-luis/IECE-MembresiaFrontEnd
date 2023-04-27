@@ -142,6 +142,7 @@ class ListaDePersonal extends Component {
             mensajeDelProceso: "Procesando...",
             modalShow: true
         })
+
         if (localStorage.getItem("sector") !== null) {
             await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
@@ -152,6 +153,11 @@ class ListaDePersonal extends Component {
                         modalShow: false
                     });
                     this.getActivos();
+                })
+                .catch((error) => {
+                    alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
+                    setTimeout(() => { document.location.href = '/'; }, 3000);
+                    this.setState({ modalShow: false })
                 }));
         }
         else {
@@ -164,7 +170,12 @@ class ListaDePersonal extends Component {
                         modalShow: false
                     });
                     this.getActivos();
-                });
+                })
+                .catch((error) => {
+                    alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
+                    setTimeout(() => { document.location.href = '/'; }, 3000);
+                    this.setState({ modalShow: false })
+                })
         }
     };
 
@@ -275,10 +286,12 @@ class ListaDePersonal extends Component {
     }
 
     handle_filtroPorNombre = (e) => {
+
         this.setState({ fNombre: e.target.value });
         if (e.target.value !== '' && e.target.value.length > 2) {
             var result = this.state.personas.filter((obj) => {
                 const query = e.target.value.toLowerCase();
+                console.log("Query: ", query)
                 if (obj.persona.per_Apellido_Materno) {
                     return obj.persona.per_Nombre.toLowerCase().includes(query)
                         || obj.persona.per_Apellido_Paterno.toLowerCase().includes(query)
@@ -339,7 +352,7 @@ class ListaDePersonal extends Component {
 
     handle_filtroPorProfesion = (e) => {
         this.setState({ fProfesionOficio: e.target.value });
-        if (e.target.value !== '' && e.target.value.length > 3) {
+        if (e.target.value !== '' && e.target.value.length > 2) {
             var result = this.state.personas.filter((obj) => {
                 const query = e.target.value.toLowerCase();
                 return (
@@ -925,7 +938,7 @@ class ListaDePersonal extends Component {
                                 onChange={this.handle_filtroPorNombre}
                             >
                             </Input>
-                            <Label>Filtro por Nombre</Label>
+                            <Label>Filtro por Nombre o Apellido</Label>
                         </Col>
                         <Col xs="3">
                             <Input

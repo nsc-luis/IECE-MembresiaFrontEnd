@@ -86,9 +86,7 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col className="negrita" xs="1">Nombre:</Col>
                             <Col xs="3" className="border border-dark">
-                                {this.objPersona.persona.per_Nombre}
-                                {this.objPersona.persona.per_Apellido_Paterno}
-                                {this.objPersona.persona.per_Apellido_Materno}
+                                {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno}
                             </Col>
                             <Col className="negrita" xs="1"></Col>
                             <Col className="negrita" xs="1">F. Nacim.:</Col>
@@ -103,7 +101,7 @@ class AnalisisPersonal extends Component {
                                 Vivo
                             </Col>
                             <Col >
-                                <img className="fotoPersona fotoAnalisis d-block mx-auto" src={this.state.foto} />
+                                <img className="fotoPersona fotoAnalisis d-block mx-auto" alt="FotoPersona" src={this.state.foto} />
                             </Col>
 
                         </Row>

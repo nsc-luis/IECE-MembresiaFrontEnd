@@ -61,7 +61,7 @@ class AltaCambioDomicilioNB extends Component {
             .then(res => {
                 this.setState({
                     personas: res.data.personas
-                        .filter(per => (per.sec_Id_Sector !== parseInt(localStorage.getItem("sector"))) && per.per_Activo === true) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
+                        .filter(per => (per.sec_Id_Sector !== parseInt(localStorage.getItem("sector"))) && per.per_Activo === false) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
                         .sort((a, b) => {
                             const nameA = a.per_Nombre; // ignore upper and lowercase
                             const nameB = b.per_Nombre; // ignore upper and lowercase
