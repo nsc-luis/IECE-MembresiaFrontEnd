@@ -452,7 +452,7 @@ class Matrimonio extends Component {
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
-                            setTimeout(() => { document.location.href = '/Main'; }, 3000);
+                            setTimeout(() => { document.location.href = '/Main'; }, 1000);
                             this.setState({
                                 mensajeDelProceso: "Procesando...",
                                 modalShow: true
@@ -464,7 +464,7 @@ class Matrimonio extends Component {
                             }, 1500);
                             setTimeout(() => {
                                 document.location.href = '/Main'
-                            }, 3500);
+                            }, 1500);
                         } else {
                             // alert(res.data.mensaje);
                             this.setState({

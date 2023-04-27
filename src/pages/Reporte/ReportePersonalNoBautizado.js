@@ -88,7 +88,7 @@ export default function ReportePersonalNoBautizado() {
 
         helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
-                setPersonas(res.data.filter(persona => persona.persona.per_Activo))
+                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado === false && persona.persona.per_En_Comunion === false && persona.persona.per_Activo))
             });
     }
 
@@ -97,7 +97,7 @@ export default function ReportePersonalNoBautizado() {
         helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 setPersonas(res.data.filter(persona => (
-                    persona.persona.per_Activo)))
+                    persona.persona.per_Bautizado === false && persona.persona.per_En_Comunion === false && persona.persona.per_Activo)))
             });
     }
 

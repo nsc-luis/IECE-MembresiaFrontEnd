@@ -577,7 +577,7 @@ class RegistroDePersonal extends Component {
                                                         this.setState({
                                                             mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                                         });
-                                                    }, 1500);
+                                                    }, 1000);
                                                     setTimeout(() => {
                                                         document.location.href = '/ListaDePersonal'
                                                     }, 2000);
@@ -611,10 +611,10 @@ class RegistroDePersonal extends Component {
                                                 this.setState({
                                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                                 });
-                                            }, 1500);
+                                            }, 1000);
                                             setTimeout(() => {
                                                 document.location.href = '/ListaDePersonal'
-                                            }, 3500);
+                                            }, 2000);
                                         }
                                         else {
                                             this.setState({
@@ -689,10 +689,10 @@ class RegistroDePersonal extends Component {
                                         this.setState({
                                             mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                         });
-                                    }, 1500);
+                                    }, 1000);
                                     setTimeout(() => {
                                         document.location.href = '/ListaDePersonal'
-                                    }, 1500);
+                                    }, 2000);
                                 } else {
                                     this.setState({
                                         mensajeDelProceso: "Procesando...",
@@ -726,10 +726,10 @@ class RegistroDePersonal extends Component {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                 });
-                            }, 1500);
+                            }, 1000);
                             setTimeout(() => {
                                 document.location.href = '/ListaDePersonal'
-                            }, 1500);
+                            }, 2000);
                         } else {
                             this.setState({
                                 mensajeDelProceso: "Procesando...",
@@ -803,10 +803,10 @@ class RegistroDePersonal extends Component {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
                                 });
-                            }, 1500);
+                            }, 1000);
                             setTimeout(() => {
                                 document.location.href = '/ListaDePersonal'
-                            }, 3500);
+                            }, 2000);
                         } else {
                             alert("Error: No se pudo guardar. Revise los datos ingresados");
                         }

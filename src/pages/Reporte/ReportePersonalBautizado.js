@@ -104,7 +104,7 @@ export default function ReportePersonalBautizado() {
         helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 setPersonas(res.data.filter(persona => (
-                    persona.persona.per_Activo && persona.persona.per_Bautizado && persona.persona.per_En_Comunion)))
+                    persona.persona.per_Activo && persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo)))
             });
     }
 

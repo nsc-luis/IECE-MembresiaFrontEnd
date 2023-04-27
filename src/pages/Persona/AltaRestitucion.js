@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
     Button, Input, Alert, Container, Row, Col, Card, ButtonGroup, FormFeedback,
-    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter
+    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter, Modal, ModalBody
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import HogarPersonaDomicilio from './HogarPersonaDomicilio';
@@ -31,7 +31,9 @@ class AltaRestitucion extends Component {
             fechaTransaccionInvalida: false,
             perIdPersonaInvalida: false,
             perCategoriaInvalida: false,
-            mostrarJerarquias: false
+            mostrarJerarquias: false,
+            modalShow: false,
+            mensajeDelProceso: "",
         }
     }
     componentDidMount() {
@@ -320,7 +322,18 @@ class AltaRestitucion extends Component {
                         if (res.data.status === 'error') {
                         }
                         else {
-                            document.location.href = '/Main';
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1000);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 2000);
                         }
                     });
             }
@@ -339,11 +352,23 @@ class AltaRestitucion extends Component {
                 console.log("HogarNuevo");
                 await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
                     .then(res => {
+
                         if (res.data.status === 'error') {
                             //console.log(res.data.mensaje)
                         }
                         else {
-                            document.location.href = '/Main';
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1000);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 2000);
                         }
                     });
             }
@@ -368,7 +393,18 @@ class AltaRestitucion extends Component {
                             //console.log(res.data.mensaje)
                         }
                         else {
-                            document.location.href = '/Main';
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
+                                });
+                            }, 1000);
+                            setTimeout(() => {
+                                document.location.href = '/ListaDePersonal'
+                            }, 2000);
                         }
                     });
             }
@@ -377,174 +413,182 @@ class AltaRestitucion extends Component {
 
     render() {
         return (
-            <Container>
-                <Card>
-                    <Form onSubmit={this.guardarRestitucion}>
-                        <CardBody>
-                            <FormGroup>
-                                <Row>
-                                    <Col xs="12">
-                                        <Alert color="warning">
-                                            <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
-                                        </Alert>
-                                    </Col>
-                                </Row>
-                            </FormGroup>
-                            <FormGroup>
-                                <Row>
-                                    <Col xs="3">
-                                        * PERSONA:
-                                    </Col>
-                                    <Col xs="9">
-                                        <Input
-                                            type="select"
-                                            onChange={this.onChange}
-                                            name="per_Id_Persona"
-                                            value={this.state.per_Id_Persona}
-                                            invalid={this.state.perIdPersonaInvalida}
-                                        >
-                                            <option value="0">Seleccione una persona</option>
-                                            {this.state.personaParaRestitucion.map(persona => {
-                                                return (
-                                                    <React.Fragment key={persona.per_Id_Persona}>
-                                                        <option value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
-                                                    </React.Fragment>
-                                                )
-                                            })
-                                            }
-                                        </Input>
-                                        <FormFeedback>Este campo es requerido</FormFeedback>
-                                    </Col>
-                                </Row>
-                            </FormGroup>
-                            <FormGroup>
-                                <Row>
-                                    <Col xs="3">
-                                        Categoría:
-                                    </Col>
-                                    <Col xs="9">
-                                        <Input
-                                            type="select"
-                                            name="per_Categoria"
-                                            onChange={this.onChange}
-                                            value={this.state.per_Categoria}
-                                            invalid={this.state.perCategoriaInvalida}
-                                        >
-                                            <option value="0">Seleccione una categoría</option>
-                                            <option value="ADULTO_HOMBRE">Adulto Hombre</option>
-                                            <option value="ADULTO_MUJER">Adulto Mujer</option>
-                                            <option value="JOVEN_HOMBRE">Joven Hombre</option>
-                                            <option value="JOVEN_MUJER">Joven Mujer</option>
-                                        </Input>
-                                        <FormFeedback>Este campo es requerido</FormFeedback>
-                                    </Col>
-                                </Row>
-                            </FormGroup>
-                            <FormGroup>
-                                <Row>
-                                    <Col xs="3">
-                                        Comentario (opcional):
-                                    </Col>
-                                    <Col xs="9">
-                                        <Input
-                                            type="text"
-                                            onChange={this.onChange}
-                                            name="comentario"
-                                            value={this.state.comentario}
-                                        />
-                                    </Col>
-                                </Row>
-                            </FormGroup>
-                            <FormGroup>
-                                <Row>
-                                    <Col xs="3">
-                                        * Fecha de transacción:
-                                    </Col>
-                                    <Col xs="3">
-                                        <Input
-                                            type="date"
-                                            name="fechaTransaccion"
-                                            placeholder='DD/MM/AAAA'
-                                            onChange={this.onChange}
-                                            value={this.state.fechaTransaccion}
-                                            invalid={this.state.fechaTransaccionInvalida}
-                                        />
-                                        <FormFeedback>Este campo es requerido</FormFeedback>
-                                    </Col>
-                                </Row>
-                            </FormGroup>
-                            <FormGroup>
-                                <Row>
-                                    <Col xs="3">
-                                        * Hogar:
-                                    </Col>
-                                    <Col xs="9">
-                                        <ButtonGroup>
-                                            <Button
-                                                color="info"
-                                                onClick={() => this.onRadioBtnClick(true)}
-                                                active={this.state.mismoHogar === true}
+            <>
+                <Container>
+                    <Card>
+                        <Form onSubmit={this.guardarRestitucion}>
+                            <CardBody>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="12">
+                                            <Alert color="warning">
+                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                            </Alert>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * PERSONA:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                onChange={this.onChange}
+                                                name="per_Id_Persona"
+                                                value={this.state.per_Id_Persona}
+                                                invalid={this.state.perIdPersonaInvalida}
                                             >
-                                                {this.state.mismoHogar ? <span className="fa fa-icon fa-check"></span> : ""} En el Mismo Hogar
-                                            </Button>
-                                            <Button
-                                                color="info"
-                                                onClick={() => this.onRadioBtnClick(false)}
-                                                active={this.state.mismoHogar === false}>
-                                                {this.state.mismoHogar ? "" : <span className="fa fa-icon fa-check"></span>} En un Hogar Diferente
-                                            </Button>
-                                        </ButtonGroup>
-                                    </Col>
-                                </Row>
-                            </FormGroup>
-                            <hr />
-                            {/* Desplega el COmponente para Elegir Hogar Existente o Crear uno Nuevo */}
-                            {!this.state.mismoHogar &&
-                                <HogarPersonaDomicilio
-                                    domicilio={this.state.domicilio}
-                                    onChangeDomicilio={this.onChangeDomicilio}
-                                    handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
-                                    handle_hp_Jerarquia={this.handle_hp_Jerarquia}
-                                    hogar={this.state.hogar}
-                                    DatosHogarDomicilio={this.state.DatosHogarDomicilio}
-                                    MiembrosDelHogar={this.state.MiembrosDelHogar}
-                                    JerarquiasDisponibles={this.state.JerarquiasDisponibles}
-                                    boolNvoEstado={this.state.boolNvoEstado}
-                                    handleChangeEstado={this.handleChangeEstado}
-                                    direccion={this.state.direccion}
-                                    habilitaPerBautizado={this.state.habilitaPerBautizado}
-                                />
-                            }
-                            {/* Desplega el Componente para escribir una Jerarquía en un Hogar Existente */}
-                            {this.state.mostrarJerarquias &&
-                                <MostrarJerarquias
-                                    handle_hp_Jerarquia={this.handle_hp_Jerarquia}
-                                    hogar={this.state.hogar}
-                                    DatosHogarDomicilio={this.state.DatosHogarDomicilio}
-                                    MiembrosDelHogar={this.state.MiembrosDelHogar}
-                                    JerarquiasDisponibles={this.state.JerarquiasDisponibles}
-                                    direccion={this.state.direccion}
-                                />
-                            }
-                        </CardBody>
-                        <CardFooter>
-                            <Link
-                                to="/ListaDePersonal"
-                            >
-                                <Button type="button" color="secondary" className="entreBotones">
-                                    Cancelar
+                                                <option value="0">Seleccione una persona</option>
+                                                {this.state.personaParaRestitucion.map(persona => {
+                                                    return (
+                                                        <React.Fragment key={persona.per_Id_Persona}>
+                                                            <option value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
+                                                        </React.Fragment>
+                                                    )
+                                                })
+                                                }
+                                            </Input>
+                                            <FormFeedback>Este campo es requerido</FormFeedback>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Categoría:
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="select"
+                                                name="per_Categoria"
+                                                onChange={this.onChange}
+                                                value={this.state.per_Categoria}
+                                                invalid={this.state.perCategoriaInvalida}
+                                            >
+                                                <option value="0">Seleccione una categoría</option>
+                                                <option value="ADULTO_HOMBRE">Adulto Hombre</option>
+                                                <option value="ADULTO_MUJER">Adulto Mujer</option>
+                                                <option value="JOVEN_HOMBRE">Joven Hombre</option>
+                                                <option value="JOVEN_MUJER">Joven Mujer</option>
+                                            </Input>
+                                            <FormFeedback>Este campo es requerido</FormFeedback>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            Comentario (opcional):
+                                        </Col>
+                                        <Col xs="9">
+                                            <Input
+                                                type="text"
+                                                onChange={this.onChange}
+                                                name="comentario"
+                                                value={this.state.comentario}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Fecha de transacción:
+                                        </Col>
+                                        <Col xs="3">
+                                            <Input
+                                                type="date"
+                                                name="fechaTransaccion"
+                                                placeholder='DD/MM/AAAA'
+                                                onChange={this.onChange}
+                                                value={this.state.fechaTransaccion}
+                                                invalid={this.state.fechaTransaccionInvalida}
+                                            />
+                                            <FormFeedback>Este campo es requerido</FormFeedback>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="3">
+                                            * Hogar:
+                                        </Col>
+                                        <Col xs="9">
+                                            <ButtonGroup>
+                                                <Button
+                                                    color="info"
+                                                    onClick={() => this.onRadioBtnClick(true)}
+                                                    active={this.state.mismoHogar === true}
+                                                >
+                                                    {this.state.mismoHogar ? <span className="fa fa-icon fa-check"></span> : ""} En el Mismo Hogar
+                                                </Button>
+                                                <Button
+                                                    color="info"
+                                                    onClick={() => this.onRadioBtnClick(false)}
+                                                    active={this.state.mismoHogar === false}>
+                                                    {this.state.mismoHogar ? "" : <span className="fa fa-icon fa-check"></span>} En un Hogar Diferente
+                                                </Button>
+                                            </ButtonGroup>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                <hr />
+                                {/* Desplega el COmponente para Elegir Hogar Existente o Crear uno Nuevo */}
+                                {!this.state.mismoHogar &&
+                                    <HogarPersonaDomicilio
+                                        domicilio={this.state.domicilio}
+                                        onChangeDomicilio={this.onChangeDomicilio}
+                                        handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
+                                        handle_hp_Jerarquia={this.handle_hp_Jerarquia}
+                                        hogar={this.state.hogar}
+                                        DatosHogarDomicilio={this.state.DatosHogarDomicilio}
+                                        MiembrosDelHogar={this.state.MiembrosDelHogar}
+                                        JerarquiasDisponibles={this.state.JerarquiasDisponibles}
+                                        boolNvoEstado={this.state.boolNvoEstado}
+                                        handleChangeEstado={this.handleChangeEstado}
+                                        direccion={this.state.direccion}
+                                        habilitaPerBautizado={this.state.habilitaPerBautizado}
+                                    />
+                                }
+                                {/* Desplega el Componente para escribir una Jerarquía en un Hogar Existente */}
+                                {this.state.mostrarJerarquias &&
+                                    <MostrarJerarquias
+                                        handle_hp_Jerarquia={this.handle_hp_Jerarquia}
+                                        hogar={this.state.hogar}
+                                        DatosHogarDomicilio={this.state.DatosHogarDomicilio}
+                                        MiembrosDelHogar={this.state.MiembrosDelHogar}
+                                        JerarquiasDisponibles={this.state.JerarquiasDisponibles}
+                                        direccion={this.state.direccion}
+                                    />
+                                }
+                            </CardBody>
+                            <CardFooter>
+                                <Link
+                                    to="/ListaDePersonal"
+                                >
+                                    <Button type="button" color="secondary" className="entreBotones">
+                                        Cancelar
+                                    </Button>
+                                </Link>
+                                <Button
+                                    type="submit"
+                                    color="success"
+                                >
+                                    <span className="fa fa-pencil"></span>Proceder
                                 </Button>
-                            </Link>
-                            <Button
-                                type="submit"
-                                color="success"
-                            >
-                                <span className="fa fa-pencil"></span>Proceder
-                            </Button>
-                        </CardFooter>
-                    </Form>
-                </Card>
-            </Container>
+                            </CardFooter>
+                        </Form>
+                    </Card>
+                </Container>
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
+            </>
         )
     }
 }

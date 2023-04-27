@@ -37,25 +37,29 @@ class BajaBautizadoCambioDomicilio extends Component {
     getBajaNoBautizadoCambioDomicilio = async () => {
         await helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) });
+                        // names must be equal
+                        return 0;
+                    })
+                });
             });
     }
 
 
 
     onChangeBajaNoBautizadoCambioDomicilio = (e) => {
+        console.log("Persona: ", e.target.value)
+
         this.setState({
             formBajaNoBautizadoCambioDomicilio: {
                 ...this.state.formBajaNoBautizadoCambioDomicilio,
@@ -66,17 +70,18 @@ class BajaBautizadoCambioDomicilio extends Component {
 
     bajaNoBautizadoCambioDomicilio = async (e) => {
         e.preventDefault();
-        if (this.state.formBajaNoBautizadoCambioDomicilio.per_Id_Persona === "0"
-            || this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino === "0"
-            || this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion === ""){
+        console.log("info: ", this.state.formBajaNoBautizadoCambioDomicilio)
+        if (this.state.formBajaNoBautizadoCambioDomicilio.idPersona == "0"
+            || this.state.formBajaNoBautizadoCambioDomicilio.tipoDestino == "0"
+            || this.state.formBajaNoBautizadoCambioDomicilio.fechaTransaccion === "") {
             alert("Error:\nDebe ingresar todos los datos requeridos.")
+            return false;
         }
         try {
             await helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaNoBautizadoCambioDomicilio)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
-                        setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
                         this.setState({
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
@@ -87,7 +92,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                             });
                         }, 1000);
                         setTimeout(() => {
-                            document.location.href = '/ListaDePersonal'
+                            document.location.href = '/Main'
                         }, 1000);
                     } else {
                         // alert(res.data.mensaje);

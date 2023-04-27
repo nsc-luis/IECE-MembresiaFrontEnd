@@ -57,12 +57,13 @@ class AltaCambioDomicilio extends Component {
         });
         this.GetPersonaCambioDomicilioReactivacionRestitucion();
     }
+
     GetPersonaCambioDomicilioReactivacionRestitucion = async () => {
         await helpers.authAxios.get("Persona/GetPersonasVisibilidadAbierta/true")
             .then(res => {
                 this.setState({
                     personas: res.data.personas
-                        .filter(per => (per.sec_Id_Sector !== parseInt(localStorage.getItem("sector"))) && per.per_Activo === true) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
+                        .filter(per => (per.sec_Id_Sector !== parseInt(localStorage.getItem("sector"))) && per.per_Activo === false) //Que traiga solo a personas de Diferente Sector al de Sesión Activa
                         .sort((a, b) => { // Que las ordene alfabeticamente
                             const nameA = a.per_Nombre; // ignore upper and lowercase
                             const nameB = b.per_Nombre; // ignore upper and lowercase
@@ -255,8 +256,10 @@ class AltaCambioDomicilio extends Component {
                     hte_Comentario: this.state.procedencia,
                     HD: this.state.domicilio
                 }
+
                 await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
                     .then(res => {
+                        console.log("Respuesta: ", res.data.status);
                         if (res.data.status === 'error') {
                             console.log(res.data.mensaje)
                         }
