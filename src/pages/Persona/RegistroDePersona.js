@@ -54,7 +54,6 @@ class RegistroDePersonal extends Component {
         }
     }
 
-
     componentDidMount() {
 
         if (localStorage.getItem("idPersona") === "0") {//Si se trata de un Nuevo Registro , No Edición Ni de un No Bautizado que pasa a Bautizado
@@ -481,7 +480,7 @@ class RegistroDePersonal extends Component {
             }
         }
         if(e.target.name === "per_Lugar_Bautismo") {
-            if (e.target.value.length > 2) {
+            if (e.target.value.length > 1) {
                 axios.get(`${helpers.url_api}/Sector/BuscarPorTexto/${e.target.value}`)
                 .then(res => {
                     this.setState({ 
@@ -505,6 +504,15 @@ class RegistroDePersonal extends Component {
             form: {
                 ...this.state.form,
                 per_Lugar_Bautismo: info.sec_Alias
+            }
+        })
+    }
+
+    borrarSeleccionLugarBautismo = () => {
+        this.setState({
+            form: {
+                ...this.state.form,
+                per_Lugar_Bautismo: ""
             }
         })
     }
@@ -893,6 +901,7 @@ class RegistroDePersonal extends Component {
                     buscarLugarDeBautismo={this.state.buscarLugarDeBautismo}
                     listaResultadoBusquedaLugarBautismo={this.state.listaResultadoBusquedaLugarBautismo}
                     seleccionaLugarDeBautismo={this.seleccionaLugarDeBautismo}
+                    borrarSeleccionLugarBautismo={this.borrarSeleccionLugarBautismo}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

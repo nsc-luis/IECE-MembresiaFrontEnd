@@ -302,7 +302,8 @@ class PersonaForm extends Component {
             handleFechaDeTransaccion,
             buscarLugarDeBautismo,
             listaResultadoBusquedaLugarBautismo,
-            seleccionaLugarDeBautismo
+            seleccionaLugarDeBautismo,
+            borrarSeleccionLugarBautismo
         } = this.props
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
@@ -1382,7 +1383,7 @@ class PersonaForm extends Component {
                                                                     {/* Bautismo */}
                                                                     {form.per_Bautizado &&
                                                                         <React.Fragment>
-                                                                            <div style={{ position: 'relative' }}>
+                                                                            <div className='relativeBuscarLugarDeBautismo'>
                                                                                 <div className="row">
                                                                                     <div className="col-sm-4">
                                                                                         <FormGroup>
@@ -1393,7 +1394,12 @@ class PersonaForm extends Component {
                                                                                                 value={form.per_Lugar_Bautismo}
                                                                                                 className="form-control"
                                                                                             />
-                                                                                            <label>Lugar de bautismo</label>
+                                                                                            <label>Lugar de bautismo (Distrito 101 Sector 101)</label>
+                                                                                            &nbsp;
+                                                                                            <span
+                                                                                                onClick={borrarSeleccionLugarBautismo}
+                                                                                                className='fa fa-window-close'>
+                                                                                            </span>
                                                                                         </FormGroup>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
@@ -1428,21 +1434,19 @@ class PersonaForm extends Component {
                                                                                         <div className="col-sm-12">
                                                                                             <div
                                                                                                 hidden={buscarLugarDeBautismo}
-                                                                                                style={{
-                                                                                                    position: 'absolute',
-                                                                                                    zIndex: '10',
-                                                                                                    backgroundColor: 'white',
-                                                                                                    border: '1px solid black',
-                                                                                                    height: '150px',
-                                                                                                    overflow: 'scroll'
-                                                                                                }}
+                                                                                                className='buscarLugarDeBautismo'
                                                                                             >
-                                                                                                <ul>
+                                                                                                <ul className='optionBuscarLugarDeBautismo'>
                                                                                                     {listaResultadoBusquedaLugarBautismo.length > 0 &&
                                                                                                         listaResultadoBusquedaLugarBautismo.map((lugar) => {
                                                                                                             return (
                                                                                                                 <React.Fragment>
-                                                                                                                    <li onClick={() => seleccionaLugarDeBautismo(lugar)} key={lugar.sec_Id_Sector}><strong>Distrito:</strong> {lugar.dis_Alias}, <strong>Sector:</strong> {lugar.sec_Alias}</li>
+                                                                                                                    <li
+                                                                                                                        onClick={() => seleccionaLugarDeBautismo(lugar)}
+                                                                                                                        key={lugar.sec_Id_Sector}
+                                                                                                                    >
+                                                                                                                        <strong>{lugar.dis_Tipo_Distrito} {lugar.dis_Numero}:</strong> {lugar.dis_Alias}, <strong>Sector:</strong> {lugar.sec_Alias}
+                                                                                                                    </li>
                                                                                                                 </React.Fragment>
                                                                                                             )
                                                                                                         })
