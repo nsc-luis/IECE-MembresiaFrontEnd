@@ -48,7 +48,8 @@ class RegistroDePersonal extends Component {
             nuevaFoto: false,
             boolNvoEstado: false,
             fechaBautismoInvalida: false,
-            FechaTransaccionHistorica: ""
+            FechaTransaccionHistorica: "",
+            submitBtnDisable: false
         }
     }
 
@@ -158,6 +159,10 @@ class RegistroDePersonal extends Component {
                 }
             });
         }
+    }
+
+    ChangeSubmitBtnDisable = (bol) => {//Sirve para evitar multiples registros por dobleclick en botón Submit
+        this.setState({ submitBtnDisable: bol });
     }
 
     setFrmValidaPersona = (bol) => {
@@ -863,6 +868,8 @@ class RegistroDePersonal extends Component {
                     ChangeFechaBautismoInvalida={this.ChangeFechaBautismoInvalida}
                     handleFechaDeTransaccion={this.handleFechaDeTransaccion}
                     FechaTransaccionHistorica={this.state.FechaTransaccionHistorica}
+                    ChangeSubmitBtnDisable={this.ChangeSubmitBtnDisable}
+                    submitBtnDisable={this.state.submitBtnDisable}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

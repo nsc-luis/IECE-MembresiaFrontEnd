@@ -104,7 +104,6 @@ class PersonaForm extends Component {
         }
     };
 
-
     openModalAltaPersona = () => {
         this.setState({
             showModalAltaPersona: true
@@ -299,7 +298,9 @@ class PersonaForm extends Component {
             fechaBautismoInvalida,
             ChangeFechaBautismoInvalida,
             FechaTransaccionHistorica,
-            handleFechaDeTransaccion
+            handleFechaDeTransaccion,
+            submitBtnDisable,
+            ChangeSubmitBtnDisable
         } = this.props
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
@@ -527,7 +528,7 @@ class PersonaForm extends Component {
                     return false;
                 }
 
-                if (this.state.hogar.hd_Id_Hogar === "0") {// Si el Registro es de Persona y de Hogar
+                if (this.state.hogar.hd_Id_Hogar === "0") {// Si el Registro es de Persona y de Nuevo Hogar
                     let PersonaDomicilioHogar = {
                         id: 1,
                         PersonaEntity: objPersona,
@@ -539,8 +540,10 @@ class PersonaForm extends Component {
                         alert("Error!. Debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
                         return false;
                     }
+                    await ChangeSubmitBtnDisable(true)
                     await fnGuardaPersona(PersonaDomicilioHogar)
                 } else {//Si el Registro es de una Persona que se asignará a un Hogar Existente
+                    await ChangeSubmitBtnDisable(true)
                     await fnGuardaPersonaEnHogar(objPersona, this.state.hogar.hp_Jerarquia, this.state.hogar.hd_Id_Hogar)
                 }
             }
@@ -1611,6 +1614,8 @@ class PersonaForm extends Component {
                                                         <Button
                                                             type="submit"
                                                             className="btn btn-success form-control"
+                                                            name="btnGuardarPersona"
+                                                            disable={submitBtnDisable}
                                                         >
                                                             <span className="fa fa-save" style={{ paddingRight: "10px" }}></span>
                                                             Guardar

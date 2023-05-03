@@ -35,6 +35,7 @@ class Legalizacion extends Component {
             perIdPersonaHombreInvalid: false,
             perIdPersonaMujerInvalid: false,
             matFechaBodaEclesiasticaInvalid: false,
+            matFechaBodaCivilInvalid: false,
             sector: {},
             DatosHogarDomicilio: [],
             MiembrosDelHogar: [],
@@ -42,7 +43,8 @@ class Legalizacion extends Component {
             direccion: "",
             mensajes: "",
             viviranEnLocalidad: false,
-            ListaHogares: []
+            ListaHogares: [],
+            submitBtnDisable: false
         }
         localStorage.setItem("mat_Id_MatrimonioLegalizacion", "0")
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
@@ -106,6 +108,9 @@ class Legalizacion extends Component {
         this.getMujeres(localStorage.getItem("sector"));//Trae Candidatas a Matrimonio
     }
 
+    ChangeSubmitBtnDisable = (bol) => {//Sirve para evitar multiples registros por dobleclick en botón Submit
+        this.setState({ submitBtnDisable: bol });
+    }
 
     getHombres = async (str) => {//Trae a los Hombres del Sector que esten Activas y que su estado civil sea diferente a 'Casado(a)' o 'Concubinato'
         await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Matrimonio_Legalizacion/GetHombresPorSectorParaLegalizacion/" + localStorage.getItem("sector"))
@@ -190,6 +195,18 @@ class Legalizacion extends Component {
             }
         });
 
+        if (e.target.name === "mat_Fecha_Boda_Civil") {
+            this.setState({
+                matFechaBodaCivilInvalid: false
+            })
+        }
+
+        if (e.target.name === "mat_Fecha_Boda_Eclesiastica") {
+            this.setState({
+                matFechaBodaEclesiasticaInvalid: false,
+            })
+        }
+
         //Si es persona Local, trae sus datos de Hogar para conformar la Posible Lista de Hogares Existentes
         if (e.target.name === "per_Id_Persona_Mujer" || e.target.name === "per_Id_Persona_Hombre") {
 
@@ -231,7 +248,8 @@ class Legalizacion extends Component {
                 matNombreContrayenteHombreForaneoInvalid: this.state.bolForaneoHombre && this.state.matLegal.mat_Nombre_Contrayente_Hombre_Foraneo === "" ? true : false,
                 perIdPersonaMujerInvalid: !this.state.bolForaneoMujer && this.state.matLegal.per_Id_Persona_Mujer === "0" ? true : false,
                 perIdPersonaHombreInvalid: !this.state.bolForaneoHombre && this.state.matLegal.per_Id_Persona_Hombre === "0" ? true : false,
-                matFechaBodaEclesiasticaInvalid: this.state.matLegal.mat_Fecha_Boda_Eclesiastica === null || this.state.matLegal.mat_Fecha_Boda_Eclesiastica === "" ? true : false
+                matFechaBodaEclesiasticaInvalid: this.state.matLegal.mat_Fecha_Boda_Eclesiastica === null || this.state.matLegal.mat_Fecha_Boda_Eclesiastica === "" ? true : false,
+                matFechaBodaCivilInvalid: this.state.matLegal.mat_Fecha_Boda_Civil === null || this.state.matLegal.mat_Fecha_Boda_Civil === "" ? true : false
             });
 
             //Pone en varibales de bloque las Variables de Invalidaciones, si deben estar en 'true'
@@ -241,10 +259,12 @@ class Legalizacion extends Component {
             let perIdPersonaMujerInvalidTmp = !this.state.bolForaneoMujer && this.state.matLegal.per_Id_Persona_Mujer === "0" ? true : false;
             let perIdPersonaHombreInvalidTmp = !this.state.bolForaneoHombre && this.state.matLegal.per_Id_Persona_Hombre === "0" ? true : false;
             let matFechaBodaEclesiasticaInvalidTmp = this.state.matLegal.mat_Fecha_Boda_Eclesiastica === null || this.state.matLegal.mat_Fecha_Boda_Eclesiastica === "" ? true : false;
+            let matFechaBodaCivilInvalidTmp = this.state.matLegal.mat_Fecha_Boda_Civil === null || this.state.matLegal.mat_Fecha_Boda_Civil === "" ? true : false;
             //Si alguna variable de Invalidación tiene valor 'true' cancela la Transacción,
             if (matTipoEnalceInvalidTmp || matNombreContrayenteMujerForaneoInvalidTmp ||
                 matNombreContrayenteHombreForaneoInvalidTmp || perIdPersonaMujerInvalidTmp ||
-                perIdPersonaHombreInvalidTmp || matFechaBodaEclesiasticaInvalidTmp) {
+                perIdPersonaHombreInvalidTmp || matFechaBodaEclesiasticaInvalidTmp ||
+                matFechaBodaCivilInvalidTmp) {
                 return false;
             }
 
@@ -279,16 +299,19 @@ class Legalizacion extends Component {
                 viviranEnLocalidad: this.state.viviranEnLocalidad
             }
 
+            //Para deshabilitar el botón y evitar multiples registros de Matrimonio y Ediciones de Persona
+            await this.ChangeSubmitBtnDisable(true)
+
+            //Procede a Registrar la Legalización y a editar Personas
             try {
+                this.setState({
+                    mensajeDelProceso: "Procesando...",
+                    modalShow: true
+                });
                 helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaLegalizacion`, matLegalDom)
                     .then(res => {
                         if (res.data.status === "success") {
-                            // alert(res.data.mensaje);
-                            setTimeout(() => { document.location.href = '/Main'; }, 3000);
-                            this.setState({
-                                mensajeDelProceso: "Procesando...",
-                                modalShow: true
-                            });
+
                             setTimeout(() => {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
@@ -474,9 +497,10 @@ class Legalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Civil}
+                                                    invalid={this.state.matFechaBodaCivilInvalid}
                                                 />
                                                 <Label><strong>Fecha Boda Civil: </strong></Label>
-                                                <FormFeedback></FormFeedback>
+                                                <FormFeedback>Debe seleccionar una fecha para continuar.</FormFeedback>
                                             </FormGroup>
                                         </Col>
                                         <Col xs="4">
