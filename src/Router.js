@@ -63,30 +63,35 @@ class Router extends Component {
                     <Route exact path="/SolicitudDeRestablecimiento" component={SolicitudDeRestablecimiento} />
                     <Route exact path="/ValidaCambioDeContrasena" component={ValidaCambioDeContrasena} />
                     <Layout>
-                        <Route exact path="/Main" component={ListaDePersonal} />
-                        <Route exact path="/Hogar" component={Hogar} />
-                        <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
-                        <Route exact path="/RegistroDePersona" component={RegistroDePersona} />
-                        <Route exact path="/PresentacionDeNino" component={PresentacionDeNino} />
-                        <Route exact path="/Matrimonio" component={Matrimonio} />
-                        <Route exact path="/Legalizacion" component={Legalizacion} />
-                        <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
-                        <Route exact path="/RptBautizados" component={RptBautizados} />
+                        {/* MONITOREO */}
                         <Route exact path="/Sector" component={Sector} />
                         <Route exact path="/ResumenMembresia" component={ResumenMembresia} />
+                        <Route exact path="/Main" component={ListaDePersonal} />
+                        <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
+                        <Route exact path="/Hogar" component={Hogar} />
                         <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />
-                        <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
-                        <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
+                        {/* MOVIMIENTOS ESTADISTICOS */}
+                        <Route exact path="/RegistroDePersona" component={RegistroDePersona} />
+                        <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
+                        <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
+                        <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
+                        <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
                         <Route exact path="/BajaBautizadoExcomunion" component={BajaBautizadoExcomunion} />
                         <Route exact path="/BajaBautizadoDefuncion" component={BajaBautizadoDefuncion} />
                         <Route exact path="/BajaNoBautizadoDefuncion" component={BajaNoBautizadoDefuncion} />
                         <Route exact path="/BajaBautizadoCambioDomicilio" component={BajaBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoCambioDomicilio" component={BajaNoBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoAlejamiento" component={BajaNoBautizadoAlejamiento} />
-                        <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
-                        <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
-                        <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
-                        <Route exact path="/AltaCambioDomicilioNB" component={AltaCambioDomicilioNB} />
+                        {/* HOGARES */}
+                        <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
+                        <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
+                        {/* SUCESOS ESTADISTICOS */}
+                        <Route exact path="/Matrimonio" component={Matrimonio} />
+                        <Route exact path="/Legalizacion" component={Legalizacion} />
+                        <Route exact path="/PresentacionDeNino" component={PresentacionDeNino} />
+                        {/* REPORTES */}
+                        <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
+                        <Route exact path="/RptBautizados" component={RptBautizados} />
                         <Route exact path="/ReporteTransacciones" component={ReporteTransacciones} />
                         <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
                         {/* COMPONENTES DE VICTOR */}

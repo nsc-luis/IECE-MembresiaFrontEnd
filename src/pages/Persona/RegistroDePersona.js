@@ -50,7 +50,8 @@ class RegistroDePersonal extends Component {
             fechaBautismoInvalida: false,
             FechaTransaccionHistorica: "",
             buscarLugarDeBautismo: true,
-            listaResultadoBusquedaLugarBautismo: []
+            listaResultadoBusquedaLugarBautismo: [],
+            submitBtnDisable: false
         }
     }
 
@@ -159,6 +160,10 @@ class RegistroDePersonal extends Component {
                 }
             });
         }
+    }
+
+    ChangeSubmitBtnDisable = (bol) => {//Sirve para evitar multiples registros por dobleclick en botón Submit
+        this.setState({ submitBtnDisable: bol });
     }
 
     setFrmValidaPersona = (bol) => {
@@ -459,7 +464,7 @@ class RegistroDePersonal extends Component {
             if (e.target.files[0].size / 1024 / 1024 > 3
                 || !mimeTypeValidos.includes(e.target.files[0].type)) {
                 alert("Error: \nSólo se admiten archivos menores o iguales a 3MB y que sea de tipo 'png', 'jpg' o jpeg.")
-
+                console.log("entro a if")
                 this.setState({
                     form: {
                         ...this.state.form,
@@ -468,8 +473,10 @@ class RegistroDePersonal extends Component {
                     foto: `${helpers.url_api}/Foto/FotoDefault`,
                     nuevaFoto: false
                 })
+                e.target.value = null
             }
             else {
+                console.log("entro a if")
                 let formData = new FormData();
                 formData.append('image', e.target.files[0]);
                 this.setState({
@@ -479,15 +486,15 @@ class RegistroDePersonal extends Component {
                 })
             }
         }
-        if(e.target.name === "per_Lugar_Bautismo") {
+        if (e.target.name === "per_Lugar_Bautismo") {
             if (e.target.value.length > 1) {
                 axios.get(`${helpers.url_api}/Sector/BuscarPorTexto/${e.target.value}`)
-                .then(res => {
-                    this.setState({ 
-                        buscarLugarDeBautismo: res.data.query.length > 0 ? false : true,
-                        listaResultadoBusquedaLugarBautismo: res.data.query
-                     })
-                })
+                    .then(res => {
+                        this.setState({
+                            buscarLugarDeBautismo: res.data.query.length > 0 ? false : true,
+                            listaResultadoBusquedaLugarBautismo: res.data.query
+                        })
+                    })
             }
             else {
                 this.setState({
@@ -912,6 +919,8 @@ class RegistroDePersonal extends Component {
                     listaResultadoBusquedaLugarBautismo={this.state.listaResultadoBusquedaLugarBautismo}
                     seleccionaLugarDeBautismo={this.seleccionaLugarDeBautismo}
                     borrarSeleccionLugarBautismo={this.borrarSeleccionLugarBautismo}
+                    ChangeSubmitBtnDisable={this.ChangeSubmitBtnDisable}
+                    submitBtnDisable={this.state.submitBtnDisable}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

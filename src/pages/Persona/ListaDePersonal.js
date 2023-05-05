@@ -11,6 +11,8 @@ import IECELogo from '../../assets/images/IECE_logo.png'
 import ModalInfoHogar from './ModalInfoHogar';
 import jsPDF from 'jspdf';
 import nvologo from '../../assets/images/IECE_LogoOficial.jpg';
+import moment from 'moment/min/moment-with-locales';
+import 'moment/dist/locale/es'
 
 class ListaDePersonal extends Component {
 
@@ -483,39 +485,41 @@ class ListaDePersonal extends Component {
         )
 
         let fechaActual = new Date();
+        console.log("persona:", typeof (moment(info.persona.per_Fecha_Nacimiento).format('D/MMM/YYYY')))
         var datos = {
             "idPersona": info.persona.per_Id_Persona,
             "NombreCompleto": `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`,
             "edad": info.persona.edad,
             "Nacionalidad": info.persona.per_Nacionalidad,
             "LugarNacimiento": info.persona.per_Lugar_De_Nacimiento,
-            "FechaNacimiento": info.persona.per_Fecha_Nacimiento,
-            "NombreDePadres": `${info.persona.per_Nombre_Padre} ${info.persona.per_Nombre_Madre != "" ? `, ${info.persona.per_Nombre_Madre}` : ""}`,
-            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno} ${info.persona.per_Nombre_Abuela_Paterna != "" ? `, ${info.persona.per_Nombre_Abuela_Paterna}` : ""}`,
-            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno} ${info.persona.per_Nombre_Abuela_Materna != "" ? `, ${info.persona.per_Nombre_Abuela_Materna}` : ""}`,
+            "FechaNacimiento": info.persona.per_Fecha_Nacimiento ? (moment(info.persona.per_Fecha_Nacimiento).format('D/MMM/YYYY')) : "",
+            "NombreDePadres": `${info.persona.per_Nombre_Padre} ${info.persona.per_Nombre_Madre != "" ? `y ${info.persona.per_Nombre_Madre}` : ""}`,
+            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno} ${info.persona.per_Nombre_Abuela_Paterna != "" ? `y ${info.persona.per_Nombre_Abuela_Paterna}` : ""}`,
+            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno} ${info.persona.per_Nombre_Abuela_Materna != "" ? `y ${info.persona.per_Nombre_Abuela_Materna}` : ""}`,
             "EstadoCivil": info.persona.per_Estado_Civil,
-            "FechaBodaCivil": info.persona.per_Fecha_Boda_Civil,
+            "FechaBodaCivil": info.persona.per_Fecha_Boda_Civil ? (moment(info.persona.per_Fecha_Boda_Civil).format('D/MMM/YYYY')) : "",
             "Acta": info.persona.per_Num_Acta_Boda_Civil,
             "Libro": info.persona.per_Libro_Acta_Boda_Civil,
             "Oficialia": info.persona.per_Oficialia_Boda_Civil,
             "RegistroCivil": info.persona.per_Registro_Civil,
-            "FechaBodaEclesiastica": info.persona.per_Fecha_Boda_Eclesiastica,
+            "FechaBodaEclesiastica": info.persona.per_Fecha_Boda_Eclesiastica ? (moment(info.persona.per_Fecha_Boda_Eclesiastica).format('D/MMM/YYYY')) : "",
             "LugarBodaEclesiastica": info.persona.per_Lugar_Boda_Eclesiastica,
             "NombreConyugue": info.persona.per_Nombre_Conyuge,
             "CantidadHijos": info.persona.per_Cantidad_Hijos,
             "NombreHijos": info.persona.per_Nombre_Hijos,
             "LugarBautismo": info.persona.per_Lugar_Bautismo,
-            "FechaBautismo": info.persona.per_Fecha_Bautismo,
+            "FechaBautismo": info.persona.per_Fecha_Bautismo ? (moment(info.persona.per_Fecha_Bautismo).format('D/MMM/YYYY')) : "",
             "QuienBautizo": info.persona.per_Ministro_Que_Bautizo,
-            "FechaPromesaEspiritu": info.persona.per_Fecha_Recibio_Espiritu_Santo,
+            "FechaPromesaEspiritu": info.persona.per_Fecha_Recibio_Espiritu_Santo ? (moment(info.persona.per_Fecha_Recibio_Espiritu_Santo).format('D/MMM/YYYY')) : "",
             "BajoImposicionDeManos": info.persona.per_Bajo_Imposicion_De_Manos,
             "Puestos": info.persona.per_Cargos_Desempenados,
             "CambiosDomicilio": info.persona.per_Cambios_De_Domicilio,
             "Domicilio": this.state.direccion,
-            "Telefonos": `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""}`,
-            "Oficio1": `${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`,
-            "Oficio2": `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`,
-            "Fecha": `${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`,
+            "Telefonos": `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? ("PERSONAL: " + info.persona.per_Telefono_Movil) : ""} ${info.domicilio[0].hd_Telefono == null || info.domicilio[0].hd_Telefono == "" ? "" : ("- CASA: " + info.domicilio[0].hd_Telefono)}`,
+            "Email": `${info.persona.per_Email_Personal !== null || info.persona.per_Email_Personal !== "" ? info.persona.per_Email_Personal : "-"}`,
+            "Oficio1": `${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`,
+            "Oficio2": `${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`,
+            "Fecha": (moment(fechaActual).format('D/MMM/YYYY')),
             "Secretario":
                 await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
                     .then(res => {
