@@ -155,7 +155,16 @@ class PersonaForm extends Component {
         axios.get(this.url + "/profesion_oficio")
             .then(res => {
                 this.setState({
-                    profesiones_oficios: res.data,
+                    profesiones_oficios: res.data.sort(function (a, b) {
+                        if (a.pro_Sub_Categoria > b.pro_Sub_Categoria) {
+                            return 1;
+                        }
+                        if (a.pro_Sub_Categoria < b.pro_Sub_Categoria) {
+                            return -1;
+                        }
+                        // a must be equal to b
+                        return 0;
+                    }),
                     status: 'success'
                 });
             });
@@ -537,7 +546,7 @@ class PersonaForm extends Component {
                     if (domicilio.pais_Id_Pais === "0"
                         || domicilio.hd_Calle === ""
                         || domicilio.hd_Municipio_Ciudad === "") {
-                        alert("Error!. Debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
+                        alert("Error!. Para Nuevo Hogar/Domicilio, debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
                         return false;
                     }
                     await ChangeSubmitBtnDisable(true)
@@ -645,6 +654,7 @@ class PersonaForm extends Component {
                                                                 onChange={onChange}
                                                                 value={form.per_Nombre}
                                                                 className="form-control"
+                                                                autoComplete="nope"
                                                             />
                                                         </div>
                                                         {per_Nombre_NoValido &&
@@ -667,6 +677,7 @@ class PersonaForm extends Component {
                                                                 onChange={onChange}
                                                                 value={form.per_Apellido_Paterno}
                                                                 className="form-control"
+                                                                autoComplete="nope"
                                                             />
                                                         </div>
                                                         {per_Apellido_Paterno_NoValido &&
@@ -836,7 +847,7 @@ class PersonaForm extends Component {
                                                                             value={form.per_Nombre}
                                                                             disabled
                                                                         />
-                                                                        <label>Nombre(s)</label>
+                                                                        <label><strong>*</strong> Nombre(s)</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
@@ -845,7 +856,7 @@ class PersonaForm extends Component {
                                                                             value={form.per_Apellido_Paterno}
                                                                             disabled
                                                                         />
-                                                                        <label>Apellido Paterno</label>
+                                                                        <label><strong>*</strong> Apellido Paterno</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
@@ -867,7 +878,7 @@ class PersonaForm extends Component {
                                                                             value={form.per_Categoria}
                                                                             disabled
                                                                         />
-                                                                        <label>Categoría</label>
+                                                                        <label><strong>*</strong> Categoría</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
@@ -877,7 +888,7 @@ class PersonaForm extends Component {
                                                                             placeholder="DD/MM/AAAA"
                                                                             disabled
                                                                         />
-                                                                        <label>Fecha de Nacimiento</label>
+                                                                        <label><strong>*</strong> Fecha de Nacimiento</label>
                                                                     </div>
                                                                     <div className="col-sm-2">
                                                                         <Button
@@ -916,6 +927,7 @@ class PersonaForm extends Component {
                                                                             onChange={onChange}
                                                                             className="form-control"
                                                                             value={form.per_Nacionalidad}
+                                                                            autoComplete="nope"
                                                                         />
                                                                         <label>Nacionalidad</label>
                                                                     </FormGroup>
@@ -928,6 +940,7 @@ class PersonaForm extends Component {
                                                                             onChange={onChange}
                                                                             className="form-control"
                                                                             value={form.per_Lugar_De_Nacimiento}
+                                                                            autoComplete="nope"
                                                                         />
                                                                         <label>Lugar de Nacimiento</label>
                                                                     </FormGroup>
@@ -941,6 +954,7 @@ class PersonaForm extends Component {
                                                                             onChange={onChange}
                                                                             invalid={this.state.emailInvalido}
                                                                             value={form.per_Email_Personal}
+                                                                            autoComplete="nope"
                                                                         />
                                                                         <label>Email</label>
                                                                         <FormFeedback>{this.state.mensajes.emailInvalido}</FormFeedback>
@@ -952,24 +966,31 @@ class PersonaForm extends Component {
                                                             <div className="row">
                                                                 <div className="col-sm-4">
                                                                     <FormGroup>
-                                                                        <Input type="select"
+                                                                        <select
                                                                             name="pro_Id_Profesion_Oficio1"
                                                                             className="form-control"
                                                                             onChange={onChange}
                                                                             value={form.pro_Id_Profesion_Oficio1}
+                                                                            autoComplete="nope"
                                                                         >
+                                                                            <option
+                                                                                value="1"
+                                                                            >
+                                                                                NINGUNO
+                                                                            </option>
                                                                             {
                                                                                 this.state.profesiones_oficios.map((profesion_oficio) => {
                                                                                     return (
                                                                                         <option
                                                                                             key={profesion_oficio.pro_Id_Profesion_Oficio}
-                                                                                            value={profesion_oficio.pro_Id_Profesion_Oficio}>
-                                                                                            {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
+                                                                                            value={profesion_oficio.pro_Id_Profesion_Oficio}
+                                                                                        >
+                                                                                            {profesion_oficio.pro_Sub_Categoria}
                                                                                         </option>
                                                                                     )
                                                                                 })
                                                                             }
-                                                                        </Input>
+                                                                        </select>
                                                                         <label>Profesión/Oficio No. 1</label>
                                                                     </FormGroup>
                                                                 </div>
@@ -980,14 +1001,20 @@ class PersonaForm extends Component {
                                                                             className="form-control"
                                                                             onChange={onChange}
                                                                             value={form.pro_Id_Profesion_Oficio2}
+                                                                            autoComplete="nope"
                                                                         >
+                                                                            <option
+                                                                                value="1"
+                                                                            >
+                                                                                NINGUNO
+                                                                            </option>
                                                                             {
                                                                                 this.state.profesiones_oficios.map((profesion_oficio, i) => {
                                                                                     return (
                                                                                         <option
                                                                                             key={profesion_oficio.pro_Id_Profesion_Oficio}
                                                                                             value={profesion_oficio.pro_Id_Profesion_Oficio}>
-                                                                                            {profesion_oficio.pro_Categoria} | {profesion_oficio.pro_Sub_Categoria}
+                                                                                            {profesion_oficio.pro_Sub_Categoria}
                                                                                         </option>
                                                                                     )
                                                                                 })
@@ -1004,6 +1031,7 @@ class PersonaForm extends Component {
                                                                             onChange={onChange}
                                                                             invalid={this.state.telMovilInvalido}
                                                                             value={form.per_Telefono_Movil}
+                                                                            autoComplete="nope"
                                                                         />
                                                                         <label>Telefono móvil</label>
                                                                         <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
@@ -1020,6 +1048,7 @@ class PersonaForm extends Component {
                                                                                 className="form-control"
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf1}
+                                                                                autoComplete="nope"
                                                                             />
                                                                             <label>Registrar Nueva profesión u oficio No.1 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
@@ -1033,6 +1062,7 @@ class PersonaForm extends Component {
                                                                                 className="form-control"
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf2}
+                                                                                autoComplete="nope"
                                                                             />
                                                                             <label>Registrar Nueva profesión u oficio No. 2 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
@@ -1049,6 +1079,8 @@ class PersonaForm extends Component {
                                                                             name="idFoto"
                                                                             onChange={onChange}
                                                                             className="form-control"
+                                                                            autoComplete="nope"
+
                                                                         />
                                                                         <label>Foto. &nbsp;&nbsp;     &#40;La foto debe ser Tipo Credencial: De hombros hacia arriba y Mujeres sin velo&#41;</label>
                                                                     </div>
@@ -1089,6 +1121,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Padre}
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Padre</label>
                                                                             </div>
@@ -1099,6 +1132,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Madre}
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Madre</label>
                                                                             </div>
@@ -1114,6 +1148,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuelo_Paterno}
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Abuelo Paterno</label>
                                                                             </div>
@@ -1124,6 +1159,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuela_Paterna}
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Abuela Paterna</label>
                                                                             </div>
@@ -1139,6 +1175,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuelo_Materno}
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Abuelo Materno</label>
                                                                             </div>
@@ -1149,6 +1186,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuela_Materna}
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Abuela Materna</label>
                                                                             </div>
@@ -1196,6 +1234,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             className="form-control"
                                                                                             value={form.per_Nombre_Conyuge}
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label>Nombre Conyuge</label>
                                                                                     </div>
@@ -1207,6 +1246,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Fecha_Boda_Civil}
                                                                                             placeholder="DD/MM/AAAA"
                                                                                             className="form-control"
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label>Fecha Boda Civil</label>
                                                                                     </div>
@@ -1226,6 +1266,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             className="form-control"
                                                                                             value={form.per_Num_Acta_Boda_Civil}
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label>Num. de acta boda civil</label>
                                                                                     </div>
@@ -1236,6 +1277,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             className="form-control"
                                                                                             value={form.per_Libro_Acta_Boda_Civil}
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label>Libro de acta de boda civil</label>
                                                                                     </div>
@@ -1246,6 +1288,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             className="form-control"
                                                                                             value={form.per_Oficialia_Boda_Civil}
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label>Oficialia de boda civil</label>
                                                                                     </div>
@@ -1259,6 +1302,7 @@ class PersonaForm extends Component {
                                                                                             name="per_Registro_Civil"
                                                                                             onChange={onChange}
                                                                                             value={form.per_Registro_Civil}
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label htmlFor="per_Registro_Civil">Registro Civil</label>
                                                                                     </FormGroup>
@@ -1275,6 +1319,7 @@ class PersonaForm extends Component {
                                                                                                     placeholder="DD/MM/AAAA"
                                                                                                     className="form-control"
                                                                                                     invalid={this.state.fechaBodaEclesiasticaInvalida}
+                                                                                                    autoComplete="nope"
                                                                                                 />
                                                                                                 <label htmlFor="per_Fecha_Boda_Eclesiastica">Fecha boda eclesiástica</label>
                                                                                                 <FormFeedback>{this.state.mensajes.fechaBodaEclesiasticaInvalida}</FormFeedback>
@@ -1288,6 +1333,7 @@ class PersonaForm extends Component {
                                                                                                     onChange={onChange}
                                                                                                     className="form-control"
                                                                                                     value={form.per_Lugar_Boda_Eclesiastica}
+                                                                                                    autoComplete="nope"
                                                                                                 />
                                                                                                 <label>Lugar boda eclesiástica</label>
                                                                                             </FormGroup>
@@ -1299,7 +1345,7 @@ class PersonaForm extends Component {
                                                                                                 onChange={onChange}
                                                                                                 className="form-control"
                                                                                                 value={form.per_Cantidad_Hijos}
-
+                                                                                                autoComplete="nope"
                                                                                             />
                                                                                             <label>Número de hijos</label>
                                                                                         </div>
@@ -1314,6 +1360,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             value={form.per_Nombre_Hijos}
                                                                                             className="form-control"
+                                                                                            autoComplete="nope"
                                                                                             onKeyPress={this.handleKeyPress} ></textarea>
                                                                                         <label>Nombre de los hijos</label>
                                                                                     </div>
@@ -1334,6 +1381,7 @@ class PersonaForm extends Component {
                                                                                                 onChange={onChange}
                                                                                                 className="form-control"
                                                                                                 value={form.per_Nombre_Conyuge}
+                                                                                                autoComplete="nope"
                                                                                             />
                                                                                             <label>Nombre de la pareja</label>
                                                                                         </div>
@@ -1344,6 +1392,7 @@ class PersonaForm extends Component {
                                                                                                 onChange={onChange}
                                                                                                 className="form-control"
                                                                                                 value={form.per_Cantidad_Hijos}
+                                                                                                autoComplete="nope"
                                                                                             />
                                                                                             <label>Número de hijos</label>
                                                                                         </div>
@@ -1358,6 +1407,7 @@ class PersonaForm extends Component {
                                                                                                 onChange={onChange}
                                                                                                 value={form.per_Nombre_Hijos}
                                                                                                 className="form-control"
+                                                                                                autoComplete="nope"
                                                                                                 onKeyPress={this.handleKeyPress}></textarea>
                                                                                             <label>Nombre de Hijos</label>
                                                                                         </div>
@@ -1392,6 +1442,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             value={form.per_Lugar_Bautismo}
                                                                                             className="form-control"
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label>Lugar de bautismo</label>
                                                                                     </FormGroup>
@@ -1404,6 +1455,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             value={form.per_Ministro_Que_Bautizo}
                                                                                             className="form-control"
+                                                                                            autoComplete="nope"
                                                                                         />
                                                                                         <label>Ministro que le bautizó</label>
                                                                                     </FormGroup>
@@ -1416,10 +1468,10 @@ class PersonaForm extends Component {
                                                                                             onChange={onChangeFechaBautismo}
                                                                                             value={form.per_Fecha_Bautismo}
                                                                                             placeholder="DD/MM/AAAA"
-
+                                                                                            autoComplete="nope"
                                                                                             invalid={fechaBautismoInvalida}
                                                                                         />
-                                                                                        <label>Fecha de bautismo</label>
+                                                                                        <label><strong>*</strong> Fecha de bautismo</label>
                                                                                         <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
                                                                                     </FormGroup>
                                                                                 </div>
@@ -1440,6 +1492,7 @@ class PersonaForm extends Component {
                                                                                     placeholder="DD/MM/AAAA"
                                                                                     className="form-control"
                                                                                     invalid={this.state.fechaEspitiruSantoInvalida}
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Fecha en que recibió el Espíritu Santo</label>
                                                                                 <FormFeedback>{this.state.mensajes.fechaEspitiruSantoInvalida}</FormFeedback>
@@ -1453,6 +1506,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     value={form.per_Bajo_Imposicion_De_Manos}
                                                                                     className="form-control"
+                                                                                    autoComplete="nope"
                                                                                 />
                                                                                 <label>Bajo imposición de manos de:</label>
                                                                             </FormGroup>
@@ -1482,6 +1536,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Cargos_Desempenados}
                                                                                     onKeyPress={this.handleKeyPress}
+                                                                                    autoComplete="nope"
                                                                                 ></textarea>
                                                                                 <label>Puestos que ha desempeñado en la IECE</label>
                                                                             </div>
@@ -1495,6 +1550,7 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     value={form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"
+                                                                                    autoComplete="nope"
                                                                                     onKeyPress={this.handleKeyPress}></textarea>
                                                                                 <label>Cambios de domicilio en la IECE</label>
                                                                             </div>
@@ -1615,7 +1671,7 @@ class PersonaForm extends Component {
                                                             type="submit"
                                                             className="btn btn-success form-control"
                                                             name="btnGuardarPersona"
-                                                            disable={submitBtnDisable}
+                                                            disabled={submitBtnDisable}
                                                         >
                                                             <span className="fa fa-save" style={{ paddingRight: "10px" }}></span>
                                                             Guardar

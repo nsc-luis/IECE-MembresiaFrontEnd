@@ -465,7 +465,7 @@ class RegistroDePersonal extends Component {
             if (e.target.files[0].size / 1024 / 1024 > 3
                 || !mimeTypeValidos.includes(e.target.files[0].type)) {
                 alert("Error: \nSólo se admiten archivos menores o iguales a 3MB y que sea de tipo 'png', 'jpg' o jpeg.")
-
+                console.log("entro a if")
                 this.setState({
                     form: {
                         ...this.state.form,
@@ -474,8 +474,10 @@ class RegistroDePersonal extends Component {
                     foto: `${helpers.url_api}/Foto/FotoDefault`,
                     nuevaFoto: false
                 })
+                e.target.value = null
             }
             else {
+                console.log("entro a if")
                 let formData = new FormData();
                 formData.append('image', e.target.files[0]);
                 this.setState({

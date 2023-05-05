@@ -74,7 +74,7 @@ class Topbar extends Component {
                                 <div className="dropdown-divider"></div>
                                 <Link to="" className="dropdown-item" data-toggle="modal" data-target="#logoutModal">
                                     <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Cerrar sesion
+                                    Cerrar Sesión
                                 </Link>
                             </div>
                         </li>
@@ -99,11 +99,11 @@ class Topbar extends Component {
                                 <strong>Nombre: </strong>{this.infoSesion.pem_Nombre} <br />
                                 <strong>Grado: </strong>{this.infoSesion.pem_Grado_Ministerial} <br />
                                 <strong>Correo personal:</strong> {this.infoSesion.pem_email_Personal} <br />
-                                <strong>Telefono1: </strong>{this.infoSesion.pem_Cel1} <br />
-                                <strong>Telefono2: </strong>{this.infoSesion.pem_Cel2}
+                                <strong>Tel.  1: </strong>{this.infoSesion.pem_Cel1} <br />
+                                <strong>Tel. 2: </strong>{this.infoSesion.pem_Cel2}
                             </div>
                             <div className="modal-footer">
-                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                                <button className="btn btn-secondary" type="button" data-dismiss="modal">OK</button>
                             </div>
                         </div>
                     </div>

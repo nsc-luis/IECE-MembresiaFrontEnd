@@ -21,9 +21,11 @@ class AnalisisPersonal extends Component {
             foto: "",
             direccion: ""
         }
+        //console.log(localStorage.getItem('objPersona'));
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
         this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No Bautizado';
         this.getHistorial(this.objPersona.persona.per_Id_Persona);
+
     }
 
     componentDidMount() {
@@ -38,9 +40,15 @@ class AnalisisPersonal extends Component {
             foto: `${helpers.url_api}/Foto/${this.objPersona.persona.per_Id_Persona}`
         })
 
+
         //Se trae la Data de la Persona que se le pasó desde el Componente Padre
-        const { persona } = this.props.location
-        this.getDireccion(persona.hogar.hd_Id_Hogar);
+
+        if (this.props.location.persona) {
+            const { persona } = this.props.location
+            this.getDireccion(persona.hogar.hd_Id_Hogar);
+        } else {
+            document.location.href = '/Main'
+        }
     }
 
     getHistorial = async (id) => {
@@ -57,9 +65,6 @@ class AnalisisPersonal extends Component {
                 this.setState({ direccion: res.data.direccion });
             })
     }
-
-
-
 
 
     render() {
@@ -90,7 +95,7 @@ class AnalisisPersonal extends Component {
                             </Col>
                             <Col className="negrita" xs="1"></Col>
                             <Col className="negrita" xs="1">F. Nacim.:</Col>
-                            <Col xs="2" className="border border-dark"> {String(moment(this.objPersona.persona.per_Fecha_Nacimiento).format("LL"))} </Col>
+                            <Col xs="2" className="border border-dark"> {String(moment(this.objPersona.persona.per_Fecha_Nacimiento).format('D/MMM/YYYY'))} </Col>
                             <Col className="negrita campoVivo" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -244,7 +249,7 @@ class AnalisisPersonal extends Component {
                                     return (
                                         <React.Fragment>
                                             <tr key={registro.hte_Id_Transaccion}>
-                                                <td>{helpers.reFormatoFecha(registro.hte_Fecha_Transaccion)}</td>
+                                                <td>{registro.hte_Fecha_Transaccion ? (moment(registro.hte_Fecha_Transaccion).format('D/MMM/YYYY')) : "-"}</td>
                                                 <td>{registro.ct_Tipo}</td>
                                                 <td>{registro.ct_Subtipo}</td>
                                                 <td>{registro.hte_Comentario}</td>

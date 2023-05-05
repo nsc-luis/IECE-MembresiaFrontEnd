@@ -492,7 +492,7 @@ class Matrimonio extends Component {
                 viviranEnLocalidad: this.state.viviranEnLocalidad
             }
             //Para deshabilitar el botón y evitar multiples registros de Matrimonio y Ediciones de Persona
-            await this.ChangeSubmitBtnDisable(true)
+            this.ChangeSubmitBtnDisable(true)
 
             //Procede a Registrar el Matrimonio y a editar Personas
             try {
@@ -552,7 +552,7 @@ class Matrimonio extends Component {
                             }, 1500);
                             setTimeout(() => {
                                 document.location.href = '/Matrimonio'
-                            }, 3500);
+                            }, 1500);
                         } else {
                             // alert(res.data.mensaje);
                             this.setState({
@@ -920,7 +920,7 @@ class Matrimonio extends Component {
                                             <Button
                                                 type="submit"
                                                 color="primary"
-                                                disable={this.state.submitBtnDisable}
+                                                disabled={this.state.submitBtnDisable}
                                             >
                                                 <span className="fas fa-save icon-btn-p"></span>Guardar
                                             </Button>

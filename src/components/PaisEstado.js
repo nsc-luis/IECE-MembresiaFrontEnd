@@ -73,6 +73,7 @@ class PaisEstado extends React.Component {
                         className="form-control"
                         onChange={handle_pais_Id_Pais}
                         value={domicilio.pais_Id_Pais}
+                        autoComplete="nope"
                     >
                         <option value="0">Seleccione un País</option>
                         {
@@ -91,6 +92,7 @@ class PaisEstado extends React.Component {
                         className="form-control"
                         value={domicilio.est_Id_Estado}
                         onChange={handleChangeEstado}
+                        autoComplete="nope"
                     >
                         <option value="0">Seleccione un Estado</option>
                         {

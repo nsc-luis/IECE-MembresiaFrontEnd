@@ -300,7 +300,7 @@ class Legalizacion extends Component {
             }
 
             //Para deshabilitar el botón y evitar multiples registros de Matrimonio y Ediciones de Persona
-            await this.ChangeSubmitBtnDisable(true)
+            this.ChangeSubmitBtnDisable(true)
 
             //Procede a Registrar la Legalización y a editar Personas
             try {
@@ -311,7 +311,6 @@ class Legalizacion extends Component {
                 helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Matrimonio_Legalizacion/AltaLegalizacion`, matLegalDom)
                     .then(res => {
                         if (res.data.status === "success") {
-
                             setTimeout(() => {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
@@ -319,7 +318,7 @@ class Legalizacion extends Component {
                             }, 1500);
                             setTimeout(() => {
                                 document.location.href = '/Main'
-                            }, 3500);
+                            }, 1500);
                         } else {
                             // alert(res.data.mensaje);
                             this.setState({
@@ -617,6 +616,7 @@ class Legalizacion extends Component {
                                             <Button
                                                 type="submit"
                                                 color="primary"
+                                                submitBtnDisable={this.state.submitBtnDisable}
                                             >
                                                 <span className="fas fa-save icon-btn-p"></span>Guardar
                                             </Button>

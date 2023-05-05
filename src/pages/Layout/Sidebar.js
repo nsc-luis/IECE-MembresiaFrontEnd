@@ -629,7 +629,7 @@ class Sidebar extends Component {
                 </ul>
 
                 {/* MODAL ACTUALIZAR PERSONA BAUTIZADA */}
-                <Modal isOpen={this.state.modalEditaPersona}>
+                <Modal isOpen={this.state.modalEditaPersona} size="lg" >
                     <Card>
                         <CardHeader>
                             <CardTitle><h3>Seleccione la Persona a Editar.</h3></CardTitle>
@@ -638,7 +638,7 @@ class Sidebar extends Component {
                             <FormGroup>
                                 <Row>
                                     <Col xs="3">
-                                        PERSONA:
+                                        <strong>PERSONA:</strong>
                                     </Col>
                                     <Col xs="9">
                                         <Input
