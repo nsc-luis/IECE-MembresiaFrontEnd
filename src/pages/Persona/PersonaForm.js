@@ -181,29 +181,39 @@ class PersonaForm extends Component {
 
     /// METODOS PARA HOGAR - DOMICILIO ///
     fnGetDatosDelHogar = async (id) => {
+        console.log("IdHogar: ", id);
+        let miembros = [];
         if (id !== "0") {
+
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
+                    console.log("MiembrosDelHogar: ", res.data);
                     this.setState({ MiembrosDelHogar: res.data })
+
+                    let jerarquias = [];
+                    console.log("LongitudMiembros: ", res.data.length);
+                    for (let i = 1; i < res.data.length + 2; i++) {
+                        jerarquias.push(<option value={i}>{i}</option>)
+                    }
+
+                    this.setState({
+                        JerarquiasDisponibles: jerarquias,
+                        hogar: {
+                            ...this.state.hogar,
+                            hp_Jerarquia: jerarquias.length
+                        }
+                    })
+
                 })
             )
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
+                    console.log("DatosDelHogar: ", res.data.miembros);
                 })
             )
-            let jerarquias = [];
-            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
-                jerarquias.push(<option value={i}>{i}</option>)
-            }
 
-            this.setState({
-                JerarquiasDisponibles: jerarquias,
-                hogar: {
-                    ...this.state.hogar,
-                    hp_Jerarquia: jerarquias.length
-                }
-            })
+
         } else {
             this.setState({
                 MiembrosDelHogar: [],
