@@ -153,11 +153,12 @@ export default function ReportePersonalNoBautizado() {
         let index = 1
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
+        let pageHeight = doc.internal.pageSize.height;
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
         doc.text("REPORTE DE PERSONAL NO BAUTIZADO", 85, 10);
-        doc.setFontSize(9);
 
+        doc.setFontSize(10);
         if (sector) {
             doc.text(entidadTitulo, 140, 22, { align: "center" });
             // doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
@@ -180,8 +181,12 @@ export default function ReportePersonalNoBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
@@ -197,8 +202,12 @@ export default function ReportePersonalNoBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_MUJER") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
@@ -214,8 +223,12 @@ export default function ReportePersonalNoBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "NIÑO") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
@@ -231,14 +244,23 @@ export default function ReportePersonalNoBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "NIÑA") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
         yAxis += 2;
         doc.rect(75, yAxis, 15, 4);
         yAxis += 3;
+        if (yAxis >= pageHeight - 30) {
+            doc.addPage();
+            yAxis = 15 // Restart height position
+        }
+
         doc.text("TOTAL DE PERSONAL NO BAUTIZADO:", 20, yAxis);
         doc.text(`${totalCount}`, 80, yAxis);
 

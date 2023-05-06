@@ -161,23 +161,21 @@ export default function ReportePersonalBautizado() {
         let index = 1
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
-
+        let pageHeight = doc.internal.pageSize.height;
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
         doc.text("REPORTE DE PERSONAL BAUTIZADO", 85, 10);
-        doc.setFontSize(8);
+        doc.setFontSize(10);
 
         if (sector) {
             doc.text(entidadTitulo, 140, 22, { align: "center" });
-            //doc.text(`${infoSec}`, 135, 18, { align: "center" });
-            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
         }
         else {
             doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, { align: "center" })
             doc.text(entidadTitulo, 140, 22, { align: "center" })
-            //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, { align: "center" });
         }
         doc.line(10, 32, 200, 32);
 
+        doc.setFontSize(8);
         let yAxis = 35
         doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
@@ -189,8 +187,12 @@ export default function ReportePersonalBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "ADULTO_HOMBRE") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
@@ -206,8 +208,12 @@ export default function ReportePersonalBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "ADULTO_MUJER") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
@@ -223,8 +229,12 @@ export default function ReportePersonalBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
@@ -240,14 +250,24 @@ export default function ReportePersonalBautizado() {
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_MUJER") {
                 doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
-                yAxis += 5;
+                yAxis += 4;
                 index++;
+                if (yAxis >= pageHeight - 10) {
+                    doc.addPage();
+                    yAxis = 15 // Restart height position
+                }
             }
         })
 
         yAxis += 2;
         doc.rect(75, yAxis, 15, 4);
         yAxis += 3;
+
+        if (yAxis >= pageHeight - 30) {
+            doc.addPage();
+            yAxis = 15 // Restart height position
+        }
+
         doc.text("TOTAL DE PERSONAL BAUTIZADO:", 20, yAxis);
         doc.text(`${totalCount}`, 80, yAxis);
 

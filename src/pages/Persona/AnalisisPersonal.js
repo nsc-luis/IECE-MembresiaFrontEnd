@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Button, Input, Alert, Container, Row, Col, Card,
-    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter
+    Alert, Container, Row, Col, FormGroup
 } from 'reactstrap';
 import Layout from '../Layout';
 import './style.css'
@@ -13,6 +12,7 @@ class AnalisisPersonal extends Component {
 
     url = helpers.url_api;
 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -21,7 +21,10 @@ class AnalisisPersonal extends Component {
             foto: "",
             direccion: ""
         }
-        //console.log(localStorage.getItem('objPersona'));
+        console.log("Props:", this.props.location.persona);
+        if (!this.props.location.persona) {
+            document.location.href = '/Main'
+        }
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
         this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No Bautizado';
         this.getHistorial(this.objPersona.persona.per_Id_Persona);
@@ -72,8 +75,6 @@ class AnalisisPersonal extends Component {
     render() {
 
         return (
-
-
             <>
                 <Container>
                     <FormGroup>

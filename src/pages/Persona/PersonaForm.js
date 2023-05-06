@@ -181,21 +181,19 @@ class PersonaForm extends Component {
 
     /// METODOS PARA HOGAR - DOMICILIO ///
     fnGetDatosDelHogar = async (id) => {
-        console.log("IdHogar: ", id);
-        let miembros = [];
         if (id !== "0") {
 
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
-                    console.log("MiembrosDelHogar: ", res.data);
                     this.setState({ MiembrosDelHogar: res.data })
-
+                    console.log("Miembros: ", res.data)
+                    //En base a la cantidad de Integrantes de Hogar, genera el rango de Posbiles Jerarquías para seleccionar
                     let jerarquias = [];
-                    console.log("LongitudMiembros: ", res.data.length);
                     for (let i = 1; i < res.data.length + 2; i++) {
                         jerarquias.push(<option value={i}>{i}</option>)
                     }
 
+                    //Actualiza las Variables de estado 'JerarquiasDisponibles' y 'hogar'
                     this.setState({
                         JerarquiasDisponibles: jerarquias,
                         hogar: {
@@ -203,17 +201,13 @@ class PersonaForm extends Component {
                             hp_Jerarquia: jerarquias.length
                         }
                     })
-
                 })
             )
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
-                    console.log("DatosDelHogar: ", res.data.miembros);
                 })
             )
-
-
         } else {
             this.setState({
                 MiembrosDelHogar: [],
@@ -1495,7 +1489,7 @@ class PersonaForm extends Component {
                                                                                                 invalid={fechaBautismoInvalida}
                                                                                                 autoComplete="nope"
                                                                                             />
-                                                                                            <label>Fecha de bautismo</label>
+                                                                                            <label>*Fecha de bautismo</label>
                                                                                             <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
                                                                                         </FormGroup>
                                                                                     </div>
