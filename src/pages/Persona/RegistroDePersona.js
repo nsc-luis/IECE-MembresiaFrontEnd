@@ -51,7 +51,8 @@ class RegistroDePersonal extends Component {
             FechaTransaccionHistorica: "",
             buscarLugarDeBautismo: true,
             listaResultadoBusquedaLugarBautismo: [],
-            submitBtnDisable: false
+            submitBtnDisable: false,
+            nvoEstado_Disponible: true
         }
     }
 
@@ -87,6 +88,7 @@ class RegistroDePersonal extends Component {
                     per_Registro_Civil: "",
                     per_Nombre_Conyuge: "",
                     per_Libro_Acta_Boda_Civil: "",
+                    per_Apellido_Casada: "",
                     per_Fecha_Bautismo: "",
                     per_Fecha_Recibio_Espiritu_Santo: "",
                     per_Cargos_Desempenados: "",
@@ -181,7 +183,7 @@ class RegistroDePersonal extends Component {
     }
 
     handleChangeDomicilio = (e) => {
-        if (e.target.name === "pais_Id_Pais") { //Si el campo que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
+        if (e.target.name === "pais_Id_Pais") { //Si el elemento que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
             this.setState({
                 domicilio: {
                     ...this.state.domicilio,
@@ -191,7 +193,14 @@ class RegistroDePersonal extends Component {
                 },
                 boolNvoEstado: false,
             })
-        } else {
+
+            if (e.target.value == "66" || e.target.value == "151") {
+                this.setState({ nvoEstado_Disponible: false })
+            } else {
+                this.setState({ nvoEstado_Disponible: true })
+            }
+
+        } else {//si el elemento que cambió es algun otro del Domicilio, lo graba en el Objeto "domicilio"
 
             this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
                 domicilio: {
@@ -204,9 +213,9 @@ class RegistroDePersonal extends Component {
 
     handleChangeEstado = (e) => { //Al cambiar el input est_Id_Estado
 
-        if (e.target.value === "999") { //Si el valor del nuevo estado es 999 significa que elegió 'Otro Estado' porque quiere registrar uno Nuevo
+        if (e.target.value == "999") { //Si el valor del nuevo estado es 999 significa que elegió 'Otro Estado' porque quiere registrar uno Nuevo
             this.setState({
-                boolNvoEstado: true,
+                boolNvoEstado: true, //Muestra el input de registro de un Nuevo Estado
                 domicilio: {
                     ...this.state.domicilio,
                     est_Id_Estado: e.target.value
@@ -921,6 +930,7 @@ class RegistroDePersonal extends Component {
                     borrarSeleccionLugarBautismo={this.borrarSeleccionLugarBautismo}
                     ChangeSubmitBtnDisable={this.ChangeSubmitBtnDisable}
                     submitBtnDisable={this.state.submitBtnDisable}
+                    nvoEstado_Disponible={this.state.nvoEstado_Disponible}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

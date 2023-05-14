@@ -147,6 +147,7 @@ class PresentacionDeNino extends Component {
                 helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
                     .then(res => {
                         if (res.data.status === "success") {
+                            alert("RECORDATORIO: Si se trata de un Nuevo Hijo en una Familia Cristiana, No olvide actualizar los datos de los Padres modificando el Número y Nombre de los Hijos.");
                             setTimeout(() => {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente.",
@@ -162,7 +163,7 @@ class PresentacionDeNino extends Component {
                         }
                     });
             } catch (error) {
-                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                alert("Error: Hubo un problema en la comunicación con el servidor. Intente mas tarde.");
                 //setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
             }
         }

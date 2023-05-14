@@ -180,7 +180,7 @@ export default function ReportePersonalNoBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -201,7 +201,7 @@ export default function ReportePersonalNoBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_MUJER") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -222,7 +222,7 @@ export default function ReportePersonalNoBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "NIÑO") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -243,7 +243,7 @@ export default function ReportePersonalNoBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "NIÑA") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -353,7 +353,7 @@ export default function ReportePersonalNoBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
                                                 } else { return null }
                                             })}
                                         </ol>
@@ -369,7 +369,7 @@ export default function ReportePersonalNoBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "JOVEN_MUJER") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
                                                 } else { return null }
                                             })}
                                         </ol>
@@ -385,7 +385,7 @@ export default function ReportePersonalNoBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "NIÑO") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
                                                 } else { return null }
                                             })}
                                         </ol>
@@ -401,7 +401,7 @@ export default function ReportePersonalNoBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "NIÑA") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
                                                 } else { return null }
                                             })}
                                         </ol>

@@ -589,9 +589,9 @@ class Sidebar extends Component {
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}
                                 >Reporte de Movimientos Estadísticos</Link>
                                 <Link className="collapse-item text-wrap"
-                                    to="/ReporteTransacciones"
-                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}
-                                >Reporte de Transacciones</Link>
+                                    to="/ResumenTransacciones"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Resumen de Transacciones")}
+                                >Resumen de Transacciones</Link>
                             </div>
                         </div>
                     </li>
@@ -632,7 +632,7 @@ class Sidebar extends Component {
                 <Modal isOpen={this.state.modalEditaPersona} size="lg" >
                     <Card>
                         <CardHeader>
-                            <CardTitle><h3>Seleccione la Persona a Editar.</h3></CardTitle>
+                            <CardTitle><h3>Seleccione la Persona a Editar:</h3></CardTitle>
                         </CardHeader>
                         <CardBody>
                             <FormGroup>
@@ -651,7 +651,7 @@ class Sidebar extends Component {
                                                 return (
                                                     <React.Fragment key={persona.per_Id_Persona}>
                                                         <option value={persona.per_Id_Persona} >
-                                                            {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            {persona.per_Nombre} {(persona.per_Apellido_Casada == "" || persona.per_Apellido_Casada == null) ? persona.per_Apellido_Paterno : (persona.per_Apellido_Casada + "* " + persona.per_Apellido_Paterno)} {persona.per_Apellido_Materno}
                                                         </option>
                                                     </React.Fragment>
                                                 )
@@ -865,7 +865,7 @@ class Sidebar extends Component {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
                                                             <option value={persona.per_Id_Persona} >
-                                                                {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                                {persona.per_Nombre} {(persona.per_Apellido_Casada == "" || persona.per_Apellido_Casada == null) ? persona.per_Apellido_Paterno : (persona.per_Apellido_Casada + "* " + persona.per_Apellido_Paterno)} {persona.per_Apellido_Materno}
                                                             </option>
                                                         </React.Fragment>
                                                     )

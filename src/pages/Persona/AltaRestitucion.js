@@ -445,7 +445,7 @@ class AltaRestitucion extends Component {
                                                 {this.state.personaParaRestitucion.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
-                                                            <option value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
+                                                            <option value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.apellidoPrincipal} {persona.per_Apellido_Materno}</option>
                                                         </React.Fragment>
                                                     )
                                                 })

@@ -67,6 +67,7 @@ class Legalizacion extends Component {
                 mat_Fecha_Boda_Eclesiastica: null,
                 mat_Cantidad_Hijos: "0",
                 mat_Nombre_Hijos: "",
+                mat_Apellido_Casada: "",
                 dis_Id_Distrito: localStorage.getItem("dto"),
                 sec_Id_Sector: localStorage.getItem("sector"),
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
@@ -141,28 +142,6 @@ class Legalizacion extends Component {
                 this.setState({ sector: res.data.sector[0] })
             })
         )
-    }
-
-    handleChangeEstado = (e) => {
-        if (e.target.value === "999") {
-            this.setState({
-                boolNvoEstado: true,
-                domicilio: {
-                    ...this.state.domicilio,
-                    est_Id_Estado: e.target.value
-                }
-            })
-        }
-        else {
-            this.setState({
-                boolNvoEstado: false,
-                domicilio: {
-                    ...this.state.domicilio,
-                    nvoEstado: "",
-                    est_Id_Estado: e.target.value
-                }
-            })
-        }
     }
 
     getMujeres = async (str) => {//Trae a las Mujeres del Sector que esten Activas y que su estado civil sea diferente a 'Casado(a)' o 'Concubinato'
@@ -474,7 +453,7 @@ class Legalizacion extends Component {
                                                                     {
                                                                         this.state.mujeres.map((mujer) => {
                                                                             return (
-                                                                                <option key={mujer.per_Id_Persona} value={mujer.per_Id_Persona}> {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno} </option>
+                                                                                <option key={mujer.per_Id_Persona} value={mujer.per_Id_Persona}> {mujer.per_Nombre} {mujer.apellidoPrincipal} {mujer.per_Apellido_Materno} </option>
                                                                             )
                                                                         })
                                                                     }
@@ -497,6 +476,7 @@ class Legalizacion extends Component {
                                                     type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Civil}
                                                     invalid={this.state.matFechaBodaCivilInvalid}
+                                                    autoComplete="nope"
                                                 />
                                                 <Label><strong>Fecha Boda Civil: </strong></Label>
                                                 <FormFeedback>Debe seleccionar una fecha para continuar.</FormFeedback>
@@ -509,6 +489,7 @@ class Legalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Numero_Acta}
+                                                    autoComplete="nope"
                                                 />
                                                 <Label><strong>Número Acta: </strong></Label>
                                                 <FormFeedback></FormFeedback>
@@ -521,6 +502,7 @@ class Legalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Libro_Acta}
+                                                    autoComplete="nope"
                                                 />
                                                 <Label><strong>Libro Acta: </strong></Label>
                                                 <FormFeedback></FormFeedback>
@@ -535,6 +517,7 @@ class Legalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Oficialia}
+                                                    autoComplete="nope"
                                                 />
                                                 <Label><strong>Oficialía: </strong></Label>
                                                 <FormFeedback></FormFeedback>
@@ -547,6 +530,7 @@ class Legalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Registro_Civil}
+                                                    autoComplete="nope"
                                                 />
                                                 <Label><strong>Registro Civil: </strong></Label>
                                                 <FormFeedback></FormFeedback>
@@ -560,6 +544,7 @@ class Legalizacion extends Component {
                                                     type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Eclesiastica}
                                                     invalid={this.state.matFechaBodaEclesiasticaInvalid}
+                                                    autoComplete="nope"
                                                 />
                                                 <Label><strong>Fecha Boda Eclesiastica: </strong></Label>
                                                 <FormFeedback>Debe seleccionar una fecha para continuar.</FormFeedback>
@@ -568,6 +553,17 @@ class Legalizacion extends Component {
                                     </Row>
                                     <hr />
                                     <Row>
+                                        <Col xs="4" className="col-sm-4">
+                                            <Input
+                                                type="text"
+                                                name="mat_Apellido_Casada"
+                                                onChange={this.onChange}
+                                                className="form-control"
+                                                value={this.state.matLegal.mat_Apellido_Casada}
+                                                autoComplete="nope"
+                                            />
+                                            <label><strong>Apellido de Casada</strong> &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
+                                        </Col>
                                         <Col xs="4">
                                             <FormGroup>
                                                 <Input
@@ -575,6 +571,7 @@ class Legalizacion extends Component {
                                                     onChange={this.onChange}
                                                     type="number"
                                                     value={this.state.matLegal.mat_Cantidad_Hijos}
+                                                    autoComplete="nope"
                                                     min="0"
                                                     max="25"
                                                 />
@@ -587,14 +584,15 @@ class Legalizacion extends Component {
                                     <Row>
                                         <Col xs="12">
                                             <FormGroup>
-                                                <Label><strong>Nombre de Hijos: </strong> &#40;Nota: Donde sea aplicable, incluya los hijos de ambos.&#41;</Label>
                                                 <Input
                                                     name="mat_Nombre_Hijos"
                                                     onChange={this.onChange}
                                                     type="textarea"
                                                     value={this.state.matLegal.mat_Nombre_Hijos}
+                                                    autoComplete="nope"
                                                     onKeyPress={this.handleKeyPress}
                                                 />
+                                                <Label><strong>Nombre de Hijos: </strong> &#40;Nota: Donde sea aplicable, incluya los hijos de ambos.&#41;</Label>
                                                 <FormFeedback></FormFeedback>
                                             </FormGroup>
                                         </Col>

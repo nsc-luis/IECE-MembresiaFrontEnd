@@ -140,7 +140,13 @@ class RptListaDeHogares extends Component {
 
             await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
-                    this.setState({ infoListaHogares: res.data.listahogares });
+                    this.setState({
+                        infoListaHogares: res.data.listahogares.sort((a, b) => {
+                            if (a.integrantes[0].apellidoPrincipal < b.integrantes[0].apellidoPrincipal) { return -1; }
+                            if (a.integrantes[0].apellidoPrincipal > b.integrantes[0].apellidoPrincipal) { return 1; }
+                            return 0;
+                        })
+                    });
                 })
             console.log("Sale de la API: ", this.state.infoListahogares)
             //this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
@@ -149,7 +155,13 @@ class RptListaDeHogares extends Component {
         } else {
             await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
                 .then(res => {
-                    this.setState({ infoListaHogares: res.data.listahogares });
+                    this.setState({
+                        infoListaHogares: res.data.listahogares.sort((a, b) => {
+                            if (a.integrantes[0].apellidoPrincipal < b.integrantes[0].apellidoPrincipal) { return -1; }
+                            if (a.integrantes[0].apellidoPrincipal > b.integrantes[0].apellidoPrincipal) { return 1; }
+                            return 0;
+                        })
+                    });
                 })
             console.log("Sale de la API: ", this.state.infoListahogares)
             this.setState({ sec_Id_Sector: localStorage.getItem('sector') });

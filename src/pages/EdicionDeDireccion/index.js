@@ -23,6 +23,7 @@ class EdicionDeDireccion extends Component {
             mensajeDelProceso: "",
             boolNvoEstado: false,
             usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
+            nvoEstado_Disponible: true
         }
     }
 
@@ -51,6 +52,7 @@ class EdicionDeDireccion extends Component {
     getListaHogares = async () => {
         await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
+                console.log("ListaHogares: ", res.data.domicilios);
                 this.setState({
                     listaDomicilios: res.data.domicilios.sort((a, b) => {
                         const nameA = a.per_Nombre; // ignore upper and lowercase
@@ -82,6 +84,14 @@ class EdicionDeDireccion extends Component {
             seleccion[0].usu_Id_Usuario = this.infoSesion.pem_Id_Ministro
             this.setState({ domicilio: seleccion[0] }) //Coloca en la Variable de Estado 'domicilio' el Hogar Seleccionado.
             console.log("CargaDirección: ", seleccion[0])
+
+            //Verifica si el Pais es Mexico o USA inhabilita poder agregar Estados
+            if (seleccion[0].pais_Id_Pais == "66" || seleccion[0].pais_Id_Pais == "151") {
+                this.setState({ nvoEstado_Disponible: false })
+            } else {
+                this.setState({ nvoEstado_Disponible: true })
+            }
+
         }
         else { //Si el Hogar= Cero, resetea todas los campos del objeto 'domicilio', significa que deseleccionó el Select "hogarSeleccionado"
             this.setState({
@@ -108,14 +118,26 @@ class EdicionDeDireccion extends Component {
 
     onChangeDomicilio = async (e) => {
         //console.log("input: ", e.target.name, e.target.value.toUpperCase())
-        this.setState({
-            domicilio: {
-                ...this.state.domicilio,
-                [e.target.name]: e.target.value.toUpperCase()
-            }
-        })
 
-        if (e.target.name === "pais_Id_Pais") { //Si el campo que edita es País, manda traer los Estados de ese País.
+
+        if (e.target.name === "pais_Id_Pais") { //Si el elemento que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    nvoEstado: "",
+                    est_Id_Estado: "0",
+                    pais_Id_Pais: e.target.value.toUpperCase(),
+                },
+                boolNvoEstado: false,
+            })
+
+            if (e.target.value == "66" || e.target.value == "151") {
+                this.setState({ nvoEstado_Disponible: false })
+            } else {
+                this.setState({ nvoEstado_Disponible: true })
+            }
+
+            //manda traer los Estados de ese País.
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
                 .then(res => {
                     let contador = 0;
@@ -134,6 +156,13 @@ class EdicionDeDireccion extends Component {
                     }
                 })
             )
+        } else {//si el elemento que cambió es algun otro del Domicilio, lo graba en el Objeto "domicilio"
+            this.setState({
+                domicilio: {
+                    ...this.state.domicilio,
+                    [e.target.name]: e.target.value.toUpperCase()
+                }
+            })
         }
     }
 
@@ -190,9 +219,18 @@ class EdicionDeDireccion extends Component {
     guardarEdicion = async (e) => {
 
         e.preventDefault();
-        if (this.state.domicilio.est_Id_Estado === "0") {//Si el Estado_Id = Cero, indica que no seleccionó Estado aun. 
+
+        if (this.state.domicilio.pais_Id_Pais === "0"
+            || this.state.domicilio.hd_Calle === ""
+            || this.state.domicilio.hd_Municipio_Ciudad === ""
+            || this.state.domicilio.est_Id_Estado === "0") {
+            alert("Error!. Debe ingresar los Campos Obligatorios: Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
+            return false;
+        }
+
+        if (this.state.domicilio.est_Id_Estado === "999") {//Si el Estado_Id = Cero, indica que no seleccionó Estado aun. 
             if (this.state.domicilio.nvoEstado === "" || this.state.domicilio.nvoEstado === undefined) { //Si el País no tiene registrado algun Estado.
-                alert("Error:\nEl País seleccionado no tiene Estados relacionados, por lo tanto, debe ingresar un nombre de Estado.")
+                alert("Error:\nEl País seleccionado no tiene Estados relacionados, por lo tanto, debe ingresar un nombre de Estado que desea Registrar.")
             }
             else { //Si nvoEstado trae algun Estado nuevo para Registrar, lo manda grabar
                 try {
@@ -204,6 +242,7 @@ class EdicionDeDireccion extends Component {
                                     est_Id_Estado: res.data.estado.est_Id_Estado
                                 }
                             })
+
                             helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                                 .then(res => {
                                     if (res.data.status === "success") {
@@ -317,7 +356,7 @@ class EdicionDeDireccion extends Component {
                                                         {this.state.listaDomicilios.map((domicilio) => {
                                                             return (
                                                                 <option key={domicilio.hd_Id_Hogar} value={domicilio.hd_Id_Hogar}>
-                                                                    {`${domicilio.per_Nombre} ${domicilio.per_Apellido_Paterno} ${domicilio.per_Apellido_Materno ? domicilio.per_Apellido_Materno : ""}`}
+                                                                    {`${domicilio.per_Nombre} ${domicilio.apellidoPrincipal} ${domicilio.per_Apellido_Materno ? domicilio.per_Apellido_Materno : ""}`}
                                                                 </option>
                                                             )
                                                         })
@@ -460,6 +499,7 @@ class EdicionDeDireccion extends Component {
                                                             onChangeDomicilio={this.onChangeDomicilio}
                                                             boolNvoEstado={this.state.boolNvoEstado}
                                                             handleChangeEstado={this.handleChangeEstado}
+                                                            nvoEstado_Disponible={this.state.nvoEstado_Disponible}
                                                             readOnly={this.state.boolHabilitaEdicion}
                                                         />
                                                     </Row>

@@ -50,7 +50,7 @@ class ModalInfoHogar extends Component {
                             {objPersona.miembros.length > 0 &&
                                 <>
                                     <h5><strong>Titular: </strong>
-                                        {objPersona.miembros[0].per_Nombre} {objPersona.miembros[0].per_Apellido_Paterno} {objPersona.miembros[0].per_Apellido_Materno}
+                                        {objPersona.miembros[0].per_Nombre} {objPersona.miembros[0].apellidoPrincipal} {objPersona.miembros[0].per_Apellido_Materno}
                                     </h5>
                                 </>
                             }
@@ -107,7 +107,7 @@ class ModalInfoHogar extends Component {
                                             return (
                                                 <tr key={miembro.per_Id_Persona}>
                                                     <td className="text-center">{miembro.per_Bautizado ? "B" : "NB"}</td>
-                                                    <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno} </td>
+                                                    <td>{miembro.per_Nombre} {miembro.apellidoPrincipal} {miembro.per_Apellido_Materno} </td>
                                                     <td className="text-center"> {miembro.hp_Jerarquia} </td>
                                                     <td className="text-center">{miembro.per_Activo ? "SI" : "NO"}</td>
                                                 </tr>

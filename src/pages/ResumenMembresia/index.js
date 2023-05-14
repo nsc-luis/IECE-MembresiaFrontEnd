@@ -160,6 +160,15 @@ class ResumenMembresia extends Component {
                     this.setState({ resumenDeMembresia: res.data.resumen })
                     this.conviertePersonasParaGraph(res.data.resumen);//Ejecuta fn que convierte la data para uso en Gráfica.
                 });
+
+            await helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+                .then(res => {
+                    let contador = 0;
+                    res.data.domicilios.forEach(element => {
+                        contador = contador + 1;
+                    });
+                    this.setState({ hogares: contador });
+                })
         } else {
             this.setState({ sectorSeleccionado: localStorage.getItem('sector') });
             //this.setState({sec_Id_Sector: localStorage.getItem('sector')});
@@ -181,6 +190,7 @@ class ResumenMembresia extends Component {
     }
 
     handle_sectorSeleccionado = async (e) => {
+        console.log(e.target.value)
         if (e.target.value === "todos") {
             this.setState({ sectorSeleccionado: e.target.value });
             await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
@@ -189,15 +199,36 @@ class ResumenMembresia extends Component {
                     this.setState({ resumenDeMembresia: res.data.resumen })
                     this.conviertePersonasParaGraph(res.data.resumen);//Ejecuta fn que convierte la data para uso en Gráfica.
                 });
+
+            await helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+                .then(res => {
+                    let contador = 0;
+                    res.data.domicilios.forEach(element => {
+                        contador = contador + 1;
+                    });
+                    this.setState({ hogares: contador });
+                })
+
             // alert("ALERTA! Aqui podemos hacer 2 cosas:\n- Generar un ciclo que sume los sectores.\n- Agregar dis_Id_Distrito a la tabla de Personal (creo que esta es mejor opcion).");
         }
         else {
+            e.persist();
             this.setState({ sectorSeleccionado: e.target.value });
+
             await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + e.target.value)
                 .then(res => {
                     // console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen.value })
                     this.conviertePersonasParaGraph(res.data.resumen.value);//Ejecuta fn que convierte la data para uso en Gráfica.
+                });
+
+            await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${e.target.value}`)
+                .then(res => {
+                    let contador = 0;
+                    res.data.domicilios.forEach(element => {
+                        contador = contador + 1;
+                    });
+                    this.setState({ hogares: contador });
                 });
         }
     }
@@ -337,6 +368,14 @@ class ResumenMembresia extends Component {
             doc.text("MEMBRESÍA GENERAL: ", 142, line);
             //doc.rect(175, line-4, 16, 6);
             doc.text(`${this.state.resumenDeMembresia.totalDeMiembros}`, 190, line);
+            doc.line(185, line + 1, 200, line + 1);
+
+            line = line + 8;
+            doc.setFont("", "", "bold");
+            doc.setFontSize(10);
+            doc.text("HOGARES ACTUALES: ", 142, line);
+            //doc.rect(175, line-4, 16, 6);
+            doc.text(`${this.state.hogares}`, 190, line);
             doc.line(185, line + 1, 200, line + 1);
 
             doc.setFont("", "", "normal");

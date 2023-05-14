@@ -35,7 +35,7 @@ export default function ReportePersonalBautizado() {
 
     useEffect(() => {
 
-        if (sector == null) {
+        if (sector == null) { //Para Sesión Obispo
             console.log("inicia programa")
             getPersonasDistrito();
             getInfoDistrito()
@@ -54,7 +54,7 @@ export default function ReportePersonalBautizado() {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 });
 
-        } else {
+        } else { //Para Sesión Pastor
             getPersonasSector(sector);
             getInfoDistrito()
             setLider("PASTOR")
@@ -77,7 +77,6 @@ export default function ReportePersonalBautizado() {
                 })
 
             getTitulo(sector)
-            console.log("Distrito al Final: ", infoDis)
         }
 
     }, [])
@@ -95,7 +94,12 @@ export default function ReportePersonalBautizado() {
 
         helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
-                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
+                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo)
+                    .sort(function (a, b) {
+                        if (a.apellidoPrincipal < b.apellidoPrincipal) { return -1; }
+                        if (a.apellidoPrincipal > b.apellidoPrincipal) { return 1; }
+                        return 0;
+                    }))
             });
     }
 
@@ -104,7 +108,12 @@ export default function ReportePersonalBautizado() {
         helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 setPersonas(res.data.filter(persona => (
-                    persona.persona.per_Activo && persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo)))
+                    persona.persona.per_Activo && persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
+                    .sort(function (a, b) {
+                        if (a.apellidoPrincipal < b.apellidoPrincipal) { return -1; }
+                        if (a.apellidoPrincipal > b.apellidoPrincipal) { return 1; }
+                        return 0;
+                    }))
             });
     }
 
@@ -186,7 +195,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "ADULTO_HOMBRE") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -207,7 +216,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "ADULTO_MUJER") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.apellidoPrincipal} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -228,7 +237,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -249,7 +258,7 @@ export default function ReportePersonalBautizado() {
         yAxis += 7;
         personas.map((persona) => {
             if (persona.persona.per_Categoria === "JOVEN_MUJER") {
-                doc.text(`${index}.- ${persona.persona.per_Nombre} ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''}`, 20, yAxis);
+                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -361,7 +370,7 @@ export default function ReportePersonalBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "ADULTO_HOMBRE") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.apellidoPrincipal} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
                                             })}
                                         </ol>
@@ -378,7 +387,7 @@ export default function ReportePersonalBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "ADULTO_MUJER") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.apellidoPrincipal} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
                                             })}
                                         </ol>
@@ -395,7 +404,7 @@ export default function ReportePersonalBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
                                             })}
                                         </ol>
@@ -411,7 +420,7 @@ export default function ReportePersonalBautizado() {
                                         <ol type="1">
                                             {personas.map((persona) => {
                                                 if (persona.persona.per_Categoria === "JOVEN_MUJER") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Nombre} {persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno}</li>
+                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
                                             })}
                                         </ol>
@@ -460,6 +469,7 @@ export default function ReportePersonalBautizado() {
                                     <th data-f-bold>Nombre(s)</th>
                                     <th data-f-bold>Apellido Paterno</th>
                                     <th data-f-bold>Apellido Materno</th>
+                                    <th data-f-bold>Apellido de Casada</th>
                                     <th data-f-bold>Categoria</th>
                                     <th data-f-bold>Telefono Movil</th>
                                     <th data-f-bold>Fecha Nacimiento</th>
@@ -472,6 +482,7 @@ export default function ReportePersonalBautizado() {
                                         <td>{persona.persona.per_Nombre}</td>
                                         <td>{persona.persona.per_Apellido_Paterno}</td>
                                         <td>{persona.persona.per_Apellido_Materno}</td>
+                                        <td>{persona.persona.per_Apellido_Casada}</td>
                                         <td>{persona.persona.per_Categoria}</td>
                                         <td>{persona.persona.per_Telefono_Movil}</td>
                                         <td>{moment(persona.persona.per_Fecha_Nacimiento).format("YYYY-MM-DD")}</td>

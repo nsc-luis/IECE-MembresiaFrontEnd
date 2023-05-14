@@ -62,7 +62,8 @@ class Domicilio extends React.Component {
             boolNvoEstado,
             handleChangeEstado,
             direccion,
-            habilitaPerBautizado
+            habilitaPerBautizado,
+            nvoEstado_Disponible
         } = this.props
 
         return (
@@ -95,7 +96,7 @@ class Domicilio extends React.Component {
                                     this.state.ListaHogares.map((h) => {
                                         return (
                                             <option key={h.hd_Id_Hogar} value={h.hd_Id_Hogar}>
-                                                {h.per_Nombre} {h.per_Apellido_Paterno} {h.per_Apellido_Materno} |
+                                                {h.per_Nombre} {h.apellidoPrincipal} {h.per_Apellido_Materno} |
                                                 {h.hd_Calle} {h.hd_Numero_Exterior}, {h.hd_Municipio_Ciudad}, {h.est_Nombre}</option>
                                         )
                                     })
@@ -138,7 +139,7 @@ class Domicilio extends React.Component {
                                     MiembrosDelHogar.map((miembro, i) => {
                                         return (
                                             <tr key={i}>
-                                                <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
+                                                <td>{miembro.per_Nombre} {miembro.apellidoPrincipal} {miembro.per_Apellido_Materno}</td>
                                                 <td>{miembro.hp_Jerarquia}</td>
                                                 <td>{miembro.per_Activo ? "SI" : "NO"}</td>
                                             </tr>
@@ -231,7 +232,7 @@ class Domicilio extends React.Component {
                                             <option value="BARRIO">BARRIO</option>
                                             <option value="ZONA">ZONA</option>
                                         </select>
-                                        <label>Tipo de Asentamiento</label>
+                                        <label>Tipo de Asentamiento/Barrio</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -241,7 +242,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Subdivision}
                                             onChange={onChangeDomicilio}
                                         />
-                                        <label>Nombre del Asentamiento</label>
+                                        <label>Nombre del Asentamiento/Barrio/Subdivisión/Referencia</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -304,6 +305,7 @@ class Domicilio extends React.Component {
                                     onChangeDomicilio={onChangeDomicilio}
                                     boolNvoEstado={boolNvoEstado}
                                     handleChangeEstado={handleChangeEstado}
+                                    nvoEstado_Disponible={nvoEstado_Disponible}
                                 />
                             </div>
                         </div>

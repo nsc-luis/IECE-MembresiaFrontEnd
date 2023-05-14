@@ -23,19 +23,20 @@ class BajaBautizadoExcomunion extends Component {
     getBajaBautizadoExcomunion = async () => { //Carga todas las personas del Sector que son Bautizadas y están en Comunión. Y las ordena alfabéticamente.
         await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetBautizadosComunionBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                    }) 
+                        // names must be equal
+                        return 0;
+                    })
                 });
             })
         );
@@ -130,7 +131,7 @@ class BajaBautizadoExcomunion extends Component {
                                                 return (
                                                     <React.Fragment key={persona.per_Id_Persona}>
                                                         <option value={persona.per_Id_Persona} >
-                                                            {persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}
+                                                            {persona.per_Nombre} {persona.apellidoPrincipal} {persona.per_Apellido_Materno}
                                                         </option>
                                                     </React.Fragment>
                                                 )
@@ -192,14 +193,14 @@ class BajaBautizadoExcomunion extends Component {
 
                         </CardBody>
                         <CardFooter>
-                        <Link
+                            <Link
                                 to="/ListaDePersonal"
                                 onClick={() => helpers.handle_LinkEncabezado("Sección: Monitoreo", "Información de membresía")}
                             >
                                 <Button type="button" color="secondary" className="entreBotones">
                                     Cancelar
                                 </Button>
-                        </Link>
+                            </Link>
                             <Button
                                 type="submit"
                                 color="success"

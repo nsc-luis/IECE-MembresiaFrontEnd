@@ -24,7 +24,7 @@ import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautiza
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
 import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
-import ReporteTransacciones from './pages/Reporte/ReporteTransacciones';
+import ResumenTransacciones from './pages/Reporte/ResumenTransacciones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
 import ValidaCambioDeContrasena from './pages/CambiarContrasena/ValidaCambioDeContrasena';
 import EdicionDeDireccion from './pages/EdicionDeDireccion';
@@ -92,7 +92,7 @@ class Router extends Component {
                         {/* REPORTES */}
                         <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
                         <Route exact path="/RptBautizados" component={RptBautizados} />
-                        <Route exact path="/ReporteTransacciones" component={ReporteTransacciones} />
+                        <Route exact path="/ResumenTransacciones" component={ResumenTransacciones} />
                         <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
                         {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />

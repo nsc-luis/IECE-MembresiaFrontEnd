@@ -148,7 +148,7 @@ class ListaDePersonal extends Component {
             modalShow: true
         })
 
-        if (localStorage.getItem("sector") !== null) {
+        if (localStorage.getItem("sector") !== null) {//Si es Sesión Pastor
             await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
                     this.setState({
@@ -166,7 +166,7 @@ class ListaDePersonal extends Component {
                 })
             );
         }
-        else {
+        else { //Si es Sesión Obispo
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
@@ -474,21 +474,23 @@ class ListaDePersonal extends Component {
             })
         }
 
-        await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
-            .then(res => {
-                if (res.data.status === "success") {
-                    this.setState({
-                        direccion: res.data.direccion
-                    })
-                }
-            })
-        )
+        // await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
+        //     .then(res => {
 
+        //         if (res.data.status === "success") {
+        //             this.setState({
+        //                 direccion: res.data.direccion
+        //             })
+        //         }
+        //     })
+        // )
+
+        console.log("info: ", info.domicilio)
         let fechaActual = new Date();
         console.log("persona:", typeof (moment(info.persona.per_Fecha_Nacimiento).format('D/MMM/YYYY')))
         var datos = {
             "idPersona": info.persona.per_Id_Persona,
-            "NombreCompleto": `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno}`,
+            "NombreCompleto": `${info.persona.per_Nombre} ${info.persona.apellidoPrincipal} ${info.persona.per_Apellido_Materno}`,
             "edad": info.persona.edad,
             "Nacionalidad": info.persona.per_Nacionalidad,
             "LugarNacimiento": info.persona.per_Lugar_De_Nacimiento,
@@ -514,7 +516,7 @@ class ListaDePersonal extends Component {
             "BajoImposicionDeManos": info.persona.per_Bajo_Imposicion_De_Manos,
             "Puestos": info.persona.per_Cargos_Desempenados,
             "CambiosDomicilio": info.persona.per_Cambios_De_Domicilio,
-            "Domicilio": this.state.direccion,
+            "Domicilio": info.domicilio[0].direccion,
             "Telefonos": `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? ("PERSONAL: " + info.persona.per_Telefono_Movil) : ""} ${info.domicilio[0].hd_Telefono == null || info.domicilio[0].hd_Telefono == "" ? "" : ("- CASA: " + info.domicilio[0].hd_Telefono)}`,
             "Email": `${info.persona.per_Email_Personal !== null || info.persona.per_Email_Personal !== "" ? info.persona.per_Email_Personal : "-"}`,
             "Oficio1": `${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`,
@@ -1010,7 +1012,7 @@ class ListaDePersonal extends Component {
                                             return (
                                                 <React.Fragment key={obj.persona.per_Id_Persona}>
                                                     <tr>
-                                                        <td>{obj.persona.per_Nombre} {obj.persona.per_Apellido_Paterno} {obj.persona.per_Apellido_Materno} </td>
+                                                        <td>{obj.persona.per_Nombre} {obj.persona.apellidoPrincipal} {obj.persona.per_Apellido_Materno} </td>
                                                         <td className="text-center">
                                                             {this.InfoStatus(obj.persona).bautizado}
                                                         </td>

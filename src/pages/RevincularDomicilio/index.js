@@ -30,6 +30,7 @@ class RevinculaDomicilio extends Component {
             habilitaPerBautizado: true,
             direccion: "",
             boolNvoEstado: false,
+            nvoEstado_Disponible: true
         }
     }
 
@@ -126,9 +127,15 @@ class RevinculaDomicilio extends Component {
                 },
                 boolNvoEstado: false,
             })
-        } else {
 
-            this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
+            if (e.target.value == "66" || e.target.value == "151") {
+                this.setState({ nvoEstado_Disponible: false })
+            } else {
+                this.setState({ nvoEstado_Disponible: true })
+            }
+
+        } else { //si el elemento que cambió es algun otro del Domicilio, lo graba en el Objeto "domicilio"
+            this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde los componentes HogarPersonaDomicilio y PaisEstado.
                 domicilio: {
                     ...this.state.domicilio,
                     [e.target.name]: e.target.value.toUpperCase(),
@@ -252,9 +259,17 @@ class RevinculaDomicilio extends Component {
         if (this.state.hogar.hd_Id_Hogar === "0"
             && (this.state.domicilio.pais_Id_Pais === "0"
                 || this.state.domicilio.hd_Calle === ""
-                || this.state.domicilio.hd_Municipio_Ciudad === "")) {
-            alert("Error!. Debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
+                || this.state.domicilio.hd_Municipio_Ciudad === ""
+                || this.state.domicilio.est_Id_Estado === "0")) {
+            alert("Error!. Debe ingresar los Campos Obligatorios: Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
             return false;
+        }
+
+        if (this.state.domicilio.est_Id_Estado === "999") {//Si el Estado_Id = Cero, indica que no seleccionó Estado aun. 
+            if (this.state.domicilio.nvoEstado === "" || this.state.domicilio.nvoEstado === undefined) { //Si el País no tiene registrado algun Estado.
+                alert("Error:\nEl País seleccionado no tiene Estados relacionados, por lo tanto, debe ingresar un nombre del Estado que desea Registrar.")
+                return false
+            }
         }
 
         if (this.state.hogar.hd_Id_Hogar === "0") { //Si es un Nuevo Domicilio
@@ -363,7 +378,7 @@ class RevinculaDomicilio extends Component {
                                                             this.state.listaPersonas.map((obj) => {
                                                                 return (
                                                                     <React.Fragment key={obj.persona.per_Id_Persona}>
-                                                                        <option value={obj.persona.per_Id_Persona}>{obj.persona.per_Nombre} {obj.persona.per_Apellido_Paterno} {obj.persona.per_Apellido_Materno}</option>
+                                                                        <option value={obj.persona.per_Id_Persona}>{obj.persona.per_Nombre} {obj.persona.apellidoPrincipal} {obj.persona.per_Apellido_Materno}</option>
                                                                     </React.Fragment>
                                                                 )
                                                             })
@@ -391,6 +406,7 @@ class RevinculaDomicilio extends Component {
                                                         direccion={this.state.direccion}
                                                         handleChangeEstado={this.handleChangeEstado}
                                                         boolNvoEstado={this.state.boolNvoEstado}
+                                                        nvoEstado_Disponible={this.state.nvoEstado_Disponible}
                                                     />
                                                 </Col>
                                             </Row>

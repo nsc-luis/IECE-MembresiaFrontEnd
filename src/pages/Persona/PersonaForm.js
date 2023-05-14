@@ -321,7 +321,8 @@ class PersonaForm extends Component {
             seleccionaLugarDeBautismo,
             borrarSeleccionLugarBautismo,
             submitBtnDisable,
-            ChangeSubmitBtnDisable
+            ChangeSubmitBtnDisable,
+            nvoEstado_Disponible
         } = this.props
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
         const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
@@ -516,9 +517,12 @@ class PersonaForm extends Component {
 
         const enviarInfo = async (e) => {
             e.preventDefault();
+
+            //Pone en variables de bloque los Objetos del Formulario de Persona y del formulario de Domicilio
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
 
+            //Si se trata de un Registro de Bautizados, verifica que tenga Fecha de nacimiento.
             if (objPersona.per_Bautizado === true
                 && objPersona.per_Fecha_Bautismo === "") {
                 alert("Error: \nSe requiere la Fecha de Bautismo.");
@@ -542,9 +546,9 @@ class PersonaForm extends Component {
                 validaFormatos(element.formato, objPersona[element.campo], element.estado)
             });
 
-            /* console.log("Success: Campos validados") */
+            //Si se trata de un Intento de Registro de una Nueva Persona, realiza varias Validaciones
             if (boolAgregarNvaPersona) {
-                /* SI LA PERSONA NO ES BAUTIZADA ENTONCES NO PODRA CREAR UN NUEVO HOGAR */
+                /* SI LA PERSONA ES NO BAUTIZADA, NO PUEDE CREAR UN NUEVO HOGAR */
                 if (!form.per_Bautizado && this.state.hogar.hd_Id_Hogar === "0") {
                     alert("LO SENTIMOS! \nUna persona NO BAUTAZADA no puede dar de alta un Nuevo Hogar/Domicilio. Favor de asignarla a un Hogar Existente.");
                     return false;
@@ -556,12 +560,20 @@ class PersonaForm extends Component {
                         PersonaEntity: objPersona,
                         HogarDomicilioEntity: objDomicilio
                     }
-                    if (domicilio.pais_Id_Pais === "0"
-                        || domicilio.hd_Calle === ""
-                        || domicilio.hd_Municipio_Ciudad === "") {
-                        alert("Error!. Para Nuevo Hogar/Domicilio, debe ingresar al menos Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
+                    if (objDomicilio.pais_Id_Pais === "0"
+                        || objDomicilio.hd_Calle === ""
+                        || objDomicilio.hd_Municipio_Ciudad === ""
+                        || objDomicilio.est_Id_Estado === "0") {
+                        alert("Error!. Para Nuevo Hogar/Domicilio, debe ingresar los Campos Obligatorios: Calle, Ciudad y País y Estado para un Nuevo Domicilio.")
                         return false;
                     }
+                    if (objDomicilio.est_Id_Estado === "999") {//Si el Estado_Id = Cero, indica que no seleccionó Estado aun. 
+                        if (objDomicilio.nvoEstado === "" || objDomicilio.nvoEstado === undefined) { //Si el País no tiene registrado algun Estado.
+                            alert("Error:\nEl País seleccionado no tiene Estados relacionados, por lo tanto, debe ingresar un nombre del Estado que desea Registrar.")
+                            return false
+                        }
+                    }
+
                     await ChangeSubmitBtnDisable(true)
                     await fnGuardaPersona(PersonaDomicilioHogar)
                 } else {//Si el Registro es de una Persona que se asignará a un Hogar Existente
@@ -1303,7 +1315,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Oficialia_Boda_Civil}
                                                                                             autoComplete="nope"
                                                                                         />
-                                                                                        <label>Oficialia de boda civil</label>
+                                                                                        <label>Oficialía de boda civil</label>
                                                                                     </div>
                                                                                 </div>
                                                                             </FormGroup>
@@ -1351,6 +1363,19 @@ class PersonaForm extends Component {
                                                                                                 <label>Lugar boda eclesiástica</label>
                                                                                             </FormGroup>
                                                                                         </div>
+                                                                                        {form.per_Categoria === "ADULTO_MUJER" &&
+                                                                                            <div className="col-sm-4">
+                                                                                                <Input
+                                                                                                    type="text"
+                                                                                                    name="per_Apellido_Casada"
+                                                                                                    onChange={onChange}
+                                                                                                    className="form-control"
+                                                                                                    value={form.per_Apellido_Casada}
+                                                                                                    autoComplete="nope"
+                                                                                                />
+                                                                                                <label>Apellido de Casada &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
+                                                                                            </div>
+                                                                                        }
                                                                                         <div className="col-sm-2">
                                                                                             <Input
                                                                                                 type="number"
@@ -1367,6 +1392,7 @@ class PersonaForm extends Component {
                                                                             </div>
                                                                             <FormGroup>
                                                                                 <div className="row">
+
                                                                                     <div className="col-sm-12">
                                                                                         <textarea
                                                                                             name="per_Nombre_Hijos"
@@ -1398,6 +1424,19 @@ class PersonaForm extends Component {
                                                                                             />
                                                                                             <label>Nombre de la pareja</label>
                                                                                         </div>
+                                                                                        {form.per_Categoria === "ADULTO_MUJER" &&
+                                                                                            <div className="col-sm-4">
+                                                                                                <Input
+                                                                                                    type="text"
+                                                                                                    name="per_Apellido_Casada"
+                                                                                                    onChange={onChange}
+                                                                                                    className="form-control"
+                                                                                                    value={form.per_Apellido_Casada}
+                                                                                                    autoComplete="nope"
+                                                                                                />
+                                                                                                <label>Apellido de Casada &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
+                                                                                            </div>
+                                                                                        }
                                                                                         <div className="col-sm-2">
                                                                                             <Input
                                                                                                 type="number"
@@ -1692,6 +1731,7 @@ class PersonaForm extends Component {
                                                                     handleChangeEstado={handleChangeEstado}
                                                                     direccion={this.state.direccion}
                                                                     habilitaPerBautizado={habilitaPerBautizado}
+                                                                    nvoEstado_Disponible={nvoEstado_Disponible}
                                                                 />
                                                             </div>
                                                         </div>

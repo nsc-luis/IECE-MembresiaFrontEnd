@@ -57,7 +57,8 @@ class PaisEstado extends React.Component {
             domicilio,
             onChangeDomicilio,
             boolNvoEstado,
-            handleChangeEstado
+            handleChangeEstado,
+            nvoEstado_Disponible
         } = this.props
 
         const handle_pais_Id_Pais = (e) => {// Cuando cambia el País
@@ -102,7 +103,9 @@ class PaisEstado extends React.Component {
                                 )
                             })
                         }
-                        <option value="999">Otro Estado</option>
+                        {nvoEstado_Disponible &&
+                            <option value="999">Otro Estado</option>
+                        }
                     </select>
                     <label>Estado/Provincia *</label>
                 </div>

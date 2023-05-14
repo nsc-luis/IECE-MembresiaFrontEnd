@@ -94,7 +94,7 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col className="negrita" xs="1">Nombre:</Col>
                             <Col xs="3" className="border border-dark">
-                                {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno}
+                                {this.objPersona.persona.per_Nombre} {this.objPersona.persona.apellidoPrincipal} {this.objPersona.persona.per_Apellido_Materno}
                             </Col>
                             <Col className="negrita" xs="1"></Col>
                             <Col className="negrita" xs="1">F. Nacim.:</Col>
