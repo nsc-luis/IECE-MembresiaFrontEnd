@@ -164,6 +164,7 @@ class ResumenMembresia extends Component {
             await helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
                 .then(res => {
                     let contador = 0;
+                    console.log("hogares desde API:", res.data.domicilios)
                     res.data.domicilios.forEach(element => {
                         contador = contador + 1;
                     });
@@ -181,6 +182,7 @@ class ResumenMembresia extends Component {
             await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
                 .then(res => {
                     let contador = 0;
+                    console.log("hogares desde API:", res.data.domicilios)
                     res.data.domicilios.forEach(element => {
                         contador = contador + 1;
                     });

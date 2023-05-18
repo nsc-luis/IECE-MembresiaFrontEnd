@@ -90,7 +90,8 @@ class RptListaDeHogares extends Component {
     }
 
     handle_sectorSeleccionado = async (e) => {
-        if (e.target.value === "todos") {
+        console.log("Se seleccionó un Sector", e.target.value)
+        if (e.target.value === "todos") {//Si se seleccionó "Todos los Sectores"
             this.setState({ sectorSeleccionado: e.target.value });
             console.log("Sector: ", e.target.value)
             await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresByDistrito/' + localStorage.getItem('dto'))
@@ -98,25 +99,30 @@ class RptListaDeHogares extends Component {
                     // console.log(res.data.value);
                     this.setState({ infoListaHogares: res.data.listahogares })
                     console.log("Hogares: ", res.data.listahogares)
-                    this.arreglarLista();
+                    //this.arreglarLista();
                     this.getInfoSector();
                 });
-        } else {
+        } else { //Si se seleccionó sólo 1 Sector en específico
             this.setState({ sectorSeleccionado: e.target.value });
-            console.log("Sector: ", e.target.value)
+            console.log("Sector: ", e.target.value);
             await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
                 .then(res => {
+                    console.log("Hogares: ", res.data.listahogares)
                     // console.log(res.data.value);
                     this.setState({
                         infoListaHogares: res.data.listahogares
                     })
-                    console.log("Hogares: ", res.data.listahogares)
-                    this.arreglarLista();
+                    //this.arreglarLista();
                     this.getInfoSector();
                 });
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.infoListaHogares !== prevState.infoListaHogares) {
+            this.arreglarLista();
+        }
+    }
 
 
     getPersonas = async () => {
@@ -136,7 +142,7 @@ class RptListaDeHogares extends Component {
     }
 
     getListaHogares = async () => {
-        if (localStorage.getItem('sector') === null) {
+        if (localStorage.getItem('sector') === null) { //Para Sesión de Obispo
 
             await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
@@ -148,11 +154,8 @@ class RptListaDeHogares extends Component {
                         })
                     });
                 })
-            console.log("Sale de la API: ", this.state.infoListahogares)
-            //this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
-            this.arreglarLista();
 
-        } else {
+        } else { //Para Sesión de Pastor
             await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
@@ -163,21 +166,18 @@ class RptListaDeHogares extends Component {
                         })
                     });
                 })
-            console.log("Sale de la API: ", this.state.infoListahogares)
             this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
-            this.arreglarLista();
         }
 
     }
 
     arreglarLista = () => {
         //Arregla la lista para desplegarla en Pantalla y PDF
-        const data2 = []
-        console.log("Entra en función Arreglar Lista: ", this.state.infoListaHogares)
-        if (this.state.infoListaHogares.length > 0) { //Si el array infoListaHogares tiene por lo menos 1 hogar Arregla/Prepara la lista
+        const data2 = [];
+        if (this.state.infoListaHogares.length > 0) { //Si el array infoListaHogares tiene por lo menos 1 hogar, procede a Arreglar/Preparar la lista
             this.state.infoListaHogares.forEach((hogar, index) => {
-                const miembros = []
                 let conteo = 0
+                let miembros = [];
                 hogar.integrantes.forEach((miembro, i) => {
                     conteo = i
                     miembros.push({
@@ -189,7 +189,6 @@ class RptListaDeHogares extends Component {
                         Celular: miembro.cel ? miembro.cel : "-"
 
                     })
-
                     data2.push({
                         Indice: (conteo === 0) ? String(hogar.indice) : " ",
                         Grupo: String(miembros[i].Grupo),
@@ -201,17 +200,16 @@ class RptListaDeHogares extends Component {
                         Tel_Casa: (conteo === 0) ? String(hogar.tel ? hogar.tel : "-") : " ",
                         Domicilio: (conteo === 0) ? String(hogar.direccion) : " ",
                     })
+
                 })
-
-                this.setState({ listaArreglada: data2 })
-
             })
+            this.setState({ listaArreglada: data2 })
+
         } else { //Si el Sector no tiene Hogares, resetea el array 'listaArreglada'
             this.setState({ listaArreglada: [] })
         }
 
     }
-
 
 
     getInfoSector = async () => {
@@ -447,7 +445,7 @@ class RptListaDeHogares extends Component {
 
                                                 //let bgcolor = hogar.Indice%2 == 0 && hogar.Indice? "#f2f2f2" : "#ddd"
                                                 return (
-                                                    <React.Fragment key={hogar.Indice}>
+                                                    <React.Fragment key={hogar.Nombre}>
                                                         <tr style={{ "background-color": bgcolor }}>
                                                             <td align="center" >{hogar.Indice}</td>
                                                             <td align="center">{hogar.Grupo}</td>

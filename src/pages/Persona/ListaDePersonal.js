@@ -151,10 +151,15 @@ class ListaDePersonal extends Component {
         if (localStorage.getItem("sector") !== null) {//Si es Sesión Pastor
             await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetBySector/" + localStorage.getItem("sector"))
                 .then(res => {
+                    let data = res.data.sort(function (a, b) {
+                        if (a.persona.per_Nombre < b.persona.per_Nombre) { return -1; }
+                        if (a.persona.per_Nombre > b.persona.per_Nombre) { return 1; }
+                        return 0;
+                    })
                     this.setState({
-                        personasTodas: res.data,
+                        personasTodas: data,
                         status: 'success',
-                        tempPersonas: res.data,
+                        tempPersonas: data,
                         modalShow: false
                     });
                     this.getActivos();
@@ -169,10 +174,15 @@ class ListaDePersonal extends Component {
         else { //Si es Sesión Obispo
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/persona/GetByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
+                    let data = res.data.sort(function (a, b) {
+                        if (a.persona.per_Nombre < b.persona.per_Nombre) { return -1; }
+                        if (a.persona.per_Nombre > b.persona.per_Nombre) { return 1; }
+                        return 0;
+                    })
                     this.setState({
-                        personasTodas: res.data,
+                        personasTodas: data,
                         status: 'success',
-                        tempPersonas: res.data,
+                        tempPersonas: data,
                         modalShow: false
                     });
                     this.getActivos();

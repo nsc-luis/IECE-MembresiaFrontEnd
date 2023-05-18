@@ -12,6 +12,7 @@ import Moment from "react-moment";
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
+import autoTable from 'jspdf-autotable'
 
 
 export default function ReporteOficiosProfesiones() {
@@ -74,10 +75,11 @@ export default function ReporteOficiosProfesiones() {
     const getPersonasSector = (sec) => {
         helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
-                setPersonas(res.data.filter(per => per.persona.per_Activo === true)
+                console.log("Profesiones: ", res.data)
+                setPersonas(res.data.filter(per => per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')
                     .sort(function (a, b) {
-                        if (a.persona.apellidoPrincipal < b.persona.apellidoPrincipal) { return -1; }
-                        if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
+                        if (a.persona.profesionOficio1[0].pro_Sub_Categoria < b.persona.profesionOficio1[0].pro_Sub_Categoria) { return -1; }
+                        if (a.persona.profesionOficio1[0].pro_Sub_Categoria > b.persona.profesionOficio1[0].pro_Sub_Categoria) { return 1; }
                         return 0;
                     }))
             });
@@ -95,10 +97,10 @@ export default function ReporteOficiosProfesiones() {
         helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
                 setPersonas(res.data
-                    .filter(per => per.persona.per_Activo === true)
+                    .filter(per => per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')
                     .sort(function (a, b) {
-                        if (a.persona.apellidoPrincipal < b.persona.apellidoPrincipal) { return -1; }
-                        if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
+                        if (a.persona.profesionOficio1[0].pro_Sub_Categoria < b.persona.profesionOficio1[0].pro_Sub_Categoria) { return -1; }
+                        if (a.persona.profesionOficio1[0].pro_Sub_Categoria > b.persona.profesionOficio1[0].pro_Sub_Categoria) { return 1; }
                         return 0;
                     })
                 )
@@ -155,22 +157,23 @@ export default function ReporteOficiosProfesiones() {
         totalCount = 0
         let index = 1
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
-        const doc = new jsPDF("p", "mm", "letter");
+        const doc = new jsPDF("lanscape", "mm", "letter");
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("LISTA PROFESIONES Y OFICIOS", 140, 10, { align: "center" });
+        doc.text("LISTA PROFESIONES Y OFICIOS", 165, 10, { align: "center" });
         doc.setFontSize(10);
 
         if (sector) {
-            doc.text(entidadTitulo, 140, 22, { align: "center" });
+            doc.text(entidadTitulo, 165, 22, { align: "center" });
             //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
-            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, { align: "center" })
-            doc.text(entidadTitulo, 140, 22, { align: "center" })
+            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 165, 17, { align: "center" })
+            doc.text(entidadTitulo, 165, 22, { align: "center" })
             //doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
-        doc.line(10, 32, 200, 32);
+        doc.line(10, 32, 270, 32);
+        let yAxis = 34
 
         doc.setFontSize(8);
         const headers = [
@@ -182,20 +185,46 @@ export default function ReporteOficiosProfesiones() {
             'Tel_Celular',
             'Email',
         ]
-        const data = personas.map((persona, index) => ({
-            Indice: String(index + 1),
-            Nombre: persona.persona.apellidoPrincipal + ' ' + (persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : "") + " " + persona.persona.per_Nombre,
-            Grupo: persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
-            Profesion_Oficio_1: String(persona.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO' ? persona.persona.profesionOficio1[0].pro_Sub_Categoria : '-'),
-            Profesion_Oficio_2: String(persona.persona.profesionOficio2[0].pro_Sub_Categoria != 'OTRO' ? persona.persona.profesionOficio2[0].pro_Sub_Categoria : '-'),
-            Tel_Celular: String(persona.persona.per_Telefono_Movil ? persona.persona.per_Telefono_Movil : '-'),
-            Email: String(persona.persona.per_Email_Personal ? persona.persona.per_Email_Personal : '-')
-        }))
-        //doc.table(10, 35, data, headers, {autoSize:true, fontSize: 6.5, padding:1})
-        doc.table(10, 35, data, headers, { fontSize: 6, padding: 1 })
 
-        let yAxis = 35 + data.length * 7 + 5
+        const data = personas.map((persona, index) => ([
+            String(index + 1),
+            persona.persona.apellidoPrincipal + ' ' + (persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : "") + " " + persona.persona.per_Nombre,
+            persona.persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
+            String(persona.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO' ? persona.persona.profesionOficio1[0].pro_Sub_Categoria : '-'),
+            String(persona.persona.profesionOficio2[0].pro_Sub_Categoria != 'OTRO' ? persona.persona.profesionOficio2[0].pro_Sub_Categoria : '-'),
+            String(persona.persona.per_Telefono_Movil ? persona.persona.per_Telefono_Movil : '-'),
+            String(persona.persona.per_Email_Personal ? persona.persona.per_Email_Personal : '-')
+        ]))
+        console.log("data: ", data)
+        console.log("datatable: ", Object.values(data))
+        //doc.table(10, 35, data, headers, {autoSize:true, fontSize: 6.5, padding:1})
+        //doc.table(10, 35, data, headers, { margin, fontSize: 6, padding: 1 })
+        autoTable(doc,
+            {
+                head: [headers],
+                body: Object.values(data),
+                theme: "plain",
+                startY: yAxis,
+                margin: { left: 10 },
+                styles: {
+                    lineColor: [44, 62, 80],
+                    lineWidth: .1,
+                },
+                headStyles: { fillColor: [196, 229, 252], halign: "center" },
+                bodyStyles: { fontSize: 6 },
+            })
+        //yAxis += data.length * 8
+        yAxis = doc.previousAutoTable.finalY;
+
+
+        yAxis = 35 + data.length * 7 + 5
         doc.setFontSize(8);
+
+        if (yAxis > 230) {
+            doc.addPage()
+            yAxis = 10
+        }
+
 
         //yAxis += 20;
         doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
