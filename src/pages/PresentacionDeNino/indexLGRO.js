@@ -54,30 +54,33 @@ class PresentacionDeNino extends Component {
     }
 
     getListaDePresentaciones = async () => { //Trae los registros de las Presentaciones de Niños de ese Sector desde la Tabla 'Presentacion_Nino'. 
-        await helpers.authAxios.get(helpers.url_api + "/Presentacion_Nino/GetBySector/" + localStorage.getItem("sector"))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Presentacion_Nino/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     listaDePresentaciones: res.data.presentaciones,
                     status: res.data.status
                 })
             })
+        )
     }
 
     getListaDeNinos = async () => {//Trae la lista de niños del Sector y que No se encuentren en la Tabla 'Presentacion_Nino'
-        await helpers.authAxios.get(helpers.url_api + "/Persona/GetListaNinosBySector/" + localStorage.getItem("sector"))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetListaNinosBySector/" + localStorage.getItem("sector"))
             .then(res => {
                 this.setState({
                     listaDeNinos: res.data.listaDeNinos,
                     status: res.data.status
                 })
             })
+        )
     }
 
     getMinistrosAncianoActivo = async () => {//Trae a los Ministros con grado de Anciano de Distrito
-        await helpers.authAxios.get(helpers.url_api + "/PersonalMinisterial/GetMinistrosAncianoActivoByDistrito/" + localStorage.getItem("dto"))
+        await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/PersonalMinisterial/GetMinistrosAncianoActivoByDistrito/" + localStorage.getItem("dto"))
             .then(res => {
                 this.setState({ ministros: res.data.ministros })
-            });
+            })
+        );
     }
 
     handle_modalEliminaPresentacion = (info) => {//Activa la variable que es condición para Desplegar una Modal de Eliminación de una Presentación.
@@ -185,7 +188,7 @@ class PresentacionDeNino extends Component {
 
     eliminaPresentacion = async () => {
         try {
-            await helpers.authAxios.delete(helpers.url_api + "/Presentacion_Nino/" + this.state.currentPresentacion.pdn_Id_Presentacion)
+            await helpers.validaToken().then(helpers.authAxios.delete(helpers.url_api + "/Presentacion_Nino/" + this.state.currentPresentacion.pdn_Id_Presentacion)
                 .then(res => {
                     if (res.data.status === "success") {
                         // alert(res.data.mensaje);
@@ -216,7 +219,8 @@ class PresentacionDeNino extends Component {
                             });
                         }, 1500);
                     }
-                });
+                })
+            );
         } catch (error) {
             alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
             // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
@@ -244,7 +248,7 @@ class PresentacionDeNino extends Component {
             info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante === "OTRO MINISTRO" ? this.state.otroMinistro : this.state.currentPresentacion.pdn_Ministro_Oficiante;
             console.log("MinistroOficianteaAPI: ", info.pdn_Ministro_Oficiante);
             try {
-                helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
+                helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -274,7 +278,8 @@ class PresentacionDeNino extends Component {
                                 });
                             }, 1500);
                         }
-                    });
+                    })
+                );
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
@@ -283,7 +288,7 @@ class PresentacionDeNino extends Component {
         else {
             var info = this.state.currentPresentacion;
             try {
-                helpers.authAxios.put(helpers.url_api + "/Presentacion_Nino/" + this.state.currentPresentacion.pdn_Id_Presentacion, info)
+                helpers.validaToken().then(helpers.authAxios.put(helpers.url_api + "/Presentacion_Nino/" + this.state.currentPresentacion.pdn_Id_Presentacion, info)
                     .then(res => {
                         if (res.data.status === "success") {
                             // alert(res.data.mensaje);
@@ -313,7 +318,8 @@ class PresentacionDeNino extends Component {
                                 });
                             }, 1500);
                         }
-                    });
+                    })
+                );
             } catch (error) {
                 alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
                 // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);

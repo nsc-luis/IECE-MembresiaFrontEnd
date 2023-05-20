@@ -14,7 +14,6 @@ import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 import autoTable from 'jspdf-autotable'
 
-
 export default function ReporteOficiosProfesiones() {
     //Estados
     const [personas, setPersonas] = useState([])
@@ -39,21 +38,22 @@ export default function ReporteOficiosProfesiones() {
             setLider("OBISPO")
             setEntidadTitulo("TODOS LOS SECTORES")
 
-            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
+            helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto))
                 .then(res => {
                     setSectores(res.data.sectores)
                 })
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
-                });
+                })
+            );
         } else { //Si es Sesión de PASTOR
             getInfoDistrito()
             getPersonasSector(sector)
             setLider("PASTOR")
 
-            helpers.authAxios.get("/Sector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/Sector/" + sector)
                 .then(res => {
                     setInfoSec(res.data.sector[0])
                     const sectores = []
@@ -62,18 +62,20 @@ export default function ReporteOficiosProfesiones() {
                     setSectorSeleccionado(sector)
                     setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
                 })
+            )
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
+            )
 
             getTitulo(sector)
         }
     }, [])
 
     const getPersonasSector = (sec) => {
-        helpers.authAxios.get("/Persona/GetBySector/" + sec)
+        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 console.log("Profesiones: ", res.data)
                 setPersonas(res.data.filter(per => per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')
@@ -82,19 +84,21 @@ export default function ReporteOficiosProfesiones() {
                         if (a.persona.profesionOficio1[0].pro_Sub_Categoria > b.persona.profesionOficio1[0].pro_Sub_Categoria) { return 1; }
                         return 0;
                     }))
-            });
+            })
+        );
     }
 
     const getInfoDistrito = () => {
-        helpers.authAxios.get("/Distrito/" + dto)
+        helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
             })
+        )
     }
 
 
     const getPersonasDistrito = () => {
-        helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
                 setPersonas(res.data
                     .filter(per => per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')
@@ -104,7 +108,8 @@ export default function ReporteOficiosProfesiones() {
                         return 0;
                     })
                 )
-            });
+            })
+        );
     }
 
     const handle_sectorSeleccionado = async (e) => {

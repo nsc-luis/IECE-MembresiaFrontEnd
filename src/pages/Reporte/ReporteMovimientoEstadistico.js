@@ -15,7 +15,6 @@ import 'moment/locale/es';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
-
 export default function ReporteMovimientoEstadistico() {
     //Estados
     const [bautismos, setBautismos] = useState(null)
@@ -77,36 +76,39 @@ export default function ReporteMovimientoEstadistico() {
 
         if (sector === null) {
             getDataDistrito();
-            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
+            const resDto = await helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto))
             setInfoDis(resDto.data)
 
             setSectorSeleccionado("todos");
             setLider("OBISPO")
             setEntidadTitulo("TODOS LOS SECTORES")
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
-                });
+                })
+            );
 
-            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
+            helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
                     setSectores(res.data.sectores)
                 })
+            )
         } else {
             getDataSector(sector);
-            const resDto = await helpers.authAxios.get("/Distrito/" + dto)
+            const resDto = await helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto))
             console.log("InfoDis: ", resDto.data);
             setInfoDis(resDto.data)
-            const resSec = await helpers.authAxios.get("/Sector/" + sector)
+            const resSec = await helpers.validaToken().then(helpers.authAxios.get("/Sector/" + sector))
             setInfoSec(resSec.data.sector[0])
             const sectores = []
             sectores.push(resSec.data.sector[0])
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
+            )
 
             setLider("PASTOR")
             setSectores(sectores);
@@ -117,7 +119,7 @@ export default function ReporteMovimientoEstadistico() {
 
     const getDataSector = async (sec) => {
         params.idSectorDistrito = sec
-        const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params);
+        const res = await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params));
         setDataGeneral(res.data.datos)
         console.log("DatosApi: ", res.data.datos)
         orderData(res.data.datos)
@@ -130,7 +132,7 @@ export default function ReporteMovimientoEstadistico() {
 
     const getDataDistrito = async () => {
         params.idSectorDistrito = dto
-        const res = await helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params);
+        const res = await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params));
         orderData(res.data.datos)
         setExcelData(res.data.datos)
     }

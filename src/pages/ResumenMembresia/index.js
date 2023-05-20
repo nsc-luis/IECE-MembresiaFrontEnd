@@ -65,32 +65,33 @@ class ResumenMembresia extends Component {
     }
 
     getDistrito = async () => {
-        await helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
             .then(res => {
                 this.setState({
                     distrito: res.data
                 })
-            });
+            })
+        );
     }
 
     getSectoresPorDistrito = async () => {
         if (localStorage.getItem('sector') === null) {
-            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         sectores: res.data.sectores,
                     })
-                });
-
+                })
+            )
         }
         else {
-            await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
                         sectores: res.data.sector
                     })
-                });
-
+                })
+            )
         }
     }
 
@@ -154,14 +155,15 @@ class ResumenMembresia extends Component {
     seleccionaSectorActivo = async () => {
         if (localStorage.getItem('sector') === null) {
             this.setState({ sectorSeleccionado: "todos" });
-            await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     //console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen })
                     this.conviertePersonasParaGraph(res.data.resumen);//Ejecuta fn que convierte la data para uso en Gráfica.
-                });
+                })
+            );
 
-            await helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
                 .then(res => {
                     let contador = 0;
                     console.log("hogares desde API:", res.data.domicilios)
@@ -170,16 +172,18 @@ class ResumenMembresia extends Component {
                     });
                     this.setState({ hogares: contador });
                 })
+            )
         } else {
             this.setState({ sectorSeleccionado: localStorage.getItem('sector') });
             //this.setState({sec_Id_Sector: localStorage.getItem('sector')});
-            await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + localStorage.getItem('sector'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({ resumenDeMembresia: res.data.resumen.value });
                     this.conviertePersonasParaGraph(res.data.resumen.value);//Ejecuta fn que convierte la data para uso en Gráfica.
-                });
+                })
+            );
 
-            await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
                 .then(res => {
                     let contador = 0;
                     console.log("hogares desde API:", res.data.domicilios)
@@ -188,6 +192,7 @@ class ResumenMembresia extends Component {
                     });
                     this.setState({ hogares: contador });
                 })
+            )
         }
     }
 
@@ -195,14 +200,15 @@ class ResumenMembresia extends Component {
         console.log(e.target.value)
         if (e.target.value === "todos") {
             this.setState({ sectorSeleccionado: e.target.value });
-            await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     //console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen })
                     this.conviertePersonasParaGraph(res.data.resumen);//Ejecuta fn que convierte la data para uso en Gráfica.
-                });
+                })
+            );
 
-            await helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
                 .then(res => {
                     let contador = 0;
                     res.data.domicilios.forEach(element => {
@@ -210,6 +216,7 @@ class ResumenMembresia extends Component {
                     });
                     this.setState({ hogares: contador });
                 })
+            )
 
             // alert("ALERTA! Aqui podemos hacer 2 cosas:\n- Generar un ciclo que sume los sectores.\n- Agregar dis_Id_Distrito a la tabla de Personal (creo que esta es mejor opcion).");
         }
@@ -217,21 +224,23 @@ class ResumenMembresia extends Component {
             e.persist();
             this.setState({ sectorSeleccionado: e.target.value });
 
-            await helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + e.target.value)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + e.target.value)
                 .then(res => {
                     // console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen.value })
                     this.conviertePersonasParaGraph(res.data.resumen.value);//Ejecuta fn que convierte la data para uso en Gráfica.
-                });
+                })
+            );
 
-            await helpers.authAxios.get(`/HogarDomicilio/GetBySector/${e.target.value}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetBySector/${e.target.value}`)
                 .then(res => {
                     let contador = 0;
                     res.data.domicilios.forEach(element => {
                         contador = contador + 1;
                     });
                     this.setState({ hogares: contador });
-                });
+                })
+            );
         }
     }
 
@@ -242,48 +251,53 @@ class ResumenMembresia extends Component {
         }
         else {
             if (this.state.sectorSeleccionado !== "todos") {
-                await helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
                     .then(res => {
                         this.setState({ infoSector: res.data.sector[0] })
-                    });
-                await helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
+                    })
+                );
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
                     .then(res => {
                         this.setState({
                             infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
                             gradoMinistro: "PASTOR"
                         });
                     })
-                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
-                    .then(res => {
-                        this.setState({
-                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                        });
-                    })
+                )
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
+                        .then(res => {
+                            this.setState({
+                                infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                            });
+                        })
+                )
             }
             else {
-                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
                     .then(res => {
                         this.setState({
                             infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
                             gradoMinistro: "OBISPO"
                         });
                     })
-                await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
-                    .then(res => {
-                        this.setState({
-                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                        });
-                    })
+                )
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
+                        .then(res => {
+                            this.setState({
+                                infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                            });
+                        })
+                )
                 this.setState({
-                    infoSector: {
-                        ...this.state.infoSector,
-                        sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
-                    }/* ,
+                            infoSector: {
+                                ...this.state.infoSector,
+                                sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
+                            }/* ,
                     infoMinistro: {
                         ...this.state.infoMinistro,
                         pem_Nombre: "OBISPO DEL DISTRITO"
                     } */
-                });
+                        });
             }
             const doc = new jsPDF("p", "mm", "letter");
 

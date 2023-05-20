@@ -61,7 +61,7 @@ class RevinculaDomicilio extends Component {
     }
 
     getPersonasParaCambioDomicilio = async () => {
-        await helpers.authAxios.get(`${helpers.url_api}/Persona/GetBySector/${localStorage.getItem("sector")}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Persona/GetBySector/${localStorage.getItem("sector")}`)
             .then(res => {
                 this.setState({
                     listaPersonas: res.data.filter((obj) => {
@@ -81,19 +81,22 @@ class RevinculaDomicilio extends Component {
                     })
                 })
             })
+        )
     }
 
     /// METODOS PARA HOGAR - DOMICILIO ///
     fnGetDatosDelHogar = async (id) => {
         if (id !== "0") {
-            await helpers.authAxios.get(helpers.url_api + "/Hogar_Persona/GetMiembros/" + id)
+            await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
                 })
-            await helpers.authAxios.get(helpers.url_api + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
+            )
+            await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
+            )
 
             let jerarquias = [];
             for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
@@ -149,7 +152,7 @@ class RevinculaDomicilio extends Component {
 
         //this.setState({ hd_Id_Hogar: e.target.value });
         if (idHogar !== "0") { //Si se selecciona un Hogar Existente
-            await helpers.authAxios.get(helpers.url_api + '/Hogar_Persona/GetMiembros/' + idHogar)
+            await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + '/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
                     this.setState({
                         hogar: {
@@ -157,7 +160,8 @@ class RevinculaDomicilio extends Component {
                             hp_Jerarquia: res.data.length
                         }
                     })
-                });
+                })
+            );
             this.setState({
                 hogar: {
                     ...this.state.hogar,
@@ -168,11 +172,12 @@ class RevinculaDomicilio extends Component {
             //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
             let getDireccion = async (id) => {
                 console.log("busca direccion: ", this.url + "/HogarDomicilio/" + id);
-                await helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
                     .then(res => {
                         this.setState({ direccion: res.data.direccion });
                         console.log("Domicilio: ", res.data.direccion);
-                    });
+                    })
+                );
             }
             getDireccion(idHogar);
         }
@@ -204,12 +209,13 @@ class RevinculaDomicilio extends Component {
 
     fnSolicitudNvoEstado = async (idPais) => {
         let contador = 0;
-        await helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${idPais}`)
             .then(res => {
                 res.data.estados.forEach(estado => {
                     contador = contador + 1;
                 });
             })
+        )
 
         if (contador > 0) {
             this.setState({
@@ -220,7 +226,7 @@ class RevinculaDomicilio extends Component {
             })
         }
         else if (this.state.domicilio.nvoEstado !== "") {
-            await helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Estado/SolicitudNvoEstado/${this.state.domicilio.nvoEstado}/${this.state.domicilio.pais_Id_Pais}/${this.infoSesion.pem_Id_Ministro}`))
         }
     }
 
@@ -246,8 +252,6 @@ class RevinculaDomicilio extends Component {
             })
         }
     }
-
-
 
     GuardaCambioDomicilio = async (e) => {
         e.preventDefault();
@@ -275,7 +279,7 @@ class RevinculaDomicilio extends Component {
         if (this.state.hogar.hd_Id_Hogar === "0") { //Si es un Nuevo Domicilio
             this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais);
             try {
-                await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaNvoHogar/${this.state.personaSeleccionada}/${this.infoSesion.pem_Id_Ministro}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
+                await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaNvoHogar/${this.state.personaSeleccionada}/${this.infoSesion.pem_Id_Ministro}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                     .then(res => {
                         if (res.data.status === "success") {
                             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
@@ -305,6 +309,7 @@ class RevinculaDomicilio extends Component {
                             }, 1000);
                         }
                     })
+                )
             }
             catch {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
@@ -313,7 +318,7 @@ class RevinculaDomicilio extends Component {
         }
         else { //Si es un Hogar Existente
             try {
-                await helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
+                await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
                     .then(res => {
                         if (res.data.status === "success") {
                             setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
@@ -343,6 +348,7 @@ class RevinculaDomicilio extends Component {
                             }, 1000);
                         }
                     })
+                )
             }
             catch {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");

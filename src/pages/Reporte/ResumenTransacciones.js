@@ -16,8 +16,6 @@ let sector = JSON.parse(localStorage.getItem("sector"))
 class ResumenTransacciones extends Component {
     constructor(props) {
         super(props);
-
-
         this.state = {
             consultaInfo: false,
             fsd: {},
@@ -180,18 +178,20 @@ class ResumenTransacciones extends Component {
             this.setState({ lider: "OBISPO" });
             this.setState({ entidadTitulo: "TODOS LOS SECTORES" });
 
-            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
+            helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
                     this.setState({ sectores: res.data.sectores });
                 })
+            )
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
                     console.log("SecretarioD", res.data.infoSecretario[0].pem_Nombre)
                     this.setState({ infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "" });
                 })
+            )
 
-            helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${dto}`)
+            helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${dto}`)
                 .then(res => {
                     console.log("res.data", res.data.domicilios)
                     let contador = 0;
@@ -200,7 +200,7 @@ class ResumenTransacciones extends Component {
                     });
                     this.setState({ hogares: contador });
                 })
-
+            )
         } else { //Para sesión de Pastor
             //Cambia estado de variables relacionadas a las Fechas y la jurisdicción correspondiente al tipo de Sesión
             this.setState({
@@ -212,15 +212,16 @@ class ResumenTransacciones extends Component {
                 }
             });
 
-            helpers.authAxios.get(`/Sector/${sector}`)
+            helpers.validaToken().then(helpers.authAxios.get(`/Sector/${sector}`)
                 .then(res => {
                     this.setState({ sector: res.data.sector[0] })
                     const sectores = []
                     sectores.push(res.data.sector[0])
                     this.setState({ entidadTitulo: sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias });
                 })
+            )
 
-            helpers.authAxios.get(`/HogarDomicilio/GetBySector/${sector}`)
+            helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetBySector/${sector}`)
                 .then(res => {
                     let contador = 0;
                     res.data.domicilios.forEach(element => {
@@ -228,11 +229,13 @@ class ResumenTransacciones extends Component {
                     });
                     this.setState({ hogares: contador });
                 })
+            )
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     this.setState({ infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "" })
                 })
+            )
 
             this.setState({ sectorSeleccionado: sector });
             this.setState({ lider: "PASTOR" });
@@ -243,10 +246,11 @@ class ResumenTransacciones extends Component {
 
     getInfoDistrito = () => {
         console.log("Dto: ", dto)
-        helpers.authAxios.get("/Distrito/" + dto)
+        helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 this.setState({ infoDis: res.data })
             })
+        )
     }
 
     getTitulo = (sector) => {
@@ -395,17 +399,19 @@ class ResumenTransacciones extends Component {
             });
 
             //Sirve para hacer el resumen de membresía actual de todo el Distrito
-            await helpers.authAxios.get(`/Persona/GetByDistrito/${dto}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/Persona/GetByDistrito/${dto}`)
                 .then(res => {
                     this.getPersonas(res.data);
-                });
+                })
+            );
 
             //Sirve para hacer el resumen de Transacciones de todo el Distrito
-            await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito`, this.state.fsd)
+            await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito`, this.state.fsd)
                 .then(res => {
                     console.log("listatransaccionesDis: ", res.data.datos)
                     this.condensaResumenTransacciones(res.data.datos);
                 })
+            )
 
         } else {//Si es un Sector
 
@@ -418,17 +424,19 @@ class ResumenTransacciones extends Component {
             });
 
             //Sirve para hacer el resumen de membresía actual del Sector
-            await helpers.authAxios.get(`/Persona/GetBySector/${this.state.sectorSeleccionado}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/Persona/GetBySector/${this.state.sectorSeleccionado}`)
                 .then(res => {
                     this.getPersonas(res.data);
-                });
+                })
+            );
 
             //Sirve para hacer el resumen de Transacciones del Sector
-            await helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/HistorialPorFechaSector`, this.state.fsd)
+            await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/HistorialPorFechaSector`, this.state.fsd)
                 .then(res => {
                     console.log("listatransaccionesSec: ", res.data.datos)
                     this.condensaResumenTransacciones(res.data.datos);
                 })
+            )
         }
     }
 

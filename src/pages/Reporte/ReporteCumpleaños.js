@@ -12,7 +12,6 @@ import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
-
 export default function ReporteCumpleaños() {
     //Estados
     const [personas, setPersonas] = useState([])
@@ -36,15 +35,17 @@ export default function ReporteCumpleaños() {
             setLider("OBISPO")
             setEntidadTitulo("TODOS LOS SECTORES")
 
-            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
+            helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
                     setSectores(res.data.sectores)
                 })
+            )
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
-                });
+                })
+            );
 
         } else {
             getInfoDistrito()
@@ -52,7 +53,7 @@ export default function ReporteCumpleaños() {
             setLider("PASTOR")
 
 
-            helpers.authAxios.get("/Sector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/Sector/" + sector)
                 .then(res => {
                     setInfoSec(res.data.sector[0])
                     const sectores = []
@@ -62,11 +63,13 @@ export default function ReporteCumpleaños() {
                     setSectorSeleccionado(sector)
                     setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
                 })
+            )
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
+            )
 
             getTitulo(sector)
 
@@ -76,35 +79,36 @@ export default function ReporteCumpleaños() {
 
     const getInfoDistrito = () => {
         console.log("Dto: ", dto)
-        helpers.authAxios.get("/Distrito/" + dto)
+        helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
                 console.log("Distrito: ", res.data)
             })
+        )
     }
 
     const getPersonasDistrito = () => {
-        helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
                 const sortedData = res.data.map(d => (d.persona)).sort((a, b) => {
                     return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
                 })
                 setPersonas(sortedData.filter(per => per.per_Activo === true))
-            });
+            })
+        );
     }
 
     const getPersonasSector = (sec) => {
 
-        helpers.authAxios.get("/Persona/GetBySector/" + sec)
+        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 const sortedData = res.data.map(d => (d.persona)).sort((a, b) => {
                     return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
                 })
                 setPersonas(sortedData.filter(per => per.per_Activo === true))
-            });
+            })
+        );
     }
-
-
 
     const handle_sectorSeleccionado = async (e) => {
 

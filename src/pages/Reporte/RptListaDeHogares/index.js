@@ -52,39 +52,42 @@ class RptListaDeHogares extends Component {
     }
 
     getDistrito = async () => {
-        await helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
             .then(res => {
                 this.setState({
                     distrito: res.data
                 })
-            });
+            })
+        );
     }
 
     getInfoDistrito = async () => {
-        await helpers.authAxios.get(this.url + "/Distrito/" + localStorage.getItem('dto'))
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Distrito/" + localStorage.getItem('dto'))
             .then(res => {
                 this.setState({ infoDistrito: res.data });
             })
+        )
     }
 
     getSectoresPorDistrito = async () => {
         if (localStorage.getItem('sector') === null) {
-            await helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         sectores: res.data.sectores
                     })
-                });
+                })
+            );
             this.setState({ lider: "OBISPO" })
-
         }
         else {
-            await helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/' + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
                         sectores: res.data.sector
                     })
-                });
+                })
+            );
             this.setState({ lider: "PASTOR" })
         }
     }
@@ -94,18 +97,19 @@ class RptListaDeHogares extends Component {
         if (e.target.value === "todos") {//Si se seleccionó "Todos los Sectores"
             this.setState({ sectorSeleccionado: e.target.value });
             console.log("Sector: ", e.target.value)
-            await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     // console.log(res.data.value);
                     this.setState({ infoListaHogares: res.data.listahogares })
                     console.log("Hogares: ", res.data.listahogares)
                     //this.arreglarLista();
                     this.getInfoSector();
-                });
+                })
+            );
         } else { //Si se seleccionó sólo 1 Sector en específico
             this.setState({ sectorSeleccionado: e.target.value });
             console.log("Sector: ", e.target.value);
-            await helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
                 .then(res => {
                     console.log("Hogares: ", res.data.listahogares)
                     // console.log(res.data.value);
@@ -114,7 +118,8 @@ class RptListaDeHogares extends Component {
                     })
                     //this.arreglarLista();
                     this.getInfoSector();
-                });
+                })
+            );
         }
     }
 
@@ -126,7 +131,7 @@ class RptListaDeHogares extends Component {
 
 
     getPersonas = async () => {
-        await helpers.authAxios.get("/Persona/GetBySector/" + sector)
+        await helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
                 //Filtro de hogares 
                 const knownElements = []
@@ -139,12 +144,13 @@ class RptListaDeHogares extends Component {
                 })
                 this.setState({ data: filteredElements })
             })
+        )
     }
 
     getListaHogares = async () => {
         if (localStorage.getItem('sector') === null) { //Para Sesión de Obispo
 
-            await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresByDistrito/" + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         infoListaHogares: res.data.listahogares.sort((a, b) => {
@@ -154,9 +160,9 @@ class RptListaDeHogares extends Component {
                         })
                     });
                 })
-
+            )
         } else { //Para Sesión de Pastor
-            await helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
                         infoListaHogares: res.data.listahogares.sort((a, b) => {
@@ -166,9 +172,9 @@ class RptListaDeHogares extends Component {
                         })
                     });
                 })
+            )
             this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
         }
-
     }
 
     arreglarLista = () => {
@@ -214,31 +220,32 @@ class RptListaDeHogares extends Component {
 
     getInfoSector = async () => {
         if (localStorage.getItem('sector') !== null) {
-            await helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/sector/" + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({ infoSector: res.data.sector[0] });
                 })
-
-            await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + localStorage.getItem('sector'))
+            )
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
                         infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
                     });
                 })
+            )
         } else {
-            await helpers.authAxios.get(this.url + "/sector/" + this.state.sectorSeleccionado)
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/sector/" + this.state.sectorSeleccionado)
                 .then(res => {
                     this.setState({ infoSector: res.data.sector[0] });
                 })
-            await helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem('dto'))
+            )
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
                         infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
                     });
                 })
+            )
         }
-
-
     }
 
     downloadTable = () => {

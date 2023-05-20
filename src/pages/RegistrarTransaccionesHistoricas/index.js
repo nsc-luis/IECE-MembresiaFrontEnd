@@ -45,37 +45,41 @@ class RegistrarTransaccionesHistoricas extends Component {
             })
     }
     getPersonas = async () => {
-        await helpers.authAxios.get(`${helpers.url_api}/persona/GetBySector/${localStorage.getItem("sector")}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/persona/GetBySector/${localStorage.getItem("sector")}`)
             .then(res => {
                 this.setState({ personas: res.data });
             })
+        )
     }
     getTransacciones = async () => {
-        await helpers.authAxios.get(`${helpers.url_api}/Codigo_Transacciones_Estadisticas/`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Codigo_Transacciones_Estadisticas/`)
             .then(res => {
                 this.setState({ transacciones: res.data.resultado });
             })
+        )
     }
     onChange = async (e) => {
         this.setState({
             [e.target.name]: e.target.value.toUpperCase()
         })
         if (e.target.name === "per_Id_Persona" && e.target.value !== "0") {
-            await helpers.authAxios.get(`${helpers.url_api}/Historial_Transacciones_Estadisticas/` + e.target.value)
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Historial_Transacciones_Estadisticas/` + e.target.value)
                 .then(res => {
                     this.setState({ historial: res.data.info });
                 })
+            )
         }
         else if (e.target.name === "per_Id_Persona" && e.target.value === "0") {
             this.setState({ historial: null })
         }
         else if (e.target.name === "dis_Id_Distrito" && e.target.value !== "0") {
-            await helpers.authAxios.get(`${helpers.url_api}/Sector/GetSectoresByDistrito/` + e.target.value)
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Sector/GetSectoresByDistrito/` + e.target.value)
                 .then(res => {
                     if (res.data.status === true) {
                         this.setState({ sectores: res.data.sectores });
                     }
                 })
+            )
         }
         else if (e.target.name === "dis_Id_Distrito" && e.target.value === "0") {
             this.setState({ sectores: [] })
@@ -104,8 +108,7 @@ class RegistrarTransaccionesHistoricas extends Component {
         }
         else {
             let comentarioTransaccion = this.state.comentarioTransaccion == "" ? "-" : this.state.comentarioTransaccion;
-            await helpers.validaToken()
-                .then(helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/RegistroHistorico/${this.state.per_Id_Persona}/${this.state.sec_Id_Sector}/${this.state.ct_Id_Codigo}/${comentarioTransaccion}/${this.state.fechaTransaccion}/${this.infoSesion.pem_Id_Ministro}`)
+            await helpers.validaToken().then(helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/RegistroHistorico/${this.state.per_Id_Persona}/${this.state.sec_Id_Sector}/${this.state.ct_Id_Codigo}/${comentarioTransaccion}/${this.state.fechaTransaccion}/${this.infoSesion.pem_Id_Ministro}`)
                     .then(res => {
                         if (res.data.status === "success") {
                             window.location = "/ListaDePersonal";
@@ -114,7 +117,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                             alert(res.data.mensaje);
                         }
                     })
-                );
+                ));
         }
 
     }

@@ -13,8 +13,6 @@ import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
-
-
 export default function ReportePersonalBautizado() {
     //Estados
     const [personas, setPersonas] = useState([])
@@ -44,22 +42,24 @@ export default function ReportePersonalBautizado() {
             setEntidadTitulo("TODOS LOS SECTORES")
 
 
-            helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
+            helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
                     setSectores(res.data.sectores)
                 })
+            )
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
-                });
+                })
+            );
 
         } else { //Para Sesión Pastor
             getPersonasSector(sector);
             getInfoDistrito()
             setLider("PASTOR")
 
-            helpers.authAxios.get("/Sector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/Sector/" + sector)
                 .then(res => {
                     setInfoSec(res.data.sector[0])
                     const sectores = []
@@ -70,11 +70,13 @@ export default function ReportePersonalBautizado() {
                     setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
 
                 })
+            )
 
-            helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
+            )
 
             getTitulo(sector)
         }
@@ -83,16 +85,17 @@ export default function ReportePersonalBautizado() {
 
     const getInfoDistrito = () => {
         console.log("Dto: ", dto)
-        helpers.authAxios.get("/Distrito/" + dto)
+        helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
                 console.log("Distrito: ", res.data)
             })
+        )
     }
 
     const getPersonasDistrito = () => {
 
-        helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
                 setPersonas(res.data.filter(persona => persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo)
                     .sort(function (a, b) {
@@ -100,12 +103,13 @@ export default function ReportePersonalBautizado() {
                         if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
                         return 0;
                     }))
-            });
+            })
+        );
     }
 
     const getPersonasSector = (sec) => {
 
-        helpers.authAxios.get("/Persona/GetBySector/" + sec)
+        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 setPersonas(res.data.filter(persona => (
                     persona.persona.per_Activo && persona.persona.per_Bautizado && persona.persona.per_En_Comunion && persona.persona.per_Activo))
@@ -114,7 +118,8 @@ export default function ReportePersonalBautizado() {
                         if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
                         return 0;
                     }))
-            });
+            })
+        );
     }
 
     const handle_sectorSeleccionado = async (e) => {
@@ -141,7 +146,6 @@ export default function ReportePersonalBautizado() {
             }
         })
     }
-
 
     const downloadTable = () => {
         TableToExcel.convert(document.getElementById("table1"), {
