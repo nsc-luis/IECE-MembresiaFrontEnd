@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Button, Input, Alert, Container, Row, Col, Card,
-    Form, FormGroup, Label, CardHeader, CardTitle, CardBody, CardFooter
+    Alert, Container, Row, Col, FormGroup
 } from 'reactstrap';
 import Layout from '../Layout';
 import './style.css'
@@ -13,6 +12,7 @@ class AnalisisPersonal extends Component {
 
     url = helpers.url_api;
 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -21,9 +21,14 @@ class AnalisisPersonal extends Component {
             foto: "",
             direccion: ""
         }
+        console.log("Props:", this.props.location.persona);
+        if (!this.props.location.persona) {
+            document.location.href = '/Main'
+        }
         this.objPersona = JSON.parse(localStorage.getItem('objPersona'));
         this.bautizado = this.objPersona.persona.per_Bautizado ? 'Bautizado' : 'No Bautizado';
         this.getHistorial(this.objPersona.persona.per_Id_Persona);
+
     }
 
     componentDidMount() {
@@ -38,9 +43,15 @@ class AnalisisPersonal extends Component {
             foto: `${helpers.url_api}/Foto/${this.objPersona.persona.per_Id_Persona}`
         })
 
+
         //Se trae la Data de la Persona que se le pasó desde el Componente Padre
-        const { persona } = this.props.location
-        this.getDireccion(persona.hogar.hd_Id_Hogar);
+
+        if (this.props.location.persona) {
+            const { persona } = this.props.location
+            this.getDireccion(persona.hogar.hd_Id_Hogar);
+        } else {
+            document.location.href = '/Main'
+        }
     }
 
     getHistorial = async (id) => {
@@ -61,14 +72,9 @@ class AnalisisPersonal extends Component {
     }
 
 
-
-
-
     render() {
 
         return (
-
-
             <>
                 <Container>
                     <FormGroup>
@@ -88,11 +94,11 @@ class AnalisisPersonal extends Component {
                         <Row>
                             <Col className="negrita" xs="1">Nombre:</Col>
                             <Col xs="3" className="border border-dark">
-                                {this.objPersona.persona.per_Nombre} {this.objPersona.persona.per_Apellido_Paterno} {this.objPersona.persona.per_Apellido_Materno}
+                                {this.objPersona.persona.per_Nombre} {this.objPersona.persona.apellidoPrincipal} {this.objPersona.persona.per_Apellido_Materno}
                             </Col>
                             <Col className="negrita" xs="1"></Col>
                             <Col className="negrita" xs="1">F. Nacim.:</Col>
-                            <Col xs="2" className="border border-dark"> {String(moment(this.objPersona.persona.per_Fecha_Nacimiento).format("LL"))} </Col>
+                            <Col xs="2" className="border border-dark"> {String(moment(this.objPersona.persona.per_Fecha_Nacimiento).format('D/MMM/YYYY'))} </Col>
                             <Col className="negrita campoVivo" xs="2">
                                 {this.objPersona.persona.per_Vivo &&
                                     <span className="fa fa-check faIconMarginRight"></span>
@@ -246,7 +252,7 @@ class AnalisisPersonal extends Component {
                                     return (
                                         <React.Fragment>
                                             <tr key={registro.hte_Id_Transaccion}>
-                                                <td>{helpers.reFormatoFecha(registro.hte_Fecha_Transaccion)}</td>
+                                                <td>{registro.hte_Fecha_Transaccion ? (moment(registro.hte_Fecha_Transaccion).format('D/MMM/YYYY')) : "-"}</td>
                                                 <td>{registro.ct_Tipo}</td>
                                                 <td>{registro.ct_Subtipo}</td>
                                                 <td>{registro.hte_Comentario}</td>

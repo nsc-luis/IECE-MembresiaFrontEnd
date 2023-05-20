@@ -64,32 +64,32 @@ class AltaRestitucion extends Component {
 
     //Trae datos del Hogar, Domicilio, Integrantes del Hogar de una Persona.
     fnGetDatosDelHogar = async (id) => {
-        if (id !== "0") {
+        if (id != "0") {
             //Trae los datos de los Integrantes de un Hogar y los pone en la variable 'MiembrosDelHogar
             await helpers.authAxios.get("/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
+                    console.log("Miembros1: ", res.data)
+                    //En base a la cantidad de Integrantes de Hogar, genera el rango de Posbiles Jerarquías para seleccionar    
+                    let jerarquias = [];
+                    for (let i = 1; i < res.data.length + 2; i++) {
+                        jerarquias.push(<option value={i}>{i}</option>)
+                    }
+
+                    //Actualiza las Variables de estado 'JerarquiasDisponibles' y 'hogar'
+                    this.setState({
+                        JerarquiasDisponibles: jerarquias,
+                        hogar: {
+                            ...this.state.hogar,
+                            hp_Jerarquia: jerarquias.length
+                        }
+                    })
                 })
             //Trae los datos del Titular y del Domicilio de una Hogar y los pone en la variable 'DatosHogarDomicilio
             await helpers.authAxios.get("/Hogar_Persona/GetDatosHogarDomicilio/" + id)
                 .then(res => {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
-
-            //En base a la cantidad de Integrantes de Hogar, genera el rango de Posbiles Jerarquías para seleccionar    
-            let jerarquias = [];
-            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
-                jerarquias.push(<option value={i}>{i}</option>)
-            }
-
-            //Actualiza las Variables de estado 'JerarquiasDisponibles' y 'hogar'
-            this.setState({
-                JerarquiasDisponibles: jerarquias,
-                hogar: {
-                    ...this.state.hogar,
-                    hp_Jerarquia: jerarquias.length
-                }
-            })
         } else {
             this.setState({
                 MiembrosDelHogar: [],
@@ -412,6 +412,7 @@ class AltaRestitucion extends Component {
     }
 
     render() {
+        console.log("Miembros2: ", this.state.MiembrosDelHogar)
         return (
             <>
                 <Container>
@@ -444,7 +445,7 @@ class AltaRestitucion extends Component {
                                                 {this.state.personaParaRestitucion.map(persona => {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
-                                                            <option value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</option>
+                                                            <option value={persona.per_Id_Persona}>{persona.per_Nombre} {persona.apellidoPrincipal} {persona.per_Apellido_Materno}</option>
                                                         </React.Fragment>
                                                     )
                                                 })
@@ -537,6 +538,7 @@ class AltaRestitucion extends Component {
                                 <hr />
                                 {/* Desplega el COmponente para Elegir Hogar Existente o Crear uno Nuevo */}
                                 {!this.state.mismoHogar &&
+
                                     <HogarPersonaDomicilio
                                         domicilio={this.state.domicilio}
                                         onChangeDomicilio={this.onChangeDomicilio}

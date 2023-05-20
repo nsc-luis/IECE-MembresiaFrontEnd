@@ -250,7 +250,7 @@ export default function ReporteMovimientoEstadistico() {
                 (index + 1).toString(),
                 persona.ct_Tipo,
                 persona.ct_Subtipo,
-                persona.per_Nombre + ' ' + persona.per_Apellido_Paterno + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ""),
+                persona.per_Nombre + ' ' + persona.apellidoPrincipal + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : ""),
                 typeof persona.hte_Comentario?.trim() !== "string" || persona.hte_Comentario?.trim() === "" ? "-" : persona.hte_Comentario?.trim(),
                 (moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")).toString(),
             ]))
@@ -332,7 +332,7 @@ export default function ReporteMovimientoEstadistico() {
                                 <td width="5%">{index + 1}</td>
                                 <td width="10%">{persona.ct_Tipo}</td>
                                 <td width="15%">{persona.ct_Subtipo}</td>
-                                <td width="25%">{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                <td width="25%">{persona.per_Nombre} {persona.apellidoPrincipal} {persona.per_Apellido_Materno}</td>
                                 <td width="35%">{persona.hte_Comentario}</td>
                                 <td width="10%">{moment(persona.hte_Fecha_Transaccion).format("DD/MMM/YYYY")}</td>
                             </tr>
@@ -631,7 +631,7 @@ export default function ReporteMovimientoEstadistico() {
                                                     <td>{index + 1}</td>
                                                     <td>{persona.ct_Tipo}</td>
                                                     <td>{persona.ct_Subtipo}</td>
-                                                    <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                                    <td>{persona.per_Nombre} {persona.apellidoPrincipal} {persona.per_Apellido_Materno}</td>
                                                     <td>{persona.hte_Comentario}</td>
                                                     <td>{moment(persona.hte_Fecha_Transaccion).format("DD/MM/YYYY")}</td>
                                                 </tr>

@@ -32,7 +32,8 @@ class PresentacionDeNino extends Component {
             mensajeDelProceso: "",
             ministros: [],
             habilitaOtroMinistro: false,
-            otroMinistro: ""
+            otroMinistro: "",
+            submitBtnDisable: false
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
         this.msjNinoSelectInvalido = "Debe seleccionar al Niño(a) para continuar.";
@@ -52,6 +53,10 @@ class PresentacionDeNino extends Component {
         this.getListaDePresentaciones(); //Trae los registros de las Presentaciones de Niños de ese Sector desde la Tabla 'Presentacion_Nino'. 
         this.getListaDeNinos(); //Trae la lista de niños del Sector y que No se encuentren en la Tabla 'Presentacion_Nino'
         this.getMinistrosAncianoActivo(); //Trae a los Ministros con grado de Anciano de Distrito
+    }
+
+    ChangeSubmitBtnDisable = (bol) => {//Sirve para evitar multiples registros por dobleclick en botón Submit
+        this.setState({ submitBtnDisable: bol });
     }
 
     getListaDePresentaciones = async () => { //Trae los registros de las Presentaciones de Niños de ese Sector desde la Tabla 'Presentacion_Nino'. 
@@ -115,7 +120,7 @@ class PresentacionDeNino extends Component {
         }
     }
 
-    guardarPresentacion = (e) => { //Gestiona la Transacción del Registro de la Presentación de Niños.
+    guardarPresentacion = async (e) => { //Gestiona la Transacción del Registro de la Presentación de Niños.
         e.preventDefault();
 
         if (this.state.bolAgregarPresentacion) {
@@ -131,6 +136,9 @@ class PresentacionDeNino extends Component {
             if (this.state.currentPresentacion.pdn_Ministro_Oficiante === "") return false;
             if (this.state.otroMinistro === "" && this.state.currentPresentacion.pdn_Ministro_Oficiante === "") return false;
 
+            //Para deshabilitar el botón y evitar multiples registros de Matrimonio y Ediciones de Persona
+            this.ChangeSubmitBtnDisable(true)
+
             //Procede a enviar los datos de la Presentación a la API
             var info = this.state.currentPresentacion;
             info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante === "OTRO MINISTRO" ? this.state.otroMinistro : this.state.currentPresentacion.pdn_Ministro_Oficiante;
@@ -139,6 +147,7 @@ class PresentacionDeNino extends Component {
                 helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
                     .then(res => {
                         if (res.data.status === "success") {
+                            alert("RECORDATORIO: Si se trata de un Nuevo Hijo en una Familia Cristiana, No olvide actualizar los datos de los Padres modificando el Número y Nombre de los Hijos.");
                             setTimeout(() => {
                                 this.setState({
                                     mensajeDelProceso: "Los datos fueron grabados satisfactoriamente.",
@@ -154,7 +163,7 @@ class PresentacionDeNino extends Component {
                         }
                     });
             } catch (error) {
-                alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+                alert("Error: Hubo un problema en la comunicación con el servidor. Intente mas tarde.");
                 //setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
             }
         }
@@ -279,6 +288,7 @@ class PresentacionDeNino extends Component {
                                     <Button
                                         color="success"
                                         type="submit"
+                                        disabled={this.state.submitBtnDisable}
                                     >
                                         <span className="fas fa-save  entreBotones"></span>Guardar
                                     </Button>

@@ -39,7 +39,8 @@ class Domicilio extends React.Component {
             MiembrosDelHogar,
             handle_hp_Jerarquia,
             JerarquiasDisponibles,
-            ListaHogares
+            ListaHogares,
+            nvoEstado_Disponible,
         } = this.props
 
         console.log("DatosHogarDomicilio: ", DatosHogarDomicilio)
@@ -72,7 +73,7 @@ class Domicilio extends React.Component {
                                     ListaHogares.map((h) => {
                                         return (
                                             <option key={h.hogarPersona.hd_Id_Hogar} value={h.hogarPersona.hd_Id_Hogar}>
-                                                {h.miembros[0].per_Nombre} {h.miembros[0].per_Apellido_Paterno}  {h.miembros[0].per_Apellido_Materno} |
+                                                {h.miembros[0].per_Nombre} {h.miembros[0].apellidoPrincipal}  {h.miembros[0].per_Apellido_Materno} |
                                                 {h.domicilio.hd_Calle} {h.domicilio.hd_Numero_Exterior}, {h.domicilio.hd_Municipio_Ciudad}</option>
                                         )
                                     })
@@ -95,6 +96,7 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                         value={domicilio.hd_Calle}
                                         onChange={onChangeDomicilio}
+                                        autoComplete="nope"
                                     />
                                     <label>Calle *</label>
                                 </div>
@@ -105,6 +107,7 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                         value={domicilio.hd_Numero_Exterior}
                                         onChange={onChangeDomicilio}
+                                        autoComplete="nope"
                                     />
                                     <label>Numero exterior</label>
                                 </div>
@@ -115,6 +118,7 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                         value={domicilio.hd_Numero_Interior}
                                         onChange={onChangeDomicilio}
+                                        autoComplete="nope"
                                     />
                                     <label>Numero interior</label>
                                 </div>
@@ -127,6 +131,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Tipo_Subdivision}
                                             onChange={onChangeDomicilio}
+                                            autoComplete="nope"
                                         >
                                             <option value="COL">COLONIA</option>
                                             <option value="FRACC">FRACC</option>
@@ -151,8 +156,9 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Subdivision}
                                             onChange={onChangeDomicilio}
+                                            autoComplete="nope"
                                         />
-                                        <label>Nombre del Asentamiento</label>
+                                        <label>Nombre del Asentamiento/Barrio/Referencia</label>
                                     </div>
                                     <div className="col-sm-4">
                                         <input
@@ -161,6 +167,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Localidad}
                                             onChange={onChangeDomicilio}
+                                            autoComplete="nope"
                                         />
                                         <label>Localidad</label>
                                     </div>
@@ -176,6 +183,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Municipio_Ciudad}
                                             onChange={onChangeDomicilio}
+                                            autoComplete="nope"
                                         />
                                         <label>Municipio/Cuidad *</label>
                                     </div>
@@ -186,6 +194,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_CP}
                                             onChange={onChangeDomicilio}
+                                            autoComplete="nope"
                                         />
                                         <label>Código Postal</label>
                                     </div>
@@ -196,6 +205,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Telefono}
                                             onChange={onChangeDomicilio}
+                                            autoComplete="nope"
                                         />
                                         <label>Telefono</label>
                                     </div>
@@ -211,6 +221,7 @@ class Domicilio extends React.Component {
                                     onChangeDomicilio={onChangeDomicilio}
                                     boolNvoEstado={boolNvoEstado}
                                     handleChangeEstado={handleChangeEstado}
+                                    nvoEstado_Disponible={nvoEstado_Disponible}
                                 />
                             </div>
                         </div>
@@ -248,7 +259,7 @@ class Domicilio extends React.Component {
                                     MiembrosDelHogar.map((miembro, i) => {
                                         return (
                                             <tr key={i}>
-                                                <td>{miembro.per_Nombre} {miembro.per_Apellido_Paterno} {miembro.per_Apellido_Materno}</td>
+                                                <td>{miembro.per_Nombre} {miembro.apellidoPrincipal} {miembro.per_Apellido_Materno}</td>
                                                 <td>{miembro.hp_Jerarquia}</td>
                                                 <td>{miembro.per_Activo ? "SI" : "NO"}</td>
                                             </tr>

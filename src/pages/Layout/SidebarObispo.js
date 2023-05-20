@@ -158,10 +158,10 @@ class SidebarObispo extends Component {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/ReporteTransacciones"
+                        <Link className="nav-link" to="/ResumenTransacciones"
                             onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Transacciones")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>
-                            <span>Reporte de Transacciones</span>
+                            <span>Resumen de Transacciones</span>
                         </Link>
                     </li>
 

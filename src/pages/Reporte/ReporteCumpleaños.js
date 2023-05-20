@@ -181,9 +181,11 @@ export default function ReporteCumpleaños() {
             'Fecha_Nacimiento',
             'Edad_Actual',
         ]
+
+        console.log("personas: ", personas);
         const data = personas.map((persona, index) => ({
             Indice: String(index + 1),
-            Nombre: (persona.per_Nombre ? persona.per_Nombre : " ") + ' ' + (persona.per_Apellido_Paterno ? persona.per_Apellido_Paterno : " ") + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : " "),
+            Nombre: (persona.apellidoPrincipal ? persona.apellidoPrincipal : " ") + ' ' + (persona.per_Apellido_Materno ? persona.per_Apellido_Materno : " ") + "" + (persona.per_Nombre ? persona.per_Nombre : " "),
             Grupo: persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase(),
             Fecha_Nacimiento: String(moment(persona.per_Fecha_Nacimiento).format("LL")),
             Edad_Actual: String(moment().diff(persona.per_Fecha_Nacimiento, "years")),
@@ -299,7 +301,7 @@ export default function ReporteCumpleaños() {
                                 {personas.map((persona, index) => (
                                     <tr key={persona.per_Id_Persona}>
                                         <td>{index + 1}</td>
-                                        <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
+                                        <td>{persona.apellidoPrincipal} {persona.per_Apellido_Materno} {persona.per_Nombre}</td>
                                         <td>{persona.per_Bautizado ? "Bautizado".toUpperCase() : "No Bautizado".toUpperCase()}</td>
                                         <td>{moment(persona.per_Fecha_Nacimiento).format("LL")}</td>
                                         <td>{moment().diff(persona.per_Fecha_Nacimiento, "years")}</td>

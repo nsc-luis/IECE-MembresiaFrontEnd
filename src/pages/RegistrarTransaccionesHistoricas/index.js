@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
     Container, Button, Input, Modal, ModalBody, Label, Alert,
-    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup
+    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
 } from 'reactstrap';
 import axios from 'axios';
 import Sectores from './Sectores';
@@ -103,7 +103,7 @@ class RegistrarTransaccionesHistoricas extends Component {
             return false;
         }
         else {
-            let comentarioTransaccion = this.state.comentarioTransaccion == "" ? "-" : this.state.comentarioTransaccion; 
+            let comentarioTransaccion = this.state.comentarioTransaccion == "" ? "-" : this.state.comentarioTransaccion;
             await helpers.validaToken()
                 .then(helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/RegistroHistorico/${this.state.per_Id_Persona}/${this.state.sec_Id_Sector}/${this.state.ct_Id_Codigo}/${comentarioTransaccion}/${this.state.fechaTransaccion}/${this.infoSesion.pem_Id_Ministro}`)
                     .then(res => {
@@ -125,6 +125,9 @@ class RegistrarTransaccionesHistoricas extends Component {
                 <Row>
                     <Col xs="12">
                         <Card>
+                            <CardHeader>
+                                <h3 className="text-sm-center">TRANSACCIONES EXTEMPORANEAS</h3>
+                            </CardHeader>
                             <CardBody>
                                 <Form onSubmit={this.guardarRegistroHistorico}>
                                     <FormGroup>
@@ -230,7 +233,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                                                     {this.state.personas.map((obj) => {
                                                         return (
                                                             <React.Fragment key={obj.persona.per_Id_Persona}>
-                                                                <option value={obj.persona.per_Id_Persona}>{obj.persona.per_Nombre} {obj.persona.per_Apellido_Paterno} {obj.persona.per_Apellido_Materno}</option>
+                                                                <option value={obj.persona.per_Id_Persona}>{obj.persona.per_Nombre} {obj.persona.apellidoPrincipal} {obj.persona.per_Apellido_Materno}</option>
                                                             </React.Fragment>
                                                         )
                                                     })}
