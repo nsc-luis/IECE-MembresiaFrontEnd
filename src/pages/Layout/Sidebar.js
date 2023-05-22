@@ -520,7 +520,7 @@ class Sidebar extends Component {
                     </div>
 
                     {/* Nav Item - Hogares  */}
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <Link
                             className="nav-link"
                             to="#"
@@ -529,8 +529,8 @@ class Sidebar extends Component {
                             <i className="fas fa-address-book"></i>
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
-                    </li>
-                    {/* Nav Item - Hogares  */}
+                    </li> */}
+
                     <li className="nav-item">
                         <Link
                             className="nav-link"
@@ -539,6 +539,28 @@ class Sidebar extends Component {
                         >
                             <i className="fas fa-address-book"></i>
                             <span>Transacciones Extemporaneas</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Alta de Personal Ministerial')}
+                            to="/RegistroPersonalMinisterial"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Alta de Personal Ministerial</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Baja de Personal Ministerial')}
+                            to="/BajaPersonalMinisterial"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Baja de Personal Ministerial</span>
                         </Link>
                     </li>
 
