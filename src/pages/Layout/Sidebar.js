@@ -519,7 +519,8 @@ class Sidebar extends Component {
                         Transacciones Especiales
                     </div>
 
-                    <li className="nav-item">
+                    {/* Nav Item - Hogares  */}
+                    {/* <li className="nav-item">
                         <Link
                             className="nav-link"
                             to="#"
@@ -528,8 +529,8 @@ class Sidebar extends Component {
                             <i className="fas fa-address-book"></i>
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
-                    </li>
-                    
+                    </li> */}
+
                     <li className="nav-item">
                         <Link
                             className="nav-link"
@@ -549,6 +550,13 @@ class Sidebar extends Component {
                         >
                             <i className="fas fa-hand-holding-usd"></i>
                             <span>Tesorero del sector</span>
+                        </Link>
+                        <Link
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Alta de Personal Ministerial')}
+                            to="/RegistroPersonalMinisterial"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Alta de Personal Ministerial</span>
                         </Link>
                     </li>
 
@@ -571,6 +579,13 @@ class Sidebar extends Component {
                         >
                             <i className="fas fa-user-tie"></i>
                             <span>Auxiliares</span>
+                        </Link>
+                        <Link
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Baja de Personal Ministerial')}
+                            to="/BajaPersonalMinisterial"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Baja de Personal Ministerial</span>
                         </Link>
                     </li>
 

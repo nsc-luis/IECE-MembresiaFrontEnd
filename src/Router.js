@@ -40,6 +40,11 @@ import Auxiliares from './pages/PersonalAdministrativo/Auxiliares';
 import SecretarioDelSector from './pages/PersonalAdministrativo/SecretarioDelSector';
 import TesoreroDelSector from './pages/PersonalAdministrativo/TesoreroDelSector';
 import Layout from './pages/Layout';
+import RegistroDePersonal from './pages/Persona/RegistroDePersona';
+import RegistroPersonalMinisterial from './pages/RegistroPersonalMinisterial';
+import BajaPersonalMinisterial from './pages/BajaPersonalMinisterial';
+// import App from './App';
+/* import helpers from './components/Helpers'; */
 
 class Router extends Component {
     constructor(props) {
@@ -93,11 +98,17 @@ class Router extends Component {
                         <Route exact path="/Matrimonio" component={Matrimonio} />
                         <Route exact path="/Legalizacion" component={Legalizacion} />
                         <Route exact path="/PresentacionDeNino" component={PresentacionDeNino} />
+                        {/* TRANSACCIONES ESPECIALES */}
+                        <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
+                        <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
+                        <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
+
                         {/* REPORTES */}
                         <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
                         <Route exact path="/RptBautizados" component={RptBautizados} />
                         <Route exact path="/ResumenTransacciones" component={ResumenTransacciones} />
-                        <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
+
+
                         {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
