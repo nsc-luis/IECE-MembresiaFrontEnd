@@ -43,26 +43,31 @@ class PersonaEncontrada extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{datosPersonaEncontrada.per_Nombre} {datosPersonaEncontrada.per_Apellido_Paterno} {datosPersonaEncontrada.per_Apellido_Materno} </td>
-                            <td>{datosPersonaEncontrada.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(datosPersonaEncontrada.per_Fecha_Nacimiento) : null} </td>
-                            <td>{datosPersonaEncontrada.per_Bautizado === true ? "Si" : "No"} </td>
-                            <td>{datosPersonaEncontrada.dis_Tipo_Distrito} {datosPersonaEncontrada.dis_Numero}</td>
-                            <td>{datosPersonaEncontrada.sec_Alias}</td>
-                            <td>
-                                {datosPersonaEncontrada.per_Bautizado === false && localStorage.getItem('nvaAltaBautizado') === "true" ? (
-                                    <React.Fragment>
-                                        <Button
-                                            color="info"
-                                            onClick={() => this.fnCambiarABautizado(datosPersonaEncontrada.per_Id_Persona)}>
-                                            <span className="fa fa-user-check" style={{ paddingRight: "5px" }}></span>
-                                            Cambiar estatus a BAUTIZADO
-                                        </Button>
-                                    </React.Fragment>)
-                                    : null
-                                }
-                            </td>
-                        </tr>
+                        {datosPersonaEncontrada.map((persona) => {
+                            return (
+                                <tr key={persona.per_Id_Persona}>
+                                    <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
+                                    <td>{persona.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(persona.per_Fecha_Nacimiento) : null} </td>
+                                    <td>{persona.per_Bautizado === true ? "Si" : "No"} </td>
+                                    <td>{persona.dis_Tipo_Distrito} {persona.dis_Numero}</td>
+                                    <td>{persona.sec_Alias}</td>
+                                    <td>
+                                        {persona.per_Bautizado === false && localStorage.getItem('nvaAltaBautizado') === "true" ? (
+                                            <React.Fragment>
+                                                <Button
+                                                    color="info"
+                                                    onClick={() => this.fnCambiarABautizado(persona.per_Id_Persona)}>
+                                                    <span className="fa fa-user-check" style={{ paddingRight: "5px" }}></span>
+                                                    Cambiar estatus a BAUTIZADO
+                                                </Button>
+                                            </React.Fragment>)
+                                            : null
+                                        }
+                                    </td>
+                                </tr>
+                            )
+                        })}
+
                     </tbody>
                 </table>
             </React.Fragment>

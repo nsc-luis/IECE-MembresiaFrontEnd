@@ -38,7 +38,7 @@ class PersonaForm extends Component {
             CasadoDivorciadoViudo: false,
             ConcubinatoSolteroConHijos: false,
             soltero: false,
-            datosPersonaEncontrada: {},
+            datosPersonaEncontrada: [],
             RFCSinHomoclave: "",
             distritoSeleccionado: "0",
             sectores: [],
@@ -383,7 +383,7 @@ class PersonaForm extends Component {
                         if (res.data.persona[0].per_Id_Persona != localStorage.getItem("idPersona")) { //Si es una persona diferente a la que se está editando.
                             setFrmValidaPersona(true)
                             setBolPersonaEncontrada(true)
-                            this.setState({ datosPersonaEncontrada: res.data.persona[0] })
+                            this.setState({ datosPersonaEncontrada: res.data.persona })
                         } else {
                             setFrmValidaPersona(false)
                             setBolPersonaEncontrada(false)
