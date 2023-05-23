@@ -37,7 +37,7 @@ export default class Auxiliares extends Component {
         })
     }
     getAuxiliaresPorSector = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetAuxiliaresBySector/${localStorage.getItem('sector')}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetAuxiliaresBySector2/${localStorage.getItem('sector')}`)
             .then(res => {
                 if (res.data.status === "success")
                     this.setState({ auxiliares: res.data.auxiliares })
