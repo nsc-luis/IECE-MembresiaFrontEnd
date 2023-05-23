@@ -52,7 +52,8 @@ class RegistroDePersonal extends Component {
             buscarLugarDeBautismo: true,
             listaResultadoBusquedaLugarBautismo: [],
             submitBtnDisable: false,
-            nvoEstado_Disponible: true
+            nvoEstado_Disponible: true,
+            idSectorBautismo: 0
         }
     }
 
@@ -80,6 +81,7 @@ class RegistroDePersonal extends Component {
                     per_Nombre_Abuela_Paterna: "",
                     per_Nombre_Abuelo_Materno: "",
                     per_Nombre_Abuela_Materna: "",
+                    per_Nacionalidad: "",
                     per_Fecha_Boda_Civil: "",
                     per_Fecha_Boda_Eclesiastica: "",
                     per_Fecha_Nacimiento: "",
@@ -235,7 +237,6 @@ class RegistroDePersonal extends Component {
     }
 
     onChangeFechaBautismo = (e) => {
-        console.log("fecha: ", e.target.value)
         this.setState({
             form: {
                 ...this.state.form,
@@ -520,7 +521,8 @@ class RegistroDePersonal extends Component {
             form: {
                 ...this.state.form,
                 per_Lugar_Bautismo: info.sec_Alias
-            }
+            },
+            idSectorBautismo: info.sec_Id_Sector
         })
     }
 
@@ -560,7 +562,8 @@ class RegistroDePersonal extends Component {
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
             nvoEstado: this.state.domicilio.nvoEstado,
-            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica
+            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica,
+            idSectorBautismo: datos.idSectorBautismo
         }
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
             .then(res => {
@@ -931,6 +934,7 @@ class RegistroDePersonal extends Component {
                     ChangeSubmitBtnDisable={this.ChangeSubmitBtnDisable}
                     submitBtnDisable={this.state.submitBtnDisable}
                     nvoEstado_Disponible={this.state.nvoEstado_Disponible}
+                    idSectorBautismo={this.state.idSectorBautismo}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

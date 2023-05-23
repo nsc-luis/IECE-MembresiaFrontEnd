@@ -9,8 +9,6 @@ import {
 import { Link } from 'react-router-dom';
 import IECELogo from '../../assets/images/IECE_logo.png'
 import ModalInfoHogar from './ModalInfoHogar';
-import jsPDF from 'jspdf';
-import nvologo from '../../assets/images/IECE_LogoOficial.jpg';
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 

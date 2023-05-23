@@ -36,9 +36,10 @@ import BajaBautizadoCambioDomicilio from './pages/Persona/BajaBautizadoCambioDom
 import BajaNoBautizadoCambioDomicilio from './pages/Persona/BajaNoBautizadoCambioDomicilio';
 import BajaNoBautizadoAlejamiento from './pages/Persona/BajaNoBautizadoAlejamiento';
 import RegistrarTransaccionesHistoricas from './pages/RegistrarTransaccionesHistoricas';
+import Auxiliares from './pages/PersonalAdministrativo/Auxiliares';
+import SecretarioDelSector from './pages/PersonalAdministrativo/SecretarioDelSector';
+import TesoreroDelSector from './pages/PersonalAdministrativo/TesoreroDelSector';
 import Layout from './pages/Layout';
-// import App from './App';
-/* import helpers from './components/Helpers'; */
 
 class Router extends Component {
     constructor(props) {
@@ -82,6 +83,9 @@ class Router extends Component {
                         <Route exact path="/BajaBautizadoCambioDomicilio" component={BajaBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoCambioDomicilio" component={BajaNoBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoAlejamiento" component={BajaNoBautizadoAlejamiento} />
+                        <Route exact path="/Auxiliares" component={Auxiliares} />
+                        <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
+                        <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} />
                         {/* HOGARES */}
                         <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                         <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />

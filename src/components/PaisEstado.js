@@ -52,7 +52,6 @@ class PaisEstado extends React.Component {
     };
 
     render() {
-        console.log("DomicilioPE: ", this.props.domicilio)
         const {
             domicilio,
             onChangeDomicilio,

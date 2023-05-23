@@ -519,7 +519,6 @@ class Sidebar extends Component {
                         Transacciones Especiales
                     </div>
 
-                    {/* Nav Item - Hogares  */}
                     <li className="nav-item">
                         <Link
                             className="nav-link"
@@ -530,7 +529,7 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li>
-                    {/* Nav Item - Hogares  */}
+                    
                     <li className="nav-item">
                         <Link
                             className="nav-link"
@@ -539,6 +538,39 @@ class Sidebar extends Component {
                         >
                             <i className="fas fa-address-book"></i>
                             <span>Transacciones Extemporaneas</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del sector.')}
+                            to="/TesoreroDelSector"
+                        >
+                            <i className="fas fa-hand-holding-usd"></i>
+                            <span>Tesorero del sector</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del sector.')}
+                            to="/SecretarioDelSector"
+                        >
+                            <i className="fas fa-edit"></i>
+                            <span>Secretario del sector</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Auxiliares.')}
+                            to="/Auxiliares"
+                        >
+                            <i className="fas fa-user-tie"></i>
+                            <span>Auxiliares</span>
                         </Link>
                     </li>
 
