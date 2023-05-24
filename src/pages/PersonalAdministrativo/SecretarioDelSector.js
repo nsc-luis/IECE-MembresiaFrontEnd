@@ -20,7 +20,8 @@ export default class SecretarioDelSector extends Component {
                 fecha: null */
             },
             personas: [],
-            secretario: []
+            secretario: [],
+            pemIdMinistroInvalido: false
         }
     }
     componentDidMount() {
@@ -61,6 +62,10 @@ export default class SecretarioDelSector extends Component {
     }
     setSecretarioDelSector = async (e) => {
         e.preventDefault();
+        if(this.state.infoNvoSecretario.pem_Id_Ministro === "0") {
+            this.setState({ pemIdMinistroInvalido: true })
+            return false
+        }
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/SetSecretarioDelSector`, this.state.infoNvoSecretario)
             .then(res => {
                 if (res.data.status === "success") {
@@ -99,7 +104,7 @@ export default class SecretarioDelSector extends Component {
                                             onChange={this.onChange}
                                             name="pem_Id_Ministro"
                                             value={this.state.infoNvoSecretario.pem_Id_Ministro}
-                                            invalid={this.state.perIdPersonaInvalida}
+                                            invalid={this.state.pemIdMinistroInvalido}
                                         >
                                             <option value="0">Seleccione una persona</option>
                                             {this.state.personas.map((persona) => {

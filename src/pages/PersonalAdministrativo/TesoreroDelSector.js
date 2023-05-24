@@ -20,7 +20,8 @@ export default class TesoreroDelSector extends Component {
                 fecha: null */
             },
             personas: [],
-            tesorero: []
+            tesorero: [],
+            pemIdMinistroInvalido: false
         }
     }
     componentDidMount() {
@@ -61,6 +62,10 @@ export default class TesoreroDelSector extends Component {
     }
     setTesoreroDelSector = async (e) => {
         e.preventDefault();
+        if(this.state.infoNvoTesorero.pem_Id_Ministro === "0") {
+            this.setState({ pemIdMinistroInvalido: true })
+            return false
+        }
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/SetTesoreroDelSector`, this.state.infoNvoTesorero)
             .then(res => {
                 if (res.data.status === "success") {
@@ -99,7 +104,7 @@ export default class TesoreroDelSector extends Component {
                                             onChange={this.onChange}
                                             name="pem_Id_Ministro"
                                             value={this.state.infoNvoTesorero.pem_Id_Ministro}
-                                            invalid={this.state.perIdPersonaInvalida}
+                                            invalid={this.state.pemIdMinistroInvalido}
                                         >
                                             <option value="0">Seleccione una persona</option>
                                             {this.state.personas.map((persona) => {

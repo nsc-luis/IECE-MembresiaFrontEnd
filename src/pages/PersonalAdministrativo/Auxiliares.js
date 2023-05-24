@@ -19,7 +19,8 @@ export default class Auxiliares extends Component {
                 fecha: null */
             },
             personas: [],
-            auxiliares: []
+            auxiliares: [],
+            perIdPersonaInvalida: false
         }
     }
     componentDidMount() {
@@ -60,6 +61,10 @@ export default class Auxiliares extends Component {
     }
     AltaAuxiliar = async (e) => {
         e.preventDefault();
+        if (this.state.infoNvoAuxiliar.per_Id_Persona === "0") {
+            this.setState({ perIdPersonaInvalida: true })
+            return false
+        }
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/AltaAuxiliarEnSector`, this.state.infoNvoAuxiliar)
             .then(res => {
                 if (res.data.status === "success") {

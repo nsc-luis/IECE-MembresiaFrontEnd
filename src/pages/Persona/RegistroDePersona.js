@@ -692,6 +692,7 @@ class RegistroDePersonal extends Component {
             ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase(),
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
+            idSectorBautismo: this.state.idSectorBautismo
         };
         // this.fnSolicitudNvaProfesion();
         if (this.state.nuevaFoto) {
@@ -785,7 +786,8 @@ class RegistroDePersonal extends Component {
             hdId: hdId,
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
-            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica
+            FechaTransaccionHistorica: this.state.FechaTransaccionHistorica,
+            idSectorBautismo: this.state.idSectorBautismo
         }
         //this.fnSolicitudNvaProfesion();
         try {
