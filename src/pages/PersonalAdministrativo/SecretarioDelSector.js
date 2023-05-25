@@ -15,13 +15,15 @@ export default class SecretarioDelSector extends Component {
         this.state = {
             infoNvoSecretario: {
                 pem_Id_Ministro: "0",
-                sec_Id_Sector: localStorage.getItem("sector")
+                sec_Id_Sector: localStorage.getItem("sector"),
+                idUsuario: this.infoSesion.pem_Id_Ministro
                 /* comentario: "",
                 fecha: null */
             },
             personas: [],
             secretario: [],
-            pemIdMinistroInvalido: false
+            pemIdMinistroInvalido: false,
+            modal: false
         }
     }
     componentDidMount() {
@@ -60,18 +62,23 @@ export default class SecretarioDelSector extends Component {
             })
         )
     }
+    handleModal = () => {
+        this.setState({ modal: !this.state.modal })
+    }
     setSecretarioDelSector = async (e) => {
         e.preventDefault();
         if(this.state.infoNvoSecretario.pem_Id_Ministro === "0") {
             this.setState({ pemIdMinistroInvalido: true })
             return false
         }
+        this.handleModal();
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/SetSecretarioDelSector`, this.state.infoNvoSecretario)
             .then(res => {
                 if (res.data.status === "success") {
                     window.location.reload()
                 }
                 else {
+                    this.handleModal();
                     alert("Error:\nNo se pudo actualizar el registro del secretario del sector, favor de reportar o intentar mas tarde.")
                 }
             })
@@ -188,6 +195,11 @@ export default class SecretarioDelSector extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
+                <Modal isOpen={this.state.modal}>
+                    <ModalBody>
+                        Procesando...
+                    </ModalBody>
+                </Modal>
             </Container>
         )
     }

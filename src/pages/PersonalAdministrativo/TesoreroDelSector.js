@@ -15,13 +15,15 @@ export default class TesoreroDelSector extends Component {
         this.state = {
             infoNvoTesorero: {
                 pem_Id_Ministro: "0",
-                sec_Id_Sector: localStorage.getItem("sector")
+                sec_Id_Sector: localStorage.getItem("sector"),
+                idUsuario: this.infoSesion.pem_Id_Ministro
                 /* comentario: "",
                 fecha: null */
             },
             personas: [],
             tesorero: [],
-            pemIdMinistroInvalido: false
+            pemIdMinistroInvalido: false,
+            modal: false
         }
     }
     componentDidMount() {
@@ -60,18 +62,23 @@ export default class TesoreroDelSector extends Component {
             })
         )
     }
+    handleModal = () => {
+        this.setState({ modal: !this.state.modal })
+    }
     setTesoreroDelSector = async (e) => {
         e.preventDefault();
         if(this.state.infoNvoTesorero.pem_Id_Ministro === "0") {
             this.setState({ pemIdMinistroInvalido: true })
             return false
         }
+        this.handleModal();
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/SetTesoreroDelSector`, this.state.infoNvoTesorero)
             .then(res => {
                 if (res.data.status === "success") {
                     window.location.reload()
                 }
                 else {
+                    this.handleModal();
                     alert("Error:\nNo se pudo actualizar el registro del tesorero del sector, favor de reportar o intentar mas tarde.")
                 }
             })
@@ -188,6 +195,11 @@ export default class TesoreroDelSector extends Component {
                         </CardFooter>
                     </Form>
                 </Card>
+                <Modal isOpen={this.state.modal}>
+                    <ModalBody>
+                        Procesando...
+                    </ModalBody>
+                </Modal>
             </Container>
         )
     }
