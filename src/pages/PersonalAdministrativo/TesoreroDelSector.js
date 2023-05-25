@@ -124,7 +124,7 @@ export default class TesoreroDelSector extends Component {
                             <FormGroup>
                                 <Row>
                                     <Col xs="3">
-                                        SECRETARIO ACTUAL:
+                                        TESORERO ACTUAL:
                                     </Col>
                                     <Col xs="9">
                                         <Input
@@ -183,7 +183,7 @@ export default class TesoreroDelSector extends Component {
                                 type="submit"
                                 color="success"
                             >
-                                <span className="fa fa-edit faIconMarginRight"></span>Establecer como secretario
+                                <span className="fa fa-hand-handing-usd faIconMarginRight"></span>Establecer como tesorero
                             </Button>
                         </CardFooter>
                     </Form>
