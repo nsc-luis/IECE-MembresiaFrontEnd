@@ -37,7 +37,7 @@ export default function ReporteCumpleaños() {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores)
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
                 })
             )
 
@@ -224,7 +224,7 @@ export default function ReporteCumpleaños() {
     return (
 
         <>
-            <Container fluid>
+            <Container lg>
 
                 <FormGroup>
                     <Row>

@@ -74,7 +74,7 @@ class RptListaDeHogares extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
-                        sectores: res.data.sectores
+                        sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR")
                     })
                 })
             );
@@ -125,6 +125,7 @@ class RptListaDeHogares extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.infoListaHogares !== prevState.infoListaHogares) {
+            console.log("ListaSinArreglar", this.state.infoListaHogares)
             this.arreglarLista();
         }
     }

@@ -23,6 +23,7 @@ import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
 import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
+import ReportePersonalMinisterial from './pages/Reporte/ReportePersonalMinisterial';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import ResumenTransacciones from './pages/Reporte/ResumenTransacciones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
@@ -88,9 +89,6 @@ class Router extends Component {
                         <Route exact path="/BajaBautizadoCambioDomicilio" component={BajaBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoCambioDomicilio" component={BajaNoBautizadoCambioDomicilio} />
                         <Route exact path="/BajaNoBautizadoAlejamiento" component={BajaNoBautizadoAlejamiento} />
-                        <Route exact path="/Auxiliares" component={Auxiliares} />
-                        <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
-                        <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} />
                         {/* HOGARES */}
                         <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                         <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
@@ -100,6 +98,9 @@ class Router extends Component {
                         <Route exact path="/PresentacionDeNino" component={PresentacionDeNino} />
                         {/* TRANSACCIONES ESPECIALES */}
                         <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
+                        <Route exact path="/Auxiliares" component={Auxiliares} />
+                        <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
+                        <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} />
                         <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
                         <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
 
@@ -114,6 +115,8 @@ class Router extends Component {
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                         <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                         <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
+                        <Route exact path="/ReportePersonalMinisterial" component={ReportePersonalMinisterial} />
+
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />

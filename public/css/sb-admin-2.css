@@ -4314,7 +4314,7 @@ input[type="button"].btn-block {
 
 .nav-link {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem .75rem;
 }
 
 .nav-link:hover,
@@ -10745,7 +10745,7 @@ a:focus {
 
 .sidebar .nav-item .nav-link {
   text-align: center;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem .75rem;
   width: 6.5rem;
 }
 
@@ -10914,7 +10914,7 @@ a:focus {
     display: block;
     width: 100%;
     text-align: left;
-    padding: 1rem;
+    padding: .75rem;
     width: 14rem;
   }
   .sidebar .nav-item .nav-link i {

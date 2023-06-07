@@ -1,7 +1,9 @@
+import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
-    Container, Button, FormGroup, Input,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+    Container, Button,
+    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
+    FormGroup, Input
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
@@ -11,18 +13,20 @@ import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
-export default function ReportePersonalNoBautizado() {
+export default function ReportePersonalBautizado() {
     //Estados
     const [personas, setPersonas] = useState([])
-    const [infoSecretario, setInfoSecretario] = useState({})
     const [infoDis, setInfoDis] = useState([])
     const [infoSec, setInfoSec] = useState([])
+    const [infoSecretario, setInfoSecretario] = useState({})
     const dto = JSON.parse(localStorage.getItem("dto"))
     const sector = JSON.parse(localStorage.getItem("sector"))
     const [sectores, setSectores] = useState([])
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
     const [entidadTitulo, setEntidadTitulo] = useState("")
     const [lider, setLider] = useState("")
+    const [personalMinisterial, setPersonalMinisterial] = useState([])
+
     //Llamadas en render
 
     useEffect(() => {
@@ -31,12 +35,14 @@ export default function ReportePersonalNoBautizado() {
 
     useEffect(() => {
 
-        if (sector == null) {
+        if (sector == null) { //Para Sesión Obispo
+            console.log("inicia programa")
+            getPersonalMinisterialDistrito();
+            getInfoDistrito()
             setSectorSeleccionado("todos");
-            getPersonasDistrito();
             setLider("OBISPO")
             setEntidadTitulo("TODOS LOS SECTORES")
-            getInfoDistrito()
+
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
@@ -49,12 +55,11 @@ export default function ReportePersonalNoBautizado() {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
             );
-        } else {
 
+        } else { //Para Sesión Pastor
+            getPersonalMinisterialSector(sector);
             getInfoDistrito()
-            getPersonasSector(sector)
             setLider("PASTOR")
-
 
             helpers.validaToken().then(helpers.authAxios.get("/Sector/" + sector)
                 .then(res => {
@@ -65,6 +70,7 @@ export default function ReportePersonalNoBautizado() {
                     setSectores(sectores);
                     setSectorSeleccionado(sector)
                     setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
+
                 })
             )
 
@@ -73,7 +79,10 @@ export default function ReportePersonalNoBautizado() {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
             )
+
+            getTitulo(sector)
         }
+
     }, [])
 
     const getInfoDistrito = () => {
@@ -86,65 +95,59 @@ export default function ReportePersonalNoBautizado() {
         )
     }
 
-    const getPersonasDistrito = () => {
-
-        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
+    const getPersonalMinisterialDistrito = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialByDistrito/${dto}`)
             .then(res => {
-                setPersonas(res.data.filter(persona => persona.persona.per_Bautizado === false && persona.persona.per_En_Comunion === false && persona.persona.per_Activo)
-                    .sort(function (a, b) {
-                        if (a.persona.apellidoPrincipal < b.persona.apellidoPrincipal) { return -1; }
-                        if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
-                        return 0;
-                    }))
-
+                if (res.data.status === "success")
+                    setPersonalMinisterial(res.data.administrativo)
+                else {
+                    alert("Error:\nNo se pudo consultar la lista del Personal Ministerial, favor de reportar o intentar mas tarde.")
+                }
             })
         );
     }
 
-    const getPersonasSector = (sec) => {
+    const getPersonalMinisterialSector = async (sec) => {
 
-        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialBySector/${sec}`)
             .then(res => {
-                setPersonas(res.data.filter(persona => (
-                    persona.persona.per_Bautizado === false && persona.persona.per_En_Comunion === false && persona.persona.per_Activo))
-                    .sort(function (a, b) {
-                        if (a.persona.apellidoPrincipal < b.persona.apellidoPrincipal) { return -1; }
-                        if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
-                        return 0;
-                    }))
+                if (res.data.status === "success")
+                    setPersonalMinisterial(res.data.administrativo)
+                else {
+                    alert("Error:\nNo se pudo consultar la lista del Personal Ministerial, favor de reportar o intentar mas tarde.")
+                }
             })
-        );
+        )
     }
 
     const handle_sectorSeleccionado = async (e) => {
 
         if (e.target.value !== "todos") {
-
-            getPersonasSector(e.target.value)
+            console.log("Sector Seleccionado: ", e.target.value)
+            getPersonalMinisterialSector(e.target.value)
             setSectorSeleccionado(e.target.value);
             getTitulo(e.target.value)
         } else {
-            getPersonasDistrito();
+            getPersonalMinisterialDistrito();
             setSectorSeleccionado("todos");
             setEntidadTitulo("TODOS LOS SECTORES")
         }
     }
 
     const getTitulo = (sector) => {
-        console.log("Sector: ", sectores);
+        console.log("SectorParaTitulo: ", sectores);
         sectores.map(sec => {
 
             if (sec.sec_Id_Sector == sector) {
                 setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
-                //console.log("entidadTitulo: ",sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+                console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }
         })
     }
 
     const downloadTable = () => {
-
         TableToExcel.convert(document.getElementById("table1"), {
-            name: "Personal_No_Bautizado.xlsx",
+            name: "Personal_Bautizado.xlsx",
             sheet: {
                 name: "Hoja 1"
             }
@@ -155,47 +158,46 @@ export default function ReportePersonalNoBautizado() {
 
     const countPersons = (type) => {
         let count = 0
-        personas.map(persona => {
-            if (persona.persona.per_Categoria === type) {
+        personalMinisterial.map(persona => {
+            if (persona.pem_Grado_Ministerial === type) {
                 count += 1
             }
         })
         totalCount += count;
         return count
     }
+
     const reportePersonalBautizadoPDF = () => {
         totalCount = 0
         let index = 1
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         const doc = new jsPDF("p", "mm", "letter");
         let pageHeight = doc.internal.pageSize.height;
-
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("REPORTE DE PERSONAL NO BAUTIZADO", 85, 10);
-
+        doc.text("REPORTE DE PERSONAL MINISTERIAL", 85, 10);
         doc.setFontSize(10);
+
         if (sector) {
             doc.text(entidadTitulo, 140, 22, { align: "center" });
-            // doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         else {
             doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, { align: "center" })
             doc.text(entidadTitulo, 140, 22, { align: "center" })
-            // doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 135, 23, {align:"center"});
         }
         doc.line(10, 32, 200, 32);
+
         doc.setFontSize(8);
         let yAxis = 35
         doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
-        doc.text("JOVENES HOMBRES", 15, yAxis);
-        doc.text(`${countPersons("JOVEN_HOMBRE")}`, 80, yAxis);
+        doc.text("ANCIANOS", 15, yAxis);
+        doc.text(`${countPersons("ANCIANO")}`, 80, yAxis);
         yAxis += 7;
-        personas.map((persona) => {
-            if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
-                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
+        personalMinisterial.map((persona) => {
+            if (persona.pem_Grado_Ministerial === "ANCIANO") {
+                doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -211,12 +213,12 @@ export default function ReportePersonalNoBautizado() {
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
-        doc.text("JOVENES MUJERES", 15, yAxis);
-        doc.text(`${countPersons("JOVEN_MUJER")}`, 80, yAxis);
+        doc.text("DÍACONOS", 15, yAxis);
+        doc.text(`${countPersons("DÍACONO")}`, 80, yAxis);
         yAxis += 7;
-        personas.map((persona) => {
-            if (persona.persona.per_Categoria === "JOVEN_MUJER") {
-                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
+        personalMinisterial.map((persona) => {
+            if (persona.pem_Grado_Ministerial === "DÍACONO") {
+                doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -232,33 +234,12 @@ export default function ReportePersonalNoBautizado() {
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
-        doc.text("NIÑOS", 15, yAxis);
-        doc.text(`${countPersons("NIÑO")}`, 80, yAxis);
+        doc.text("AUXILIARES", 15, yAxis);
+        doc.text(`${countPersons("AUXILIAR") + countPersons("DÍACONO A PRUEBA")}`, 80, yAxis);
         yAxis += 7;
-        personas.map((persona) => {
-            if (persona.persona.per_Categoria === "NIÑO") {
-                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
-                yAxis += 4;
-                index++;
-                if (yAxis >= pageHeight - 10) {
-                    doc.addPage();
-                    yAxis = 15 // Restart height position
-                }
-            }
-        })
-
-        index = 1;
-        yAxis += 7;
-        doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
-        doc.rect(10, yAxis, 190, 4, "F");
-        doc.setFont("", "", "bold");
-        yAxis += 3;
-        doc.text("NIÑAS", 15, yAxis);
-        doc.text(`${countPersons("NIÑA")}`, 80, yAxis);
-        yAxis += 7;
-        personas.map((persona) => {
-            if (persona.persona.per_Categoria === "NIÑA") {
-                doc.text(`${index}.- ${persona.persona.per_Apellido_Paterno} ${persona.persona.per_Apellido_Materno ? persona.persona.per_Apellido_Materno : ''} ${persona.persona.per_Nombre}`, 20, yAxis);
+        personalMinisterial.map((persona) => {
+            if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DÍACONO A PRUEBA") {
+                doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -271,18 +252,19 @@ export default function ReportePersonalNoBautizado() {
         yAxis += 2;
         doc.rect(75, yAxis, 15, 4);
         yAxis += 3;
+
         if (yAxis >= pageHeight - 30) {
             doc.addPage();
             yAxis = 15 // Restart height position
         }
 
-        doc.text("TOTAL DE PERSONAL NO BAUTIZADO:", 20, yAxis);
+        doc.text("TOTAL DE PERSONAL MINISTERIAL:", 20, yAxis);
         doc.text(`${totalCount}`, 80, yAxis);
 
         yAxis += 25;
-        doc.text(`JUSTICIA Y VERDAD`, 90, yAxis);
+        doc.text(`JUSTICIA Y VERDAD`, 105, yAxis, { align: "center" });
         yAxis += 5;
-        doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 85, yAxis);
+        doc.text(`AL DÍA ${moment().format('LL').toUpperCase()}`, 105, yAxis, { align: "center" });
 
         yAxis += 35;
         doc.line(30, yAxis, 90, yAxis);
@@ -295,7 +277,7 @@ export default function ReportePersonalNoBautizado() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReportePersonalNoBautizado.pdf");
+        doc.save("ReportePersonalBautizado.pdf");
     }
     return (
         <>
@@ -343,12 +325,12 @@ export default function ReportePersonalNoBautizado() {
                 <Button className="btn-danger m-3 " onClick={() => reportePersonalBautizadoPDF()}><i className="fas fa-file-pdf mr-2"></i>Descargar PDF</Button>
                 <Card body>
                     <Row>
-                        <Col lg="5"  >
+                        <Col lg="5">
                             <img src={logo} alt="Logo" width="100%" className="ml-3"></img>
                         </Col>
-                        <Col lg="6">
+                        <Col lg="6" >
                             <CardTitle className="text-center" tag="h3">
-                                LISTA DE PERSONAL NO BAUTIZADO
+                                LISTA DE PERSONAL MINISTERIAL
                                 <FormGroup>
                                     <Row>
                                         <h1></h1>
@@ -360,64 +342,17 @@ export default function ReportePersonalNoBautizado() {
                         </Col>
                     </Row>
                     <CardBody>
-                        <Button size="lg" className="text-left categoriasReportes" block id="jovenes_hombres">Jovenes hombres: {countPersons("JOVEN_HOMBRE")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
+                        <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
+                            <Button size="lg" className="text-left categoriasReportes " block id="adultos_hombres">Ancianos: {countPersons("ANCIANO")}</Button>
+
                             <Card>
                                 <CardBody>
                                     <h5>
                                         <ol type="1">
-                                            {personas.map((persona) => {
-                                                if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
-                                                } else { return null }
-                                            })}
-                                        </ol>
-                                    </h5>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button size="lg" className="text-left mt-2 categoriasReportes" block id="jovenes_mujeres">Jovenes mujeres: {countPersons("JOVEN_MUJER")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#jovenes_mujeres">
-                            <Card>
-                                <CardBody>
-                                    <h5>
-                                        <ol type="1">
-                                            {personas.map((persona) => {
-                                                if (persona.persona.per_Categoria === "JOVEN_MUJER") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
-                                                } else { return null }
-                                            })}
-                                        </ol>
-                                    </h5>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button size="lg" className="text-left mt-2 categoriasReportes" block id="niños">Niños: {countPersons("NIÑO")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#niños">
-                            <Card>
-                                <CardBody>
-                                    <h5>
-                                        <ol type="1">
-                                            {personas.map((persona) => {
-                                                if (persona.persona.per_Categoria === "NIÑO") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
-                                                } else { return null }
-                                            })}
-                                        </ol>
-                                    </h5>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
-                        <Button size="lg" className="text-left mt-2 categoriasReportes" block id="niñas">Niñas: {countPersons("NIÑA")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#niñas">
-                            <Card>
-                                <CardBody>
-                                    <h5>
-                                        <ol type="1">
-                                            {personas.map((persona) => {
-                                                if (persona.persona.per_Categoria === "NIÑA") {
-                                                    return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre} </li>
-                                                } else { return null }
+                                            {personalMinisterial.map((persona) => {
+                                                if (persona.pem_Grado_Ministerial === "ANCIANO") {
+                                                    return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
+                                                }
                                             })}
                                         </ol>
                                     </h5>
@@ -425,10 +360,47 @@ export default function ReportePersonalNoBautizado() {
                             </Card>
                         </UncontrolledCollapse>
 
-                        <h4 className="text-right m-4">Total de personal no bautizado: <strong>{totalCount}</strong></h4>
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">Díaconos: {countPersons("DÍACONO")}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
+                            <Card>
+                                <CardBody>
+                                    <h5>
+                                        <ol type="1">
+                                            {personalMinisterial.map((persona) => {
+                                                if (persona.pem_Grado_Ministerial === "DÍACONO") {
+                                                    return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
+                                                }
+                                            })}
+                                        </ol>
+                                    </h5>
+                                </CardBody>
+                            </Card>
+                        </UncontrolledCollapse>
+
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="jovenes_hombres">Auxiliares: {countPersons("AUXILIAR") + countPersons("DÍACONO A PRUEBA")}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
+                            <Card>
+                                <CardBody>
+                                    <h5>
+                                        <ol type="1">
+                                            {personalMinisterial.map((persona) => {
+                                                if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DÍACONO A PRUEBA") {
+                                                    return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
+                                                }
+                                            })}
+                                        </ol>
+                                    </h5>
+                                </CardBody>
+                            </Card>
+                        </UncontrolledCollapse>
+
+
+                        {/* <h4 className="text-right m-4">Total de personal bautizado: <strong>{totalCount}</strong></h4> */}
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
                         <h4 className="text-center m-4">a {moment().format('LL')}</h4>
-                        <Row className="text-center mt-5">
+
+
+                        <Row className="text-center mt-5 flex-between">
                             <Col xs="1"></Col>
                             <Col xs="4">
                                 {/* <h5 style={{height: "1.2em"}}></h5> */}
@@ -436,48 +408,41 @@ export default function ReportePersonalNoBautizado() {
                                 <hr color="black"></hr>
                                 <h5>Secretario</h5>
                             </Col>
-                            <Col cols="2"></Col>
+                            <Col xs="2"></Col>
                             <Col xs="4">
                                 <h5>{JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}</h5>
                                 <hr color="black"></hr>
                                 {sector ? <h5>Pastor</h5> : <h5>Obispo</h5>}
-                            </Col >
+                            </Col>
                             <Col xs="1"></Col>
                         </Row>
                     </CardBody>
                 </Card>
 
 
-                {/* TABLA */}
+                {/* TABLA PARA EXCEL */}
                 <Card hidden body>
                     <CardTitle className="text-center" tag="h3">
-                        Reporte de Personal Bautizado
+                        Reporte de Personal Ministerial
                         <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
                         {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
                     </CardTitle>
                     <CardBody>
-                        <Table responsive hover id="table1" data-cols-width="10,20,20,20,20,20,20">
+                        <Table responsive hover id="table1" data-cols-width="10,40,20">
                             <thead>
                                 <tr>
                                     <th data-f-bold>Indice</th>
                                     <th data-f-bold>Nombre(s)</th>
-                                    <th data-f-bold>Apellido Paterno</th>
-                                    <th data-f-bold>Apellido Materno</th>
-                                    <th data-f-bold>Categoria</th>
-                                    <th data-f-bold>Telefono Movil</th>
-                                    <th data-f-bold>Fecha Nacimiento</th>
+                                    <th data-f-bold>Grado Ministerial</th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                {personas.map((persona, index) => (
-                                    <tr key={persona.persona.per_Id_Persona}>
+                                {personalMinisterial.map((persona, index) => (
+                                    <tr key={persona.pem_Id_Ministro}>
                                         <td>{index + 1}</td>
-                                        <td>{persona.persona.per_Nombre}</td>
-                                        <td>{persona.persona.per_Apellido_Paterno}</td>
-                                        <td>{persona.persona.per_Apellido_Materno}</td>
-                                        <td>{persona.persona.per_Categoria}</td>
-                                        <td>{persona.persona.per_Telefono_Movil}</td>
-                                        <td>{moment(persona.persona.per_Fecha_Nacimiento).format("YYYY-MM-DD")}</td>
+                                        <td>{persona.pem_Nombre}</td>
+                                        <td>{persona.pem_Grado_Ministerial}</td>
                                     </tr>
                                 ))}
                             </tbody>

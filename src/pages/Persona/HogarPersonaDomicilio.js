@@ -66,6 +66,7 @@ class Domicilio extends React.Component {
             nvoEstado_Disponible
         } = this.props
 
+        console.log("Hogar: ", JerarquiasDisponibles)
         return (
             <React.Fragment>
                 <div className="form-group">

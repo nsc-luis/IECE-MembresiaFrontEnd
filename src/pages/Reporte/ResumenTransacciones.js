@@ -180,7 +180,7 @@ class ResumenTransacciones extends Component {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    this.setState({ sectores: res.data.sectores });
+                    this.setState({ sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR") });
                 })
             )
 
@@ -714,7 +714,7 @@ class ResumenTransacciones extends Component {
         console.log("disInfo", this.state.infoDis)
         return (
             <>
-                <Container fluid>
+                <Container md>
                     {sector == null &&
                         <>
                             <FormGroup>

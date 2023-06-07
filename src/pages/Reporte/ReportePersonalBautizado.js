@@ -44,7 +44,7 @@ export default function ReportePersonalBautizado() {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores)
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
                 })
             )
 
@@ -304,7 +304,7 @@ export default function ReportePersonalBautizado() {
     }
     return (
         <>
-            <Container>
+            <Container lg>
                 <FormGroup>
                     <Row>
                         <Col xs="5">

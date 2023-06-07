@@ -25,6 +25,7 @@ class RegistroPersonalMinisterial extends Component {
             personalMinisterial: [],
             tipoRegistro: "NuevoElemento",
             submitBtnDisable: false,
+            auxiliares: []
         }
     }
 
@@ -60,8 +61,9 @@ class RegistroPersonalMinisterial extends Component {
             helpers.authAxios.get("/PersonalMinisterial/GetPersonalMinisterialSinIdMiembroByDistrito/" + dto)
                 .then(res => {
                     this.setState({ personalMinisterial: res.data.personalSinVincularConPersona })
-
                 });
+
+            this.getAuxiliaresPorSector();
         }
     }
 
@@ -124,6 +126,19 @@ class RegistroPersonalMinisterial extends Component {
         return this.state.personalMinisterial.some(elemento =>
             this.quitarAcentos(elemento.pem_Nombre) === persona)
     }
+
+    getAuxiliaresPorSector = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetAuxiliaresBySector2/${JSON.parse(localStorage.getItem("sector"))}`)
+            .then(res => {
+                if (res.data.status === "success")
+                    this.setState({ auxiliares: res.data.auxiliares })
+                else {
+                    alert("Error:\nNo se pudo consultar la lista de auxiliares, favor de reportar o intentar mas tarde.")
+                }
+            })
+        )
+    }
+
 
     enviar1 = () => {
         if (this.state.form.id_Persona === "0") {
@@ -222,7 +237,7 @@ class RegistroPersonalMinisterial extends Component {
                             </Row>
                         </CardTitle>
                         <Alert color="warning" className="alertLogin">
-                            <strong>Para incorporar un Elemento como parte del Personal Ministerial: </strong> <br />
+                            <strong>Para incorporar un Elemento al Personal Ministerial: </strong> <br />
                             <ol>
                                 <li>Seleccione la persona que aparezca en la Lista de Personal Ministerial.
                                     <ul>
@@ -243,7 +258,7 @@ class RegistroPersonalMinisterial extends Component {
                                 <Row className=' mb-3'>
                                     <div className="col col-md-2"></div>
                                     <div className="col col-md-4">
-                                        <label><h6>Seleccione la persona a Incorporar a la lista del Personal Ministerial</h6></label>
+                                        <label><h6>Seleccione la persona a Incorporar al Personal Ministerial</h6></label>
                                     </div>
                                     <div className="col col-md-4">
                                         <Input
@@ -268,7 +283,7 @@ class RegistroPersonalMinisterial extends Component {
                                 <Row className='mb-2'>
                                     <div className="col col-md-2"></div>
                                     <div className="col col-md-4">
-                                        <label ><h6>Elija el Elemento del Personal Ministerial que desea se reconozca como parte del Personal Ministerial. Si no se encuentra en la lista, elija "NUEVO ELEMENTO"</h6></label>
+                                        <label ><h6>Revise si el Elemento del Personal Ministerial ya está registrado y Seleccionelo para confirmar que es la misma persona. Si no se encuentra en la lista, elija "NUEVO ELEMENTO"</h6></label>
                                     </div>
                                     <div className="col col-md-4">
                                         <Input type="select"
@@ -294,7 +309,7 @@ class RegistroPersonalMinisterial extends Component {
                                 <Row className='mb-3'>
                                     <div className="col col-md-2"></div>
                                     <Col xs="4">
-                                        <h6>Fecha de transacción:</h6>
+                                        <h6>Fecha del Alta o Vinculación:</h6>
                                     </Col>
                                     <Col xs="4">
                                         <Input
@@ -322,6 +337,34 @@ class RegistroPersonalMinisterial extends Component {
 
                         </CardBody>
                     </Card>
+                    {/* <Table>
+                        <thead>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>ACTIVO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.auxiliares.map((auxiliar) => {
+                                return (
+                                    <tr key={auxiliar.pem_Id_Ministro}>
+                                        <td>{auxiliar.pem_Nombre}</td>
+                                        <td>{auxiliar.pem_Activo ? "Activo" : "Inactivo"}</td>
+                                        <td>
+                                            <Button
+                                                type="button"
+                                                color="danger"
+                                                onClick={() => this.BajaDeAuxiliar(auxiliar)}
+                                            >
+                                                <span className="fas fa-user-alt-slash faIconMarginRight"></span>
+                                                Baja
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </Table> */}
                 </Container>
                 <Modal isOpen={this.state.modal_Confirmacion} className="card">
                     <ModalHeader className="card-header">
@@ -336,7 +379,7 @@ class RegistroPersonalMinisterial extends Component {
                                 {this.state.tipoRegistro == "ElementoExistente" &&
                                     <p>¿Estas seguro de Vincular a
                                         <strong> {this.state.form.nombre_Persona} </strong>
-                                        con el Elemento del Personal Ministerial ya Existente en la Base de Datos de Secretaría General de nombre
+                                        con el Elemento del Personal Ministerial ya Existente en la Base de Datos de Secretaría General bajo el nombre de:
                                         <strong> {this.state.form.nombre_Elemento} </strong>?
                                     </p>
                                 }

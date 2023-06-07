@@ -79,7 +79,7 @@ class ResumenMembresia extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
-                        sectores: res.data.sectores,
+                        sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR")
                     })
                 })
             )
@@ -265,11 +265,11 @@ class ResumenMembresia extends Component {
                     })
                 )
                 await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
-                        .then(res => {
-                            this.setState({
-                                infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                            });
-                        })
+                    .then(res => {
+                        this.setState({
+                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                        });
+                    })
                 )
             }
             else {
@@ -282,22 +282,22 @@ class ResumenMembresia extends Component {
                     })
                 )
                 await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
-                        .then(res => {
-                            this.setState({
-                                infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                            });
-                        })
+                    .then(res => {
+                        this.setState({
+                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                        });
+                    })
                 )
                 this.setState({
-                            infoSector: {
-                                ...this.state.infoSector,
-                                sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
-                            }/* ,
+                    infoSector: {
+                        ...this.state.infoSector,
+                        sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
+                    }/* ,
                     infoMinistro: {
                         ...this.state.infoMinistro,
                         pem_Nombre: "OBISPO DEL DISTRITO"
                     } */
-                        });
+                });
             }
             const doc = new jsPDF("p", "mm", "letter");
 
@@ -437,7 +437,7 @@ class ResumenMembresia extends Component {
     render() {
         return (
             <>
-                <Container>
+                <Container lg>
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     <FormGroup>
                         <Row>

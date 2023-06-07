@@ -90,6 +90,19 @@ class RevinculaDomicilio extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
+
+                    let jerarquias = [];
+                    for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
+                        jerarquias.push(<option value={i}>{i}</option>)
+                    }
+
+                    this.setState({
+                        JerarquiasDisponibles: jerarquias,
+                        hogar: {
+                            ...this.state.hogar,
+                            hp_Jerarquia: jerarquias.length
+                        }
+                    })
                 })
             )
             await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Hogar_Persona/GetDatosHogarDomicilio/" + id)
@@ -98,18 +111,7 @@ class RevinculaDomicilio extends Component {
                 })
             )
 
-            let jerarquias = [];
-            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
-                jerarquias.push(<option value={i}>{i}</option>)
-            }
 
-            await this.setState({
-                JerarquiasDisponibles: jerarquias,
-                hogar: {
-                    ...this.state.hogar,
-                    hp_Jerarquia: jerarquias.length
-                }
-            })
         } else {
             this.setState({
                 MiembrosDelHogar: [],
@@ -154,6 +156,7 @@ class RevinculaDomicilio extends Component {
         if (idHogar !== "0") { //Si se selecciona un Hogar Existente
             await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + '/Hogar_Persona/GetMiembros/' + idHogar)
                 .then(res => {
+                    console.log("Jerarquías: ", res.data)
                     this.setState({
                         hogar: {
                             ...this.state.hogar,

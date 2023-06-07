@@ -76,8 +76,10 @@ export default function ReporteMovimientoEstadistico() {
 
         if (sector === null) {
             getDataDistrito();
-            const resDto = await helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto))
-            setInfoDis(resDto.data)
+            await helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
+                .then(resDto => {
+                    setInfoDis(resDto.data)
+                }))
 
             setSectorSeleccionado("todos");
             setLider("OBISPO")
@@ -91,50 +93,66 @@ export default function ReporteMovimientoEstadistico() {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores)
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
                 })
             )
         } else {
             getDataSector(sector);
-            const resDto = await helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto))
-            console.log("InfoDis: ", resDto.data);
-            setInfoDis(resDto.data)
-            const resSec = await helpers.validaToken().then(helpers.authAxios.get("/Sector/" + sector))
-            setInfoSec(resSec.data.sector[0])
-            const sectores = []
-            sectores.push(resSec.data.sector[0])
+            await helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
+                .then(resDto => {
+                    console.log("InfoDis: ", resDto.data);
+                    setInfoDis(resDto.data)
 
-            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
+                }))
+            await helpers.validaToken().then(helpers.authAxios.get("/Sector/" + sector)
+                .then(resSec => {
+                    setInfoSec(resSec.data.sector[0])
+                    const sectores = []
+                    sectores.push(resSec.data.sector[0])
+                    setSectores(sectores);
+                    setSectorSeleccionado(sector)
+                    setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
+                }))
+
+
+            await helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioBySector/" + sector)
                 .then(res => {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
+                    setLider("PASTOR")
                 })
+
+
             )
 
-            setLider("PASTOR")
-            setSectores(sectores);
-            setSectorSeleccionado(sector)
-            setEntidadTitulo(sectores[0].sec_Tipo_Sector + " " + sectores[0].sec_Numero + " " + sectores[0].sec_Alias)
+
         }
     }
 
     const getDataSector = async (sec) => {
         params.idSectorDistrito = sec
-        const res = await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params));
-        setDataGeneral(res.data.datos)
-        console.log("DatosApi: ", res.data.datos)
-        orderData(res.data.datos)
+        console.log("Sector: ", params.idSectorDistrito);
+        await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params)
+            .then(res => {
+                console.log("DatosApi: ", res.data);
+                setDataGeneral(res.data.datos)
+                orderData(res.data.datos)
 
-        setExcelData(res.data.datos)
+                setExcelData(res.data.datos)
 
-        console.log("res-data-datos: ", res.data.datos);
+                console.log("res-data-datos: ", res.data.datos);
 
+            })
+
+        )
     }
 
     const getDataDistrito = async () => {
         params.idSectorDistrito = dto
-        const res = await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params));
-        orderData(res.data.datos)
-        setExcelData(res.data.datos)
+        await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params)
+            .then(res => {
+                orderData(res.data.datos)
+                setExcelData(res.data.datos)
+            }))
     }
 
     const handle_sectorSeleccionado = async (e) => {
@@ -359,7 +377,7 @@ export default function ReporteMovimientoEstadistico() {
     }
     return (
         <>
-            <Container fluid>
+            <Container lg>
                 <FormGroup>
                     <Row>
                         <Col xs="5">

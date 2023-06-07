@@ -545,18 +545,10 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseAdministrativo" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-user-tie"></i>
-                            <span>Personal administrativo</span>
+                            <span>Personal Administrativo</span>
                         </Link>
                         <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
-                                <Link
-                                    className="collapse-item"
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del sector.')}
-                                    to="/TesoreroDelSector"
-                                >
-                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
-                                    <span>Tesorero del sector</span>
-                                </Link>
                                 <Link
                                     className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del sector.')}
@@ -567,36 +559,47 @@ class Sidebar extends Component {
                                 </Link>
                                 <Link
                                     className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del sector.')}
+                                    to="/TesoreroDelSector"
+                                >
+                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
+                                    <span>Tesorero del sector</span>
+                                </Link>
+                                {/* <Link
+                                    className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Auxiliares del sector.')}
                                     to="/Auxiliares"
                                 >
-                                    {/* <i className="fas fa-user-tie"></i> */}
+                                    {/* <i className="fas fa-user-tie"></i> 
                                     <span>Auxiliares del sector</span>
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </li>
 
                     <li className="nav-item">
-                        <Link
-                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Alta de Personal Ministerial')}
-                            to="/RegistroPersonalMinisterial"
-                            className="nav-link"
-                        >
-                            <i className="fas fa-address-book"></i>
-                            <span>Alta de Personal Ministerial</span>
+                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMinisterial" aria-expanded="true" aria-controls="collapsePages">
+                            <i className="fas fa-user-tie"></i>
+                            <span>Personal Ministerial</span>
                         </Link>
-                    </li>
-
-                    <li className="nav-item">
-                        <Link
-                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Baja de Personal Ministerial')}
-                            to="/BajaPersonalMinisterial"
-                            className="nav-link"
-                        >
-                            <i className="fas fa-address-book"></i>
-                            <span>Baja de Personal Ministerial</span>
-                        </Link>
+                        <div id="collapseMinisterial" className="collapse" aria-labelledby="headingMinisterial" data-parent="#accordionSidebar">
+                            <div className="bg-white py-2 collapse-inner rounded">
+                                <Link
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Alta de Personal Ministerial')}
+                                    to="/RegistroPersonalMinisterial"
+                                    className="collapse-item"
+                                >
+                                    <span>Alta de Personal Ministerial</span>
+                                </Link>
+                                <Link
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Baja de Personal Ministerial')}
+                                    to="/BajaPersonalMinisterial"
+                                    className="collapse-item"
+                                >
+                                    <span>Baja de Personal Ministerial</span>
+                                </Link>
+                            </div>
+                        </div>
                     </li>
 
                     {/* Divider */}
@@ -642,6 +645,10 @@ class Sidebar extends Component {
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista por Fecha de Cumpleaños")}
                                 >Lista por Fecha de Cumpleaños</Link>
                                 <Link className="collapse-item text-wrap"
+                                    to="/ReportePersonalMinisterial"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Ministerial")}
+                                >Lista de Personal Ministerial</Link>
+                                <Link className="collapse-item text-wrap"
                                     to="/ReporteMovimientoEstadistico"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}
                                 >Reporte de Movimientos Estadísticos</Link>
@@ -675,7 +682,8 @@ class Sidebar extends Component {
                     </li> */}
 
                     {/* Divider */
-                        <hr className="sidebar-divider d-none d-md-block" />}
+                        <hr className="sidebar-divider d-none d-md-block" />
+                    }
 
 
                     {/* Sidebar Toggler (Sidebar) */}
@@ -683,10 +691,10 @@ class Sidebar extends Component {
                         <button className="rounded-circle border-0" id="sidebarToggle"></button>
                     </div>
 
-                </ul>
+                </ul >
 
                 {/* MODAL ACTUALIZAR PERSONA BAUTIZADA */}
-                <Modal isOpen={this.state.modalEditaPersona} size="lg" >
+                < Modal isOpen={this.state.modalEditaPersona} size="lg" >
                     <Card>
                         <CardHeader>
                             <CardTitle><h3>Seleccione la Persona a Editar:</h3></CardTitle>
@@ -737,10 +745,10 @@ class Sidebar extends Component {
                             </Button>
                         </CardFooter>
                     </Card>
-                </Modal>
+                </Modal >
 
                 {/* MODAL ACTUALIZAR PERSONA NO BAUTIZADA */}
-                <Modal isOpen={this.state.modalEditaPersonaNB}>
+                < Modal isOpen={this.state.modalEditaPersonaNB} >
                     <Card>
                         <CardHeader>
                             <CardTitle><h3>Seleccione una Persona a Editar.</h3></CardTitle>
@@ -790,7 +798,7 @@ class Sidebar extends Component {
                             </Button>
                         </CardFooter>
                     </Card>
-                </Modal>
+                </Modal >
 
                 {/* MODAL BAJA/NOBAUTIZADO/ALEJAMIENTO */}
                 {/* <Modal isOpen={this.state.modalBajaNoBautizadoAlejamiento} size="lg">
@@ -960,7 +968,7 @@ class Sidebar extends Component {
                 </Modal>
 
                 {/* End of Sidebar */}
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }

@@ -38,10 +38,10 @@ export default function ReporteOficiosProfesiones() {
             setLider("OBISPO")
             setEntidadTitulo("TODOS LOS SECTORES")
 
-            helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto))
+            helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores)
-                })
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
+                }))
 
             helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + dto)
                 .then(res => {
