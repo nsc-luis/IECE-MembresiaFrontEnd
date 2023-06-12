@@ -45,6 +45,7 @@ const helpers = {
 
     // URLs PARA PRUEBA
     //url_api: "http://" + window.location.hostname + ":59239/api",
+    //url_api: "http://" + window.location.hostname + ":5228/api",
     url_api: "http://" + window.location.hostname + ":81/webapi/api",
 
     // METODO PARA VALIDAR CAMPOS
@@ -58,6 +59,7 @@ const helpers = {
 
     authAxios: axios.create({
         //baseURL: "http://" + window.location.hostname + ":59239/api",
+        //baseURL: "http://" + window.location.hostname + ":5228/api",
         baseURL: "http://" + window.location.hostname + ":81/webapi/api",
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -68,7 +70,10 @@ const helpers = {
     validaToken: () => {
         let timestampNow = moment(new Date()).unix();
         let tokenExpires = jwt_decode(localStorage.getItem("token")).exp;
-        if (timestampNow > tokenExpires) {
+
+        // FECHA DEL TOKEN MENOS 10 MIN
+        let tokenExpiresLessTen = moment(tokenExpires*1000).subtract(10, 'minutes').unix();
+        if (timestampNow > tokenExpiresLessTen) {
             localStorage.removeItem('token');
             localStorage.removeItem('infoSesion');
             alert("Alerta!\nSu sesion ha expirado, debe volver a iniciar sesión.");
