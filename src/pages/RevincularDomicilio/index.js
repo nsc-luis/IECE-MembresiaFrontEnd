@@ -361,6 +361,7 @@ class RevinculaDomicilio extends Component {
     }
 
     render() {
+        console.log("Domicilio_Revinculacion", this.state.domicilio);
         return (
             <>
                 <Container>

@@ -322,7 +322,12 @@ class PersonaForm extends Component {
             submitBtnDisable,
             ChangeSubmitBtnDisable,
             nvoEstado_Disponible,
-            idSectorBautismo
+            idSectorBautismo,
+            buscarOficio1,
+            buscarOficio2,
+            listaResultadoBusquedaOficio,
+            seleccionaOficio1,
+            seleccionaOficio2
         } = this.props
 
 
@@ -556,7 +561,7 @@ class PersonaForm extends Component {
                     return false;
                 }
 
-                if (this.state.hogar.hd_Id_Hogar === "0") {// Si el Registro es de Persona y de Nuevo Hogar
+                if (this.state.hogar.hd_Id_Hogar === "0") {// Si el Registro de Persona es tambien de un Nuevo Hogar
                     let PersonaDomicilioHogar = {
                         id: 1,
                         PersonaEntity: objPersona,
@@ -696,7 +701,7 @@ class PersonaForm extends Component {
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <label><strong>*</strong> Apellido Paterno</label>
+                                                            <label><strong>*</strong> Apellido Paterno o Apellido Principal</label>
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input
@@ -706,6 +711,8 @@ class PersonaForm extends Component {
                                                                 value={form.per_Apellido_Paterno}
                                                                 className="form-control"
                                                                 autoComplete="nope"
+                                                                title="En casos ordinarios, ingresar el apellido Paterno, 
+                                                                y en casos Extraordinarios, se puede ingresar el apellido de la Madre si éste es el Apellido Principal de la persona."
                                                             />
                                                         </div>
                                                         {per_Apellido_Paterno_NoValido &&
@@ -719,7 +726,7 @@ class PersonaForm extends Component {
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-sm-2">
-                                                            <label>Apellido Materno</label>
+                                                            <label>Apellido Materno o Apellido Secundario</label>
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <Input
@@ -729,6 +736,9 @@ class PersonaForm extends Component {
                                                                 value={form.per_Apellido_Materno}
                                                                 id="per_Apellido_Materno"
                                                                 className="form-control"
+                                                                title="En casos ordinarios, ingresar el apellido Materno, 
+                                                                y en casos Extraordinarios, se puede dejar en blanco si oficialmente 
+                                                                No cuenta con un Apellido Secundario."
                                                             />
                                                         </div>
                                                         {!per_Apellido_Materno_OK &&
@@ -752,6 +762,8 @@ class PersonaForm extends Component {
                                                                 value={form.per_Fecha_Nacimiento}
                                                                 className="form-control"
                                                                 placeholder="DD/MM/AAAA"
+                                                                title="Para ingresar fechas asegúrese el Formato en que se muestra esta caja de fechas,
+                                                                A fin de que no se confundan los días por meses y viceversa."
                                                             />
                                                         </div>
                                                         {per_Fecha_Nacimiento_NoValido &&
@@ -884,7 +896,7 @@ class PersonaForm extends Component {
                                                                             value={form.per_Apellido_Paterno}
                                                                             disabled
                                                                         />
-                                                                        <label><strong>*</strong> Apellido Paterno</label>
+                                                                        <label><strong>*</strong> Apellido Paterno o Principal</label>
                                                                     </div>
                                                                     <div className="col-sm-4">
                                                                         <Input
@@ -893,7 +905,7 @@ class PersonaForm extends Component {
                                                                             value={form.per_Apellido_Materno}
                                                                             disabled
                                                                         />
-                                                                        <label>Apellido Materno</label>
+                                                                        <label>Apellido Materno o Secundario</label>
                                                                     </div>
                                                                 </div>
                                                             </FormGroup>
@@ -989,86 +1001,60 @@ class PersonaForm extends Component {
                                                                     </FormGroup>
                                                                 </div>
                                                             </div>
-
-
-                                                            <div className="row">
-                                                                <div className="col-sm-4">
-                                                                    <FormGroup>
-                                                                        <select
-                                                                            name="pro_Id_Profesion_Oficio1"
-                                                                            className="form-control"
-                                                                            onChange={onChange}
-                                                                            value={form.pro_Id_Profesion_Oficio1}
-                                                                            autoComplete="nope"
-                                                                        >
-                                                                            <option
-                                                                                value="1"
-                                                                            >
-                                                                                NINGUNO
-                                                                            </option>
-                                                                            {
-                                                                                this.state.profesiones_oficios.map((profesion_oficio) => {
-                                                                                    return (
-                                                                                        <option
-                                                                                            key={profesion_oficio.pro_Id_Profesion_Oficio}
-                                                                                            value={profesion_oficio.pro_Id_Profesion_Oficio}
-                                                                                        >
-                                                                                            {profesion_oficio.pro_Sub_Categoria}
-                                                                                        </option>
-                                                                                    )
-                                                                                })
-                                                                            }
-                                                                        </select>
-                                                                        <label>Profesión/Oficio No. 1</label>
-                                                                    </FormGroup>
-                                                                </div>
-                                                                <div className="col-sm-4">
-                                                                    <FormGroup>
-                                                                        <Input type="select"
-                                                                            name="pro_Id_Profesion_Oficio2"
-                                                                            className="form-control"
-                                                                            onChange={onChange}
-                                                                            value={form.pro_Id_Profesion_Oficio2}
-                                                                            autoComplete="nope"
-                                                                        >
-                                                                            <option
-                                                                                value="1"
-                                                                            >
-                                                                                NINGUNO
-                                                                            </option>
-                                                                            {
-                                                                                this.state.profesiones_oficios.map((profesion_oficio, i) => {
-                                                                                    return (
-                                                                                        <option
-                                                                                            key={profesion_oficio.pro_Id_Profesion_Oficio}
-                                                                                            value={profesion_oficio.pro_Id_Profesion_Oficio}>
-                                                                                            {profesion_oficio.pro_Sub_Categoria}
-                                                                                        </option>
-                                                                                    )
-                                                                                })
-                                                                            }
-                                                                        </Input>
-                                                                        <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesión/Oficio No. 2</label>
-                                                                    </FormGroup>
-                                                                </div>
-                                                                <div className="col-sm-4">
-                                                                    <FormGroup>
+                                                            <FormGroup>
+                                                                <div className="row">
+                                                                    <div className="col-sm-4">
+                                                                        <FormGroup>
+                                                                            <Input
+                                                                                type="text"
+                                                                                name="per_Telefono_Movil"
+                                                                                onChange={onChange}
+                                                                                invalid={this.state.telMovilInvalido}
+                                                                                value={form.per_Telefono_Movil === null ? "" : form.per_Telefono_Movil}
+                                                                                autoComplete="nope"
+                                                                            />
+                                                                            <label>Teléfono móvil/celular</label>
+                                                                            <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                    <div className="col-sm-6">
                                                                         <Input
-                                                                            type="text"
-                                                                            name="per_Telefono_Movil"
+                                                                            type="file"
+                                                                            name="idFoto"
                                                                             onChange={onChange}
-                                                                            invalid={this.state.telMovilInvalido}
-                                                                            value={form.per_Telefono_Movil === null ? "" : form.per_Telefono_Movil}
+                                                                            className="form-file-control"
                                                                             autoComplete="nope"
+                                                                            title="Para seleccionar el archivo de la Foto, presione el botón 'Seleccionar archivo'
+                                                                             y ayudado del asistente, elija el archivo deseado.'"
+
                                                                         />
-                                                                        <label>Telefono móvil</label>
-                                                                        <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
-                                                                    </FormGroup>
+                                                                        <label>Foto. &nbsp;&nbsp;     &#40;La foto debe ser Tipo Credencial: De hombros hacia arriba y Mujeres sin velo&#41;</label>
+                                                                    </div>
+                                                                    <div className="col-sm-2 text-center">
+                                                                        <img src={foto} alt="Foto Persona" className="fotoFormulario" />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
+                                                            </FormGroup>
 
                                                             <div className="row">
-                                                                {form.pro_Id_Profesion_Oficio1 === "1" &&
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="pro_Profesion_Oficio1"
+                                                                            className="form-control"
+                                                                            onChange={onChange}
+                                                                            value={form.pro_Profesion_Oficio1}
+                                                                            autoComplete="nope"
+                                                                            title="Escriba una palabra clave relacionada con el Oficio o Profesión deseada
+                                                                            y elija el oficio.profesión que se enlistan en la lista que se desplega.
+                                                                            En caso de que no exista el Oficio/Profesión deseada, ingrese uno Nuevo en la caja de texto siguiente."
+                                                                        >
+                                                                        </input>
+                                                                        <label>Profesión/Oficio No.1 o Primario</label>
+                                                                    </FormGroup>
+                                                                </div>
+                                                                {form.pro_Profesion_Oficio1 === "" &&
                                                                     <div className="col-sm-4">
                                                                         <FormGroup>
                                                                             <Input type="text"
@@ -1077,12 +1063,58 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf1}
                                                                                 autoComplete="nope"
+                                                                                title="Si no encontró en la Lista desplegada el Oficio/Profesión deseada,
+                                                                                Registre un Nuevo Oficio/Profesión. Éste se agregará a la Base de Datos de Oficios/Profesiones."
                                                                             />
                                                                             <label>Registrar Nueva profesión u oficio No.1 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
                                                                     </div>
                                                                 }
-                                                                {form.pro_Id_Profesion_Oficio2 === "1" &&
+
+                                                                <div className="col-sm-6">
+                                                                    <div
+                                                                        hidden={buscarOficio1}
+                                                                        className='buscarLugarDeBautismo'
+                                                                    >
+                                                                        <ul className='optionBuscarLugarDeBautismo'>
+                                                                            {listaResultadoBusquedaOficio.length > 0 &&
+                                                                                listaResultadoBusquedaOficio.map((oficio) => {
+                                                                                    return (
+                                                                                        <React.Fragment key={oficio.pro_Id_Profesion_Oficio}>
+                                                                                            <li
+                                                                                                onClick={() => seleccionaOficio1(oficio)}
+                                                                                            >
+                                                                                                <strong>{oficio.pro_Categoria}:</strong> {oficio.pro_Sub_Categoria}
+                                                                                            </li>
+                                                                                        </React.Fragment>
+                                                                                    )
+                                                                                })
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div className="row">
+                                                                <div className="col-sm-4">
+                                                                    <FormGroup>
+                                                                        <Input
+                                                                            type="text"
+                                                                            name="pro_Profesion_Oficio2"
+                                                                            className="form-control"
+                                                                            onChange={onChange}
+                                                                            value={form.pro_Profesion_Oficio2}
+                                                                            autoComplete="nope"
+                                                                            title="Si tiene un Segundo Oficio/Profesión, escriba una 'Palabra Clave' relacionada con el Oficio o Profesión deseada
+                                                                            y elija el oficio.profesión que se enlistan en la lista que se desplega.
+                                                                            En caso de que no exista el Oficio/Profesión deseada, ingrese uno Nuevo en la caja de texto siguiente."
+                                                                        >
+                                                                        </Input>
+                                                                        <label htmlFor="Personal.pro_Id_Profesion_Oficio2">Profesión/Oficio No.2 o Secundario</label>
+                                                                    </FormGroup>
+                                                                </div>
+                                                                {form.pro_Profesion_Oficio2 === "" &&
                                                                     <div className="col-sm-4">
                                                                         <FormGroup>
                                                                             <Input type="text"
@@ -1091,32 +1123,39 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf2}
                                                                                 autoComplete="nope"
+                                                                                title="Si no encontró en la Lista desplegada el Oficio/Profesión deseada,
+                                                                                Registre un Nuevo Oficio/Profesión. Éste se agregará a la Base de Datos de Oficios/Profesiones."
                                                                             />
-                                                                            <label>Registrar Nueva profesión u oficio No. 2 &#40;Opcional&#41;</label>
+                                                                            <label>Registrar Nueva profesión u oficio No.2 &#40;Opcional&#41;</label>
                                                                         </FormGroup>
                                                                     </div>
-
                                                                 }
-                                                            </div>
 
-                                                            <FormGroup>
-                                                                <div className="row">
-                                                                    <div className="col-sm-8">
-                                                                        <Input
-                                                                            type="file"
-                                                                            name="idFoto"
-                                                                            onChange={onChange}
-                                                                            className="form-control"
-                                                                            autoComplete="nope"
-
-                                                                        />
-                                                                        <label>Foto. &nbsp;&nbsp;     &#40;La foto debe ser Tipo Credencial: De hombros hacia arriba y Mujeres sin velo&#41;</label>
-                                                                    </div>
-                                                                    <div className="col-sm-4 text-center">
-                                                                        <img src={foto} alt="Foto Persona" className="fotoFormulario" />
+                                                                <div className="col-sm-6">
+                                                                    <div
+                                                                        hidden={buscarOficio2}
+                                                                        className='buscarLugarDeBautismo'
+                                                                    >
+                                                                        <ul className='optionBuscarLugarDeBautismo'>
+                                                                            {listaResultadoBusquedaOficio.length > 0 &&
+                                                                                listaResultadoBusquedaOficio.map((oficio) => {
+                                                                                    return (
+                                                                                        <React.Fragment key={oficio.pro_Id_Profesion_Oficio}>
+                                                                                            <li
+                                                                                                onClick={() => seleccionaOficio2(oficio)}
+                                                                                            >
+                                                                                                <strong>{oficio.pro_Categoria}:</strong> {oficio.pro_Sub_Categoria}
+                                                                                            </li>
+                                                                                        </React.Fragment>
+                                                                                    )
+                                                                                })
+                                                                            }
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
-                                                            </FormGroup>
+                                                            </div>
+
+
 
                                                             {/* <FormGroup>
                                                                 <div className="row">
@@ -1246,7 +1285,7 @@ class PersonaForm extends Component {
                                                                                     <option value="CASADO(A)">Casado/a</option>
                                                                                     <option value="DIVORCIADO(A)">Divorciado/a</option>
                                                                                     <option value="VIUDO(A)">Viudo/a</option>
-                                                                                    <option value="CONCUBINATO">Unión libre/concubinato</option>
+                                                                                    <option value="CONCUBINATO">Unión libre/Concubinato</option>
                                                                                     <option value="SOLTERO(A) CON HIJOS">Soltero/a CON hijos</option>
                                                                                 </Input>
                                                                                 <label>Estado civil</label>
@@ -1296,7 +1335,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Num_Acta_Boda_Civil}
                                                                                             autoComplete="nope"
                                                                                         />
-                                                                                        <label>Num. de acta boda civil</label>
+                                                                                        <label>Num. de acta Boda Civil/Num. de Registro de Matrimonio</label>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
@@ -1307,7 +1346,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Libro_Acta_Boda_Civil}
                                                                                             autoComplete="nope"
                                                                                         />
-                                                                                        <label>Libro de acta de boda civil</label>
+                                                                                        <label>Libro de acta de Boda Civil/ Libro de Registro de Matrimonio</label>
                                                                                     </div>
                                                                                     <div className="col-sm-4">
                                                                                         <Input
@@ -1318,7 +1357,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Oficialia_Boda_Civil}
                                                                                             autoComplete="nope"
                                                                                         />
-                                                                                        <label>Oficialía de boda civil</label>
+                                                                                        <label>Oficialía de Boda Civil/ Oficina de Registros</label>
                                                                                     </div>
                                                                                 </div>
                                                                             </FormGroup>
@@ -1332,7 +1371,7 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Registro_Civil}
                                                                                             autoComplete="nope"
                                                                                         />
-                                                                                        <label htmlFor="per_Registro_Civil">Registro Civil</label>
+                                                                                        <label htmlFor="per_Registro_Civil">Del Registro Civil en/Lugar de la Oficina de Registros</label>
                                                                                     </FormGroup>
                                                                                 </div>
                                                                                 {form.per_Bautizado &&
@@ -1375,6 +1414,8 @@ class PersonaForm extends Component {
                                                                                                     className="form-control"
                                                                                                     value={form.per_Apellido_Casada}
                                                                                                     autoComplete="nope"
+                                                                                                    title="En los Países donde sea aplicable y si se desea que una Mujer Casada aparezca con Apellido de Casada,
+                                                                                                    ingrese aquí el Apellido del Esposo. Pero si desea que aparezca con Apellidos de Soltera, deje en blanco esta caja de texto."
                                                                                                 />
                                                                                                 <label>Apellido de Casada &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
                                                                                             </div>
@@ -1403,6 +1444,8 @@ class PersonaForm extends Component {
                                                                                             value={form.per_Nombre_Hijos}
                                                                                             className="form-control"
                                                                                             autoComplete="nope"
+                                                                                            title="Puede ingresar los Nombres de cada uno y hasta el final los Apellidos. 
+                                                                                            Para casos de hijos de diferentes Matrimonios, escriba los Nombres y Apellidos segun corresponda"
                                                                                             onKeyPress={this.handleKeyPress} ></textarea>
                                                                                         <label>Nombre de los hijos</label>
                                                                                     </div>
@@ -1425,7 +1468,7 @@ class PersonaForm extends Component {
                                                                                                 value={form.per_Nombre_Conyuge}
                                                                                                 autoComplete="nope"
                                                                                             />
-                                                                                            <label>Nombre de la pareja</label>
+                                                                                            <label>Nombre de la Pareja</label>
                                                                                         </div>
                                                                                         {form.per_Categoria === "ADULTO_MUJER" &&
                                                                                             <div className="col-sm-4">
@@ -1436,6 +1479,8 @@ class PersonaForm extends Component {
                                                                                                     className="form-control"
                                                                                                     value={form.per_Apellido_Casada}
                                                                                                     autoComplete="nope"
+                                                                                                    title="En los Países donde sea aplicable y si se desea que una Mujer Casada aparezca con Apellido de Casada,
+                                                                                                    ingrese aquí el Apellido del Esposo. Pero si desea que aparezca con Apellidos de Soltera, deje en blanco esta caja de texto."
                                                                                                 />
                                                                                                 <label>Apellido de Casada &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
                                                                                             </div>
@@ -1498,6 +1543,9 @@ class PersonaForm extends Component {
                                                                                                 value={form.per_Lugar_Bautismo}
                                                                                                 className="form-control"
                                                                                                 autoComplete="nope"
+                                                                                                title="Ingrese el nombre del Sector donde se bautizó. 
+                                                                                                Al ingresar las primeras letras del lugar, se desplegarán los Sectores que coinciden con la palabra tecleada y elija el Sector deseado.
+                                                                                                Si no se encuentra registrado el Sector deseado, puede escribir a texto libre el nombre de ese Sector donde se bautizó"
                                                                                             />
                                                                                             <label>Lugar de bautismo</label>
                                                                                             &nbsp;
@@ -1531,7 +1579,7 @@ class PersonaForm extends Component {
                                                                                                 invalid={fechaBautismoInvalida}
                                                                                                 autoComplete="nope"
                                                                                             />
-                                                                                            <label>*Fecha de bautismo</label>
+                                                                                            <label>*Fecha de Bautismo</label>
                                                                                             <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
                                                                                         </FormGroup>
                                                                                     </div>
@@ -1592,7 +1640,10 @@ class PersonaForm extends Component {
                                                                                     onChange={onChange}
                                                                                     value={form.per_Bajo_Imposicion_De_Manos === null ? "" : form.per_Bajo_Imposicion_De_Manos}
                                                                                     className="form-control"
+                                                                                    onKeyPress={this.handleKeyPress}
                                                                                     autoComplete="nope"
+                                                                                    title="Si fueron varios Ministros los que le impusieron las manos, escriba a renglon seguido
+                                                                                    el Nombre y Apellidos de cada uno de ellos."
                                                                                 />
                                                                                 <label>Bajo imposición de manos de:</label>
                                                                             </FormGroup>
@@ -1623,6 +1674,8 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Cargos_Desempenados}
                                                                                     onKeyPress={this.handleKeyPress}
                                                                                     autoComplete="nope"
+                                                                                    title="Escriba a renglón seguido los cargos que ha desempeñado en la Iglesia,
+                                                                                    tratando de abreviar o especificar los más importantes en caso de que sean muchos."
                                                                                 ></textarea>
                                                                                 <label>Puestos que ha desempeñado en la IECE</label>
                                                                             </div>
@@ -1637,6 +1690,8 @@ class PersonaForm extends Component {
                                                                                     value={form.per_Cambios_De_Domicilio === null ? "" : form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"
                                                                                     autoComplete="nope"
+                                                                                    title="Ingrese los cambios de Congregación que ha tenido, 
+                                                                                    tratando de abreviar en caso de que sean muchos."
                                                                                     onKeyPress={this.handleKeyPress}></textarea>
                                                                                 <label>Cambios de domicilio en la IECE</label>
                                                                             </div>
@@ -1668,6 +1723,8 @@ class PersonaForm extends Component {
                                                                                     value={FechaTransaccionHistorica}
                                                                                     placeholder="DD/MM/AAAA"
                                                                                     className="form-control"
+                                                                                    title="Si se tiene conocimiento de una fecha aproximada en que la persona No Bautizada se integró a la Iglesia,
+                                                                                    indique la fecha. En caso contrario, deje en blanco este campo y tomará por default, la fecha de Nacimiento."
                                                                                 />
                                                                                 <label>Si no se especifica una fecha, por defecto se registrará con la Fecha de Nacimiento.</label>
                                                                             </div>

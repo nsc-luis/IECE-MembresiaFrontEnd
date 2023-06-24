@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import helpers from '../../components/Helpers'
+import './style.css'
+import { Button } from 'reactstrap';
+import axios from 'axios';
+
+
+
 
 class Topbar extends Component {
+
+    urlapi = helpers.url_api;
 
     constructor(props) {
         super(props);
         this.state = {
-            fotoMinistro: ""
+            fotoMinistro: "",
+            manual: ""
         };
     }
 
@@ -36,6 +45,35 @@ class Topbar extends Component {
         );
     }
 
+    handleDownloadManualUsuario = async () => {
+
+        axios({
+            url: helpers.url_api + "/Archivos/ManualDeUsuario",
+            method: 'GET',
+            responseType: 'blob'
+        })
+            .then(res => {
+                // Crear una URL temporal con el objeto Blob
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+
+                // Crear un elemento <a> para descargar el archivo
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Manual_De_Usuario_Aplicacion_IECE_Membresia.pdf');
+                document.body.appendChild(link);
+
+                // Simular un clic en el enlace para iniciar la descarga
+                link.click();
+
+                // Eliminar el elemento <a> después de la descarga
+                link.parentNode.removeChild(link);
+
+                // Liberar la URL temporal
+                window.URL.revokeObjectURL(url);
+            });
+    }
+
+
     render() {
         return (
             <React.Fragment>
@@ -51,20 +89,25 @@ class Topbar extends Component {
                         <i className="fa fa-bars"></i>
                     </button>
 
-                    {/* Topbar Navbar */}
-                    <ul className="navbar-nav ml-auto">
 
+                    <button onClick={this.handleDownloadManualUsuario} className="ml-auto text-TopBar text-center border-0 bg-transparent">
+                        <div className='lead'><i class="fas fa-fw fa-file-download pb-0"></i></div>
+                        <div className="p-0">Manual de Usuario</div>
+                    </button>
+
+                    {/* Topbar Navbar */}
+                    <ul className="navbar-nav ml-w-auto">
                         <div className="topbar-divider d-none d-sm-block"></div>
 
                         {/* Nav Item - User Information */}
                         <li className="nav-item dropdown no-arrow">
-                            <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button className="nav-link dropdown-toggle border-0 bg-transparent text-left" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span className="mr-2 d-none d-lg-inline text-TopBar ">
                                     {this.infoSesion.pem_Nombre} <br />
                                     {localStorage.getItem('sector') === null ? 'OBISPO' : 'PASTOR'}
                                 </span>
                                 <img className="img-profile rounded-circle" alt="foto usuario" src={this.state.fotoMinistro} />
-                            </a>
+                            </button>
                             {/* Dropdown - User Information */}
                             <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                                 <Link to="/Main" className="dropdown-item" data-toggle="modal" data-target="#perfilModal">
@@ -131,7 +174,7 @@ class Topbar extends Component {
                 {/* End Logout Modal*/}
                 {/* Begin Page Content */}
                 <div className="container-fluid"></div>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 

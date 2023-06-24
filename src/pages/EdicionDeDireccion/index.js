@@ -28,6 +28,8 @@ class EdicionDeDireccion extends Component {
     }
 
     componentDidMount() {
+        window.scrollTo(0, 0);
+
         this.setState({
             ...this.state.domicilio,
             domicilio: {
@@ -82,8 +84,12 @@ class EdicionDeDireccion extends Component {
                 return obj.hd_Id_Hogar === parseInt(e.target.value)
             })
             seleccion[0].usu_Id_Usuario = this.infoSesion.pem_Id_Ministro
+            seleccion[0].nvoEstado = ""
+
             this.setState({ domicilio: seleccion[0] }) //Coloca en la Variable de Estado 'domicilio' el Hogar Seleccionado.
             console.log("CargaDirección: ", seleccion[0])
+
+
 
             //Verifica si el Pais es Mexico o USA inhabilita poder agregar Estados
             if (seleccion[0].pais_Id_Pais == "66" || seleccion[0].pais_Id_Pais == "151") {
@@ -327,6 +333,7 @@ class EdicionDeDireccion extends Component {
     }
 
     render() {
+        console.log("Domicilio_EdicionDomicilio", this.state.domicilio);
         return (
             <>
                 <Container>

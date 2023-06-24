@@ -67,7 +67,7 @@ export default class SecretarioDelSector extends Component {
     }
     setSecretarioDelSector = async (e) => {
         e.preventDefault();
-        if(this.state.infoNvoSecretario.pem_Id_Ministro === "0") {
+        if (this.state.infoNvoSecretario.pem_Id_Ministro === "0") {
             this.setState({ pemIdMinistroInvalido: true })
             return false
         }
@@ -190,7 +190,7 @@ export default class SecretarioDelSector extends Component {
                                 type="submit"
                                 color="success"
                             >
-                                <span className="fa fa-edit faIconMarginRight"></span>Establecer como secretario
+                                <span className="fa fa-edit faIconMarginRight"></span>Establecer como Secretario
                             </Button>
                         </CardFooter>
                     </Form>

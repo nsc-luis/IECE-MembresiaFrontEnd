@@ -147,7 +147,7 @@ export default function ReportePersonalBautizado() {
 
     const downloadTable = () => {
         TableToExcel.convert(document.getElementById("table1"), {
-            name: "Personal_Bautizado.xlsx",
+            name: "Personal_Ministerial.xlsx",
             sheet: {
                 name: "Hoja 1"
             }
@@ -376,7 +376,7 @@ export default function ReportePersonalBautizado() {
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
-
+                        <hr></hr>
                         <Button size="lg" className="text-left categoriasReportes mt-2" block id="jovenes_hombres">Auxiliares: {countPersons("AUXILIAR") + countPersons("DIÁCONO A PRUEBA")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
                             <Card>

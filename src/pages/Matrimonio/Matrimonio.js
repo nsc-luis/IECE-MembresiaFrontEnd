@@ -610,12 +610,7 @@ class Matrimonio extends Component {
     }
 
     render() {
-        // const {
-        //     handle_CancelaCaptura,
-        //     mat_Id_MatrimonioLegalizacion
-        // } = this.props
-
-
+        console.log("Domicilio_Matrimonio", this.state.domicilio);
         return (
             <Container>
                 <Row>
