@@ -67,7 +67,7 @@ export default class TesoreroDelSector extends Component {
     }
     setTesoreroDelSector = async (e) => {
         e.preventDefault();
-        if(this.state.infoNvoTesorero.pem_Id_Ministro === "0") {
+        if (this.state.infoNvoTesorero.pem_Id_Ministro === "0") {
             this.setState({ pemIdMinistroInvalido: true })
             return false
         }
@@ -190,7 +190,7 @@ export default class TesoreroDelSector extends Component {
                                 type="submit"
                                 color="success"
                             >
-                                <span className="fa fa-hand-handing-usd faIconMarginRight"></span>Establecer como tesorero
+                                <span className="fa fa-hand-handing-usd faIconMarginRight"></span>Establecer como Tesorero
                             </Button>
                         </CardFooter>
                     </Form>

@@ -104,6 +104,11 @@ class Sidebar extends Component {
 
     //Despues de Seleccionar a un Bautizado para Edición/Actualización
     invocaFormularioDePersona = () => {
+
+        if (this.state.personaSeleccionada == 0) {
+            alert("No ha elegido la Persona que desea actualizar. Elija una.");
+            return false;
+        }
         this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Edición de Persona Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
         localStorage.setItem("nvaAltaBautizado", true);
@@ -113,11 +118,17 @@ class Sidebar extends Component {
 
     //Despues de Seleccionar a un NoBautizado para Edición/Actualización
     invocaFormularioDePersonaNB = () => {
+        if (this.state.personaSeleccionada == 0) {
+            alert("No ha elegido la Persona que desea actualizar. Elija una.");
+            return false;
+        }
         this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Edición de Persona NO Bautizada")
         localStorage.setItem("idPersona", this.state.personaSeleccionada);
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
         window.location = "/RegistroDePersona";
+
+
     }
 
     openModalVisibilidadAbierta = async () => {
@@ -213,6 +224,7 @@ class Sidebar extends Component {
     }
 
     render() {
+        console.log("PersonaSeleccionada: ", this.state.personaSeleccionada);
         return (
             <React.Fragment>
                 {/* Sidebar */}

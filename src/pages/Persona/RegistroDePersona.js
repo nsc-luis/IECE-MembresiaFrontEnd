@@ -26,7 +26,6 @@ class RegistroDePersonal extends Component {
         this.state = {
             form: {},
             domicilio: {},
-            /* hogar: {}, */
             FrmValidaPersona: true,
             bolPersonaEncontrada: false,
             categoriaSeleccionada: true,
@@ -53,11 +52,26 @@ class RegistroDePersonal extends Component {
             listaResultadoBusquedaLugarBautismo: [],
             submitBtnDisable: false,
             nvoEstado_Disponible: true,
-            idSectorBautismo: 0
+            idSectorBautismo: 0,
+            buscarOficio1: true,
+            buscarOficio2: true,
+            listaResultadoBusquedaOficio: [],
+            idOficio1: "",
+            idOficio2: ""
         }
     }
 
     componentDidMount() {
+        //Iniciación de Variables de Estado que son Para Nuevos Registros como para Edición
+        this.setState({
+            descNvaProfesion: {
+                ...this.state.descNvaProfesion,
+                nvaProf1: "",
+                nvaProf2: ""
+            },
+
+        })
+
 
         if (localStorage.getItem("idPersona") === "0") {//Si se trata de un Nuevo Registro , No Edición Ni de un No Bautizado que pasa a Bautizado
             this.setState({
@@ -73,8 +87,8 @@ class RegistroDePersonal extends Component {
                     per_Activo: 1,
                     per_En_Comunion: JSON.parse(localStorage.getItem("nvaAltaComunion")),
                     per_Vivo: 1,
-                    pro_Id_Profesion_Oficio1: "1",
-                    pro_Id_Profesion_Oficio2: "1",
+                    pro_Profesion_Oficio1: "",
+                    pro_Profesion_Oficio2: "",
                     per_Nombre_Padre: "",
                     per_Nombre_Madre: "",
                     per_Nombre_Abuelo_Paterno: "",
@@ -118,13 +132,16 @@ class RegistroDePersonal extends Component {
                     usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
                 },
                 habilitaPerBautizado: true,
-                descNvaProfesion: {
-                    ...this.state.descNvaProfesion,
-                    nvaProf1: "",
-                    nvaProf2: ""
-                }
+                // descNvaProfesion: {
+                //     ...this.state.descNvaProfesion,
+                //     nvaProf1: "",
+                //     nvaProf2: ""
+                // },
+                idOficio1: "1",
+                idOficio2: "1"
             })
         } else {//si trae un Id significa que se trata de una Edición o de un Cambio de estatus de No Bautizado a Bautizado
+            console.log("Entra en Edición");
             helpers.validaToken().then(helpers.authAxios.get(this.url + "/Persona/" + localStorage.getItem("idPersona"))
                 .then(res => {
                     res.data.per_Fecha_Nacimiento = res.data.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(res.data.per_Fecha_Nacimiento) : "";
@@ -138,9 +155,46 @@ class RegistroDePersonal extends Component {
 
                     this.setState({
                         foto: `${helpers.url_api}/Foto/${localStorage.getItem("idPersona")}`,
-                        form: res.data
+                        form: res.data //Aquí carga la mayoría de los datos de la persona.
                     })
                     localStorage.setItem('estadoCivil', res.data.per_Estado_Civil);
+
+                    //Consulta el Alias de la Profesión_Oficio1 que tiene la Persona
+                    helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Profesion_Oficio/${res.data.pro_Id_Profesion_Oficio1}`)
+                        .then(res => {
+
+                            this.setState({
+                                form: {
+                                    ...this.state.form,
+                                    pro_Profesion_Oficio1: res.data.pro_Sub_Categoria
+                                },
+                                idOficio1: res.data.pro_Id_Profesion_Oficio
+                            })
+                            console.log("idOficio1 desde API", res.data);
+                        }))
+
+                    //Consulta el Alias de la Profesión_Oficio1 que tiene la Persona
+                    helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Profesion_Oficio/${res.data.pro_Id_Profesion_Oficio2}`)
+                        .then(res => {
+                            this.setState({
+                                form: {
+                                    ...this.state.form,
+                                    pro_Profesion_Oficio2: res.data.pro_Sub_Categoria
+                                },
+                                idOficio2: res.data.pro_Id_Profesion_Oficio
+                            })
+                        }))
+
+                    //Consulta el Id del Sector de Bautismo que se registro en el Registro Histórico del Bautismo
+                    helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Sector/PorTransaccionBautismo/${res.data.per_Id_Persona}`)
+                        .then(res => {
+
+                            this.setState({
+                                idSectorBautismo: res.data.sector
+                            })
+                            console.log("idSectorBautismodesdeAPI", res.data.sector);
+                        }))
+
                 })
             )
             this.setState({
@@ -196,6 +250,7 @@ class RegistroDePersonal extends Component {
                 boolNvoEstado: false,
             })
 
+            //Para que no esté disponible crear Nuevos Estados para México y Estados Unidos
             if (e.target.value == "66" || e.target.value == "151") {
                 this.setState({ nvoEstado_Disponible: false })
             } else {
@@ -215,9 +270,9 @@ class RegistroDePersonal extends Component {
 
     handleChangeEstado = (e) => { //Al cambiar el input est_Id_Estado
 
-        if (e.target.value == "999") { //Si el valor del nuevo estado es 999 significa que elegió 'Otro Estado' porque quiere registrar uno Nuevo
+        if (e.target.value == "999") { //Si el valor del nvoEstado es 999 significa que elegió 'Otro Estado' porque quiere registrar uno Nuevo
             this.setState({
-                boolNvoEstado: true, //Muestra el input de registro de un Nuevo Estado
+                boolNvoEstado: true, //Muestra el textBox para registro de un Nuevo Estado
                 domicilio: {
                     ...this.state.domicilio,
                     est_Id_Estado: e.target.value
@@ -365,24 +420,8 @@ class RegistroDePersonal extends Component {
                     });
                     break;
             }
-            if (e.target.name === 'pro_Id_Profesion_Oficio1') {
-                if (e.target.value === '1') {
-                    this.setState({ solicitudNvaProf1: true })
-                }
-                else {
-                    this.setState({ solicitudNvaProf1: false })
-                }
-            }
-
-            if (e.target.name === 'pro_Id_Profesion_Oficio2') {
-                if (e.target.value === '1') {
-                    this.setState({ solicitudNvaProf2: true })
-                }
-                else {
-                    this.setState({ solicitudNvaProf2: false })
-                }
-            }
         }
+
         if (e.target.name === "per_Bautizado") {
             if (e.target.checked) {
                 this.setState({
@@ -449,32 +488,51 @@ class RegistroDePersonal extends Component {
                 });
             }
         }
-        if (e.target.name === "pro_Id_Profesion_Oficio1") {
-            if (e.target.value !== "1") {
+
+        if (e.target.name === 'pro_Profesion_Oficio1') {
+            //Si se elije una Profesion de la BBDD, asegura que la variable 'nvaProf1' vaya vacía.
+            if (e.target.value !== "") {
                 this.setState({
                     descNvaProfesion: {
                         ...this.state.descNvaProfesion,
                         nvaProf1: ""
                     }
                 })
+            } else {
+                this.setState({
+                    buscarOficio1: true,
+                    idOficio1: "1"
+                })
             }
+            this.buscaProfesionOficio1(e.target.value)
         }
-        if (e.target.name === "pro_Id_Profesion_Oficio2") {
-            if (e.target.value !== "1") {
+
+
+        if (e.target.name === 'pro_Profesion_Oficio2') {
+            //Si se elije una Profesion de la BBDD, asegura que la variable 'nvaProf2' vaya vacía.
+            if (e.target.value !== "") {
                 this.setState({
                     descNvaProfesion: {
                         ...this.state.descNvaProfesion,
                         nvaProf2: ""
                     }
                 })
+            } else {
+                this.setState({
+                    buscarOficio2: true,
+                    idOficio2: "1"
+                })
             }
+            this.buscaProfesionOficio2(e.target.value)
         }
+
         if (e.target.name === "idFoto") {
             var mimeTypeValidos = ["image/png", "image/jpeg", "image/jpg"];
+
+            //Si la foto Excede 3MB y si NO es de formatos permitidos
             if (e.target.files[0].size / 1024 / 1024 > 3
                 || !mimeTypeValidos.includes(e.target.files[0].type)) {
                 alert("Error: \nSólo se admiten archivos menores o iguales a 3MB y que sea de tipo 'png', 'jpg' o jpeg.")
-                console.log("entro a if")
                 this.setState({
                     form: {
                         ...this.state.form,
@@ -485,8 +543,7 @@ class RegistroDePersonal extends Component {
                 })
                 e.target.value = null
             }
-            else {
-                console.log("entro a if")
+            else { //Si la foto no excede 3MB y si es de los formatos permitidos
                 let formData = new FormData();
                 formData.append('image', e.target.files[0]);
                 this.setState({
@@ -513,6 +570,66 @@ class RegistroDePersonal extends Component {
                 })
             }
         }
+    }
+
+    buscaProfesionOficio1 = (palabraclave) => {
+        if (palabraclave.length > 1) {
+            axios.get(`${helpers.url_api}/Profesion_Oficio/BuscarPorTexto/${palabraclave}`)
+                .then(res => {
+                    this.setState({
+                        buscarOficio1: res.data.query.length > 0 ? false : true,
+                        listaResultadoBusquedaOficio: res.data.query
+                    })
+                })
+        }
+        else {
+            this.setState({
+                buscarOficio1: true,
+                listaResultadoBusquedaOficio: [],
+                idOficio1: "1"
+            })
+        }
+    }
+
+    buscaProfesionOficio2 = (palabraclave) => {
+        if (palabraclave.length > 1) {
+            axios.get(`${helpers.url_api}/Profesion_Oficio/BuscarPorTexto/${palabraclave}`)
+                .then(res => {
+                    this.setState({
+                        buscarOficio2: res.data.query.length > 0 ? false : true,
+                        listaResultadoBusquedaOficio: res.data.query
+                    })
+                })
+        }
+        else {
+            this.setState({
+                buscarOficio2: true,
+                listaResultadoBusquedaOficio: [],
+                idOficio2: "1"
+            })
+        }
+    }
+
+    seleccionaOficio1 = (oficio) => {
+        this.setState({
+            buscarOficio1: true,
+            form: {
+                ...this.state.form,
+                pro_Profesion_Oficio1: oficio.pro_Sub_Categoria
+            },
+            idOficio1: oficio.pro_Id_Profesion_Oficio
+        })
+    }
+
+    seleccionaOficio2 = (oficio) => {
+        this.setState({
+            buscarOficio2: true,
+            form: {
+                ...this.state.form,
+                pro_Profesion_Oficio2: oficio.pro_Sub_Categoria
+            },
+            idOficio2: oficio.pro_Id_Profesion_Oficio
+        })
     }
 
     seleccionaLugarDeBautismo = (info) => {
@@ -555,7 +672,7 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => { //Graba persona en un Hogar Nuevo
-        // this.fnSolicitudNvaProfesion();
+        console.log("Entra en funcion GuardaPersona", this.state.idOficio1, this.state.idOficio2, datos)
         var info = {
             PersonaEntity: datos.PersonaEntity,
             HogarDomicilioEntity: datos.HogarDomicilioEntity,
@@ -563,7 +680,9 @@ class RegistroDePersonal extends Component {
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
             nvoEstado: this.state.domicilio.nvoEstado,
             FechaTransaccionHistorica: this.state.FechaTransaccionHistorica,
-            idSectorBautismo: datos.idSectorBautismo
+            idSectorBautismo: datos.idSectorBautismo,
+            idOficio1: this.state.idOficio1,
+            idOficio2: this.state.idOficio2
         }
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Estado/GetEstadoByIdPais/${this.state.domicilio.pais_Id_Pais}`)
             .then(res => {
@@ -692,9 +811,11 @@ class RegistroDePersonal extends Component {
             ComentarioHTE: this.state.ComentarioHistorialTransacciones.toUpperCase(),
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
-            idSectorBautismo: this.state.idSectorBautismo
+            idSectorBautismo: this.state.idSectorBautismo,
+            idOficio1: this.state.idOficio1,
+            idOficio2: this.state.idOficio2
         };
-        // this.fnSolicitudNvaProfesion();
+        console.log("Info_Editar: ", info)
         if (this.state.nuevaFoto) {
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                 .then(res => {
@@ -733,7 +854,7 @@ class RegistroDePersonal extends Component {
                             })
                         );
                     } catch (error) {
-                        alert("Error: Hubo un problema en la comunicacioón con el Servidor. Intente mas tarde.");
+                        alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
                         // setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
                     }
                 })
@@ -787,9 +908,10 @@ class RegistroDePersonal extends Component {
             nvaProfesionOficio1: this.state.descNvaProfesion.nvaProf1 !== "" && this.state.descNvaProfesion.nvaProf1 ? this.state.descNvaProfesion.nvaProf1.toUpperCase() : "",
             nvaProfesionOficio2: this.state.descNvaProfesion.nvaProf2 !== "" && this.state.descNvaProfesion.nvaProf2 ? this.state.descNvaProfesion.nvaProf2.toUpperCase() : "",
             FechaTransaccionHistorica: this.state.FechaTransaccionHistorica,
-            idSectorBautismo: this.state.idSectorBautismo
+            idSectorBautismo: this.state.idSectorBautismo,
+            idOficio1: this.state.idOficio1,
+            idOficio2: this.state.idOficio2
         }
-        //this.fnSolicitudNvaProfesion();
         try {
             if (this.state.nuevaFoto) {
                 helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
@@ -888,6 +1010,12 @@ class RegistroDePersonal extends Component {
     }
 
     render() {
+        console.log("idOficio1", this.state.idOficio1);
+        console.log("idOficio2", this.state.idOficio2);
+        console.log("nvaProf1", this.state.descNvaProfesion.nvaProf1);
+        console.log("nvaProf2", this.state.descNvaProfesion.nvaProf2);
+        console.log("LugarBautismo", this.state.idSectorBautismo);
+
         return (
             <>
 
@@ -931,12 +1059,17 @@ class RegistroDePersonal extends Component {
                     FechaTransaccionHistorica={this.state.FechaTransaccionHistorica}
                     buscarLugarDeBautismo={this.state.buscarLugarDeBautismo}
                     listaResultadoBusquedaLugarBautismo={this.state.listaResultadoBusquedaLugarBautismo}
+                    buscarOficio1={this.state.buscarOficio1}
+                    buscarOficio2={this.state.buscarOficio2}
+                    listaResultadoBusquedaOficio={this.state.listaResultadoBusquedaOficio}
                     seleccionaLugarDeBautismo={this.seleccionaLugarDeBautismo}
                     borrarSeleccionLugarBautismo={this.borrarSeleccionLugarBautismo}
                     ChangeSubmitBtnDisable={this.ChangeSubmitBtnDisable}
                     submitBtnDisable={this.state.submitBtnDisable}
                     nvoEstado_Disponible={this.state.nvoEstado_Disponible}
                     idSectorBautismo={this.state.idSectorBautismo}
+                    seleccionaOficio1={this.seleccionaOficio1}
+                    seleccionaOficio2={this.seleccionaOficio2}
                 />
                 {/*Modal success*/}
                 <Modal isOpen={this.state.modalShow}>

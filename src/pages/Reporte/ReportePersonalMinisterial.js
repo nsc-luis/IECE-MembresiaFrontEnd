@@ -147,7 +147,7 @@ export default function ReportePersonalBautizado() {
 
     const downloadTable = () => {
         TableToExcel.convert(document.getElementById("table1"), {
-            name: "Personal_Bautizado.xlsx",
+            name: "Personal_Ministerial.xlsx",
             sheet: {
                 name: "Hoja 1"
             }
@@ -213,11 +213,11 @@ export default function ReportePersonalBautizado() {
         doc.rect(10, yAxis, 190, 4, "F");
         doc.setFont("", "", "bold");
         yAxis += 3;
-        doc.text("DÍACONOS", 15, yAxis);
-        doc.text(`${countPersons("DÍACONO")}`, 80, yAxis);
+        doc.text("DIÁCONOS", 15, yAxis);
+        doc.text(`${countPersons("DIÁCONO")}`, 80, yAxis);
         yAxis += 7;
         personalMinisterial.map((persona) => {
-            if (persona.pem_Grado_Ministerial === "DÍACONO") {
+            if (persona.pem_Grado_Ministerial === "DIÁCONO") {
                 doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
                 yAxis += 4;
                 index++;
@@ -235,10 +235,10 @@ export default function ReportePersonalBautizado() {
         doc.setFont("", "", "bold");
         yAxis += 3;
         doc.text("AUXILIARES", 15, yAxis);
-        doc.text(`${countPersons("AUXILIAR") + countPersons("DÍACONO A PRUEBA")}`, 80, yAxis);
+        doc.text(`${countPersons("AUXILIAR") + countPersons("DIÁCONO A PRUEBA")}`, 80, yAxis);
         yAxis += 7;
         personalMinisterial.map((persona) => {
-            if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DÍACONO A PRUEBA") {
+            if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DIÁCONO A PRUEBA") {
                 doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
                 yAxis += 4;
                 index++;
@@ -360,14 +360,14 @@ export default function ReportePersonalBautizado() {
                             </Card>
                         </UncontrolledCollapse>
 
-                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">Díaconos: {countPersons("DÍACONO")}</Button>
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">Diáconos: {countPersons("DIÁCONO")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
                             <Card>
                                 <CardBody>
                                     <h5>
                                         <ol type="1">
                                             {personalMinisterial.map((persona) => {
-                                                if (persona.pem_Grado_Ministerial === "DÍACONO") {
+                                                if (persona.pem_Grado_Ministerial === "DIÁCONO") {
                                                     return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
                                                 }
                                             })}
@@ -376,15 +376,15 @@ export default function ReportePersonalBautizado() {
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
-
-                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="jovenes_hombres">Auxiliares: {countPersons("AUXILIAR") + countPersons("DÍACONO A PRUEBA")}</Button>
+                        <hr></hr>
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="jovenes_hombres">Auxiliares: {countPersons("AUXILIAR") + countPersons("DIÁCONO A PRUEBA")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
                             <Card>
                                 <CardBody>
                                     <h5>
                                         <ol type="1">
                                             {personalMinisterial.map((persona) => {
-                                                if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DÍACONO A PRUEBA") {
+                                                if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DIÁCONO A PRUEBA") {
                                                     return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
                                                 }
                                             })}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
     Container, Button, Input, Modal, ModalBody, Alert,
-    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, FormGroup, ModalHeader, ModalFooter
+    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, FormGroup, ModalHeader, ModalFooter, CardFooter
 } from 'reactstrap';
 import logo from '../../assets/images/IECE_LogoOficial.jpg';
 import '../../assets/css/index.css';
@@ -119,6 +119,10 @@ class BajaPersonalMinisterial extends Component {
         this.setState({ modal_Confirmacion: false })
     }
 
+    cancelar = () => {
+        document.location.href = '/ListaDePersonal'
+    }
+
     handleContinue = async () => {
         // Cierra el Modal de COnfirmación y continua
         this.closemodal_Confirmacion();
@@ -181,11 +185,11 @@ class BajaPersonalMinisterial extends Component {
                         <CardBody>
                             <>
                                 <Row className=' mb-5'>
-                                    <div className="col col-md-3"></div>
+                                    <div className="col col-md-2"></div>
                                     <div className="col col-md-3">
                                         <label><h6>Seleccione el Elemento a dar de Baja del Personal Ministerial:</h6></label>
                                     </div>
-                                    <div className="col col-md-3">
+                                    <div className="col col-md-4">
                                         <Input
                                             type="select"
                                             name="id_Ministro"
@@ -206,11 +210,11 @@ class BajaPersonalMinisterial extends Component {
                                 </Row>
 
                                 <Row className=' mb-5'>
-                                    <div className="col col-md-3"></div>
+                                    <div className="col col-md-2"></div>
                                     <div className="col col-md-3">
                                         <label><h6>Causa de la Baja del Auxiliar:</h6></label>
                                     </div>
-                                    <div className="col col-md-2">
+                                    <div className="col col-md-4">
                                         <Input
                                             type="select"
                                             name="causaDeBaja"
@@ -226,11 +230,11 @@ class BajaPersonalMinisterial extends Component {
                                             <option value="SUSPENCION TEMPORAL DEL MINISTERIO">SUSPENCION TEMPORAL DEL MINISTERIO</option>
                                         </Input>
                                     </div>
-                                    <div className="col col-md-3"></div>
+                                    <div className="col col-md-5"></div>
                                 </Row>
 
                                 <Row className=' mb-3'>
-                                    <div className="col col-md-3"></div>
+                                    <div className="col col-md-2"></div>
                                     <Col xs="3">
                                         <h6>Fecha de transacción:</h6>
                                     </Col>
@@ -244,21 +248,29 @@ class BajaPersonalMinisterial extends Component {
                                         />
                                         <FormFeedback>Este campo es requerido</FormFeedback>
                                     </Col>
-                                    <div className="col col-md-3"></div>
-                                </Row>
-
-                                <Row className='mt-3'>
-                                    <Col className="col-md-3"></Col>
-                                    <Col className=" col-md-6 text-right">
-                                        <Button className="btn-danger ml-auto" onClick={this.enviar1} disabled={this.submitBtnDisable}>
-                                            Dar de Baja
-                                        </Button>
-                                    </Col>
-                                    <Col className="col-md-3"></Col>
+                                    <div className="col col-md-4"></div>
                                 </Row>
                             </>
-
                         </CardBody>
+
+                        <CardFooter>
+                            <Row className='mt-3'>
+                                <Col className="col-md-5"></Col>
+                                <Col className=" col-md-1 text-right">
+                                    <Button className="btn-secondary ml-auto" onClick={this.cancelar}>
+                                        Cancelar
+                                    </Button>
+                                </Col>
+                                <Col className=" col-md-3 text-right">
+                                    <Button className="btn-danger ml-auto" onClick={this.enviar1} disabled={this.submitBtnDisable}>
+                                        Dar de Baja
+                                    </Button>
+                                </Col>
+                                <Col className="col-md-3"></Col>
+                            </Row>
+
+                        </CardFooter>
+
                     </Card>
                 </Container>
                 <Modal isOpen={this.state.modal_Confirmacion} className="card">

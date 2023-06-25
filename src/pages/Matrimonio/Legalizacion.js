@@ -564,7 +564,7 @@ class Legalizacion extends Component {
                                             />
                                             <label><strong>Apellido de Casada</strong> &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
                                         </Col>
-                                        <Col xs="4">
+                                        {/* <Col xs="4">
                                             <FormGroup>
                                                 <Input
                                                     name="mat_Cantidad_Hijos"
@@ -578,10 +578,10 @@ class Legalizacion extends Component {
                                                 <Label><strong>Cantidad Hijos: </strong></Label>
                                                 <FormFeedback></FormFeedback>
                                             </FormGroup>
-                                        </Col>
+                                        </Col> */}
                                     </Row>
 
-                                    <Row>
+                                    {/* <Row>
                                         <Col xs="12">
                                             <FormGroup>
                                                 <Input
@@ -596,7 +596,7 @@ class Legalizacion extends Component {
                                                 <FormFeedback></FormFeedback>
                                             </FormGroup>
                                         </Col>
-                                    </Row>
+                                    </Row> */}
                                 </CardBody>
                                 <CardFooter>
                                     <Row >

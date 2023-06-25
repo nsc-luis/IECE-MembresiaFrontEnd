@@ -156,14 +156,31 @@ class Login extends Component {
             <React.Fragment>
                 <Container>
                     {/* <!-- Outer Row --> */}
+
                     <Row className="justify-content-center">
                         <Col xs="12">
                             <Card className="o-hidden border-0 shadow-lg my-5">
                                 <CardBody className="p-0">
                                     {/* <!-- Nested Row within Card Body --> */}
+                                    <Row className="text-center bg-logo">
+                                        <Col xs="3" />
+                                        <Col xs="6" className="mt-3">
+                                            <img
+                                                src="../favicon.png"
+                                                alt="Logo de la App"
+                                                width="100" height="100"
+                                            />
+
+                                            <h1 className="h4 text-gray-900 mb-4">IECE MEMBRESIA</h1>
+
+                                        </Col>
+                                        <Col xs="3" />
+                                    </Row>
+                                    <hr className="mt-1" />
+
                                     <Row>
                                         <Col xs="3" />
-                                        <Col xs="6" className="p-5">
+                                        <Col xs="6" className="p-3">
                                             <CardTitle className="text-center">
                                                 <h1 className="h4 text-gray-900 mb-4">Bienvenido! </h1>
                                             </CardTitle>
@@ -197,7 +214,7 @@ class Login extends Component {
                                                         Validar credenciales
                                                     </Button>
                                                     <br />
-                                                    <Link to="/Signup">Registrar nuevo usuario</Link> | <Link to="/SolicitudDeRestablecimiento">Olvidé contraseña</Link>
+                                                    <Link to="/Signup">Registrar Nuevo Usuario</Link> | <Link to="/SolicitudDeRestablecimiento">Olvidé Contraseña</Link>
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Input

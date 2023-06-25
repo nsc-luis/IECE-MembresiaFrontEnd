@@ -89,7 +89,7 @@ class RegistroPersonalMinisterial extends Component {
                 form: {
                     ...this.state.form,
                     [e.target.name]: e.target.value,
-                    nombre_Persona: persona[0].per_Nombre + " " + persona[0].per_Apellido_Paterno + " " + persona[0].per_Apellido_Materno
+                    nombre_Persona: persona[0].per_Nombre + " " + persona[0].per_Apellido_Paterno + (persona[0].per_Apellido_Materno ? " " + persona[0].per_Apellido_Materno : "")
 
                 }
             })
@@ -221,6 +221,10 @@ class RegistroPersonalMinisterial extends Component {
         this.setState({ submitBtnDisable: bol });
     }
 
+    cancelar = () => {
+        document.location.href = '/ListaDePersonal'
+    }
+
     render() {
         console.log("form:", this.state.form)
         return (
@@ -236,29 +240,35 @@ class RegistroPersonalMinisterial extends Component {
                                 </Col>
                             </Row>
                         </CardTitle>
-                        <Alert color="warning" className="alertLogin">
-                            <strong>Para incorporar un Elemento al Personal Ministerial: </strong> <br />
-                            <ol>
-                                <li>Seleccione la persona que aparezca en la Lista de Personal Ministerial.
-                                    <ul>
-                                        <li>La primer caja de Selección contiene a los Varones del Sector.</li>
-                                    </ul>
-                                </li>
-                                <li>Dado que es posible que la persona ya esté registrado en la Base de Datos de la Dirección General como Personal Ministerial,
-                                    solo hace falta vincularlo. Búsquelo en la segunda caja de selección, la cual muestra los elementos ya registrados como parte del Personal Ministerial del Distrito.
-                                    <ul>
-                                        <li>Si la persona que desea dar de Alta ya se encuentra registrada, elija al Elemento del Personal Ministerial.</li>
-                                        <li>Si la persona que desea dar de Alta No se encuentra registrada, elija la Opción "NUEVO ELEMENTO". Sólo se puede registrar "AUXILIARES".</li>
-                                    </ul>
-                                </li>
-                            </ol>
-                        </Alert>
+                        <CardBody>
+                            <Alert color="warning" className="alertLogin">
+                                <strong>Para incorporar un Elemento al Personal Ministerial del Sector: </strong>
+
+                                <ol>
+                                    <br></br>
+                                    <li>Seleccione la persona que desea registrar como Elemento del Personal Ministerial. Elija al que desea registrar como parte del Personal Ministerial.
+                                    </li>
+                                    <br></br>
+                                    <li>Dado que es posible que la persona ya esté registrada en la Base de Datos como Personal Ministerial, en ese caso
+                                        solo hace falta vincularlo. Búsquelo en la segunda caja de selección, la cual muestra los elementos ya registrados como parte del Personal Ministerial del Distrito.
+                                        <ul>
+                                            <li>Si la persona que desea dar de Alta ya se encuentra registrada, elija al Elemento del Personal Ministerial.</li>
+                                            <li>Si la persona que desea dar de Alta No se encuentra registrada, elija la Opción "NUEVO ELEMENTO". Sólo se puede registrar "AUXILIARES".</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </Alert>
+
+                        </CardBody>
+                    </Card>
+
+                    <Card className="card mt-3" id="pdf">
                         <CardBody>
                             <>
                                 <Row className=' mb-3'>
                                     <div className="col col-md-2"></div>
                                     <div className="col col-md-4">
-                                        <label><h6>Seleccione la persona a Incorporar al Personal Ministerial</h6></label>
+                                        <label><h6>PASO 1.- Seleccione la persona a Incorporar al Personal Ministerial</h6></label>
                                     </div>
                                     <div className="col col-md-4">
                                         <Input
@@ -283,7 +293,7 @@ class RegistroPersonalMinisterial extends Component {
                                 <Row className='mb-2'>
                                     <div className="col col-md-2"></div>
                                     <div className="col col-md-4">
-                                        <label ><h6>Revise si el Elemento del Personal Ministerial ya está registrado y Seleccionelo para confirmar que es la misma persona. Si no se encuentra en la lista, elija "NUEVO ELEMENTO"</h6></label>
+                                        <label ><h6>PASO 2.- Revise en esta segunda caja de opciones si el Elemento del Personal Ministerial ya está registrado y Seleccionelo para confirmar que es la misma persona. Si no se encuentra en la lista, elija "NUEVO ELEMENTO"</h6></label>
                                     </div>
                                     <div className="col col-md-4">
                                         <Input type="select"
@@ -309,7 +319,7 @@ class RegistroPersonalMinisterial extends Component {
                                 <Row className='mb-3'>
                                     <div className="col col-md-2"></div>
                                     <Col xs="4">
-                                        <h6>Fecha del Alta o Vinculación:</h6>
+                                        <h6>PASO 3.- Indique la Fecha del Alta o Vinculación:</h6>
                                     </Col>
                                     <Col xs="4">
                                         <Input
@@ -318,6 +328,8 @@ class RegistroPersonalMinisterial extends Component {
                                             placeholder='DD/MM/AAAA'
                                             onChange={this.onChange}
                                             value={this.state.form.fechaTransaccion}
+                                            title="Si es Alta de un Nuevo Personal, indique la fecha en que inició como auxiliar el Nuevo Elemento
+                                            Si es Vinculación de un elemento ya existente, indique la fecha actual."
                                         />
                                         <FormFeedback>Este campo es requerido</FormFeedback>
                                     </Col>
@@ -325,16 +337,22 @@ class RegistroPersonalMinisterial extends Component {
                                 </Row>
 
                                 <CardFooter className='mt-3'>
-                                    <Col className="col-md-2"></Col>
-                                    <Col className=" col-md-8 text-right">
-                                        <Button className="btn-success ml-auto" onClick={this.enviar1} disabled={this.submitBtnDisable}>
-                                            {(this.state.form.id_Ministro === "0") ? (<>Registrar</>) : (<>Vincular</>)}
-                                        </Button>
-                                    </Col>
-                                    <Col className="col-md-2"></Col>
+                                    <Row className='mt-3'>
+                                        <Col className="col-md-5"></Col>
+                                        <Col className=" col-md-2 text-right">
+                                            <Button className="btn-secondary ml-auto" onClick={this.cancelar}>
+                                                Cancelar
+                                            </Button>
+                                        </Col>
+                                        <Col className=" col-md-2 text-right">
+                                            <Button className="btn-success ml-auto" onClick={this.enviar1} disabled={this.submitBtnDisable}>
+                                                {(this.state.form.id_Ministro === "0") ? (<>Registrar</>) : (<>Vincular</>)}
+                                            </Button>
+                                        </Col>
+                                        <Col className="col-md-4"></Col>
+                                    </Row>
                                 </CardFooter>
                             </>
-
                         </CardBody>
                     </Card>
                     {/* <Table>
@@ -365,7 +383,7 @@ class RegistroPersonalMinisterial extends Component {
                             })}
                         </tbody>
                     </Table> */}
-                </Container>
+                </Container >
                 <Modal isOpen={this.state.modal_Confirmacion} className="card">
                     <ModalHeader className="card-header">
                         <h2>Confirmación</h2>
@@ -374,7 +392,7 @@ class RegistroPersonalMinisterial extends Component {
                         <div >
                             <div >
                                 {this.state.tipoRegistro == "NuevoElemento" &&
-                                    <p>¿Estas seguro de querer agregar a <strong> {this.state.form.nombre_Persona} </strong>como elemento del Personal Ministerial?</p>
+                                    <p>¿Esta seguro de querer agregar a <strong> {this.state.form.nombre_Persona} </strong>como elemento del Personal Ministerial?</p>
                                 }
                                 {this.state.tipoRegistro == "ElementoExistente" &&
                                     <p>¿Estas seguro de Vincular a
