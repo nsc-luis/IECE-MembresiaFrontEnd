@@ -40,6 +40,8 @@ import RegistrarTransaccionesHistoricas from './pages/RegistrarTransaccionesHist
 import Auxiliares from './pages/PersonalAdministrativo/Auxiliares';
 import SecretarioDelSector from './pages/PersonalAdministrativo/SecretarioDelSector';
 import TesoreroDelSector from './pages/PersonalAdministrativo/TesoreroDelSector';
+import SecretarioDelDistrito from './pages/PersonalAdministrativo/SecretarioDelDistrito';
+import TesoreroDelDistrito from './pages/PersonalAdministrativo/TesoreroDelDistrito';
 import Layout from './pages/Layout';
 import RegistroDePersonal from './pages/Persona/RegistroDePersona';
 import RegistroPersonalMinisterial from './pages/RegistroPersonalMinisterial';
@@ -101,6 +103,8 @@ class Router extends Component {
                         <Route exact path="/Auxiliares" component={Auxiliares} />
                         <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
                         <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} />
+                        <Route exact path="/TesoreroDelDistrito" component={TesoreroDelDistrito} />
+                        <Route exact path="/SecretarioDelDistrito" component={SecretarioDelDistrito} />
                         <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
                         <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
 

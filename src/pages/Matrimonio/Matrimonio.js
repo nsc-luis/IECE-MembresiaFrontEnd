@@ -863,17 +863,19 @@ class Matrimonio extends Component {
                                     </Row>
                                     <hr />
                                     <Row>
-                                        <Col xs="4" className="col-sm-4">
-                                            <Input
-                                                type="text"
-                                                name="mat_Apellido_Casada"
-                                                onChange={this.onChange}
-                                                className="form-control"
-                                                value={this.state.matLegal.mat_Apellido_Casada}
-                                                autoComplete="nope"
-                                            />
-                                            <label><strong>Apellido de Casada</strong> &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
-                                        </Col>
+                                        {!this.state.bolForaneoMujer &&
+                                            <Col xs="4" className="col-sm-4">
+                                                <Input
+                                                    type="text"
+                                                    name="mat_Apellido_Casada"
+                                                    onChange={this.onChange}
+                                                    className="form-control"
+                                                    value={this.state.matLegal.mat_Apellido_Casada}
+                                                    autoComplete="nope"
+                                                />
+                                                <label><strong>Apellido de Casada</strong> &#40;Nota: Sólo si se desea que aparezca con Apellido de Casada.&#41;</label>
+                                            </Col>
+                                        }
                                         <Col xs="4">
                                             <FormGroup>
 

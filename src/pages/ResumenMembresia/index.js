@@ -32,6 +32,8 @@ class ResumenMembresia extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            dto: JSON.parse(localStorage.getItem("dto")),
+            sector: JSON.parse(localStorage.getItem("sector")),
             sectores: [],
             sectorSeleccionado: "0",
             resumenDeMembresia: {},
@@ -42,7 +44,8 @@ class ResumenMembresia extends Component {
             gradoMinistro: "",
             resumenBautizados: [],
             resumenNoBautizados: [],
-            hogares: 0
+            hogares: 0,
+            entidadTitulo: ""
             //sec_Id_Sector:""
         }
     }
@@ -153,8 +156,12 @@ class ResumenMembresia extends Component {
     }
 
     seleccionaSectorActivo = async () => {
-        if (localStorage.getItem('sector') === null) {
+        if (localStorage.getItem('sector') === null) { //Sesión de Obispo
+
+            //Setea la variable de Estado "SectorSeleccionado"
             this.setState({ sectorSeleccionado: "todos" });
+
+            //Consulta el Resumen de Membresía Distrital
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     //console.log(res.data.value);
@@ -163,6 +170,7 @@ class ResumenMembresia extends Component {
                 })
             );
 
+            //Consulta el Resumen de Hogares Distritales
             await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
                 .then(res => {
                     let contador = 0;
@@ -173,8 +181,40 @@ class ResumenMembresia extends Component {
                     this.setState({ hogares: contador });
                 })
             )
-        } else {
+
+            //Consulta el Nombre del Obispo del Distrito y el Titulo del Lider que aparecerá en el PDF
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
+                .then(res => {
+                    this.setState({
+                        infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                        gradoMinistro: "OBISPO"
+                    });
+                })
+            )
+
+            //Consulta el Secretario del Distrito
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
+                .then(res => {
+                    this.setState({
+                        infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                    });
+                })
+            )
+
+            //Setea el Título que aparecerá en el archivo PDF
+            this.setState({
+                infoSector: {
+                    ...this.state.infoSector,
+                    sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
+                }
+            });
+
+
+
+        } else { //Sesión de Pastor
+
             this.setState({ sectorSeleccionado: localStorage.getItem('sector') });
+
             //this.setState({sec_Id_Sector: localStorage.getItem('sector')});
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaBySector/' + localStorage.getItem('sector'))
                 .then(res => {
@@ -193,12 +233,43 @@ class ResumenMembresia extends Component {
                     this.setState({ hogares: contador });
                 })
             )
+
+            //Consulta los detalles del Sector
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({
+                        infoSector: res.data.sector[0],
+                        entidadTitulo: res.data.sector[0].sec_Alias
+                    })
+                })
+            );
+
+            //Consulta el Nombre del Pastor y el Título de Lider que aparecerá en el Reporte PDF
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({
+                        infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                        gradoMinistro: "PASTOR"
+                    });
+                })
+            )
+
+            //Consulta el Nombre del Secretario del Sector
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + localStorage.getItem('sector'))
+                .then(res => {
+                    this.setState({
+                        infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                    });
+                })
+            )
+
+
         }
     }
 
     handle_sectorSeleccionado = async (e) => {
         console.log(e.target.value)
-        if (e.target.value === "todos") {
+        if (e.target.value === "todos") { //Si es Sesión Obispo
             this.setState({ sectorSeleccionado: e.target.value });
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
@@ -217,8 +288,6 @@ class ResumenMembresia extends Component {
                     this.setState({ hogares: contador });
                 })
             )
-
-            // alert("ALERTA! Aqui podemos hacer 2 cosas:\n- Generar un ciclo que sume los sectores.\n- Agregar dis_Id_Distrito a la tabla de Personal (creo que esta es mejor opcion).");
         }
         else {
             e.persist();
@@ -241,6 +310,35 @@ class ResumenMembresia extends Component {
                     this.setState({ hogares: contador });
                 })
             );
+
+            //Consulta los detalles del Sector
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/" + e.target.value)
+                .then(res => {
+                    this.setState({
+                        infoSector: res.data.sector[0],
+                        entidadTitulo: res.data.sector[0].sec_Tipo_Sector + " " + res.data.sector[0].sec_Numero + " " + res.data.sector[0].sec_Alias
+                    })
+                })
+            );
+
+            //Consulta el Nombre del Pastor y el Título de Lider que aparecerá en el Reporte PDF
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + e.target.value)
+                .then(res => {
+                    this.setState({
+                        infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                        gradoMinistro: "PASTOR"
+                    });
+                })
+            );
+
+            //Consulta el Nombre del Secretario del Sector
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + e.target.value)
+                .then(res => {
+                    this.setState({
+                        infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                    });
+                })
+            );
         }
     }
 
@@ -249,56 +347,8 @@ class ResumenMembresia extends Component {
         if (this.state.sectorSeleccionado === '0') {
             alert('Error: Debes seleccionar un sector.');
         }
-        else {
-            if (this.state.sectorSeleccionado !== "todos") {
-                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/" + this.state.sectorSeleccionado)
-                    .then(res => {
-                        this.setState({ infoSector: res.data.sector[0] })
-                    })
-                );
-                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/Sector/GetPastorBySector/" + this.state.sectorSeleccionado)
-                    .then(res => {
-                        this.setState({
-                            infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
-                            gradoMinistro: "PASTOR"
-                        });
-                    })
-                )
-                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioBySector/" + this.state.sectorSeleccionado)
-                    .then(res => {
-                        this.setState({
-                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                        });
-                    })
-                )
-            }
-            else {
-                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
-                    .then(res => {
-                        this.setState({
-                            infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
-                            gradoMinistro: "OBISPO"
-                        });
-                    })
-                )
-                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
-                    .then(res => {
-                        this.setState({
-                            infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
-                        });
-                    })
-                )
-                this.setState({
-                    infoSector: {
-                        ...this.state.infoSector,
-                        sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
-                    }/* ,
-                    infoMinistro: {
-                        ...this.state.infoMinistro,
-                        pem_Nombre: "OBISPO DEL DISTRITO"
-                    } */
-                });
-            }
+        else { //Si es Sesión Pastor
+
             const doc = new jsPDF("p", "mm", "letter");
 
             let fechaActual = moment();
@@ -311,8 +361,8 @@ class ResumenMembresia extends Component {
             doc.setFontSize(10);
 
             //Si en LocalStorage tiene Numero de Sector, significa que es Sesión Sector
-            if (localStorage.getItem('sector') !== null) {
-                doc.text(`${this.state.infoSector.sec_Alias}`, 136, 18, { align: 'center' });
+            if (this.state.sectorSeleccionado !== "todos") {
+                doc.text(`${this.state.infoSector.sec_Tipo_Sector} ${this.state.infoSector.sec_Numero} ${this.state.infoSector.sec_Alias}`, 136, 18, { align: 'center' });
                 /* doc.text(fechaTexto, 85, 25); */
             }
             else {
@@ -460,7 +510,7 @@ class ResumenMembresia extends Component {
                                     value={this.state.sectorSeleccionado}
                                     onChange={this.handle_sectorSeleccionado}
                                 >
-                                    <option value="0">Selecciona un sector</option>
+                                    {/* <option value="0">Selecciona un sector</option> */}
 
                                     {this.state.sectores.map(sector => {
                                         return (

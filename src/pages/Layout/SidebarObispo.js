@@ -103,6 +103,41 @@ class SidebarObispo extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
+                        Transacciones Especiales
+                    </div>
+
+                    <li className="nav-item">
+                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseAdministrativo" aria-expanded="true" aria-controls="collapsePages">
+                            <i className="fas fa-user-tie"></i>
+                            <span>Personal Administrativo</span>
+                        </Link>
+                        <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
+                            <div className="bg-white py-2 collapse-inner rounded">
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del Distrito.')}
+                                    to="/SecretarioDelDistrito"
+                                >
+                                    {/* <i className="fas fa-edit"></i> */}
+                                    <span>Secretario del Distrito</span>
+                                </Link>
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del Distrito.')}
+                                    to="/TesoreroDelDistrito"
+                                >
+                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
+                                    <span>Tesorero del Distrito</span>
+                                </Link>
+                            </div>
+                        </div>
+                    </li>
+
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
+
+                    {/* Heading */}
+                    <div className="sidebar-heading">
                         Reportes
                     </div>
 

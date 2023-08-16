@@ -109,15 +109,15 @@ class RegistrarTransaccionesHistoricas extends Component {
         else {
             let comentarioTransaccion = this.state.comentarioTransaccion == "" ? "-" : this.state.comentarioTransaccion;
             await helpers.validaToken().then(helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Historial_Transacciones_Estadisticas/RegistroHistorico/${this.state.per_Id_Persona}/${this.state.sec_Id_Sector}/${this.state.ct_Id_Codigo}/${comentarioTransaccion}/${this.state.fechaTransaccion}/${this.infoSesion.pem_Id_Ministro}`)
-                    .then(res => {
-                        if (res.data.status === "success") {
-                            window.location = "/ListaDePersonal";
-                        }
-                        else {
-                            alert(res.data.mensaje);
-                        }
-                    })
-                ));
+                .then(res => {
+                    if (res.data.status === "success") {
+                        window.location = "/ListaDePersonal";
+                    }
+                    else {
+                        alert(res.data.mensaje);
+                    }
+                })
+            ));
         }
 
     }
@@ -158,7 +158,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                                                     <option value="0">Selecciona una transacción</option>
                                                     <option value="11002">ALTA POR RESTITUCIÓN</option>
                                                     <option value="11003">ALTA POR CAMBIO DE DOMICILIO INTERNO</option>
-                                                    <option value="11004">SALTA POR CAMBIO DE DOMICILIO EXTERNO</option>
+                                                    <option value="11004">ALTA POR CAMBIO DE DOMICILIO EXTERNO</option>
                                                     <option value="11101">BAJA POR DEFUNCIÓN</option>
                                                     <option value="11102">BAJA POR EXCOMUNIÓN TEMPORAL</option>
                                                     <option value="11103">BAJA POR EXCOMUNIÓN</option>
