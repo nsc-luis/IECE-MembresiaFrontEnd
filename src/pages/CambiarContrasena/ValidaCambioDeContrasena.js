@@ -116,7 +116,7 @@ class ValidaCambioDeContrasena extends Component {
                                 <Form onSubmit={this.cambiarPassword}>
                                     <Card className="o-hidden border-0 shadow-lg my-5">
                                         <CardTitle className="text-center">
-                                            <h1 className="h4 text-gray-900 mb-4">Ingresa la nueva contraseña <br /> ({this.state.datosParaCambio.vcc_Correo}) </h1>
+                                            <h1 className="h4 text-gray-900 mb-4">Ingresa la nueva Contraseña <br /> ({this.state.datosParaCambio.vcc_Correo}) </h1>
                                         </CardTitle>
                                         <CardBody className="p-0">
                                             <Row>
@@ -124,7 +124,7 @@ class ValidaCambioDeContrasena extends Component {
                                                 <Col sm='8'>
                                                     <Alert color='warning'>
                                                         Ingrese una nueva contraseña y confirmela. <br />
-                                                        La contraseña debe contener al menos 5 caracteres con MAYUSCULAS, minusculas y numeros.
+                                                        La contraseña debe contener al menos 8 caracteres con MAYUSCULAS, minusculas, numeros y un caracter especial.
                                                     </Alert>
                                                 </Col>
                                                 <Col sm='2'></Col>
@@ -149,7 +149,7 @@ class ValidaCambioDeContrasena extends Component {
                                             <FormGroup>
                                                 <Row>
                                                     <Col sm='2'></Col>
-                                                    <Col sm='2' className='aumentarFuente'>Confirmación</Col>
+                                                    <Col sm='2' className='aumentarFuente'>Confirmar Contraseña</Col>
                                                     <Col sm='6'>
                                                         <Input
                                                             name='confirmacion'
@@ -175,7 +175,7 @@ class ValidaCambioDeContrasena extends Component {
                                             <Button
                                                 type='submit'
                                                 color='primary'>
-                                                Cambiar contraseña
+                                                Cambiar Contraseña
                                             </Button>
                                         </CardFooter>
                                     </Card>
@@ -203,7 +203,7 @@ class ValidaCambioDeContrasena extends Component {
                                             <Row>
                                                 <Col sm='1'></Col>
                                                 <Col sm='10'>
-                                                    La nueva contraseña esta lista para usarse.
+                                                    La nueva contraseña está lista para usarse.
                                                 </Col>
                                                 <Col sm='1'></Col>
                                             </Row>

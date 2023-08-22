@@ -529,7 +529,7 @@ class PersonaForm extends Component {
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
 
-            //Si se trata de un Registro de Bautizados, verifica que tenga Fecha de nacimiento.
+            //Si se trata de un Registro de Bautizados, verifica que tenga Fecha de bautismo.
             if (objPersona.per_Bautizado === true
                 && objPersona.per_Fecha_Bautismo === "") {
                 alert("Error: \nSe requiere la Fecha de Bautismo.");
@@ -562,6 +562,8 @@ class PersonaForm extends Component {
                 }
 
                 if (this.state.hogar.hd_Id_Hogar === "0") {// Si el Registro de Persona es tambien de un Nuevo Hogar
+
+                    //Coloca en una variable todos los datos que se enviarán al BackEnd
                     let PersonaDomicilioHogar = {
                         id: 1,
                         PersonaEntity: objPersona,
