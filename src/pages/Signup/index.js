@@ -32,6 +32,7 @@ class Signup extends Component {
     }
 
     handle_onChange = (e) => {
+        console.log("clave: ", e.target.value);
         this.setState({ [e.target.name]: e.target.value })
     }
 
@@ -161,7 +162,7 @@ class Signup extends Component {
                                     <CardBody>
                                         <FormGroup>
                                             <Row>
-                                            <Col sm="1"></Col>
+                                                <Col sm="1"></Col>
                                                 <Col sm="2" className="txtNegrita">Email: *</Col>
                                                 <Col sm="8">
                                                     <Input
@@ -271,6 +272,7 @@ class Signup extends Component {
                                                 <Col sm="4">
                                                     <Input
                                                         type="text"
+                                                        id='myInput'
                                                         name="superSecreto"
                                                         onChange={this.handle_onChange}
                                                         value={this.state.superSecreto}

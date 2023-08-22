@@ -8,3 +8,11 @@
 .loginAlertSuccess {
     color: green!important;
 }
+
+#noPaddingRigth{
+ padding-right: 0;
+}
+
+#noPaddingLeft{
+    padding-left: 0;
+   }

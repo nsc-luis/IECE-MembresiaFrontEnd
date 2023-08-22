@@ -553,6 +553,7 @@ class RegistroDePersonal extends Component {
                 })
             }
         }
+
         if (e.target.name === "per_Lugar_Bautismo") {
             if (e.target.value.length > 1) {
                 axios.get(`${helpers.url_api}/Sector/BuscarPorTexto/${e.target.value}`)
@@ -913,7 +914,7 @@ class RegistroDePersonal extends Component {
             idOficio2: this.state.idOficio2
         }
         try {
-            if (this.state.nuevaFoto) {
+            if (this.state.nuevaFoto) { //Se graba Foto y datos de la persona
                 helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                     .then(resFoto => {
                         if (resFoto.data.status === "success") {
@@ -943,7 +944,7 @@ class RegistroDePersonal extends Component {
                     })
                 )
             }
-            else {
+            else { //Se graban solo los datos de la persona, no la foto.
                 helpers.validaToken().then(helpers.authAxios.post(this.url + "/persona/AddPersonaHogar", datos)
                     .then(res => {
                         if (res.data.status === "success") {

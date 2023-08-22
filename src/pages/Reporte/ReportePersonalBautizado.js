@@ -41,7 +41,6 @@ export default function ReportePersonalBautizado() {
             setLider("OBISPO")
             setEntidadTitulo("TODOS LOS SECTORES")
 
-
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
                     setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
