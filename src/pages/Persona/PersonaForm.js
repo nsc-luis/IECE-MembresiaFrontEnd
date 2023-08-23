@@ -372,7 +372,8 @@ class PersonaForm extends Component {
 
             // Creando cadena de validacion de duplicados
             //var RFCSinHomo = ap[0] + pv + am[0] + n[0] + y + f[1] + f[2]
-            var RFCSinHomo = ap[0] + pv + am + n[0] + y + f[1] + f[2];
+            //var RFCSinHomo = ap[0] + pv + am + n[0] + y + f[1] + f[2];
+            var RFCSinHomo = ap[0] + ap[1] + n[0] + n[1] + am + f[2] + f[1] + f[0];
 
             changeRFCSinHomo(RFCSinHomo);
             getPersonaByRFCSinHomo(RFCSinHomo);
