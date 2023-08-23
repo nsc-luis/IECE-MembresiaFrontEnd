@@ -377,6 +377,7 @@ class PersonaForm extends Component {
 
             changeRFCSinHomo(RFCSinHomo);
             getPersonaByRFCSinHomo(RFCSinHomo);
+
         }
 
         // RECUPERA INFO DE PERSONA DUPLICADA DE ACUERDO AL RFC (SIN HOMOCLAVE)
