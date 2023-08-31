@@ -72,7 +72,6 @@ class RegistroDePersonal extends Component {
 
         })
 
-
         if (localStorage.getItem("idPersona") === "0") {//Si se trata de un Nuevo Registro , No Edición Ni de un No Bautizado que pasa a Bautizado
             this.setState({
                 foto: `${helpers.url_api}/Foto/FotoDefault`,
@@ -91,6 +90,7 @@ class RegistroDePersonal extends Component {
                     pro_Profesion_Oficio2: "",
                     per_Nombre_Padre: "",
                     per_Nombre_Madre: "",
+                    per_Nombre_Completo: "",
                     per_Nombre_Abuelo_Paterno: "",
                     per_Nombre_Abuela_Paterna: "",
                     per_Nombre_Abuelo_Materno: "",
@@ -233,8 +233,8 @@ class RegistroDePersonal extends Component {
     }
 
     const_regex = {
-        alphaSpaceRequired: /^[a-zA-Z]{1}[a-zA-ZÑ\d\s]{0,37}$/,
-        alphaSpace: /^[a-zA-ZÑ\s]{0,37}$/,
+        alphaSpaceRequired: /^[a-zA-ZáéíóúÁÉÍÓÚ]{1}[a-zA-ZÑáéíóúÁÉÍÓÚ\d\s]{0,37}$/,
+        alphaSpace: /^[a-zA-ZÑáéíóúÁÉÍÓÚ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
     }
 
@@ -673,7 +673,7 @@ class RegistroDePersonal extends Component {
     }
 
     fnGuardaPersona = async (datos) => { //Graba persona en un Hogar Nuevo
-        console.log("Entra en funcion GuardaPersona", this.state.idOficio1, this.state.idOficio2, datos)
+        //console.log("Entra en funcion GuardaPersona", this.state.idOficio1, this.state.idOficio2, datos)
         var info = {
             PersonaEntity: datos.PersonaEntity,
             HogarDomicilioEntity: datos.HogarDomicilioEntity,
@@ -816,7 +816,7 @@ class RegistroDePersonal extends Component {
             idOficio1: this.state.idOficio1,
             idOficio2: this.state.idOficio2
         };
-        console.log("Info_Editar: ", info)
+        //console.log("Info_Editar: ", info)
         if (this.state.nuevaFoto) {
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/AgregarFoto`, this.state.formDataFoto)
                 .then(res => {
@@ -1011,11 +1011,11 @@ class RegistroDePersonal extends Component {
     }
 
     render() {
-        console.log("idOficio1", this.state.idOficio1);
+        /* console.log("idOficio1", this.state.idOficio1);
         console.log("idOficio2", this.state.idOficio2);
         console.log("nvaProf1", this.state.descNvaProfesion.nvaProf1);
         console.log("nvaProf2", this.state.descNvaProfesion.nvaProf2);
-        console.log("LugarBautismo", this.state.idSectorBautismo);
+        console.log("LugarBautismo", this.state.idSectorBautismo); */
 
         return (
             <>

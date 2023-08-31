@@ -46,6 +46,9 @@ import Layout from './pages/Layout';
 import RegistroDePersonal from './pages/Persona/RegistroDePersona';
 import RegistroPersonalMinisterial from './pages/RegistroPersonalMinisterial';
 import BajaPersonalMinisterial from './pages/BajaPersonalMinisterial';
+import AgrupacionesMusicales from './pages/Sector/AgrupacionesMusicales';
+import Comisiones from './pages/Sector/Comisiones';
+import Sociedades from './pages/Sector/Sociedades';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -94,6 +97,10 @@ class Router extends Component {
                         {/* HOGARES */}
                         <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                         <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
+                        {/* SECTOR */}
+                        <Route exact path="/AgrupacionesMusicales" component={AgrupacionesMusicales} />
+                        <Route exact path="/Comisiones" component={Comisiones} />
+                        <Route exact path="/Sociedades" component={Sociedades} />
                         {/* SUCESOS ESTADISTICOS */}
                         <Route exact path="/Matrimonio" component={Matrimonio} />
                         <Route exact path="/Legalizacion" component={Legalizacion} />
@@ -107,20 +114,16 @@ class Router extends Component {
                         <Route exact path="/SecretarioDelDistrito" component={SecretarioDelDistrito} />
                         <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
                         <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
-
                         {/* REPORTES */}
                         <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
                         <Route exact path="/RptBautizados" component={RptBautizados} />
                         <Route exact path="/ResumenTransacciones" component={ResumenTransacciones} />
-
-
                         {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                         <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                         <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                         <Route exact path="/ReportePersonalMinisterial" component={ReportePersonalMinisterial} />
-
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />

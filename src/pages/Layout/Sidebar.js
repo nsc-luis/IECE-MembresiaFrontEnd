@@ -528,6 +528,47 @@ class Sidebar extends Component {
 
                     {/* Heading */}
                     <div className="sidebar-heading">
+                        Sector
+                    </div>
+                    
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Sección: Sector', 'Agrupaciones musicales.')}
+                            to="/AgrupacionesMusicales"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Agrupaciones musicales</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Sección: Sector', 'Sociedades.')}
+                            to="/Sociedades"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Sociedades</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Sección: Sector', 'Comisiones.')}
+                            to="/Comisiones"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Comisiones</span>
+                        </Link>
+                    </li>
+
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
+
+                    {/* Heading */}
+                    <div className="sidebar-heading">
                         Transacciones Especiales
                     </div>
 

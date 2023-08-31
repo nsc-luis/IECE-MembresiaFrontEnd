@@ -309,17 +309,47 @@ class ListaDePersonal extends Component {
 
         this.setState({ fNombre: e.target.value });
         if (e.target.value !== '' && e.target.value.length > 2) {
+
+            let nombreSinAcentos = ""
+            let texto = e.target.value.toUpperCase();
+            texto.split("").forEach(element => {
+                element.replace(element, () => {
+                    switch (element) {
+                        case "Á":
+                            element = "A"
+                            break;
+                        case "É":
+                            element = "E"
+                            break;
+                        case "Í":
+                            element = "I"
+                            break;
+                        case "Ó":
+                            element = "O"
+                            break;
+                        case "Ú":
+                            element = "U"
+                            break;
+                        default:
+                            element = element
+                            break;
+                    }
+                })
+                nombreSinAcentos = nombreSinAcentos + element
+            });
+
             var result = this.state.personas.filter((obj) => {
-                const query = e.target.value.toLowerCase();
-                console.log("Query: ", query)
-                if (obj.persona.per_Apellido_Materno) {
+                const query = nombreSinAcentos.toLowerCase();
+                return obj.persona.per_Nombre_Completo.toLowerCase().includes(query)
+
+                /* if (obj.persona.per_Apellido_Materno) {
                     return obj.persona.per_Nombre.toLowerCase().includes(query)
                         || obj.persona.per_Apellido_Paterno.toLowerCase().includes(query)
                         || obj.persona.per_Apellido_Materno.toLowerCase().includes(query)
                 } else {
                     return obj.persona.per_Nombre.toLowerCase().includes(query)
                         || obj.persona.per_Apellido_Paterno.toLowerCase().includes(query)
-                }
+                } */
             });
             this.setState({
                 personas: result,

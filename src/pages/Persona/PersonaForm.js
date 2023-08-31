@@ -20,7 +20,7 @@ class PersonaForm extends Component {
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
-        alphaSpaceRequired: /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/,
+        alphaSpaceRequired: /^[a-zA-ZáéíóúÁÉÍÓÚ]{2}[a-zA-ZÑáéíóúÁÉÍÓÚ\d\s]{0,37}$/,
         alfaSpace: /^[a-zA-ZÑ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
         formatoEmail: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -332,8 +332,8 @@ class PersonaForm extends Component {
 
 
         /* const per_Apellido_Materno = document.getElementById('per_Apellido_Materno') */
-        const alphaSpaceRequired = /^[a-zA-Z]{1}[a-zA-ZÑ\s]{0,37}$/;
-        const alphaSpace = /^[a-zA-ZÑ\s]{0,37}$/;
+        const alphaSpaceRequired = /^[a-zA-ZáéíóúÁÉÍÓÚ]{1}[a-zA-ZÑáéíóúÁÉÍÓÚ\s]{0,37}$/;
+        const alphaSpace = /^[a-zA-ZÑáéíóúÁÉÍÓÚ\s]{0,37}$/;
 
         // ESTRUCTURA EL RFC Y COMPRUEBA DUPLICADOS
         const CheckNvaPersona = (per_Nombre, per_Apellido_Paterno, per_Apellido_Materno, per_Fecha_Nacimiento) => {
@@ -375,8 +375,35 @@ class PersonaForm extends Component {
             //var RFCSinHomo = ap[0] + pv + am + n[0] + y + f[1] + f[2];
             var RFCSinHomo = ap[0] + ap[1] + n[0] + n[1] + am + f[2] + f[1] + f[0];
 
-            changeRFCSinHomo(RFCSinHomo);
-            getPersonaByRFCSinHomo(RFCSinHomo);
+            var RFCSinHomo2 = ""
+            RFCSinHomo.split("").forEach(element => {
+                element.replace(element, () => {
+                    switch (element) {
+                        case "Á":
+                            element = "A"
+                            break;
+                        case "É":
+                            element = "E"
+                            break;
+                        case "Í":
+                            element = "I"
+                            break;
+                        case "Ó":
+                            element = "O"
+                            break;
+                        case "Ú":
+                            element = "U"
+                            break;
+                        default:
+                            element = element
+                            break;
+                    }
+                })
+                RFCSinHomo2 = RFCSinHomo2 + element
+            });
+
+            changeRFCSinHomo(RFCSinHomo2);
+            getPersonaByRFCSinHomo(RFCSinHomo2);
         }
 
         // RECUPERA INFO DE PERSONA DUPLICADA DE ACUERDO AL RFC (SIN HOMOCLAVE)
