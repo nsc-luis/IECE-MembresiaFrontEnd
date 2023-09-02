@@ -46,9 +46,6 @@ import Layout from './pages/Layout';
 import RegistroDePersonal from './pages/Persona/RegistroDePersona';
 import RegistroPersonalMinisterial from './pages/RegistroPersonalMinisterial';
 import BajaPersonalMinisterial from './pages/BajaPersonalMinisterial';
-import AgrupacionesMusicales from './pages/Sector/AgrupacionesMusicales';
-import Comisiones from './pages/Sector/Comisiones';
-import Sociedades from './pages/Sector/Sociedades';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -98,9 +95,7 @@ class Router extends Component {
                         <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                         <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
                         {/* SECTOR */}
-                        <Route exact path="/AgrupacionesMusicales" component={AgrupacionesMusicales} />
-                        <Route exact path="/Comisiones" component={Comisiones} />
-                        <Route exact path="/Sociedades" component={Sociedades} />
+                        
                         {/* SUCESOS ESTADISTICOS */}
                         <Route exact path="/Matrimonio" component={Matrimonio} />
                         <Route exact path="/Legalizacion" component={Legalizacion} />
