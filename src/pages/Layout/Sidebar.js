@@ -596,41 +596,6 @@ class Sidebar extends Component {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseAdministrativo" aria-expanded="true" aria-controls="collapsePages">
-                            <i className="fas fa-user-tie"></i>
-                            <span>Personal Administrativo</span>
-                        </Link>
-                        <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
-                            <div className="bg-white py-2 collapse-inner rounded">
-                                <Link
-                                    className="collapse-item"
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del sector.')}
-                                    to="/SecretarioDelSector"
-                                >
-                                    {/* <i className="fas fa-edit"></i> */}
-                                    <span>Secretario del sector</span>
-                                </Link>
-                                <Link
-                                    className="collapse-item"
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del sector.')}
-                                    to="/TesoreroDelSector"
-                                >
-                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
-                                    <span>Tesorero del sector</span>
-                                </Link>
-                                {/* <Link
-                                    className="collapse-item"
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Auxiliares del sector.')}
-                                    to="/Auxiliares"
-                                >
-                                    {/* <i className="fas fa-user-tie"></i> 
-                                    <span>Auxiliares del sector</span>
-                                </Link> */}
-                            </div>
-                        </div>
-                    </li>
-
-                    <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMinisterial" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-user-tie"></i>
                             <span>Personal Ministerial</span>
@@ -654,6 +619,45 @@ class Sidebar extends Component {
                             </div>
                         </div>
                     </li>
+
+
+                    <li className="nav-item">
+                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseAdministrativo" aria-expanded="true" aria-controls="collapsePages">
+                            <i className="fas fa-user-tie"></i>
+                            <span>Personal Administrativo</span>
+                        </Link>
+                        <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
+                            <div className="bg-white py-2 collapse-inner rounded">
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del sector.')}
+                                    to="/SecretarioDelSector"
+                                >
+                                    {/* <i className="fas fa-edit"></i> */}
+                                    <span>Secretario del sector</span>
+                                </Link>
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del sector.')}
+                                    to="/TesoreroDelSector"
+                                >
+                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
+                                    <span>Tesorero del sector</span>
+                                </Link>
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Comisiones Locales')}
+                                    to="/ComisionesLocales"
+                                >
+                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
+                                    <span>Comisiones Locales</span>
+                                </Link>
+
+                            </div>
+                        </div>
+                    </li>
+
+
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />

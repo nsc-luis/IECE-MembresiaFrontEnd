@@ -718,6 +718,7 @@ class PersonaForm extends Component {
                                                                 value={form.per_Nombre}
                                                                 className="form-control"
                                                                 autoComplete="nope"
+                                                                maxlength="40"
                                                             />
                                                         </div>
                                                         {per_Nombre_NoValido &&
@@ -741,6 +742,7 @@ class PersonaForm extends Component {
                                                                 value={form.per_Apellido_Paterno}
                                                                 className="form-control"
                                                                 autoComplete="nope"
+                                                                maxlength="40"
                                                                 title="En casos ordinarios, ingresar el apellido Paterno, 
                                                                 y en casos Extraordinarios, se puede ingresar el apellido de la Madre si éste es el Apellido Principal de la persona."
                                                             />
@@ -766,6 +768,7 @@ class PersonaForm extends Component {
                                                                 value={form.per_Apellido_Materno}
                                                                 id="per_Apellido_Materno"
                                                                 className="form-control"
+                                                                maxlength="40"
                                                                 title="En casos ordinarios, ingresar el apellido Materno, 
                                                                 y en casos Extraordinarios, se puede dejar en blanco si oficialmente 
                                                                 No cuenta con un Apellido Secundario."
@@ -916,6 +919,7 @@ class PersonaForm extends Component {
                                                                             className="form-control"
                                                                             value={form.per_Nombre}
                                                                             disabled
+                                                                            maxlength="40"
                                                                         />
                                                                         <label><strong>*</strong> Nombre(s)</label>
                                                                     </div>
@@ -925,6 +929,7 @@ class PersonaForm extends Component {
                                                                             className="form-control"
                                                                             value={form.per_Apellido_Paterno}
                                                                             disabled
+                                                                            maxlength="40"
                                                                         />
                                                                         <label><strong>*</strong> Apellido Paterno o Principal</label>
                                                                     </div>
@@ -934,6 +939,7 @@ class PersonaForm extends Component {
                                                                             className="form-control"
                                                                             value={form.per_Apellido_Materno}
                                                                             disabled
+                                                                            maxlength="40"
                                                                         />
                                                                         <label>Apellido Materno o Secundario</label>
                                                                     </div>
@@ -998,6 +1004,7 @@ class PersonaForm extends Component {
                                                                             className="form-control"
                                                                             value={form.per_Nacionalidad === null ? "" : form.per_Nacionalidad}
                                                                             autoComplete="nope"
+                                                                            maxlength="80"
                                                                         />
                                                                         <label>Nacionalidad</label>
                                                                     </FormGroup>
@@ -1025,6 +1032,7 @@ class PersonaForm extends Component {
                                                                             invalid={this.state.emailInvalido}
                                                                             value={form.per_Email_Personal === null ? "" : form.per_Email_Personal}
                                                                             autoComplete="nope"
+                                                                            maxlength="80"
                                                                         />
                                                                         <label>Email</label>
                                                                         <FormFeedback>{this.state.mensajes.emailInvalido}</FormFeedback>
@@ -1042,6 +1050,7 @@ class PersonaForm extends Component {
                                                                                 invalid={this.state.telMovilInvalido}
                                                                                 value={form.per_Telefono_Movil === null ? "" : form.per_Telefono_Movil}
                                                                                 autoComplete="nope"
+                                                                                maxlength="25"
                                                                             />
                                                                             <label>Teléfono móvil/celular</label>
                                                                             <FormFeedback>{this.state.mensajes.telMovilInvalido}</FormFeedback>
@@ -1093,6 +1102,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf1}
                                                                                 autoComplete="nope"
+                                                                                maxlength="100"
                                                                                 title="Si no encontró en la Lista desplegada el Oficio/Profesión deseada,
                                                                                 Registre un Nuevo Oficio/Profesión. Éste se agregará a la Base de Datos de Oficios/Profesiones."
                                                                             />
@@ -1153,6 +1163,7 @@ class PersonaForm extends Component {
                                                                                 onChange={handle_descNvaProfesion}
                                                                                 value={descNvaProfesion.nvaProf2}
                                                                                 autoComplete="nope"
+                                                                                maxlength="100"
                                                                                 title="Si no encontró en la Lista desplegada el Oficio/Profesión deseada,
                                                                                 Registre un Nuevo Oficio/Profesión. Éste se agregará a la Base de Datos de Oficios/Profesiones."
                                                                             />
@@ -1219,6 +1230,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Padre}
                                                                                     autoComplete="nope"
+                                                                                    maxlength="200"
                                                                                 />
                                                                                 <label>Padre</label>
                                                                             </div>
@@ -1230,6 +1242,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Madre}
                                                                                     autoComplete="nope"
+                                                                                    maxlength="200"
                                                                                 />
                                                                                 <label>Madre</label>
                                                                             </div>
@@ -1246,6 +1259,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuelo_Paterno}
                                                                                     autoComplete="nope"
+                                                                                    maxlength="200"
                                                                                 />
                                                                                 <label>Abuelo Paterno</label>
                                                                             </div>
@@ -1257,6 +1271,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuela_Paterna}
                                                                                     autoComplete="nope"
+                                                                                    maxlength="200"
                                                                                 />
                                                                                 <label>Abuela Paterna</label>
                                                                             </div>
@@ -1273,6 +1288,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuelo_Materno}
                                                                                     autoComplete="nope"
+                                                                                    maxlength="200"
                                                                                 />
                                                                                 <label>Abuelo Materno</label>
                                                                             </div>
@@ -1284,6 +1300,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuela_Materna}
                                                                                     autoComplete="nope"
+                                                                                    maxlength="200"
                                                                                 />
                                                                                 <label>Abuela Materna</label>
                                                                             </div>
@@ -1332,6 +1349,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Nombre_Conyuge}
                                                                                             autoComplete="nope"
+                                                                                            maxlength="200"
                                                                                         />
                                                                                         <label>Nombre Conyuge</label>
                                                                                     </div>
@@ -1364,6 +1382,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Num_Acta_Boda_Civil}
                                                                                             autoComplete="nope"
+                                                                                            maxlength="200"
                                                                                         />
                                                                                         <label>Num. de acta Boda Civil/Num. de Registro de Matrimonio</label>
                                                                                     </div>
@@ -1375,6 +1394,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Libro_Acta_Boda_Civil}
                                                                                             autoComplete="nope"
+                                                                                            maxlength="200"
                                                                                         />
                                                                                         <label>Libro de acta de Boda Civil/ Libro de Registro de Matrimonio</label>
                                                                                     </div>
@@ -1386,6 +1406,7 @@ class PersonaForm extends Component {
                                                                                             className="form-control"
                                                                                             value={form.per_Oficialia_Boda_Civil}
                                                                                             autoComplete="nope"
+                                                                                            maxlength="200"
                                                                                         />
                                                                                         <label>Oficialía de Boda Civil/ Oficina de Registros</label>
                                                                                     </div>
@@ -1400,6 +1421,7 @@ class PersonaForm extends Component {
                                                                                             onChange={onChange}
                                                                                             value={form.per_Registro_Civil}
                                                                                             autoComplete="nope"
+                                                                                            maxlength="200"
                                                                                         />
                                                                                         <label htmlFor="per_Registro_Civil">Del Registro Civil en/Lugar de la Oficina de Registros</label>
                                                                                     </FormGroup>
@@ -1431,6 +1453,7 @@ class PersonaForm extends Component {
                                                                                                     className="form-control"
                                                                                                     value={form.per_Lugar_Boda_Eclesiastica}
                                                                                                     autoComplete="nope"
+                                                                                                    maxlength="250"
                                                                                                 />
                                                                                                 <label>Lugar boda eclesiástica</label>
                                                                                             </FormGroup>
@@ -1444,6 +1467,7 @@ class PersonaForm extends Component {
                                                                                                     className="form-control"
                                                                                                     value={form.per_Apellido_Casada}
                                                                                                     autoComplete="nope"
+                                                                                                    maxlength="50"
                                                                                                     title="En los Países donde sea aplicable y si se desea que una Mujer Casada aparezca con Apellido de Casada,
                                                                                                     ingrese aquí el Apellido del Esposo. Pero si desea que aparezca con Apellidos de Soltera, deje en blanco esta caja de texto."
                                                                                                 />
@@ -1509,6 +1533,7 @@ class PersonaForm extends Component {
                                                                                                     className="form-control"
                                                                                                     value={form.per_Apellido_Casada}
                                                                                                     autoComplete="nope"
+                                                                                                    maxlength="50"
                                                                                                     title="En los Países donde sea aplicable y si se desea que una Mujer Casada aparezca con Apellido de Casada,
                                                                                                     ingrese aquí el Apellido del Esposo. Pero si desea que aparezca con Apellidos de Soltera, deje en blanco esta caja de texto."
                                                                                                 />
@@ -1573,6 +1598,7 @@ class PersonaForm extends Component {
                                                                                                 value={form.per_Lugar_Bautismo}
                                                                                                 className="form-control"
                                                                                                 autoComplete="nope"
+                                                                                                maxlength="150"
                                                                                                 title="Ingrese el nombre del Sector donde se bautizó. 
                                                                                                 Al ingresar las primeras letras del lugar, se desplegarán los Sectores que coinciden con la palabra tecleada y elija el Sector deseado.
                                                                                                 Si no se encuentra registrado el Sector deseado, puede escribir a texto libre el nombre de ese Sector donde se bautizó"
@@ -1608,6 +1634,7 @@ class PersonaForm extends Component {
                                                                                                 placeholder="DD/MM/AAAA"
                                                                                                 invalid={fechaBautismoInvalida}
                                                                                                 autoComplete="nope"
+                                                                                                maxlength="200"
                                                                                             />
                                                                                             <label>*Fecha de Bautismo</label>
                                                                                             <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
@@ -1657,6 +1684,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     invalid={this.state.fechaEspitiruSantoInvalida}
                                                                                     autoComplete="nope"
+
                                                                                 />
                                                                                 <label>Fecha en que recibió el Espíritu Santo</label>
                                                                                 <FormFeedback>{this.state.mensajes.fechaEspitiruSantoInvalida}</FormFeedback>
@@ -1672,6 +1700,7 @@ class PersonaForm extends Component {
                                                                                     className="form-control"
                                                                                     onKeyPress={this.handleKeyPress}
                                                                                     autoComplete="nope"
+                                                                                    maxlength="200"
                                                                                     title="Si fueron varios Ministros los que le impusieron las manos, escriba a renglon seguido
                                                                                     el Nombre y Apellidos de cada uno de ellos."
                                                                                 />
@@ -1785,7 +1814,7 @@ class PersonaForm extends Component {
                                                                                     onChange={handle_ComentarioHistorialTransacciones}
                                                                                     type='text'
                                                                                     placeholder='Comentario opcional'
-                                                                                    maxLength={200}
+                                                                                    maxlength="200"
                                                                                 />
                                                                             </div>
                                                                         </div>

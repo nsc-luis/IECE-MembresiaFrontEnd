@@ -183,6 +183,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Calle}
                                         onChange={onChangeDomicilio}
                                         autoComplete="nope"
+                                        maxlength="80"
                                     />
                                     <label>Calle *</label>
                                 </div>
@@ -194,6 +195,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Exterior}
                                         onChange={onChangeDomicilio}
                                         autoComplete="nope"
+                                        maxlength="20"
                                     />
                                     <label>Número Exterior</label>
                                 </div>
@@ -205,6 +207,7 @@ class Domicilio extends React.Component {
                                         value={domicilio.hd_Numero_Interior}
                                         onChange={onChangeDomicilio}
                                         autoComplete="nope"
+                                        maxlength="20"
                                     />
                                     <label>Número Interior</label>
                                 </div>
@@ -242,6 +245,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Subdivision}
                                             onChange={onChangeDomicilio}
+                                            maxlength="80"
                                         />
                                         <label>Nombre del Asentamiento/Barrio/Subdivisión/Referencia</label>
                                     </div>
@@ -253,6 +257,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Localidad}
                                             onChange={onChangeDomicilio}
                                             autoComplete="nope"
+                                            maxlength="80"
                                         />
                                         <label>Localidad/Poblado</label>
                                     </div>
@@ -269,6 +274,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Municipio_Ciudad}
                                             onChange={onChangeDomicilio}
                                             autoComplete="nope"
+                                            maxlength="80"
                                         />
                                         <label>Municipio/Ciudad *</label>
                                     </div>
@@ -280,6 +286,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_CP}
                                             onChange={onChangeDomicilio}
                                             autoComplete="nope"
+                                            maxlength="8"
                                         />
                                         <label>Código Postal</label>
                                     </div>
@@ -291,6 +298,7 @@ class Domicilio extends React.Component {
                                             value={domicilio.hd_Telefono}
                                             onChange={onChangeDomicilio}
                                             autoComplete="nope"
+                                            maxlength="25"
                                         />
                                         <label>Teléfono de Casa</label>
                                     </div>
