@@ -723,7 +723,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {per_Nombre_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo Requerido, sólo acepta letras (Sin acentos) y espacios.
+                                                                Campo Requerido, sólo acepta letras y espacios.
                                                             </span>
                                                         }
                                                     </div>
@@ -749,7 +749,7 @@ class PersonaForm extends Component {
                                                         </div>
                                                         {per_Apellido_Paterno_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo Requerido, sólo acepta letras (Sin acentos) y espacios.
+                                                                Campo Requerido, sólo acepta letras y espacios.
                                                             </span>
                                                         }
                                                     </div>
