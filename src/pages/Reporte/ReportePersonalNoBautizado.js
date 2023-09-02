@@ -31,7 +31,7 @@ export default function ReportePersonalNoBautizado() {
 
     useEffect(() => {
 
-        if (sector == null) {
+        if (sector === null) {
             setSectorSeleccionado("todos");
             getPersonasDistrito();
             setLider("OBISPO")
@@ -40,7 +40,7 @@ export default function ReportePersonalNoBautizado() {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR"))
                 })
             )
 
@@ -134,7 +134,7 @@ export default function ReportePersonalNoBautizado() {
         console.log("Sector: ", sectores);
         sectores.map(sec => {
 
-            if (sec.sec_Id_Sector == sector) {
+            if (sec.sec_Id_Sector === sector) {
                 setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
                 //console.log("entidadTitulo: ",sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }

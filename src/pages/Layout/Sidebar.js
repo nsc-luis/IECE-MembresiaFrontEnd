@@ -105,7 +105,7 @@ class Sidebar extends Component {
     //Despues de Seleccionar a un Bautizado para Edición/Actualización
     invocaFormularioDePersona = () => {
 
-        if (this.state.personaSeleccionada == 0) {
+        if (this.state.personaSeleccionada === 0) {
             alert("No ha elegido la Persona que desea actualizar. Elija una.");
             return false;
         }
@@ -118,7 +118,7 @@ class Sidebar extends Component {
 
     //Despues de Seleccionar a un NoBautizado para Edición/Actualización
     invocaFormularioDePersonaNB = () => {
-        if (this.state.personaSeleccionada == 0) {
+        if (this.state.personaSeleccionada === 0) {
             alert("No ha elegido la Persona que desea actualizar. Elija una.");
             return false;
         }
@@ -224,7 +224,7 @@ class Sidebar extends Component {
     }
 
     render() {
-        console.log("PersonaSeleccionada: ", this.state.personaSeleccionada);
+        //console.log("PersonaSeleccionada: ", this.state.personaSeleccionada);
         return (
             <React.Fragment>
                 {/* Sidebar */}
@@ -527,7 +527,7 @@ class Sidebar extends Component {
                     <hr className="sidebar-divider" />
 
                     {/* Heading */}
-                    <div className="sidebar-heading">
+                   {/*  <div className="sidebar-heading">
                         Sector
                     </div>
                     
@@ -562,7 +562,7 @@ class Sidebar extends Component {
                             <i className="fas fa-address-book"></i>
                             <span>Comisiones</span>
                         </Link>
-                    </li>
+                    </li> */}
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
@@ -773,7 +773,7 @@ class Sidebar extends Component {
                                                 return (
                                                     <React.Fragment key={persona.per_Id_Persona}>
                                                         <option value={persona.per_Id_Persona} >
-                                                            {persona.per_Nombre} {(persona.per_Apellido_Casada == "" || persona.per_Apellido_Casada == null) ? persona.per_Apellido_Paterno : (persona.per_Apellido_Casada + "* " + persona.per_Apellido_Paterno)} {persona.per_Apellido_Materno}
+                                                            {persona.per_Nombre} {(persona.per_Apellido_Casada === "" || persona.per_Apellido_Casada === null) ? persona.per_Apellido_Paterno : (persona.per_Apellido_Casada + "* " + persona.per_Apellido_Paterno)} {persona.per_Apellido_Materno}
                                                         </option>
                                                     </React.Fragment>
                                                 )
@@ -987,7 +987,7 @@ class Sidebar extends Component {
                                                     return (
                                                         <React.Fragment key={persona.per_Id_Persona}>
                                                             <option value={persona.per_Id_Persona} >
-                                                                {persona.per_Nombre} {(persona.per_Apellido_Casada == "" || persona.per_Apellido_Casada == null) ? persona.per_Apellido_Paterno : (persona.per_Apellido_Casada + "* " + persona.per_Apellido_Paterno)} {persona.per_Apellido_Materno}
+                                                                {persona.per_Nombre} {(persona.per_Apellido_Casada === "" || persona.per_Apellido_Casada === null) ? persona.per_Apellido_Paterno : (persona.per_Apellido_Casada + "* " + persona.per_Apellido_Paterno)} {persona.per_Apellido_Materno}
                                                             </option>
                                                         </React.Fragment>
                                                     )

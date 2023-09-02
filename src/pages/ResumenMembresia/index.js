@@ -82,7 +82,7 @@ class ResumenMembresia extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
-                        sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR")
+                        sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR")
                     })
                 })
             )

@@ -162,7 +162,7 @@ class ResumenTransacciones extends Component {
         window.scrollTo(0, 0);
 
         //Para sesión de Obispo
-        if (sector == null) {
+        if (sector === null) {
             //Cambia estado de variables relacionadas a las Fechas y la jurisdicción correspondiente al tipo de Sesión
             this.setState({
                 fsd: {
@@ -180,7 +180,7 @@ class ResumenTransacciones extends Component {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    this.setState({ sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR") });
+                    this.setState({ sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR") });
                 })
             )
 
@@ -256,7 +256,7 @@ class ResumenTransacciones extends Component {
     getTitulo = (sector) => {
         console.log("SectorParaTitulo: ", this.state.sectores);
         this.state.sectores.map(sec => {
-            if (sec.sec_Id_Sector == sector) {
+            if (sec.sec_Id_Sector === sector) {
                 this.setState({ entidadTitulo: (sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias) })
                 console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }
@@ -388,7 +388,7 @@ class ResumenTransacciones extends Component {
         }
 
 
-        if (this.state.sectorSeleccionado == "todos") { //si es Todo el Distrito
+        if (this.state.sectorSeleccionado === "todos") { //si es Todo el Distrito
 
             //Cambia estado de variable de la jurisdicción correspondiente al tipo de Sesión
             this.setState({
@@ -601,7 +601,7 @@ class ResumenTransacciones extends Component {
             });
         } else {
             hte = data.filter(hte => { //Si está en modo Distrito, no se desglosarán las Transacciones de Edición, ni las de Movimientos Internos.
-                if (hte.ct_Tipo === "EDICION" || hte.ct_Codigo_Transaccion == 11003 || hte.ct_Codigo_Transaccion == 11104 || hte.ct_Codigo_Transaccion == 12002 || hte.ct_Codigo_Transaccion == 12103) {
+                if (hte.ct_Tipo === "EDICION" || hte.ct_Codigo_Transaccion === 11003 || hte.ct_Codigo_Transaccion === 11104 || hte.ct_Codigo_Transaccion === 12002 || hte.ct_Codigo_Transaccion === 12103) {
                     return false
                 } else {
                     return true
@@ -715,7 +715,7 @@ class ResumenTransacciones extends Component {
         return (
             <>
                 <Container md>
-                    {sector == null &&
+                    {sector === null &&
                         <>
                             <FormGroup>
                                 <Row>

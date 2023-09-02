@@ -124,7 +124,7 @@ class ListaDePersonal extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     this.setState({
-                        sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR")
+                        sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR")
                     })
                 })
             );
@@ -533,9 +533,9 @@ class ListaDePersonal extends Component {
             "Nacionalidad": info.persona.per_Nacionalidad,
             "LugarNacimiento": info.persona.per_Lugar_De_Nacimiento,
             "FechaNacimiento": info.persona.per_Fecha_Nacimiento ? (moment(info.persona.per_Fecha_Nacimiento).format('D/MMM/YYYY')) : "",
-            "NombreDePadres": `${info.persona.per_Nombre_Padre} ${info.persona.per_Nombre_Madre != "" ? `y ${info.persona.per_Nombre_Madre}` : ""}`,
-            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno} ${info.persona.per_Nombre_Abuela_Paterna != "" ? `y ${info.persona.per_Nombre_Abuela_Paterna}` : ""}`,
-            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno} ${info.persona.per_Nombre_Abuela_Materna != "" ? `y ${info.persona.per_Nombre_Abuela_Materna}` : ""}`,
+            "NombreDePadres": `${info.persona.per_Nombre_Padre} ${info.persona.per_Nombre_Madre !== "" ? `y ${info.persona.per_Nombre_Madre}` : ""}`,
+            "PadresPaternos": `${info.persona.per_Nombre_Abuelo_Paterno} ${info.persona.per_Nombre_Abuela_Paterna !== "" ? `y ${info.persona.per_Nombre_Abuela_Paterna}` : ""}`,
+            "PadresMaternos": `${info.persona.per_Nombre_Abuelo_Materno} ${info.persona.per_Nombre_Abuela_Materna !== "" ? `y ${info.persona.per_Nombre_Abuela_Materna}` : ""}`,
             "EstadoCivil": info.persona.per_Estado_Civil,
             "FechaBodaCivil": info.persona.per_Fecha_Boda_Civil ? (moment(info.persona.per_Fecha_Boda_Civil).format('D/MMM/YYYY')) : "",
             "Acta": info.persona.per_Num_Acta_Boda_Civil,
@@ -555,7 +555,7 @@ class ListaDePersonal extends Component {
             "Puestos": info.persona.per_Cargos_Desempenados,
             "CambiosDomicilio": info.persona.per_Cambios_De_Domicilio,
             "Domicilio": info.domicilio[0].direccion,
-            "Telefonos": `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? ("PERSONAL: " + info.persona.per_Telefono_Movil) : ""} ${info.domicilio[0].hd_Telefono == null || info.domicilio[0].hd_Telefono == "" ? "" : ("- CASA: " + info.domicilio[0].hd_Telefono)}`,
+            "Telefonos": `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? ("PERSONAL: " + info.persona.per_Telefono_Movil) : ""} ${info.domicilio[0].hd_Telefono === null || info.domicilio[0].hd_Telefono === "" ? "" : ("- CASA: " + info.domicilio[0].hd_Telefono)}`,
             "Email": `${info.persona.per_Email_Personal !== null || info.persona.per_Email_Personal !== "" ? info.persona.per_Email_Personal : "-"}`,
             "Oficio1": `${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`,
             "Oficio2": `${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`,

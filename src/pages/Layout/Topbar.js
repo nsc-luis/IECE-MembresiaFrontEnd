@@ -91,7 +91,7 @@ class Topbar extends Component {
 
 
                     <button onClick={this.handleDownloadManualUsuario} className="ml-auto text-TopBar text-center border-0 bg-transparent">
-                        <div className='lead'><i class="fas fa-fw fa-file-download pb-0"></i></div>
+                        <div className='lead'><i className="fas fa-fw fa-file-download pb-0"></i></div>
                         <div className="p-0">Manual de Usuario</div>
                     </button>
 
