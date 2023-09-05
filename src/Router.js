@@ -47,6 +47,7 @@ import RegistroDePersonal from './pages/Persona/RegistroDePersona';
 import RegistroPersonalMinisterial from './pages/RegistroPersonalMinisterial';
 import BajaPersonalMinisterial from './pages/BajaPersonalMinisterial';
 import ComisionesLocales from './pages/PersonalAdministrativo/ComisionesLocales';
+import Administracion from './pages/PersonalAdministrativo/Administracion';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -107,6 +108,7 @@ class Router extends Component {
                         <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
                         <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
 
+                        <Route exact path="/Administracion" component={Administracion} />
                         <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
                         <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} />
                         <Route exact path="/TesoreroDelDistrito" component={TesoreroDelDistrito} />

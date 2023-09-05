@@ -527,7 +527,7 @@ class Sidebar extends Component {
                     <hr className="sidebar-divider" />
 
                     {/* Heading */}
-                   {/*  <div className="sidebar-heading">
+                    {/*  <div className="sidebar-heading">
                         Sector
                     </div>
                     
@@ -628,6 +628,16 @@ class Sidebar extends Component {
                         </Link>
                         <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
+
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Administración.')}
+                                    to="/Administracion"
+                                >
+                                    {/* <i className="fas fa-edit"></i> */}
+                                    <span>Administración del sector</span>
+                                </Link>
+
                                 <Link
                                     className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del sector.')}

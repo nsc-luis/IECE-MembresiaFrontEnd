@@ -8,20 +8,12 @@ import { Link } from 'react-router-dom';
 import './style.css';
 
 class ComisionesLocales extends Component {
+
     constructor(props) {
         super(props);
         const fechaActual = new Date().toLocaleDateString();
         // Supongamos que tienes un array de datos con información de las comisiones, nombres e jerarquía.
         this.state = {
-            // data: [
-            //     { id: 1, comision: 'Comisión 1', nombre: 'Integrante 1', jerarquia: 3 },
-            //     { id: 2, comision: 'Comisión 2', nombre: 'Integrante 2', jerarquia: 1 },
-            //     { id: 3, comision: 'Comisión 1', nombre: 'Integrante 3', jerarquia: 2 },
-            //     // Agrega más datos según sea necesario
-            // ],
-
-
-
             comisiones: [],
             comisionesLocalesDisponibles: [],
             personasBautizadas: [],
@@ -41,7 +33,6 @@ class ComisionesLocales extends Component {
     }
 
     handle_BtnAgregarMostrarFormulario = () => {
-        console.log("clicked!")
         this.setState({
             mostrarFormulario: !this.state.mostrarFormulario,
             mostrarBotonAgregarIntegrante: !this.state.mostrarBotonAgregarIntegrante
@@ -55,7 +46,6 @@ class ComisionesLocales extends Component {
         //Sube el cursor hasta la parte superior
         window.scrollTo(0, 0);
     }
-
 
     getComisionesLocales = async () => {
         //console.log(helpers.authAxios.get((helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Local/GetComisionesBySector/${localStorage.getItem('sector')}`))))
@@ -72,10 +62,8 @@ class ComisionesLocales extends Component {
     }
 
     getComisionesLocalesBySector = async () => {
-        //console.log(helpers.authAxios.get((helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Local/GetComisionesBySector/${localStorage.getItem('sector')}`))))
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Local/GetComisionesBySector/${localStorage.getItem('sector')}`)
             .then(res => {
-                //console.log("comisiones: ", res.data.comisiones)
                 if (res.data.status === true)
                     this.setState({ comisiones: res.data.comisiones })
                 else {
@@ -99,16 +87,20 @@ class ComisionesLocales extends Component {
         )
     }
 
-
     handleChange = (e) => {
-        //console.log("comisionSeleccionada:", [e.target.name], e.target.value)
         this.setState({
             integranteComision: {
                 ...this.state.integranteComision,
                 [e.target.name]: e.target.value
             }
         })
-
+        
+        /* if (e.target.name === "comision_Id") {
+            var result = this.state.comisiones.filter((obj) => {
+                return obj.comision === "VIGILANCIA"
+            })
+            this.setState({ comisiones: result })
+        } */
     }
 
     // Función para manejar el evento "Dar de Baja"
@@ -252,7 +244,18 @@ class ComisionesLocales extends Component {
                             </FormGroup>
 
                             <Row>
-                                <Col xs="10"></Col>
+                                <Col xs="8"></Col>
+                                <Col xs="2" >
+                                    <Button
+                                        type="submit"
+                                        className="btn btn-secondary form-control"
+                                        name="btnGuardarIntegranteComision"
+                                        disabled={this.handle_BtnAgregarMostrarFormulario}
+                                    >
+                                        <span className="fa fa-times" style={{ paddingRight: "10px" }}></span>
+                                        Cancelar
+                                    </Button>
+                                </Col>
                                 <Col xs="2" >
                                     <Button
                                         type="submit"
