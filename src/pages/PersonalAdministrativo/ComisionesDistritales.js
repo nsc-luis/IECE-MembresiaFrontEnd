@@ -7,18 +7,17 @@ import {
 import { Link } from 'react-router-dom';
 import './style.css';
 
-class ComisionesLocales extends Component {
-
+class ComisionesDistritales extends Component {
     constructor(props) {
         super(props);
         const fechaActual = new Date().toLocaleDateString();
         // Supongamos que tienes un array de datos con información de las comisiones, nombres e jerarquía.
         this.state = {
             comisiones: [],
-            comisionesLocalesDisponibles: [],
+            comisionesDistritalesDisponibles: [],
             personasBautizadas: [],
             integranteComision: {
-                sector_Id: localStorage.getItem('sector'),
+                distrito_Id: localStorage.getItem('dto'),
                 comision_Id: "",
                 integrante_Id: "",
                 jerarquia: 0,
@@ -39,7 +38,7 @@ class ComisionesLocales extends Component {
         console.log("Inicializando Variables")
         this.setState({
             integranteComision: {
-                sector_Id: localStorage.getItem('sector'),
+                distrito_Id: localStorage.getItem('dto'),
                 comision_Id: "",
                 integrante_Id: "",
                 jerarquia: 0,
@@ -66,20 +65,21 @@ class ComisionesLocales extends Component {
     }
 
     componentDidMount() {
-        this.getComisionesLocalesBySector();
-        this.getComisionesLocales();
-        this.getBautizadosBySector();
+        this.getComisionesDistritalesByDistrito();
+        this.getComisionesDistritales();
+        this.getPersonalMinisterialByDistrito();
         //Sube el cursor hasta la parte superior
         window.scrollTo(0, 0);
     }
 
-    getComisionesLocales = async () => {
-        //console.log(helpers.authAxios.get((helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Local/GetComisionesBySector/${localStorage.getItem('sector')}`))))
-        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Comision_Local/GetComisionLocal`)
+
+    getComisionesDistritales = async () => {
+        //console.log(helpers.authAxios.get((helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Distrital/GetComisionesByDistrito/${localStorage.getItem('dto')}`))))
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Comision_Distrital/GetComisionDistrital`)
             .then(res => {
                 //console.log("comisionesDisponibles: ", res.data)
                 if (res.data.status === true)
-                    this.setState({ comisionesLocalesDisponibles: res.data.comisionesDisponibles })
+                    this.setState({ comisionesDistritalesDisponibles: res.data.comisionesDisponibles })
                 else {
                     alert("Error:\nNo se pudo consultar la lista de personas, favor de reportar o intentar mas tarde.")
                 }
@@ -87,9 +87,9 @@ class ComisionesLocales extends Component {
         )
     }
 
-    getComisionesLocalesBySector = async () => {
+    getComisionesDistritalesByDistrito = async () => {
         console.log("Recargando lista de comisiones")
-        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Local/GetComisionesBySector/${localStorage.getItem('sector')}`)
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Distrital/GetComisionesByDistrito/${localStorage.getItem('dto')}`)
             .then(res => {
                 console.log("Recargó comisiones: ", res.data.comisiones)
                 if (res.data.status === true) {
@@ -105,19 +105,20 @@ class ComisionesLocales extends Component {
         )
     }
 
-    getBautizadosBySector = async () => {
-        //console.log(helpers.authAxios.get((helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Local/GetComisionesBySector/${localStorage.getItem('sector')}`))))
-        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Persona/GetBautizadosComunionVivoBySector/${localStorage.getItem('sector')}`)
+    getPersonalMinisterialByDistrito = async () => {
+        //console.log(helpers.authAxios.get((helpers.authAxios.get(`${helpers.url_api}/Integrante_Comision_Distrital/GetComisionesByDistrito/${localStorage.getItem('dto')}`))))
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialByDistrito/${localStorage.getItem('dto')}`)
             .then(res => {
                 //console.log("personasBautizadas: ", res.data.personas)
                 if (res.data.status === "success")
-                    this.setState({ personasBautizadas: res.data.personas })
+                    this.setState({ personasBautizadas: res.data.administrativo })
                 else {
                     alert("Error:\nNo se pudo consultar la lista de personas, favor de reportar o intentar mas tarde.")
                 }
             })
         )
     }
+
 
     handleChange = (e) => {
         console.log("comisionSeleccionada:", [e.target.name], e.target.value)
@@ -147,8 +148,8 @@ class ComisionesLocales extends Component {
     // Función para manejar el evento "Dar de Baja"
     handleDarDeBaja = async (integrante_Comision_Id) => {
         console.log("Dando de Baja: ", integrante_Comision_Id)
-        await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Integrante_Comision_Local/BajaDeIntegranteComision/${integrante_Comision_Id}`)
-            .then(() => { this.getComisionesLocalesBySector() })
+        await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Integrante_Comision_Distrital/BajaDeIntegranteComision/${integrante_Comision_Id}`)
+            .then(() => { this.getComisionesDistritalesByDistrito() })
         )
     }
 
@@ -178,7 +179,7 @@ class ComisionesLocales extends Component {
 
             let comisionEntity = {
                 Activo: this.state.integranteComision.activa,
-                Sector_Id: this.state.integranteComision.sector_Id,
+                Distrito_Id: this.state.integranteComision.distrito_Id,
                 Comision_Id: this.state.integranteComision.comision_Id,
                 Integrante_Id: this.state.integranteComision.integrante_Id,
                 Jerarquia_Integrante: this.state.integranteComision.jerarquia,
@@ -186,13 +187,13 @@ class ComisionesLocales extends Component {
                 Fecha_Registro: this.state.integranteComision.fecha_Registro
             }
 
-            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Integrante_Comision_Local/PostIntegrante_Comision_Local`, comisionEntity)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Integrante_Comision_Distrital/PostIntegrante_Comision_Distrital`, comisionEntity)
                 .then(res => {
                     console.log("Se agregó un Integrante ", res)
 
                     if (res.data.status === "success") {
                         console.log("Se actualiza la lista de comisiones ", res)
-                        this.getComisionesLocalesBySector();
+                        this.getComisionesDistritalesByDistrito();
                         this.handle_BtnAgregarMostrarFormulario();
                     }
                 })
@@ -214,9 +215,10 @@ class ComisionesLocales extends Component {
                             <Alert color="warning">
                                 <strong>AVISO: </strong>
                                 <ul>
-                                    <li>Para establecer una Nueva Asignación de Comisión Local, presione el Botón <strong>"Nueva Asignación"</strong>.</li>
+                                    <li>Para establecer una Nueva Asignación de Comisión Distrital, presione el Botón <strong>"Nueva Asignación"</strong>.</li>
                                     <li>Para dar de Baja un integrante de una Comisión, seleccione el Botón <strong>"Dar de Baja"</strong> en el renglón correspondiente.</li>
-                                    <li> <strong>El personal cualificado</strong> para una designación de <strong>Comisión Local</strong> puede ser cualquier miembro del Sector.</li>
+                                    <li> <strong>El personal cualificado</strong> para una designación de <strong>Comisión Distrital</strong> debe ser del Personal Ministerial del Distrito.</li>
+                                    <li> Para ver a todos los Elementos del Personal Ministerial, asegúrese de que en cada Sector se haya realizado <strong>la Vinculación</strong> o <strong>la Alta</strong> del Personal Ministerial.</li>
                                 </ul>
                             </Alert>
                         </Col>
@@ -257,10 +259,10 @@ class ComisionesLocales extends Component {
                                             className={this.state.errors.comision_Id ? 'is-invalid' : ''}
                                         >
                                             <option value="0">Elija una Comisión</option>
-                                            {this.state.comisionesLocalesDisponibles.map((com) => {
+                                            {this.state.comisionesDistritalesDisponibles.map((com) => {
                                                 return (
-                                                    <React.Fragment key={com.comisionLocal_Id}>
-                                                        <option value={com.comisionLocal_Id}>{com.nombre}</option>
+                                                    <React.Fragment key={com.comisionDistrital_Id}>
+                                                        <option value={com.comisionDistrital_Id}>{com.nombre}</option>
                                                     </React.Fragment>
                                                 )
                                             })
@@ -359,7 +361,7 @@ class ComisionesLocales extends Component {
                     </Form>
                 }
 
-                <h4 className="text-center pt-4">COMISIONES LOCALES E INTEGRANTES</h4>
+                <h4 className="text-center pt-4">COMISIONES DISTRITALES Y SUS INTEGRANTES</h4>
                 <table id="miTabla" className="table table-striped table-bordered table-sm">
                     <thead className="text-center bg-gradient-info">
                         <tr>
@@ -426,4 +428,4 @@ class ComisionesLocales extends Component {
     }
 }
 
-export default ComisionesLocales;
+export default ComisionesDistritales;
