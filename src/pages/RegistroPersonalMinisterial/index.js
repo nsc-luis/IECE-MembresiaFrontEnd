@@ -246,14 +246,15 @@ class RegistroPersonalMinisterial extends Component {
 
                                 <ol>
                                     <br></br>
-                                    <li>Seleccione la persona que desea registrar como Elemento del Personal Ministerial. Elija al que desea registrar como parte del Personal Ministerial.
+                                    <li>Seleccione la persona que desea registrar como parte del Personal Ministerial.
                                     </li>
                                     <br></br>
-                                    <li>Dado que es posible que la persona ya esté registrada en la Base de Datos como Personal Ministerial, en ese caso
-                                        solo hace falta vincularlo. Búsquelo en la segunda caja de selección, la cual muestra los elementos ya registrados como parte del Personal Ministerial del Distrito.
+                                    <li>Es posible que la persona ya esté registrada en la Base de Datos del Personal Ministerial, en ese caso
+                                        solo hace falta vincular el Id que tiene como Persona al Id que tiene como Personal Ministerial.
+                                        Búsquelo en la segunda caja de selección, la cual muestra los elementos ya registrados como parte del Personal Ministerial del Distrito.
                                         <ul>
                                             <li>Si la persona que desea dar de Alta ya se encuentra registrada, elija al Elemento del Personal Ministerial.</li>
-                                            <li>Si la persona que desea dar de Alta No se encuentra registrada, elija la Opción "NUEVO ELEMENTO". Sólo se puede registrar "AUXILIARES".</li>
+                                            <li>Si la persona que desea dar de Alta No se encuentra registrada, elija la Opción <strong>"NUEVO ELEMENTO"</strong>. Sólo se puede registrar <strong>"AUXILIARES"</strong>.</li>
                                         </ul>
                                     </li>
                                 </ol>
@@ -293,7 +294,8 @@ class RegistroPersonalMinisterial extends Component {
                                 <Row className='mb-2'>
                                     <div className="col col-md-2"></div>
                                     <div className="col col-md-4">
-                                        <label ><h6>PASO 2.- Revise en esta segunda caja de opciones si el Elemento del Personal Ministerial ya está registrado y Seleccionelo para confirmar que es la misma persona. Si no se encuentra en la lista, elija "NUEVO ELEMENTO"</h6></label>
+                                        <label ><h6>PASO 2.- Revise en esta Segunda caja de opciones y, si encuentra a la persona que desea incorporar al Personal Ministerial,
+                                            Seleccionelo para confirmar que es la misma persona y Vincularlo. Si no se encuentra en la lista, elija "NUEVO ELEMENTO"</h6></label>
                                     </div>
                                     <div className="col col-md-4">
                                         <Input type="select"

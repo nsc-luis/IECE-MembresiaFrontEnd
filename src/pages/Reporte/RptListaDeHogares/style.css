@@ -25,3 +25,19 @@
   margin-top: 2em;
 }
 
+/* table{
+  table-layout: fixed;
+} */
+
+#miTabla td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#miBoton{
+  height:1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-items: center;
+}
+

@@ -24,6 +24,7 @@ import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautiza
 import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones';
 import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
 import ReportePersonalMinisterial from './pages/Reporte/ReportePersonalMinisterial';
+import ReportePersonalAdministrativo from './pages/Reporte/ReportePersonalAdministrativo';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import ResumenTransacciones from './pages/Reporte/ResumenTransacciones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
@@ -47,6 +48,7 @@ import RegistroDePersonal from './pages/Persona/RegistroDePersona';
 import RegistroPersonalMinisterial from './pages/RegistroPersonalMinisterial';
 import BajaPersonalMinisterial from './pages/BajaPersonalMinisterial';
 import ComisionesLocales from './pages/PersonalAdministrativo/ComisionesLocales';
+import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDistritales';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -96,7 +98,7 @@ class Router extends Component {
                         <Route exact path="/EdicionDeDireccion" component={EdicionDeDireccion} />
                         <Route exact path="/RevinculaDomicilio" component={RevinculaDomicilio} />
                         {/* SECTOR */}
-                        
+
                         {/* SUCESOS ESTADISTICOS */}
                         <Route exact path="/Matrimonio" component={Matrimonio} />
                         <Route exact path="/Legalizacion" component={Legalizacion} />
@@ -112,6 +114,7 @@ class Router extends Component {
                         <Route exact path="/TesoreroDelDistrito" component={TesoreroDelDistrito} />
                         <Route exact path="/SecretarioDelDistrito" component={SecretarioDelDistrito} />
                         <Route exact path="/ComisionesLocales" component={ComisionesLocales} />
+                        <Route exact path="/ComisionesDistritales" component={ComisionesDistritales} />
 
                         {/* REPORTES */}
                         <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
@@ -123,6 +126,8 @@ class Router extends Component {
                         <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
                         <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                         <Route exact path="/ReportePersonalMinisterial" component={ReportePersonalMinisterial} />
+                        <Route exact path="/ReportePersonalAdministrativo" component={ReportePersonalAdministrativo} />
+
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />

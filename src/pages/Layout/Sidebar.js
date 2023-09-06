@@ -527,7 +527,7 @@ class Sidebar extends Component {
                     <hr className="sidebar-divider" />
 
                     {/* Heading */}
-                   {/*  <div className="sidebar-heading">
+                    {/*  <div className="sidebar-heading">
                         Sector
                     </div>
                     
@@ -624,7 +624,7 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseAdministrativo" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-user-tie"></i>
-                            <span>Personal Administrativo</span>
+                            <span>Personal Administrativo y Comisiones</span>
                         </Link>
                         <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
@@ -705,6 +705,10 @@ class Sidebar extends Component {
                                     to="/ReportePersonalMinisterial"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Ministerial")}
                                 >Lista de Personal Ministerial</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReportePersonalAdministrativo"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Administrativo")}
+                                >Lista de Personal Administrativo y Comisiones</Link>
                                 <Link className="collapse-item text-wrap"
                                     to="/ReporteMovimientoEstadistico"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}

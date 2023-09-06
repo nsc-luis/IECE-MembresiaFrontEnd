@@ -109,7 +109,7 @@ class SidebarObispo extends Component {
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseAdministrativo" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-user-tie"></i>
-                            <span>Personal Administrativo</span>
+                            <span>Personal Administrativo y Comisiones</span>
                         </Link>
                         <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
@@ -129,8 +129,19 @@ class SidebarObispo extends Component {
                                     {/* <i className="fas fa-hand-holding-usd"></i> */}
                                     <span>Tesorero del Distrito</span>
                                 </Link>
+
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Comisiones Distritales')}
+                                    to="/ComisionesDistritales"
+                                >
+                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
+                                    <span>Comisiones Distritales</span>
+                                </Link>
                             </div>
                         </div>
+
+
                     </li>
 
                     {/* Divider */}
@@ -193,6 +204,17 @@ class SidebarObispo extends Component {
                             <span>Lista de Personal Ministerial</span>
                         </Link>
                     </li>
+
+
+                    <li className="nav-item">
+                        <Link className="nav-link"
+                            to="/ReportePersonalAdministrativo"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Administrativo y Comisiones")}>
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista de Personal Administrativo y Comisiones</span>
+                        </Link>
+                    </li>
+
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReporteMovimientoEstadistico"
                             onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}>
