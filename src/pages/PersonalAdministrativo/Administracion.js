@@ -84,7 +84,7 @@ export default class Administracion extends Component {
             idUsuario: this.infoSesion.pem_Id_Ministro,
             puesto: this.state.puesto
         }
-        if(this.state.pem_Id_Ministro === "0" || this.state.puesto === "0") {
+        if (this.state.pem_Id_Ministro === "0" || this.state.puesto === "0") {
             this.setState({
                 pem_Id_MinistroInvalido: true,
                 puestoInvalido: true
@@ -105,6 +105,22 @@ export default class Administracion extends Component {
             })
         )
         this.handle_BtnAsignarMostrarFormulario()
+    }
+
+    removerAsignacion = async (info) => {
+        await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/removerAsignacionDeAdministracion/${localStorage.getItem("sector")}/${info.puesto}`)
+            .then(res => {
+                if (res.data.status === "success") {
+                    this.getPersonalAdministrativoBySector()
+                    this.setState({
+                        pem_Id_MinistroInvalido: false,
+                        puestoInvalido: false,
+                        pem_Id_Ministro: "0",
+                        puesto: "0"
+                    })
+                }
+            })
+        )
     }
 
     render() {
@@ -212,6 +228,7 @@ export default class Administracion extends Component {
                                     <th>PUESTO</th>
                                     <th>NOMBRE</th>
                                     <th>GRADO</th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     {this.state.personalAdministrativo.map((obj) => {
@@ -220,6 +237,9 @@ export default class Administracion extends Component {
                                                 <td><i>{obj.puesto}</i></td>
                                                 <td>{obj.personalMinisterial.length > 0 ? obj.personalMinisterial[0].pem_Nombre : ""}</td>
                                                 <td>{obj.personalMinisterial.length > 0 ? obj.personalMinisterial[0].pem_Grado_Ministerial : ""}</td>
+                                                <td>
+                                                {obj.personalMinisterial.length > 0 ? <a href="#" onClick={() => this.removerAsignacion(obj)}>Remover asignación</a> : ""}
+                                                </td>
                                             </tr>
                                         )
                                     })}

@@ -38,8 +38,8 @@ import BajaNoBautizadoCambioDomicilio from './pages/Persona/BajaNoBautizadoCambi
 import BajaNoBautizadoAlejamiento from './pages/Persona/BajaNoBautizadoAlejamiento';
 import RegistrarTransaccionesHistoricas from './pages/RegistrarTransaccionesHistoricas';
 import Auxiliares from './pages/PersonalAdministrativo/Auxiliares';
-import SecretarioDelSector from './pages/PersonalAdministrativo/SecretarioDelSector';
-import TesoreroDelSector from './pages/PersonalAdministrativo/TesoreroDelSector';
+/* import SecretarioDelSector from './pages/PersonalAdministrativo/SecretarioDelSector';
+import TesoreroDelSector from './pages/PersonalAdministrativo/TesoreroDelSector'; */
 import SecretarioDelDistrito from './pages/PersonalAdministrativo/SecretarioDelDistrito';
 import TesoreroDelDistrito from './pages/PersonalAdministrativo/TesoreroDelDistrito';
 import Layout from './pages/Layout';
@@ -109,8 +109,8 @@ class Router extends Component {
                         <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
 
                         <Route exact path="/Administracion" component={Administracion} />
-                        <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
-                        <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} />
+                        {/* <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
+                        <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} /> */}
                         <Route exact path="/TesoreroDelDistrito" component={TesoreroDelDistrito} />
                         <Route exact path="/SecretarioDelDistrito" component={SecretarioDelDistrito} />
                         <Route exact path="/ComisionesLocales" component={ComisionesLocales} />

@@ -638,12 +638,11 @@ class Sidebar extends Component {
                                     <span>Administración del sector</span>
                                 </Link>
 
-                                <Link
+                                {/* <Link
                                     className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del sector.')}
                                     to="/SecretarioDelSector"
                                 >
-                                    {/* <i className="fas fa-edit"></i> */}
                                     <span>Secretario del sector</span>
                                 </Link>
                                 <Link
@@ -651,9 +650,9 @@ class Sidebar extends Component {
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del sector.')}
                                     to="/TesoreroDelSector"
                                 >
-                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
                                     <span>Tesorero del sector</span>
-                                </Link>
+                                </Link> */}
+                                
                                 <Link
                                     className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Comisiones Locales')}
