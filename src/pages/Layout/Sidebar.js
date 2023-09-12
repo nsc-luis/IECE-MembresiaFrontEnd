@@ -564,9 +564,6 @@ class Sidebar extends Component {
                         </Link>
                     </li> */}
 
-                    {/* Divider */}
-                    <hr className="sidebar-divider" />
-
                     {/* Heading */}
                     <div className="sidebar-heading">
                         Transacciones Especiales
@@ -631,28 +628,13 @@ class Sidebar extends Component {
 
                                 <Link
                                     className="collapse-item"
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Administración.')}
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Administración del Sector')}
                                     to="/Administracion"
                                 >
                                     {/* <i className="fas fa-edit"></i> */}
-                                    <span>Administración del sector</span>
+                                    <span>Administración del Sector</span>
                                 </Link>
 
-                                {/* <Link
-                                    className="collapse-item"
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del sector.')}
-                                    to="/SecretarioDelSector"
-                                >
-                                    <span>Secretario del sector</span>
-                                </Link>
-                                <Link
-                                    className="collapse-item"
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del sector.')}
-                                    to="/TesoreroDelSector"
-                                >
-                                    <span>Tesorero del sector</span>
-                                </Link> */}
-                                
                                 <Link
                                     className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Comisiones Locales')}

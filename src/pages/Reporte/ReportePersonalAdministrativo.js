@@ -16,6 +16,7 @@ import logo from '../../assets/images/IECE_LogoOficial.jpg'
 export default function ReportePersonalAdministrativo() {
     //Estados
     const [comisiones, setComisiones] = useState([])
+    const [personalAdministrativo, setPersonalAdministrativo] = useState([])
     const [infoDis, setInfoDis] = useState([])
     const [infoSec, setInfoSec] = useState([])
     const [infoSecretario, setInfoSecretario] = useState({})
@@ -35,11 +36,13 @@ export default function ReportePersonalAdministrativo() {
 
         if (sector == null) { //Para Sesión Obispo
             console.log("inicia programa")
-            getComisionesDistrito();
+            getComisionesDistrito(dto);
+            getPersonalAdministrativoDistrito(dto);
             getInfoDistrito()
             setSectorSeleccionado("todos");
-            setLider("OBISPO")
-            setEntidadTitulo("TODOS LOS SECTORES")
+            setLider("OBISPO");
+            setEntidadTitulo("")
+
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
@@ -55,6 +58,7 @@ export default function ReportePersonalAdministrativo() {
 
         } else { //Para Sesión Pastor
             getComisionesSector(sector);
+            getPersonalAdministrativoSector(sector);
             getInfoDistrito()
             setLider("PASTOR")
 
@@ -88,14 +92,13 @@ export default function ReportePersonalAdministrativo() {
             .then(res => {
                 setInfoDis(res.data)
                 console.log("Distrito: ", res.data)
+                //setEntidadTitulo(res.data.dis_Tipo_Distrito + " " + (res.data.dis_Tipo_Distrito == "MISION" ? "" : "No. " + res.data.dis_Numero + ": ") + res.data.dis_Alias)
             })
         )
     }
 
-    const getComisionesDistrito = () => {
-
-
-        helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Local/GetComisionesByDistrito/" + dto)
+    const getComisionesDistrito = (dto) => {
+        helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Distrital/GetComisionesByDistrito/" + dto)
             .then(res => {
                 console.log("respuesta: ", res.data.comisiones)
                 setComisiones(res.data.comisiones)
@@ -113,17 +116,40 @@ export default function ReportePersonalAdministrativo() {
         );
     }
 
+    const getPersonalAdministrativoSector = (sec) => {
+
+        helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioBySector/" + sec)
+            .then(res => {
+                console.log("respuesta: ", res.data.administrativo)
+                setPersonalAdministrativo(res.data.administrativo)
+            })
+        );
+    }
+
+
+    const getPersonalAdministrativoDistrito = (dto) => {
+
+        helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioByDistrito/" + dto)
+            .then(res => {
+                console.log("respuesta: ", res.data.administrativo)
+                setPersonalAdministrativo(res.data.administrativo)
+            })
+        );
+    }
+
     const handle_sectorSeleccionado = async (e) => {
 
         if (e.target.value !== "todos") {
             console.log("Sector Seleccionado: ", e.target.value)
             getComisionesSector(e.target.value)
+            getPersonalAdministrativoSector(e.target.value)
             setSectorSeleccionado(e.target.value);
             getTitulo(e.target.value)
         } else {
             getComisionesDistrito();
+            getPersonalAdministrativoDistrito(dto)
             setSectorSeleccionado("todos");
-            setEntidadTitulo("TODOS LOS SECTORES")
+            setEntidadTitulo("TODOS LOS SECTORES");
         }
     }
 
@@ -138,14 +164,22 @@ export default function ReportePersonalAdministrativo() {
         })
     }
 
+    // const downloadTable = () => {
+    //     TableToExcel.convert(document.getElementById("table1"), {
+    //         name: "Personal_Bautizado.xlsx",
+    //         sheet: {
+    //             name: "Hoja 1"
+    //         }
+    //     });
+    // }
+
     const downloadTable = () => {
-        TableToExcel.convert(document.getElementById("table1"), {
-            name: "Personal_Bautizado.xlsx",
-            sheet: {
-                name: "Hoja 1"
-            }
-        });
-    }
+        const table1 = document.getElementById("table1");
+        const table2 = document.getElementById("table2");
+        const book = TableToExcel.tableToBook(table1, { sheet: { name: "Administración" } });
+        TableToExcel.tableToSheet(book, table2, { sheet: { name: "Comisiones" } });
+        TableToExcel.save(book, "PersonalMinisterialyComisiones.xlsx")
+    };
 
     const reportePersonalBautizadoPDF = () => {
         let index = 1
@@ -153,15 +187,15 @@ export default function ReportePersonalAdministrativo() {
         const doc = new jsPDF("p", "mm", "letter");
         let pageHeight = doc.internal.pageSize.height;
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("LISTA DE PERSONAL ADMINISTRATIVO Y COMISIONES", 85, 10);
+        doc.text("LISTA DE PERSONAL ADMINISTRATIVO Y COMISIONES", 140, 9, { align: "center", maxWidth: 110 });
         doc.setFontSize(10);
 
         if (sector) {
-            doc.text(entidadTitulo, 140, 22, { align: "center" });
+            doc.text(entidadTitulo, 140, 24, { align: "center" });
         }
         else {
-            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, { align: "center" })
-            doc.text(entidadTitulo, 140, 22, { align: "center" })
+            doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 21, { align: "center" })
+            doc.text(entidadTitulo, 140, 26, { align: "center" })
         }
         doc.line(10, 32, 200, 32);
 
@@ -173,9 +207,13 @@ export default function ReportePersonalAdministrativo() {
         yAxis += 3;
         doc.text("ADMINISTRACIÓN", 15, yAxis);
         yAxis += 7;
-        comisiones.map((comision) => {
-            if (comision.persona.per_Categoria === "ADULTO_HOMBRE") {
-                doc.text(`${index}.- ${comision.persona.per_Apellido_Paterno} ${comision.persona.per_Apellido_Materno ? comision.persona.per_Apellido_Materno : ''} ${comision.persona.per_Nombre}`, 20, yAxis);
+        personalAdministrativo.map(((cargo, index) => {
+            if (cargo.datosPersonalMinisterial != null) {
+                doc.setFont("", "", "bold");
+                doc.text(`${cargo.cargo}`, 20, yAxis);
+                doc.setFont("", "", "normal");
+                yAxis += 4;
+                doc.text(`${cargo.datosPersonalMinisterial.pem_Nombre}`, 25, yAxis);
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -183,7 +221,8 @@ export default function ReportePersonalAdministrativo() {
                     yAxis = 15 // Restart height position
                 }
             }
-        })
+        }))
+
 
         index = 1;
         yAxis += 7;
@@ -194,8 +233,14 @@ export default function ReportePersonalAdministrativo() {
         doc.text("COMISIONES", 15, yAxis);
         yAxis += 7;
         comisiones.map((comision) => {
-            if (comision.persona.per_Categoria === "ADULTO_MUJER") {
-                doc.text(`${index}.- ${comision.persona.apellidoPrincipal} ${comision.persona.per_Apellido_Materno ? comision.persona.per_Apellido_Materno : ''} ${comision.persona.per_Nombre}`, 20, yAxis);
+            doc.setFont("", "", "bold");
+            if (comision.integrantes.length > 0) {
+                doc.text(`${comision.comision}`, 20, yAxis);
+                comision.integrantes.map((integrante) => {
+                    doc.setFont("", "", "normal");
+                    yAxis += 4;
+                    doc.text(`${integrante.integrante}`, 25, yAxis);
+                })
                 yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
@@ -206,7 +251,7 @@ export default function ReportePersonalAdministrativo() {
         })
 
         yAxis += 2;
-        doc.rect(75, yAxis, 15, 4);
+        //doc.rect(75, yAxis, 15, 4);
         yAxis += 3;
 
         if (yAxis >= pageHeight - 30) {
@@ -271,7 +316,7 @@ export default function ReportePersonalAdministrativo() {
                                 })}
                                 {localStorage.getItem('sector') === null &&
                                     <React.Fragment>
-                                        <option value="todos">TODOS LOS SECTORES</option>
+                                        <option value="todos">DISTRITO</option>
                                     </React.Fragment>
                                 }
                             </Input>
@@ -300,24 +345,36 @@ export default function ReportePersonalAdministrativo() {
                     </Row>
                     <CardBody>
                         <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Button size="lg" className="text-left categoriasReportes " block id="adultos_hombres">ADMINISTRACIÓN</Button>
+                            <Button size="md" className="text-left categoriasReportes " block id="adultos_hombres">ADMINISTRACIÓN</Button>
 
                             <Card>
                                 <CardBody>
                                     <h5>
-                                        <ol type="1">
-                                            <li>Aquí va el personal de la Administración</li>
-                                            {/* {comisiones.map((comision) => {
-                                                return <li>Aquí va el personal de la Administración</li>
-                                                //return <li key={comision.persona.per_Id_Persona}>{comision.persona.apellidoPrincipal} {comision.persona.per_Apellido_Materno} {comision.persona.per_Nombre}</li>
-                                            })} */}
-                                        </ol>
+                                        <ul type="1">
+                                            {
+                                                personalAdministrativo.map(((cargo, index) => {
+                                                    if (cargo.datosPersonalMinisterial != null) {
+                                                        return <fragment>
+                                                            <li className="list-group d-flex justify-content-between align-items-start">
+                                                                <div className="ms-2 me-auto mb-2">
+                                                                    <div className="font-weight-bold" style={{ fontSize: '1.2rem' }} key={index}>{cargo.cargo}</div>
+                                                                    <ul className="list-unstyled pl-3" >
+                                                                        <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}>{cargo.datosPersonalMinisterial.pem_Nombre}</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </li>
+                                                        </fragment>
+                                                    }
+                                                }))
+                                            }
+
+                                        </ul>
                                     </h5>
                                 </CardBody>
                             </Card>
                         </UncontrolledCollapse>
 
-                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">COMISIONES</Button>
+                        <Button size="md" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">COMISIONES</Button>
                         <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
                             <Card>
                                 <CardBody>
@@ -328,30 +385,17 @@ export default function ReportePersonalAdministrativo() {
                                                     if (comision.integrantes.length > 0) {
                                                         return <fragment>
                                                             <li className="list-group d-flex justify-content-between align-items-start">
-                                                                <div className="ms-2 me-auto mb-3">
-                                                                    <div className="font-weight-bold" style={{ fontSize: '1.3rem' }} key={comision.comision_Id}>{comision.comision}</div>
+                                                                <div className="ms-2 me-auto mb-2">
+                                                                    <div className="font-weight-bold" style={{ fontSize: '1.2rem' }} key={comision.comision_Id}>{comision.comision}</div>
                                                                     <ol>
                                                                         {comision.integrantes.map((integrante => {
                                                                             return <fragment>
-                                                                                <li className="font-weight-light" style={{ fontSize: '1.2rem' }} key={integrante.integrante_comision_Id}>{integrante.integrante}</li>
+                                                                                <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={integrante.integrante_comision_Id}>{integrante.integrante}</li>
                                                                             </fragment>
                                                                         }))}
                                                                     </ol>
                                                                 </div>
                                                             </li>
-
-
-
-
-
-                                                            {/* <li className="fw-bold" key={comision.comision_Id}>{comision.comision} </li>
-                                                            <ol>
-                                                                {comision.integrantes.map((integrante => {
-                                                                    return <li key={integrante.integrante_comision_Id}>{integrante.integrante}</li>
-                                                                }))}
-
-                                                            </ol> */}
-
                                                         </fragment>
                                                     }
                                                 }))
@@ -395,25 +439,46 @@ export default function ReportePersonalAdministrativo() {
                         {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
                     </CardTitle>
                     <CardBody>
-                        <Table responsive hover id="table1" data-cols-width="10,20,20,20,20,20,20">
-                            <thead>
-                                <tr>
-                                    <th data-f-bold>Indice</th>
-                                    <th data-f-bold>Nombre(s)</th>
+                        <Table responsive hover id="table1" data-cols-width="30,40,20">
+                            <thead className="text-center bg-gradient-info">
+                                <th >CARGO</th>
+                                <th >NOMBRE</th>
+                                <th >GRADO</th>
+                            </thead>
+                            <tbody>
+                                {personalAdministrativo.map((obj, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td><b>{obj.cargo}</b></td>
+                                            <td>{obj.datosPersonalMinisterial != null ? obj.datosPersonalMinisterial.pem_Nombre : ""}</td>
+                                            <td>{obj.datosPersonalMinisterial != null ? obj.datosPersonalMinisterial.pem_Grado_Ministerial : ""}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </Table>
 
+                        <table responsive hover id="table2" data-cols-width="30,40,20">
+                            <thead className="text-center bg-gradient-info">
+                                <tr>
+                                    <th>COMISIÓN</th>
+                                    <th >NOMBRE</th>
+                                    <th >ORDEN/JERARQUÍA</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {comisiones.map((comision, index) => (
-                                    <tr key={comision.Comision_Id}>
-                                        <td>{index + 1}</td>
-                                        <td>{comision.Comision}</td>
-
-
-                                    </tr>
+                                {comisiones.map((item) => (
+                                    item.integrantes.map((persona) => {
+                                        return <tr>
+                                            <td>{persona.comision} </td>
+                                            <td>{persona.integrante} </td>
+                                            <td>{persona.jerarquia} </td>
+                                        </tr>
+                                    })
                                 ))}
                             </tbody>
-                        </Table>
+                        </table>
+
                     </CardBody>
                 </Card>
             </Container>

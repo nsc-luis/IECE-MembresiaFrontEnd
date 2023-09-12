@@ -30,7 +30,9 @@ class ComisionesDistritales extends Component {
             mostrarFormulario: false,
             errors: {},
             numbers: [],
-            comisionSeleccionada: []
+            comisionSeleccionada: [],
+            modalShow: false,
+            mensajeDelProceso: "",
         };
     }
 
@@ -97,6 +99,14 @@ class ComisionesDistritales extends Component {
                         comisiones: res.data.comisiones
                     });
                     this.inicializarVariables();
+
+
+                    //Desaparecerá un Mensaje de espera
+                    this.setState({
+                        mensajeDelProceso: "Designación Completada",
+                        modalShow: false
+                    })
+
                 }
                 else {
                     alert("Error:\nNo se pudo consultar la lista de personas, favor de reportar o intentar mas tarde.")
@@ -192,6 +202,13 @@ class ComisionesDistritales extends Component {
                     console.log("Se agregó un Integrante ", res)
 
                     if (res.data.status === "success") {
+
+                        //Aparecerá un Mensaje de espera
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        })
+
                         console.log("Se actualiza la lista de comisiones ", res)
                         this.getComisionesDistritalesByDistrito();
                         this.handle_BtnAgregarMostrarFormulario();
@@ -216,7 +233,7 @@ class ComisionesDistritales extends Component {
                                 <strong>AVISO: </strong>
                                 <ul>
                                     <li>Para establecer una Nueva Asignación de Comisión Distrital, presione el Botón <strong>"Nueva Asignación"</strong>.</li>
-                                    <li>Para dar de Baja un integrante de una Comisión, seleccione el Botón <strong>"Dar de Baja"</strong> en el renglón correspondiente.</li>
+                                    <li>Para dar de Baja un integrante de una Comisión, seleccione el Botón <strong>"Baja de Designación"</strong> en el renglón correspondiente.</li>
                                     <li> <strong>El personal cualificado</strong> para una designación de <strong>Comisión Distrital</strong> debe ser del Personal Ministerial del Distrito.</li>
                                     <li> Para ver a todos los Elementos del Personal Ministerial, asegúrese de que en cada Sector se haya realizado <strong>la Vinculación</strong> o <strong>la Alta</strong> del Personal Ministerial.</li>
                                 </ul>
@@ -365,10 +382,10 @@ class ComisionesDistritales extends Component {
                 <table id="miTabla" className="table table-striped table-bordered table-sm">
                     <thead className="text-center bg-gradient-info">
                         <tr>
-                            <th width="35%">Comisión</th>
+                            <th width="30%">Comisión</th>
                             <th width="30%">Nombre de Integrante</th>
                             <th width="15%">Orden de Jerarquía</th>
-                            <th width="15%">Acciones</th>
+                            <th width="20%">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -397,32 +414,22 @@ class ComisionesDistritales extends Component {
                                                 className="btn btn-danger"
                                                 onClick={() => this.handleDarDeBaja(persona.integrante_Comision_Id)}
                                             >
-                                                Dar de Baja
+                                                Baja de Designación
                                             </button> <br />
                                         </FormGroup>
                                     ))}
                                 </td>
-
                             </tr>
-
-                            /* item.integrantes.map(i => (
-                                <tr key={i.integrante_Comision_Id}>
-                                    <td>{i.comision ? i.comision : ""}</td>
-                                    <td>{i.integrante ? i.integrante : ""}</td>
-                                    <td>{i.jerarquia ? i.jerarquia : ""}</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => this.handleDarDeBaja(i.integrante_Comision_Id)}
-                                        >
-                                            Dar de Baja
-                                        </button>
-                                    </td>
-                                </tr>
-                            )) */
                         ))}
                     </tbody>
                 </table>
+
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </div >
         );
     }

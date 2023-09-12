@@ -113,21 +113,27 @@ class SidebarObispo extends Component {
                         </Link>
                         <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
-                                <Link
+                                {/* <Link
                                     className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Secretario del Distrito.')}
                                     to="/SecretarioDelDistrito"
                                 >
-                                    {/* <i className="fas fa-edit"></i> */}
                                     <span>Secretario del Distrito</span>
                                 </Link>
                                 <Link
                                     className="collapse-item"
                                     onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Tesorero del Distrito.')}
                                     to="/TesoreroDelDistrito"
-                                >
-                                    {/* <i className="fas fa-hand-holding-usd"></i> */}
+                                >                                    
                                     <span>Tesorero del Distrito</span>
+                                </Link> */}
+
+                                <Link
+                                    className="collapse-item"
+                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Administración del Distrito')}
+                                    to="/AdministracionDistrital"
+                                >
+                                    <span>Administración del Distrito</span>
                                 </Link>
 
                                 <Link

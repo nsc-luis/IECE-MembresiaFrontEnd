@@ -31,7 +31,9 @@ class ComisionesLocales extends Component {
             mostrarFormulario: false,
             errors: {},
             numbers: [],
-            comisionSeleccionada: []
+            comisionSeleccionada: [],
+            modalShow: false,
+            mensajeDelProceso: "",
         };
     }
 
@@ -97,6 +99,11 @@ class ComisionesLocales extends Component {
                         comisiones: res.data.comisiones
                     });
                     this.inicializarVariables();
+
+                    //Desaparecerá un Mensaje de espera
+                    this.setState({
+                        modalShow: false
+                    })
                 }
                 else {
                     alert("Error:\nNo se pudo consultar la lista de personas, favor de reportar o intentar mas tarde.")
@@ -187,16 +194,26 @@ class ComisionesLocales extends Component {
             }
 
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Integrante_Comision_Local/PostIntegrante_Comision_Local`, comisionEntity)
+
+
+
+
                 .then(res => {
                     console.log("Se agregó un Integrante ", res)
 
                     if (res.data.status === "success") {
+                        //Aparecerá un Mensaje de espera
+                        this.setState({
+                            mensajeDelProceso: "Procesando...",
+                            modalShow: true
+                        })
+
                         console.log("Se actualiza la lista de comisiones ", res)
                         this.getComisionesLocalesBySector();
                         this.handle_BtnAgregarMostrarFormulario();
                     }
                 })
-            );
+            )
         }
     }
 
@@ -214,9 +231,10 @@ class ComisionesLocales extends Component {
                             <Alert color="warning">
                                 <strong>AVISO: </strong>
                                 <ul>
-                                    <li>Para establecer una Nueva Asignación de Comisión Local, presione el Botón <strong>"Nueva Asignación"</strong>.</li>
-                                    <li>Para dar de Baja un integrante de una Comisión, seleccione el Botón <strong>"Dar de Baja"</strong> en el renglón correspondiente.</li>
+                                    <li>Para establecer una Nueva Designación de Comisión Local, presione el Botón <strong>"Nueva Designación"</strong>.</li>
+                                    <li>Para dar de Baja un integrante de una Comisión, seleccione el Botón <strong>"Dar de Baja"</strong> en el caso correspondiente.</li>
                                     <li> <strong>El personal cualificado</strong> para una designación de <strong>Comisión Local</strong> puede ser cualquier miembro del Sector.</li>
+                                    <li> Para ver a todos los Elementos del Personal Ministerial, asegúrese de haber realizado <strong>la Vinculación</strong> o <strong>la Alta</strong> del Personal Ministerial.</li>
                                 </ul>
                             </Alert>
                         </Col>
@@ -351,7 +369,7 @@ class ComisionesLocales extends Component {
                                         disabled={this.state.submitBtnDisable}
                                     >
                                         <span className="fa fa-save" style={{ paddingRight: "10px" }}></span>
-                                        Asignar
+                                        Designar
                                     </Button>
                                 </Col>
                             </Row>
@@ -363,17 +381,17 @@ class ComisionesLocales extends Component {
                 <table id="miTabla" className="table table-striped table-bordered table-sm">
                     <thead className="text-center bg-gradient-info">
                         <tr>
-                            <th width="35%">Comisión</th>
-                            <th width="30%">Nombre de Integrante</th>
-                            <th width="15%">Orden de Jerarquía</th>
-                            <th width="15%">Acciones</th>
+                            <th width="35%">COMISIÓN</th>
+                            <th width="30%">NOMBRE</th>
+                            <th width="15%">ORDEN/JERARQUÍA</th>
+                            <th width="15%">ACCION</th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.comisiones.map((item) => (
                             item.integrantes.length > 0 &&
                             <tr>
-                                <td className="border">{item.comision}</td>
+                                <td className="border"><b>{item.comision}</b></td>
                                 <td className="border-bottom">
                                     {item.integrantes.map((persona) => (
                                         <FormGroup key={persona.integrante_Comision_Id}>
@@ -402,25 +420,17 @@ class ComisionesLocales extends Component {
                                 </td>
 
                             </tr>
-
-                            /* item.integrantes.map(i => (
-                                <tr key={i.integrante_Comision_Id}>
-                                    <td>{i.comision ? i.comision : ""}</td>
-                                    <td>{i.integrante ? i.integrante : ""}</td>
-                                    <td>{i.jerarquia ? i.jerarquia : ""}</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => this.handleDarDeBaja(i.integrante_Comision_Id)}
-                                        >
-                                            Dar de Baja
-                                        </button>
-                                    </td>
-                                </tr>
-                            )) */
                         ))}
                     </tbody>
                 </table>
+
+
+                {/*Modal success*/}
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </div >
         );
     }

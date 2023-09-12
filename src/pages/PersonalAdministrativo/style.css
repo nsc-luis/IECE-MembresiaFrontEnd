@@ -5,3 +5,17 @@
 .espacioEntreBotones {
     margin-right: 5px;
 }
+
+#miTabla td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+
+#BotonAdministracion{
+    height:1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-items: center;
+    margin-bottom: 0px;
+  }

@@ -7,7 +7,7 @@ import {
 import { Link } from 'react-router-dom';
 import './style.css';
 
-export default class AdministracionDistrital extends Component {
+export default class Administracion extends Component {
 
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     constructor(props) {
@@ -15,6 +15,7 @@ export default class AdministracionDistrital extends Component {
         this.state = {
             pem_Id_Ministro: "0",
             sec_Id_Sector: localStorage.getItem("sector"),
+            dis_Id_Distrito: localStorage.getItem("dto"),
             idUsuario: this.infoSesion.pem_Id_Ministro,
             puesto: "0",
             personas: [],
@@ -31,20 +32,21 @@ export default class AdministracionDistrital extends Component {
         console.log("Inicializando Variables")
         this.setState({
             pem_Id_Ministro: "0",
-            sec_Id_Sector: localStorage.getItem("sector"),
+
+            dis_Id_Distrito: localStorage.getItem("dto"),
             idUsuario: this.infoSesion.pem_Id_Ministro,
             puesto: "0",
             pem_Id_MinistroInvalido: false,
             puestoInvalido: false,
-            submitBtnDisable: false,
+            submitBtnDisable: false
         })
     }
 
 
 
     componentDidMount() {
-        this.getPersonalAdministrativoBySector();
-        this.getPersonalMinisterialBySector();
+        this.getPersonalAdministrativoByDistrito();
+        this.getPersonalMinisterialByDistrito();
         //Sube el cursor hasta la parte superior
         window.scrollTo(0, 0);
     }
@@ -57,8 +59,8 @@ export default class AdministracionDistrital extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
 
-    getPersonalMinisterialBySector = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialBySector/${localStorage.getItem('sector')}`)
+    getPersonalMinisterialByDistrito = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialByDistrito/${localStorage.getItem('dto')}`)
             .then(res => {
                 if (res.data.status === "success")
                     this.setState({ personas: res.data.administrativo })
@@ -78,10 +80,11 @@ export default class AdministracionDistrital extends Component {
         this.inicializarVariables();
     }
 
-    getPersonalAdministrativoBySector = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalAdministrativoSecundarioBySector/${localStorage.getItem('sector')}`)
-            .then(res => {
+    getPersonalAdministrativoByDistrito = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalAdministrativoSecundarioByDistrito/${localStorage.getItem('dto')}`)
 
+            .then(res => {
+                console.log("personalAdministrativo: ", res.data.administrativo);
                 this.setState({ personalAdministrativo: res.data.administrativo })
             })
         )
@@ -91,7 +94,8 @@ export default class AdministracionDistrital extends Component {
         e.preventDefault()
         let info = {
             pem_Id_Ministro: this.state.pem_Id_Ministro,
-            sec_Id_Sector: this.state.sec_Id_Sector,
+
+            dis_Id_Distrito: this.state.dis_Id_Distrito,
             idUsuario: this.infoSesion.pem_Id_Ministro,
             puesto: this.state.puesto
         }
@@ -113,10 +117,11 @@ export default class AdministracionDistrital extends Component {
 
         // Envía el formulario si no hay errores
         this.setState({ submitBtnDisable: true });
-        await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/SetPersonalAdministrativoBySector`, info)
+
+        await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/SetPersonalAdministrativoByDistrito`, info)
             .then(res => {
                 if (res.data.status === "success") {
-                    this.getPersonalAdministrativoBySector()
+                    this.getPersonalAdministrativoByDistrito()
                     this.setState({
                         pem_Id_MinistroInvalido: false,
                         puestoInvalido: false,
@@ -131,10 +136,10 @@ export default class AdministracionDistrital extends Component {
 
     removerAsignacion = async (info) => {
         console.log("objeto a Borrar: ", info)
-        await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/RemoverAsignacionDeAdministracion/${localStorage.getItem("sector")}/${info.cargo}`)
+        await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/RemoverAsignacionDeAdministracionDistrital/${localStorage.getItem("dto")}/${info.cargo}`)
             .then(res => {
                 if (res.data.status === "success") {
-                    this.getPersonalAdministrativoBySector()
+                    this.getPersonalAdministrativoByDistrito()
                     this.setState({
                         pem_Id_MinistroInvalido: false,
                         puestoInvalido: false,
@@ -158,7 +163,7 @@ export default class AdministracionDistrital extends Component {
                                     <li>Para establecer una Nueva Designación Administrativa, presione el Botón <strong>"Nueva Designación"</strong>.</li>
                                     <li>Para dar de Baja una Designación Administrativa, seleccione el Botón <strong>"Dar de Baja"</strong> en el cargo respectivo.</li>
                                     <li> <strong>El personal cualificado</strong> para una designación de <strong>Cargo Administrativo</strong> debe ser del Personal Ministerial.</li>
-                                    <li> Para ver a todos los Elementos del Personal Ministerial, asegúrese de haber realizado <strong>la Vinculación</strong> o <strong>la Alta</strong> del Personal Ministerial.</li>
+                                    <li> Para ver a todos los Elementos del Personal Ministerial, asegúrese de que en cada Sector se haya realizado <strong>la Vinculación</strong> o <strong>la Alta</strong> del Personal Ministerial.</li>
                                 </ul>
                             </Alert>
                         </Col>
@@ -263,7 +268,7 @@ export default class AdministracionDistrital extends Component {
                 <FormGroup>
                     <Card className="border-info">
                         <CardTitle>
-                            <h4 className="text-center pt-4">PERSONAL ADMINISTRATIVO DEL SECTOR</h4>
+                            <h4 className="text-center pt-4">PERSONAL ADMINISTRATIVO DEL DISTRITO</h4>
                         </CardTitle>
                         <CardBody>
                             <Table id="miTabla" className="table table-striped table-bordered table-sm bt-0">

@@ -15,9 +15,9 @@ import Sector from './pages/Sector';
 import Login from './pages/Login';
 import ResumenMembresia from './pages/ResumenMembresia';
 import AltaRestitucion from './pages/Persona/AltaRestitucion';
-import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio'
-import AltaReactivacion from './pages/Persona/AltaReactivacion'
-import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB'
+import AltaCambioDomicilio from './pages/Persona/AltaCambioDomicilio';
+import AltaReactivacion from './pages/Persona/AltaReactivacion';
+import AltaCambioDomicilioNB from './pages/Persona/AltaCambioDomicilioNB';
 import AnalisisPersonal from './pages/Persona/AnalisisPersonal';
 import ReportePersonalBautizado from './pages/Reporte/ReportePersonalBautizado';
 import ReportePersonalNoBautizado from './pages/Reporte/ReportePersonalNoBautizado';
@@ -50,6 +50,7 @@ import BajaPersonalMinisterial from './pages/BajaPersonalMinisterial';
 import ComisionesLocales from './pages/PersonalAdministrativo/ComisionesLocales';
 import Administracion from './pages/PersonalAdministrativo/Administracion';
 import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDistritales';
+import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -111,6 +112,7 @@ class Router extends Component {
                         <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
 
                         <Route exact path="/Administracion" component={Administracion} />
+                        <Route exact path="/AdministracionDistrital" component={AdministracionDistrital} />
                         {/* <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
                         <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} /> */}
                         <Route exact path="/TesoreroDelDistrito" component={TesoreroDelDistrito} />
