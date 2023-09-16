@@ -103,7 +103,6 @@ class ComisionesDistritales extends Component {
 
                     //Desaparecerá un Mensaje de espera
                     this.setState({
-                        mensajeDelProceso: "Designación Completada",
                         modalShow: false
                     })
 

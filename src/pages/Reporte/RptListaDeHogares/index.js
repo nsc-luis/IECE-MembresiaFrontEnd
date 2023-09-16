@@ -148,6 +148,12 @@ class RptListaDeHogares extends Component {
         )
     }
 
+
+    eliminarEspaciosExtra(cadena) {
+        // Utiliza una expresión regular para reemplazar espacios múltiples por un solo espacio
+        return cadena.replace(/\s+/g, ' ');
+    }
+
     getListaHogares = async () => {
         if (localStorage.getItem('sector') === null) { //Para Sesión de Obispo
 
@@ -155,8 +161,8 @@ class RptListaDeHogares extends Component {
                 .then(res => {
                     this.setState({
                         infoListaHogares: res.data.listahogares.sort((a, b) => {
-                            if (a.integrantes[0].apellidoPrincipal < b.integrantes[0].apellidoPrincipal) { return -1; }
-                            if (a.integrantes[0].apellidoPrincipal > b.integrantes[0].apellidoPrincipal) { return 1; }
+                            if (a.indice < b.indice) { return -1; }
+                            if (a.indice > b.indice) { return 1; }
                             return 0;
                         })
                     });
@@ -167,8 +173,8 @@ class RptListaDeHogares extends Component {
                 .then(res => {
                     this.setState({
                         infoListaHogares: res.data.listahogares.sort((a, b) => {
-                            if (a.integrantes[0].apellidoPrincipal < b.integrantes[0].apellidoPrincipal) { return -1; }
-                            if (a.integrantes[0].apellidoPrincipal > b.integrantes[0].apellidoPrincipal) { return 1; }
+                            if (a.indice < b.indice) { return -1; }
+                            if (a.indice > b.indice) { return 1; }
                             return 0;
                         })
                     });
