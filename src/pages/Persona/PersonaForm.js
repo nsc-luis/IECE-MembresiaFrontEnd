@@ -281,6 +281,7 @@ class PersonaForm extends Component {
     render() {
         const {
             onChange,
+            onBlur,
             form,
             domicilio,
             FrmValidaPersona,
@@ -288,6 +289,7 @@ class PersonaForm extends Component {
             setFrmValidaPersona,
             setBolPersonaEncontrada,
             onChangeDomicilio,
+            onBlurDomicilio,
             categoriaSeleccionada,
             msjCategoriaSeleccionada,
             per_Nombre_NoValido,
@@ -557,6 +559,7 @@ class PersonaForm extends Component {
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
 
+
             //Si se trata de un Registro de Bautizados, verifica que tenga Fecha de bautismo.
             if (objPersona.per_Bautizado === true
                 && objPersona.per_Fecha_Bautismo === "") {
@@ -715,6 +718,7 @@ class PersonaForm extends Component {
                                                                 type="text"
                                                                 name="per_Nombre"
                                                                 onChange={onChange}
+                                                                onBlur={onBlur}
                                                                 value={form.per_Nombre}
                                                                 className="form-control"
                                                                 autoComplete="nope"
@@ -739,6 +743,7 @@ class PersonaForm extends Component {
                                                                 type="text"
                                                                 name="per_Apellido_Paterno"
                                                                 onChange={onChange}
+                                                                onBlur={onBlur}
                                                                 value={form.per_Apellido_Paterno}
                                                                 className="form-control"
                                                                 autoComplete="nope"
@@ -765,6 +770,7 @@ class PersonaForm extends Component {
                                                                 type="text"
                                                                 name="per_Apellido_Materno"
                                                                 onChange={onChange}
+                                                                onBlur={onBlur}
                                                                 value={form.per_Apellido_Materno}
                                                                 id="per_Apellido_Materno"
                                                                 className="form-control"
@@ -1001,6 +1007,7 @@ class PersonaForm extends Component {
                                                                             type="text"
                                                                             name="per_Nacionalidad"
                                                                             onChange={onChange}
+                                                                            onBlur={onBlur}
                                                                             className="form-control"
                                                                             value={form.per_Nacionalidad === null ? "" : form.per_Nacionalidad}
                                                                             autoComplete="nope"
@@ -1015,6 +1022,7 @@ class PersonaForm extends Component {
                                                                             type="text"
                                                                             name="per_Lugar_De_Nacimiento"
                                                                             onChange={onChange}
+                                                                            onBlur={onBlur}
                                                                             className="form-control"
                                                                             value={form.per_Lugar_De_Nacimiento === null ? "" : form.per_Lugar_De_Nacimiento}
                                                                             autoComplete="nope"
@@ -1029,6 +1037,7 @@ class PersonaForm extends Component {
                                                                             name="per_Email_Personal"
                                                                             className="email"
                                                                             onChange={onChange}
+                                                                            onBlur={onBlur}
                                                                             invalid={this.state.emailInvalido}
                                                                             value={form.per_Email_Personal === null ? "" : form.per_Email_Personal}
                                                                             autoComplete="nope"
@@ -1047,6 +1056,7 @@ class PersonaForm extends Component {
                                                                                 type="text"
                                                                                 name="per_Telefono_Movil"
                                                                                 onChange={onChange}
+                                                                                onBlur={onBlur}
                                                                                 invalid={this.state.telMovilInvalido}
                                                                                 value={form.per_Telefono_Movil === null ? "" : form.per_Telefono_Movil}
                                                                                 autoComplete="nope"
@@ -1227,6 +1237,7 @@ class PersonaForm extends Component {
                                                                                     type="text"
                                                                                     name="per_Nombre_Padre"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Padre}
                                                                                     autoComplete="nope"
@@ -1239,6 +1250,7 @@ class PersonaForm extends Component {
                                                                                     type="text"
                                                                                     name="per_Nombre_Madre"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Madre}
                                                                                     autoComplete="nope"
@@ -1256,6 +1268,7 @@ class PersonaForm extends Component {
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuelo_Paterno"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuelo_Paterno}
                                                                                     autoComplete="nope"
@@ -1268,6 +1281,7 @@ class PersonaForm extends Component {
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuela_Paterna"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuela_Paterna}
                                                                                     autoComplete="nope"
@@ -1285,6 +1299,7 @@ class PersonaForm extends Component {
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuelo_Materno"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuelo_Materno}
                                                                                     autoComplete="nope"
@@ -1297,6 +1312,7 @@ class PersonaForm extends Component {
                                                                                     type="text"
                                                                                     name="per_Nombre_Abuela_Materna"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     className="form-control"
                                                                                     value={form.per_Nombre_Abuela_Materna}
                                                                                     autoComplete="nope"
@@ -1346,6 +1362,7 @@ class PersonaForm extends Component {
                                                                                             type="text"
                                                                                             name="per_Nombre_Conyuge"
                                                                                             onChange={onChange}
+                                                                                            onBlur={onBlur}
                                                                                             className="form-control"
                                                                                             value={form.per_Nombre_Conyuge}
                                                                                             autoComplete="nope"
@@ -1379,6 +1396,7 @@ class PersonaForm extends Component {
                                                                                             type="text"
                                                                                             name="per_Num_Acta_Boda_Civil"
                                                                                             onChange={onChange}
+                                                                                            onBlur={onBlur}
                                                                                             className="form-control"
                                                                                             value={form.per_Num_Acta_Boda_Civil}
                                                                                             autoComplete="nope"
@@ -1391,6 +1409,7 @@ class PersonaForm extends Component {
                                                                                             type="text"
                                                                                             name="per_Libro_Acta_Boda_Civil"
                                                                                             onChange={onChange}
+                                                                                            onBlur={onBlur}
                                                                                             className="form-control"
                                                                                             value={form.per_Libro_Acta_Boda_Civil}
                                                                                             autoComplete="nope"
@@ -1403,6 +1422,7 @@ class PersonaForm extends Component {
                                                                                             type="text"
                                                                                             name="per_Oficialia_Boda_Civil"
                                                                                             onChange={onChange}
+                                                                                            onBlur={onBlur}
                                                                                             className="form-control"
                                                                                             value={form.per_Oficialia_Boda_Civil}
                                                                                             autoComplete="nope"
@@ -1419,6 +1439,7 @@ class PersonaForm extends Component {
                                                                                             type="text"
                                                                                             name="per_Registro_Civil"
                                                                                             onChange={onChange}
+                                                                                            onBlur={onBlur}
                                                                                             value={form.per_Registro_Civil}
                                                                                             autoComplete="nope"
                                                                                             maxlength="200"
@@ -1450,6 +1471,7 @@ class PersonaForm extends Component {
                                                                                                     type="text"
                                                                                                     name="per_Lugar_Boda_Eclesiastica"
                                                                                                     onChange={onChange}
+                                                                                                    onBlur={onBlur}
                                                                                                     className="form-control"
                                                                                                     value={form.per_Lugar_Boda_Eclesiastica}
                                                                                                     autoComplete="nope"
@@ -1464,6 +1486,7 @@ class PersonaForm extends Component {
                                                                                                     type="text"
                                                                                                     name="per_Apellido_Casada"
                                                                                                     onChange={onChange}
+                                                                                                    onBlur={onBlur}
                                                                                                     className="form-control"
                                                                                                     value={form.per_Apellido_Casada}
                                                                                                     autoComplete="nope"
@@ -1495,6 +1518,7 @@ class PersonaForm extends Component {
                                                                                         <textarea
                                                                                             name="per_Nombre_Hijos"
                                                                                             onChange={onChange}
+                                                                                            onBlur={onBlur}
                                                                                             value={form.per_Nombre_Hijos}
                                                                                             className="form-control"
                                                                                             autoComplete="nope"
@@ -1518,6 +1542,7 @@ class PersonaForm extends Component {
                                                                                                 type="text"
                                                                                                 name="per_Nombre_Conyuge"
                                                                                                 onChange={onChange}
+                                                                                                onBlur={onBlur}
                                                                                                 className="form-control"
                                                                                                 value={form.per_Nombre_Conyuge}
                                                                                                 autoComplete="nope"
@@ -1530,6 +1555,7 @@ class PersonaForm extends Component {
                                                                                                     type="text"
                                                                                                     name="per_Apellido_Casada"
                                                                                                     onChange={onChange}
+                                                                                                    onBlur={onBlur}
                                                                                                     className="form-control"
                                                                                                     value={form.per_Apellido_Casada}
                                                                                                     autoComplete="nope"
@@ -1560,6 +1586,7 @@ class PersonaForm extends Component {
                                                                                             <textarea
                                                                                                 name="per_Nombre_Hijos"
                                                                                                 onChange={onChange}
+                                                                                                onBlur={onBlur}
                                                                                                 value={form.per_Nombre_Hijos}
                                                                                                 className="form-control"
                                                                                                 autoComplete="nope"
@@ -1595,6 +1622,7 @@ class PersonaForm extends Component {
                                                                                                 type="text"
                                                                                                 name="per_Lugar_Bautismo"
                                                                                                 onChange={onChange}
+                                                                                                onBlur={onBlur}
                                                                                                 value={form.per_Lugar_Bautismo}
                                                                                                 className="form-control"
                                                                                                 autoComplete="nope"
@@ -1617,6 +1645,7 @@ class PersonaForm extends Component {
                                                                                                 type="text"
                                                                                                 name="per_Ministro_Que_Bautizo"
                                                                                                 onChange={onChange}
+                                                                                                onBlur={onBlur}
                                                                                                 value={form.per_Ministro_Que_Bautizo === null ? "" : form.per_Ministro_Que_Bautizo}
                                                                                                 className="form-control"
                                                                                                 autoComplete="nope"
@@ -1696,6 +1725,7 @@ class PersonaForm extends Component {
                                                                                     type="text"
                                                                                     name="per_Bajo_Imposicion_De_Manos"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     value={form.per_Bajo_Imposicion_De_Manos === null ? "" : form.per_Bajo_Imposicion_De_Manos}
                                                                                     className="form-control"
                                                                                     onKeyPress={this.handleKeyPress}
@@ -1729,6 +1759,7 @@ class PersonaForm extends Component {
                                                                                 <textarea
                                                                                     name="per_Cargos_Desempenados"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     className="form-control"
                                                                                     value={form.per_Cargos_Desempenados}
                                                                                     onKeyPress={this.handleKeyPress}
@@ -1746,6 +1777,7 @@ class PersonaForm extends Component {
                                                                                 <textarea
                                                                                     name="per_Cambios_De_Domicilio"
                                                                                     onChange={onChange}
+                                                                                    onBlur={onBlur}
                                                                                     value={form.per_Cambios_De_Domicilio === null ? "" : form.per_Cambios_De_Domicilio}
                                                                                     className="form-control"
                                                                                     autoComplete="nope"
@@ -1837,6 +1869,7 @@ class PersonaForm extends Component {
                                                             </div>
                                                             <div className="card-body">
                                                                 <HogarPersonaDomicilio
+                                                                    onBlurDomicilio={onBlurDomicilio}
                                                                     domicilio={domicilio}
                                                                     onChangeDomicilio={onChangeDomicilio}
                                                                     handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}

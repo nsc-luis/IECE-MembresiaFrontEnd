@@ -30,6 +30,7 @@ class Domicilio extends React.Component {
         const {
             domicilio,
             onChangeDomicilio,
+            onBlurDomicilio,
             handleChangeEstado,
             boolNvoEstado,
             handle_hd_Id_Hogar,
@@ -96,6 +97,7 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                         value={domicilio.hd_Calle}
                                         onChange={onChangeDomicilio}
+                                        onBlur={onBlurDomicilio}
                                         autoComplete="nope"
                                     />
                                     <label>Calle *</label>
@@ -107,6 +109,7 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                         value={domicilio.hd_Numero_Exterior}
                                         onChange={onChangeDomicilio}
+                                        onBlur={onBlurDomicilio}
                                         autoComplete="nope"
                                     />
                                     <label>Numero exterior</label>
@@ -118,6 +121,7 @@ class Domicilio extends React.Component {
                                         className="form-control"
                                         value={domicilio.hd_Numero_Interior}
                                         onChange={onChangeDomicilio}
+                                        onBlur={onBlurDomicilio}
                                         autoComplete="nope"
                                     />
                                     <label>Numero interior</label>
@@ -131,6 +135,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Tipo_Subdivision}
                                             onChange={onChangeDomicilio}
+                                            onBlur={onBlurDomicilio}
                                             autoComplete="nope"
                                         >
                                             <option value="COL">COLONIA</option>
@@ -156,6 +161,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Subdivision}
                                             onChange={onChangeDomicilio}
+                                            onBlur={onBlurDomicilio}
                                             autoComplete="nope"
                                         />
                                         <label>Nombre del Asentamiento/Barrio/Referencia</label>
@@ -167,6 +173,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Localidad}
                                             onChange={onChangeDomicilio}
+                                            onBlur={onBlurDomicilio}
                                             autoComplete="nope"
                                         />
                                         <label>Localidad</label>
@@ -183,6 +190,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Municipio_Ciudad}
                                             onChange={onChangeDomicilio}
+                                            onBlur={onBlurDomicilio}
                                             autoComplete="nope"
                                         />
                                         <label>Municipio/Cuidad *</label>
@@ -194,6 +202,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_CP}
                                             onChange={onChangeDomicilio}
+                                            onBlur={onBlurDomicilio}
                                             autoComplete="nope"
                                         />
                                         <label>Código Postal</label>
@@ -205,6 +214,7 @@ class Domicilio extends React.Component {
                                             className="form-control"
                                             value={domicilio.hd_Telefono}
                                             onChange={onChangeDomicilio}
+                                            onBlur={onBlurDomicilio}
                                             autoComplete="nope"
                                         />
                                         <label>Telefono</label>
