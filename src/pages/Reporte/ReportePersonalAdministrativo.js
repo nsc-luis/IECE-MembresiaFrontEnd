@@ -164,14 +164,14 @@ export default function ReportePersonalAdministrativo() {
         })
     }
 
-    // const downloadTable = () => {
-    //     TableToExcel.convert(document.getElementById("table1"), {
-    //         name: "Personal_Bautizado.xlsx",
-    //         sheet: {
-    //             name: "Hoja 1"
-    //         }
-    //     });
-    // }
+    const downloadTable1 = () => {
+        TableToExcel.convert(document.getElementById("table1"), {
+            name: "Personal_Bautizado.xlsx",
+            sheet: {
+                name: "Hoja 1"
+            }
+        });
+    }
 
     const downloadTable = () => {
         const table1 = document.getElementById("table1");

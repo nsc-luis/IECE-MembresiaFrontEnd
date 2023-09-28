@@ -61,6 +61,7 @@ class RevinculaDomicilio extends Component {
     }
 
     getPersonasParaCambioDomicilio = async () => {
+        //Trae todas las Personas Activas del Sector y sus Hogares, Domicilios y Mimebros de Hogar y Los ordena alfabeticamente por Nombre
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Persona/GetBySector/${localStorage.getItem("sector")}`)
             .then(res => {
                 this.setState({
@@ -160,7 +161,7 @@ class RevinculaDomicilio extends Component {
                     this.setState({
                         hogar: {
                             ...this.state.hogar,
-                            hp_Jerarquia: res.data.length
+                            hp_Jerarquia: res.data.length + 1
                         }
                     })
                 })
@@ -172,19 +173,9 @@ class RevinculaDomicilio extends Component {
                 }
             })
 
-            //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
-            let getDireccion = async (id) => {
-                console.log("busca direccion: ", this.url + "/HogarDomicilio/" + id);
-                await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
-                    .then(res => {
-                        this.setState({ direccion: res.data.direccion });
-                        console.log("Domicilio: ", res.data.direccion);
-                    })
-                );
-            }
-            getDireccion(idHogar);
+            this.getDireccion(idHogar);
         }
-        else { //Si el id_Hogar es 0, 
+        else { //Si el id_Hogar es 0, es decir, si se selecciona Nuevo Hogar.
             this.setState({
                 hogar: {
                     ...this.state.hogar,
@@ -195,6 +186,16 @@ class RevinculaDomicilio extends Component {
         }
 
         this.fnGetDatosDelHogar(idHogar); //Pone en variables de Estado los datos de los Mimebros del hogar seleccionado y del Domicilio
+    }
+
+    //Fn que llama la API que trae la Dirección con multi-nomenclatura por países, ésta se ejecuta en el componentDidMount
+    getDireccion = async (id) => {
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/" + id)
+            .then(res => {
+                this.setState({ direccion: res.data.direccion });
+                console.log("Domicilio: ", res.data.direccion);
+            })
+        );
     }
 
     handle_hp_Jerarquia = (e) => {
@@ -208,6 +209,7 @@ class RevinculaDomicilio extends Component {
 
     handle_personaSeleccionada = (e) => { // Guarda en 'personaSeleccionada' el valor del Id_Persona.
         this.setState({ [e.target.name]: e.target.value })
+        console.log([e.target.name], e.target.value)
     }
 
     fnSolicitudNvoEstado = async (idPais) => {
@@ -258,7 +260,8 @@ class RevinculaDomicilio extends Component {
 
     GuardaCambioDomicilio = async (e) => {
         e.preventDefault();
-        if (this.state.personaSeleccionada === "0") {
+
+        if (this.state.personaSeleccionada === "0") { //Si no seleccionó a alguna persona.
             alert("Error: \nSe requiere que seleccione una Persona.");
             return false;
         }
@@ -320,6 +323,9 @@ class RevinculaDomicilio extends Component {
             }
         }
         else { //Si es un Hogar Existente
+
+
+
             try {
                 await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
                     .then(res => {
@@ -374,7 +380,7 @@ class RevinculaDomicilio extends Component {
                                         <FormGroup>
                                             <Row>
                                                 <Col xs="2">
-                                                    Seleccione la Persona que se asignará a Otro Hogar*:
+                                                    Seleccione la Persona que se vinculará a Otro Hogar*:
                                                 </Col>
                                                 <Col xs="10">
                                                     <Input

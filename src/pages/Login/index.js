@@ -62,8 +62,9 @@ class Login extends Component {
     getListaSectoresPorDistritoMinistro = async (idDistrito, idMinistro) => {
         await helpers.validaToken().then(helpers.authAxios.get(this.url + '/PersonalMinisterial/GetSectoresByDistritoMinistro/' + idDistrito + '/' + idMinistro)
             .then(res => {
+                console.log("Sector: ", res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"));
                 this.setState({
-                    listaSectoresPorDistrito: res.data.sectores,
+                    listaSectoresPorDistrito: res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"),
                     obispo: res.data.obispo
                 })
             })

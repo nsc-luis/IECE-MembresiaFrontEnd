@@ -77,7 +77,7 @@ class Domicilio extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col-sm-2">
-                            <label>Asignar a hogar: </label>
+                            <label>Asignar al Hogar: </label>
                         </div>
                         <div className="col-sm-9">
                             <select

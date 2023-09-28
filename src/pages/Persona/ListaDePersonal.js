@@ -63,7 +63,8 @@ class ListaDePersonal extends Component {
             objPersona: {},
             direccion: "",
             modalShow: false,
-            mensajeDelProceso: ""
+            mensajeDelProceso: "",
+            infoSecretario: ""
 
         };
     }
@@ -74,7 +75,20 @@ class ListaDePersonal extends Component {
         this.getSector();
         this.getDistrito();
         this.getSectoresPorDistrito();
+        this.getSecretarioSector();
         window.scrollTo(0, 0);
+    }
+
+    getSecretarioSector = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${localStorage.getItem('sector')}`)
+
+            .then(res => {
+
+                if (res.data.status === "success" && res.data.infoSecretario.length > 0) {
+                    this.setState({ infoSecretario: res.data.infoSecretario[0].pem_Nombre })
+                }
+            })
+        )
     }
 
     handle_LinkEncabezado = (seccion, componente) => {
@@ -512,19 +526,9 @@ class ListaDePersonal extends Component {
             })
         }
 
-        // await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
-        //     .then(res => {
-
-        //         if (res.data.status === "success") {
-        //             this.setState({
-        //                 direccion: res.data.direccion
-        //             })
-        //         }
-        //     })
-        // )
-
         console.log("info: ", info.domicilio)
         let fechaActual = new Date();
+        let secreatrio = this.state.infoSecretario;
         console.log("persona:", typeof (moment(info.persona.per_Fecha_Nacimiento).format('D/MMM/YYYY')))
         var datos = {
             "idPersona": info.persona.per_Id_Persona,
@@ -560,17 +564,11 @@ class ListaDePersonal extends Component {
             "Oficio1": `${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`,
             "Oficio2": `${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`,
             "Fecha": (moment(fechaActual).format('D/MMM/YYYY')),
-            "Secretario":
-                await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
-                    .then(res => {
-                        if (res.data.status === "success" && res.data.infoSecretario.length > 0) {
-                            return `${res.data.infoSecretario[0].pem_Nombre}`;
-                        }
-                    })
-                ),
+            "Secretario": secreatrio,
             "Foto": `${helpers.url_api}/Foto/${info.persona.per_Id_Persona}`
         }
 
+        console.log("Datos: ", datos)
         var request = new Request(
             `${helpers.url_api}/DocumentosPDF/HojaDatosEstadisticos`,
             {
@@ -605,8 +603,8 @@ class ListaDePersonal extends Component {
         // INSTANCIA NUEVO OBJETO PARA CREAR PDF
         /* const doc = new jsPDF("p", "mm", "letter")
         doc.lineHeightProportion = 5;
-
-
+    
+    
         await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/${info.domicilio[0].hd_Id_Hogar}`)
             .then(res => {
                 if (res.data.status === "success") {
@@ -615,7 +613,7 @@ class ListaDePersonal extends Component {
                     })
                 }
             })
-
+    
         // AGREGA DECORACION underline AL TEXTO
         //PARAMETROS: x = INICIO DE LINEA, contante = MARGEN, texto = TEXTO A DECORAR, y = ALTURA
         const drawUnderlineTotext = (x, constante, texto, y) => {
@@ -624,8 +622,8 @@ class ListaDePersonal extends Component {
             return doc.line(bar, y + .5, bar + foo, y + .5);
         }
         var txt = "";
-
-
+    
+    
         // FUNCION PARA DIVIDIR TEXTBOX LARGOS
         const dividirTextbox = (limitePrimeraLinea, texto) => {
             let info = {
@@ -656,13 +654,13 @@ class ListaDePersonal extends Component {
                 }
             }
         }
-
+    
         // ELIMINA TEXTO null
         Object.keys(info.persona).forEach((key) => {
             info.persona[key] = info.persona[key] === null ? '' : info.persona[key];
         });
-
-
+    
+    
         if (info.domicilio.length > 0) {
             Object.keys(info.domicilio[0]).forEach((key) => {
                 info.domicilio[0][key] = info.domicilio[0][key] === null ? '' : info.domicilio[0][key];
@@ -682,7 +680,7 @@ class ListaDePersonal extends Component {
                 pais_Nombre_Corto: ""
             })
         }
-
+    
         // FORMATEA FECHA PARA PDF
         helpers.fechas.forEach(fecha => {
             // Comprueba si la fecha fue formateada previamente
@@ -690,13 +688,13 @@ class ListaDePersonal extends Component {
                 info.persona[fecha] = helpers.reFormatoFecha(info.persona[fecha])
             }
         })
-
+    
         // INICIA DOCUMENTO
         doc.addImage(nvologo, 'PNG', 13, 5, 85, 22.26);
         doc.text("DATOS ESTADISTICOS", 110, 19);
         doc.line(10, 32, 200, 32);
-
-
+    
+    
         let line = 40;
         let renglon = 8;
         // FOTO DE LA PERSONA
@@ -706,77 +704,77 @@ class ListaDePersonal extends Component {
         doc.line(169, line - 5 + 30, 199, line - 5 + 30)
         doc.line(199, line - 5, 199, line - 5 + 30)
         //doc.addImage(`http://iece-tpr.ddns.net/webapi/api/Foto/${info.persona.per_Id_Persona}`, 'PNG', 169, line-5);
-
+    
         doc.setFontSize(9)
         doc.text(`1.- Nombre(s): ${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno} `, 11, line);
         drawUnderlineTotext('1.- Nombre(s): ', 11, `${info.persona.per_Nombre} ${info.persona.per_Apellido_Paterno} ${info.persona.per_Apellido_Materno} `, line);
-
+    
         line = line + renglon;
         doc.text(`2.- Edad: ${info.persona.edad} `, 11, line);
         drawUnderlineTotext('2.- Edad: ', 11, `${info.persona.edad} `, line)
         doc.text(`Nacionalidad: ${info.persona.per_Nacionalidad} `, 50, line);
         drawUnderlineTotext('Nacionalidad: ', 50, `${info.persona.per_Nacionalidad} `, line);
-
+    
         line = line + renglon;
         doc.text(`3.- Lugar y Fecha de nacimiento: ${info.persona.per_Lugar_De_Nacimiento}, En fecha: ${info.persona.per_Fecha_Nacimiento} `, 11, line);
         drawUnderlineTotext('3.- Lugar y Fecha de nacimiento: ', 11, `${info.persona.per_Lugar_De_Nacimiento} `, line);
         drawUnderlineTotext(`3.- Lugar y Fecha de nacimiento: ${info.persona.per_Lugar_De_Nacimiento}, En fecha: `, 13, `${info.persona.per_Fecha_Nacimiento} `, line);
-
+    
         line = line + renglon;
         doc.text(`4.- Nombre de Padres: ${info.persona.per_Nombre_Padre}${info.persona.per_Nombre_Madre ? " y " : " "}${info.persona.per_Nombre_Madre} `, 11, line);
         drawUnderlineTotext('4.- Nombre de Padres: ', 11, `${info.persona.per_Nombre_Padre}, ${info.persona.per_Nombre_Madre}      `, line);
-
+    
         line = line + renglon;
         doc.text(`5.- Abuelos Paternos: ${info.persona.per_Nombre_Abuelo_Paterno}${info.persona.per_Nombre_Abuela_Paterna ? " y " : " "}${info.persona.per_Nombre_Abuela_Paterna} `, 11, line);
         drawUnderlineTotext('5.- Abuelos Paternos: ', 11, `${info.persona.per_Nombre_Abuelo_Paterno}, ${info.persona.per_Nombre_Abuela_Paterna}     `, line);
-
+    
         line = line + renglon;
         doc.text(`6.- Abuelos Maternos: ${info.persona.per_Nombre_Abuelo_Materno}${info.persona.per_Nombre_Abuela_Materna ? " y " : " "}${info.persona.per_Nombre_Abuela_Materna} `, 11, line);
         drawUnderlineTotext('6.- Abuelos Maternos: ', 11, `${info.persona.per_Nombre_Abuelo_Materno}, ${info.persona.per_Nombre_Abuela_Materna}     `, line);
-
+    
         line = line + renglon;
         doc.text(`7.- Estado Civil: ${info.persona.per_Estado_Civil} `, 11, line);
         drawUnderlineTotext('7.- Estado Civil: ', 11, `${info.persona.per_Estado_Civil}   `, line);
-
+    
         doc.text(`Fecha Boda Civil: ${info.persona.per_Fecha_Boda_Civil} `, 120, line);
         drawUnderlineTotext('Fecha Boda Civil: ', 120, `${info.persona.per_Fecha_Boda_Civil}   `, line);
-
+    
         line = line + renglon - 3;
         doc.text(`Según Acta No.: ${info.persona.per_Num_Acta_Boda_Civil} `, 16, line);
         drawUnderlineTotext('Según Acta No.: ', 16, `${info.persona.per_Num_Acta_Boda_Civil}   `, line);
-
+    
         doc.text(`del Libro No.: ${info.persona.per_Libro_Acta_Boda_Civil} `, 70, line);
         drawUnderlineTotext('del Libro No.: ', 70, `${info.persona.per_Libro_Acta_Boda_Civil}   `, line);
-
+    
         doc.text(`Que lleva la oficialía.: ${info.persona.per_Oficialia_Boda_Civil} `, 120, line);
         drawUnderlineTotext('Que lleva la Oficialía.: ', 120, `${info.persona.per_Oficialia_Boda_Civil}   `, line);
-
+    
         line = line + renglon - 3;
         doc.text(`del Registro Civil en: ${info.persona.per_Registro_Civil} `, 16, line);
         drawUnderlineTotext('del Registro Civil en: ', 16, `${info.persona.per_Registro_Civil}   `, line);
-
+    
         line = line + renglon;
         doc.text(`8.- Contrajo matrimonio eclesiástico en la IECE el día: ${info.persona.per_Fecha_Boda_Eclesiastica}   `, 11, line);
         drawUnderlineTotext('8.- Contrajo matrimonio eclesiástico en la IECE el día: ', 11, `${info.persona.per_Fecha_Boda_Eclesiastica}   `, line);
-
+    
         line = line + renglon - 3;
         doc.text(`Lugar de matrimonio eclesiástico en la IECE: ${info.persona.per_Lugar_Boda_Eclesiastica}   `, 16, line);
         drawUnderlineTotext('Lugar de matrimonio eclesiástico en la IECE: ', 16, `${info.persona.per_Lugar_Boda_Eclesiastica}   `, line);
-
+    
         line = line + renglon;
         doc.text(`9.- Nombre de esposa(o): ${info.persona.per_Nombre_Conyuge}   `, 11, line);
         drawUnderlineTotext('9.- Nombre de esposa(o): ', 11, `${info.persona.per_Nombre_Conyuge}   `, line);
-
+    
         line = line + renglon;
         doc.text(`10.- Cuántos hijos y sus nombres: ${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos} `, 11, line);
         drawUnderlineTotext('10.- Cuántos hijos y sus nombres: ', 11, `${info.persona.per_Cantidad_Hijos === 0 ? "" : info.persona.per_Cantidad_Hijos}  `, line);
-
+    
         if (info.persona.per_Nombre_Hijos !== null) {
             txt = dividirTextbox(71, info.persona.per_Nombre_Hijos);
             doc.text(`${txt.primerLinea} `, 67, line);
             drawUnderlineTotext('', 67, `${txt.primerLinea} `, line);
             if (txt.textoTruncado.length > 0) {
-
+    
                 for (let i = 0; i < txt.textoTruncado.length; i++) {
                     line = line + 6;
                     doc.text(txt.textoTruncado[i], 13, line);
@@ -791,31 +789,31 @@ class ListaDePersonal extends Component {
         else {
             doc.text(``, 67, line);
         }
-
-
+    
+    
         line = line + renglon;
         doc.text(`11.- Lugar y fecha de Bautismo: ${info.persona.per_Lugar_Bautismo}, En fecha: ${info.persona.per_Fecha_Bautismo} `, 11, line);
         drawUnderlineTotext('11.- Lugar y fecha de Bautismo: ', 11, `${info.persona.per_Lugar_Bautismo} `, line);
         drawUnderlineTotext(`11.- Lugar y fecha de Bautismo: ${info.persona.per_Lugar_Bautismo}, En fecha: `, 11, `${info.persona.per_Fecha_Bautismo} `, line);
-
+    
         line = line + renglon;
         doc.text(`12.- Por quién fue bautizado: ${info.persona.per_Ministro_Que_Bautizo} `, 11, line);
         drawUnderlineTotext('12.- Por quién fue bautizado: ', 11, `${info.persona.per_Ministro_Que_Bautizo} `, line);
-
+    
         line = line + renglon;
         doc.text(`13.- Fecha en la que recibió la Promesa del Espíritu Santo: ${info.persona.per_Fecha_Recibio_Espiritu_Santo} `, 11, line);
         drawUnderlineTotext('13.- Fecha en la que recibió la Promesa del Espíritu Santo: ', 11, `${info.persona.per_Fecha_Recibio_Espiritu_Santo} `, line);
         line = line + renglon - 3;
         doc.text(`Bajo la imposición de manos del Presbiterio: ${info.persona.per_Bajo_Imposicion_De_Manos} `, 16, line);
         drawUnderlineTotext('Bajo la imposición de manos del Presbiterio: ', 16, `${info.persona.per_Bajo_Imposicion_De_Manos} `, line);
-
+    
         line = line + renglon;
         if (info.persona.per_Cargos_Desempenados !== null) {
             txt = dividirTextbox(68, info.persona.per_Cargos_Desempenados);
             doc.text(`14.- Puestos que ha desempeñado en la iglesia: ${txt.primerLinea} `, 11, line);
             drawUnderlineTotext('14.- Puestos que ha desempeñado en la iglesia: ', 11, `${txt.primerLinea} `, line);
             if (txt.textoTruncado.length > 0) {
-
+    
                 for (let i = 0; i < txt.textoTruncado.length; i++) {
                     line = line + 6;
                     doc.text(txt.textoTruncado[i], 11, line);
@@ -830,7 +828,7 @@ class ListaDePersonal extends Component {
         else {
             doc.text(`14.- Puestos desempeñados en la iglesia: `, 11, line);
         }
-
+    
         line = line + renglon;
         if (info.persona.per_Cambios_De_Domicilio !== null) {
             txt = dividirTextbox(82, info.persona.per_Cambios_De_Domicilio);
@@ -851,7 +849,7 @@ class ListaDePersonal extends Component {
         else {
             doc.text(`15.- Cambios de domicilio: `, 11, line);
         }
-
+    
         line = line + renglon; */
         /* doc.text(`16. - Domicilio actual: ${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior}, ${info.domicilio[0].hd_Numero_Interior === "" ? "" : "Interior: " + info.domicilio[0].hd_Numero_Interior}, ${info.domicilio[0].hd_Tipo_Subdivision} ${info.domicilio[0].hd_Subdivision}, ${info.domicilio[0].hd_Municipio_Ciudad}, ${info.domicilio[0].est_Nombre}, ${info.domicilio[0].pais_Nombre_Corto} `, 13, line);
         drawUnderlineTotext('16. - Domicilio actual: ', 13, `${info.domicilio[0].hd_Calle} ${info.domicilio[0].hd_Numero_Exterior} `, line);
@@ -859,23 +857,23 @@ class ListaDePersonal extends Component {
 
         /* doc.text(`16. - Domicilio actual: ${this.state.direccion}`, 11, line);
         drawUnderlineTotext('16.- Domicilio actual: ', 11, `${this.state.direccion} `, line);
-
+    
         line = line + renglon;
         doc.text(`17.- Teléfonos: ${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, 11, line);
         drawUnderlineTotext('17.- Teléfonos. ', 11, `${info.persona.per_Telefono_Movil !== null || info.persona.per_Telefono_Movil !== "" ? "Personal: " + info.persona.per_Telefono_Movil : ""} ${info.domicilio[0].hd_Telefono !== null || info.domicilio[0].hd_Telefono !== "" ? ", Hogar: " + info.domicilio[0].hd_Telefono : ""} `, line);
-
+    
         line = line + renglon;
         doc.text(`18.- Profesión / Oficio1: ${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`, 11, line);
         drawUnderlineTotext('18.- Profesión / Oficio1: ', 11, `${info.persona.profesionOficio1[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Categoria} / ${info.persona.profesionOficio1[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio1[0].pro_Sub_Categoria}`, line);
-
+    
         line = line + renglon;
         doc.text(`Profesión / Oficio2: ${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, 17, line);
         drawUnderlineTotext('Profesión / Oficio2: ', 17, `${info.persona.profesionOficio2[0].pro_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Categoria} / ${info.persona.profesionOficio2[0].pro_Sub_Categoria === "OTRO" ? "" : info.persona.profesionOficio2[0].pro_Sub_Categoria}`, line);
-
+    
         doc.text(`${fechaActual.getFullYear()}-${fechaActual.getMonth() + 1}-${fechaActual.getDate()}`, 52, 249);
         doc.line(30, 250, 90, 250);
         doc.text("FECHA", 54, 255);
-
+    
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${info.persona.sec_Id_Sector}`)
             .then(res => {
                 //console.log(res.data.infoSecretario[0].pem_Nombre)

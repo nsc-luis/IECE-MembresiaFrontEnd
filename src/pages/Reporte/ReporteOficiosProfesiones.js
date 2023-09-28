@@ -74,19 +74,21 @@ export default function ReporteOficiosProfesiones() {
         }
     }, [])
 
-    const getPersonasSector = (sec) => {
-        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
+    const getPersonasSector = async (sec) => {
+        await helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
-                console.log("Profesiones: ", res.data)
-                setPersonas(res.data.filter(per => per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')
+                console.log("Profesiones1: ", res.data.filter((per) => (per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')))
+                setPersonas(res.data.filter((per) => (per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO'))
                     .sort(function (a, b) {
                         if (a.persona.profesionOficio1[0].pro_Sub_Categoria < b.persona.profesionOficio1[0].pro_Sub_Categoria) { return -1; }
                         if (a.persona.profesionOficio1[0].pro_Sub_Categoria > b.persona.profesionOficio1[0].pro_Sub_Categoria) { return 1; }
                         return 0;
-                    }))
+                    })
+                )
             })
         );
     }
+
 
     const getInfoDistrito = () => {
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
@@ -250,6 +252,7 @@ export default function ReporteOficiosProfesiones() {
         doc.save("ReporteOficiosProfesiones.pdf");
     }
     return (
+
         <>
             <Container fluid>
                 <FormGroup>

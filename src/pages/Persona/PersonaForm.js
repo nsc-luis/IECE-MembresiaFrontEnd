@@ -20,8 +20,8 @@ class PersonaForm extends Component {
 
     // EXPRESIONES REGULARES PARA VALIDAR CAMPOS
     const_regex = {
-        alphaSpaceRequired: /^[a-zA-ZáéíóúÁÉÍÓÚ]{2}[a-zA-ZÑáéíóúÁÉÍÓÚ\d\s]{0,37}$/,
-        alfaSpace: /^[a-zA-ZÑ\s]{0,37}$/,
+        alphaSpaceRequired: /^[a-zA-ZáéíóúÁÉÍÓÚ]{2}[a-zA-ZÑñáéíóúÁÉÍÓÚ\d\s]{0,37}$/,
+        alfaSpace: /^[a-zñA-ZÑ\s]{0,37}$/,
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
         formatoEmail: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         formatoTelefono: /^(\+\d{1,3})*(\(\d{2,3}\))*\d{7,25}$/
