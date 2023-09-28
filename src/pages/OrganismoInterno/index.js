@@ -18,17 +18,111 @@ export default class OrganismoInterno extends Component {
             },
             organismosInternos: [],
             mensajeDelProceso: "Procesando...",
-            modalShow: false
+            modalShow: false,
+            showForm: false,
+            showDeptoInfantil: false,
+            org_CategoriaInvalid: false,
+            org_Tipo_OrganismoInvalid: false,
+            org_Fecha_OrganizacionInvalid: false,
+            org_NombreInvalid: false,
+            oid_PresidenteInvalid: false,
+            oid_SecretarioInvalid: false,
+            oid_TesoreroInvalid: false,
+            mujeres: [],
+            jovenes: [],
+            ninos: []
         }
     }
 
     componentDidMount() {
         this.getOrganismosInternosBySector();
         window.scrollTo(0, 0);
+        this.setState({
+            organismoInterno: {
+                ...this.state.organismoInterno,
+                oi: {
+                    ...this.state.organismoInterno.oi,
+                    org_Activo: true,
+                    org_Usuario: this.infoSesion.pem_Id_Ministro,
+                    org_Categoria: "0",
+                    org_Fecha_Organizacion: "",
+                    org_Nombre: "",
+                    org_Tipo_Organismo: "0",
+                    org_Id_Sector: localStorage.getItem("sector")
+                },
+                oid: {
+                    ...this.state.organismoInterno.oid,
+                    oid_Director: 0,
+                    oid_Presidente: "0",
+                    oid_Secretario: "0",
+                    oid_Tesorero: "0",
+                    oid_Vice_Presidente: "0",
+                    oid_Sub_Secretario: "0",
+                    oid_Sub_Tesorero: "0"
+                }
+            }
+        })
     }
 
     activaModal = () => {
         this.setState({ modalShow: !this.state.modalShow })
+    }
+
+    mostrarFormulario = () => {
+        this.setState({ showForm: !this.state.showForm })
+    }
+
+    onChangeOI = (e) => {
+        this.setState({
+            organismoInterno: {
+                ...this.state.organismoInterno,
+                oi: {
+                    ...this.state.organismoInterno.oi,
+                    [e.target.name]: e.target.value.toUpperCase()
+                }
+            }
+        })
+
+        if (e.target.name === "org_Categoria" && e.target.value === "FEMENIL") {
+            helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetMujeresBySector/${localStorage.getItem('sector')}`)
+                .then(res => {
+                    this.setState({ mujeres: res.data.mujeres })
+                }))
+        }
+
+        if (e.target.name === "org_Categoria" && e.target.value === "JUVENIL") {
+            helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetJovenesBySector/${localStorage.getItem('sector')}`)
+                .then(res => {
+                    this.setState({ jovenes: res.data.jovenes })
+                }))
+        }
+
+        if (e.target.name === "org_Categoria" && e.target.value === "INFANTIL") {
+            helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetNinosBySector/${localStorage.getItem('sector')}`)
+                .then(res => {
+                    this.setState({ ninos: res.data.ninos })
+                }))
+        }
+
+        if (e.target.name === "org_Tipo_Organismo" && e.target.value === "DEPARTAMENTO") {
+            this.setState({ showDeptoInfantil: true })
+        }
+
+        if (e.target.name === "org_Tipo_Organismo" && e.target.value !== "DEPARTAMENTO") {
+            this.setState({ showDeptoInfantil: false })
+        }
+    }
+
+    onChangeOID = (e) => {
+        this.setState({
+            organismoInterno: {
+                ...this.state.organismoInterno,
+                oid: {
+                    ...this.state.organismoInterno.oid,
+                    [e.target.name]: e.target.value.toUpperCase()
+                }
+            }
+        })
     }
 
     getOrganismosInternosBySector = async () => {
@@ -46,180 +140,360 @@ export default class OrganismoInterno extends Component {
         catch {
             alert("ERROR!\nOcurrio un problema al consultar la información, cierre la aplicación y vuelva a intentar.")
         }
+    }
 
+    enviarInfo = async (e) => {
+        e.preventDefault()
+
+        this.setState({
+            org_Tipo_OrganismoInvalid: this.state.organismoInterno.oi.org_Tipo_Organismo === "0" ? true : false,
+            org_CategoriaInvalid: this.state.organismoInterno.oi.org_Categoria === "0" ? true : false,
+            org_NombreInvalid: this.state.organismoInterno.oi.org_Nombre === "" ? true : false,
+            org_Fecha_OrganizacionInvalid: this.state.organismoInterno.oi.org_Fecha_Organizacion === "" ? true : false,
+            oid_PresidenteInvalid: this.state.organismoInterno.oid.oid_Presidente === "0" ? true : false,
+            oid_SecretarioInvalid: this.state.organismoInterno.oid.oid_Secretario === "0" ? true : false,
+            oid_TesoreroInvalid: this.state.organismoInterno.oid.oid_Tesorero === "0" ? true : false
+        })
+
+        if (this.state.org_Tipo_OrganismoInvalid
+            && this.state.org_CategoriaInvalid
+            && this.state.org_NombreInvalid
+            && this.state.org_Fecha_OrganizacionInvalid
+            && this.state.oid_PresidenteInvalid
+            && this.state.oid_SecretarioInvalid
+            && this.state.oid_TesoreroInvalid) {
+            return false
+        }
+
+        await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Organismo_Interno`, this.state.organismoInterno)
+            .then(res => {
+                if (res.data.status === "success") {
+                    this.mostrarFormulario()
+                }
+                else {
+                    alert(res.data.mensaje)
+                }
+            })
+        )
     }
 
     render() {
         return (
             <Container>
                 <FormGroup>
-                    <Button
-                        type="button"
-                        color="primary"
-                    >
-                        Agregar organismo interno
-                    </Button>
+                    <Row>
+                        <Col xs="12" style={{ textAlign: 'right' }}>
+                            <Button
+                                type="button"
+                                color="primary"
+                                onClick={this.mostrarFormulario}
+                                hidden={this.state.showForm}
+                            >
+                                Agregar organismo interno
+                            </Button>
+                        </Col>
+                    </Row>
                 </FormGroup>
-                <FormGroup>
-                    <Card>
-                        <Form onSubmit="">
-                            <CardBody>
-                                <FormGroup>
+
+                {this.state.showForm &&
+                    <FormGroup>
+                        <Card>
+                            <Form onSubmit={this.enviarInfo}>
+                                <CardBody>
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="12">
+                                                <Alert color="warning">
+                                                    <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
+                                                </Alert>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="3">
+                                                * TIPO DE ORGANISMO:
+                                            </Col>
+                                            <Col xs="9">
+                                                <Input
+                                                    type="select"
+                                                    name="org_Tipo_Organismo"
+                                                    onChange={this.onChangeOI}
+                                                    value={this.state.organismoInterno.oi.org_Tipo_Organismo}
+                                                    invalid={this.state.org_Tipo_OrganismoInvalid}
+                                                >
+                                                    <option value="0">Seleccione el tipo de organismo</option>
+                                                    <option value="SOCIEDAD">Sociedad</option>
+                                                    <option value="DEPARTAMENTO">Departamento</option>
+                                                </Input>
+                                                <FormFeedback>Este campo es requerido</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="3">
+                                                * CATEGORIA:
+                                            </Col>
+                                            <Col xs="9">
+                                                <Input
+                                                    type="select"
+                                                    name="org_Categoria"
+                                                    onChange={this.onChangeOI}
+                                                    value={this.state.organismoInterno.oi.org_Categoria}
+                                                    invalid={this.state.org_CategoriaInvalid}
+                                                >
+                                                    <option value="0">Seleccione una categoria</option>
+                                                    <option value="FEMENIL">Femenil</option>
+                                                    <option value="JUVENIL">Juvenil</option>
+
+                                                    {this.state.showDeptoInfantil &&
+                                                        <option value="INFANTIL">Infantil</option>
+                                                    }
+
+                                                </Input>
+                                                <FormFeedback>Este campo es requerido</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="3">
+                                                * NOMBRE:
+                                            </Col>
+                                            <Col xs="9">
+                                                <Input
+                                                    type="text"
+                                                    name="org_Nombre"
+                                                    onChange={this.onChangeOI}
+                                                    value={this.state.organismoInterno.oi.org_Nombre}
+                                                    invalid={this.state.org_NombreInvalid}
+                                                />
+                                                <FormFeedback>Este campo es requerido</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="3">
+                                                * FECHA DE ORGANIZACIÓN:
+                                            </Col>
+                                            <Col xs="3">
+                                                <Input
+                                                    type="date"
+                                                    name="org_Fecha_Organizacion"
+                                                    onChange={this.onChangeOI}
+                                                    value={this.state.organismoInterno.oi.org_Fecha_Organizacion}
+                                                    invalid={this.state.org_Fecha_OrganizacionInvalid}
+                                                />
+                                                <FormFeedback>Este campo es requerido</FormFeedback>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="4">
+                                                <Input
+                                                    type="select"
+                                                    name="oid_Presidente"
+                                                    onChange={this.onChangeOID}
+                                                    value={this.state.organismoInterno.oid.oid_Presidente}
+                                                    invalid={this.state.oid_PresidenteInvalid}
+                                                >
+                                                    <option value="0">Seleccione una persona</option>
+                                                    {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
+                                                        <>
+                                                            {
+                                                                this.state.mujeres.map((mujer) => {
+                                                                    return (
+                                                                        <React.Fragment key={mujer.per_Id_Persona}>
+                                                                            <option value={mujer.per_Id_Persona}>
+                                                                                {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
+                                                                            </option>
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </>
+                                                    }
+
+                                                    {this.state.organismoInterno.oi.org_Categoria === "JUVENIL" &&
+                                                        <>
+                                                            {
+                                                                this.state.jovenes.map((joven) => {
+                                                                    return (
+                                                                        <React.Fragment key={joven.per_Id_Persona}>
+                                                                            <option value={joven.per_Id_Persona}>
+                                                                                {joven.per_Nombre} {joven.per_Apellido_Paterno} {joven.per_Apellido_Materno}
+                                                                            </option>
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </>
+                                                    }
+
+                                                    {this.state.organismoInterno.oi.org_Categoria === "INFANTIL" &&
+                                                        <>
+                                                            {
+                                                                this.state.ninos.map((nino) => {
+                                                                    return (
+                                                                        <React.Fragment key={nino.per_Id_Persona}>
+                                                                            <option value={nino.per_Id_Persona}>
+                                                                                {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno}
+                                                                            </option>
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </>
+                                                    }
+
+                                                </Input>
+                                                <Label>
+                                                    * Presidente
+                                                </Label>
+                                                <FormFeedback>Este campo es requerido</FormFeedback>
+                                            </Col>
+                                            <Col xs="4">
+                                                <Input
+                                                    type="select"
+                                                    name="oid_Secretario"
+                                                    onChange={this.onChangeOID}
+                                                    value={this.state.organismoInterno.oid.oid_Secretario}
+                                                    invalid={this.state.oid_SecretarioInvalid}
+                                                >
+                                                    <option value="0">Seleccione una persona</option>
+                                                    {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
+                                                        <>
+                                                            {
+                                                                this.state.mujeres.map((mujer) => {
+                                                                    return (
+                                                                        <React.Fragment key={mujer.per_Id_Persona}>
+                                                                            <option value={mujer.per_Id_Persona}>
+                                                                                {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
+                                                                            </option>
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </>
+                                                    }
+                                                </Input>
+                                                <Label>
+                                                    * Secretario
+                                                </Label>
+                                                <FormFeedback>Este campo es requerido</FormFeedback>
+                                            </Col>
+                                            <Col xs="4">
+                                                <Input
+                                                    type="select"
+                                                    name="oid_Tesorero"
+                                                    onChange={this.onChangeOID}
+                                                    value={this.state.organismoInterno.oid.oid_Tesorero}
+                                                    invalid={this.state.oid_SecretarioInvalid}
+                                                >
+                                                    <option value="0">Seleccione una persona</option>
+                                                    {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
+                                                        <>
+                                                            {
+                                                                this.state.mujeres.map((mujer) => {
+                                                                    return (
+                                                                        <React.Fragment key={mujer.per_Id_Persona}>
+                                                                            <option value={mujer.per_Id_Persona}>
+                                                                                {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
+                                                                            </option>
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </>
+                                                    }
+                                                </Input>
+                                                <Label>
+                                                    * Tesorero
+                                                </Label>
+                                                <FormFeedback>Este campo es requerido</FormFeedback>
+                                            </Col>
+                                            oid_Presidente    </Row>
+                                    </FormGroup>
+
+                                    <FormGroup>
+                                        <Row>
+                                            <Col xs="4">
+                                                <Input
+                                                    type="select"
+                                                    name="oid_Vice_Presidente"
+                                                    onChange={this.onChangeOID}
+                                                    value={this.state.organismoInterno.oid.oid_Vice_Presidente}
+                                                >
+                                                    <option value="0">Seleccione una persona</option>
+                                                    <option value="1">oid_Vice_Presidente</option>
+                                                </Input>
+                                                <Label>
+                                                    * Vice-Presidente
+                                                </Label>
+                                            </Col>
+                                            <Col xs="4">
+                                                <Input
+                                                    type="select"
+                                                    name="oid_Sub_Secretario"
+                                                    onChange={this.onChangeOID}
+                                                    value={this.state.organismoInterno.oid.oid_Sub_Secretario}
+                                                >
+                                                    <option value="0">Seleccione una persona</option>
+                                                    <option value="1">oid_Sub_Secretario</option>
+                                                </Input>
+                                                <Label>
+                                                    * Sub-Secretario
+                                                </Label>
+                                            </Col>
+                                            <Col xs="4">
+                                                <Input
+                                                    type="select"
+                                                    name="oid_Sub_Tesorero"
+                                                    onChange={this.onChangeOID}
+                                                    value={this.state.organismoInterno.oid.oid_Sub_Tesorero}
+                                                >
+                                                    <option value="0">Seleccione una persona</option>
+                                                    <option value="1">oid_Sub_Tesorero</option>
+                                                </Input>
+                                                <Label>
+                                                    * Sub-Tesorero
+                                                </Label>
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+
+                                </CardBody>
+                                <CardFooter>
                                     <Row>
-                                        <Col xs="12">
-                                            <Alert color="warning">
-                                                <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
-                                            </Alert>
+                                        <Col xs="12" style={{ textAlign: 'right' }}>
+                                            <Button
+                                                type="button"
+                                                color="secondary"
+                                                className="entreBotones"
+                                                onClick={this.mostrarFormulario}
+                                            >
+                                                Cancelar
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                                color="success"
+                                            >
+                                                <span className="fa fa-users faIconMarginRight"></span>Agregar organismo
+                                            </Button>
                                         </Col>
                                     </Row>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * TIPO DE ORGANISMO:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione el tipo de organismo</option>
-                                                <option value="sociedad">Sociedad</option>
-                                                <option value="departamento">Departamento</option>
-                                            </Input>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="3">
-                                            * CATEGORIA:
-                                        </Col>
-                                        <Col xs="9">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione una categoria</option>
-                                                <option value="femenil">Femenil</option>
-                                                <option value="juvenil">Juvenil</option>
-                                                <option value="infantil">Infantil</option>
-
-                                            </Input>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="4">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-
-                                            </Input>
-                                            <Label>
-                                                * Presidente
-                                            </Label>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                        <Col xs="4">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-
-                                            </Input>
-                                            <Label>
-                                                * Secretario
-                                            </Label>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                        <Col xs="4">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-
-                                            </Input>
-                                            <Label>
-                                                * Tesorero
-                                            </Label>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                                <FormGroup>
-                                    <Row>
-                                        <Col xs="4">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-
-                                            </Input>
-                                            <Label>
-                                                * Vice-Presidente
-                                            </Label>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                        <Col xs="4">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-
-                                            </Input>
-                                            <Label>
-                                                * Sub-Secretario
-                                            </Label>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                        <Col xs="4">
-                                            <Input
-                                                type="select"
-                                                name=""
-                                            >
-                                                <option value="0">Seleccione una persona</option>
-
-                                            </Input>
-                                            <Label>
-                                                * Sub-Tesorero
-                                            </Label>
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-
-                            </CardBody>
-                            <CardFooter>
-                                <Link
-                                    to="/ListaDePersonal"
-                                >
-                                    <Button type="button" color="secondary" className="entreBotones">
-                                        Cancelar
-                                    </Button>
-                                </Link>
-                                <Button
-                                    type="submit"
-                                    color="success"
-                                >
-                                    <span className="fa fa-users faIconMarginRight"></span>Agregar organismo
-                                </Button>
-                            </CardFooter>
-                        </Form>
-                    </Card>
-                </FormGroup>
+                                </CardFooter>
+                            </Form>
+                        </Card>
+                    </FormGroup>
+                }
 
                 <FormGroup>
                     <table className="table table-striped table-bordered table-sm">
