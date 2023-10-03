@@ -51,6 +51,7 @@ import ComisionesLocales from './pages/PersonalAdministrativo/ComisionesLocales'
 import Administracion from './pages/PersonalAdministrativo/Administracion';
 import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDistritales';
 import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
+import OrganismoInterno from './pages/OrganismoInterno'
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -110,6 +111,7 @@ class Router extends Component {
                         <Route exact path="/Auxiliares" component={Auxiliares} />
                         <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
                         <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
+                        <Route exact path="/OrganismoInterno" component={OrganismoInterno} />
 
                         <Route exact path="/Administracion" component={Administracion} />
                         <Route exact path="/AdministracionDistrital" component={AdministracionDistrital} />
