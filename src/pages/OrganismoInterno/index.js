@@ -12,25 +12,20 @@ export default class OrganismoInterno extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            organismoInterno: {
-                oi: {},
-                oid: {}
-            },
             organismosInternos: [],
             mensajeDelProceso: "Procesando...",
             modalShow: false,
             showForm: false,
             showDeptoInfantil: false,
-            org_CategoriaInvalid: false,
-            org_Tipo_OrganismoInvalid: false,
-            org_Fecha_OrganizacionInvalid: false,
-            org_NombreInvalid: false,
-            oid_PresidenteInvalid: false,
-            oid_SecretarioInvalid: false,
-            oid_TesoreroInvalid: false,
-            mujeres: [],
-            jovenes: [],
-            ninos: []
+            organismoInterno: {},
+            org_Id: "0",
+            cargo: "0",
+            per_Id_Persona: "0",
+            org_IdInvalid: false,
+            cargoInvalid: false,
+            per_Id_PersonaInvalid: false,
+            personas: [],
+            mostrarCargosSuplentes: false
         }
     }
 
@@ -38,29 +33,9 @@ export default class OrganismoInterno extends Component {
         this.getOrganismosInternosBySector();
         window.scrollTo(0, 0);
         this.setState({
-            organismoInterno: {
-                ...this.state.organismoInterno,
-                oi: {
-                    ...this.state.organismoInterno.oi,
-                    org_Activo: true,
-                    org_Usuario: this.infoSesion.pem_Id_Ministro,
-                    org_Categoria: "0",
-                    org_Fecha_Organizacion: "",
-                    org_Nombre: "",
-                    org_Tipo_Organismo: "0",
-                    org_Id_Sector: localStorage.getItem("sector")
-                },
-                oid: {
-                    ...this.state.organismoInterno.oid,
-                    oid_Director: 0,
-                    oid_Presidente: "0",
-                    oid_Secretario: "0",
-                    oid_Tesorero: "0",
-                    oid_Vice_Presidente: "0",
-                    oid_Sub_Secretario: "0",
-                    oid_Sub_Tesorero: "0"
-                }
-            }
+            org_Id: "0",
+            cargo: "0",
+            per_Id_Persona: "0"
         })
     }
 
@@ -72,57 +47,46 @@ export default class OrganismoInterno extends Component {
         this.setState({ showForm: !this.state.showForm })
     }
 
-    onChangeOI = (e) => {
-        this.setState({
-            organismoInterno: {
-                ...this.state.organismoInterno,
-                oi: {
-                    ...this.state.organismoInterno.oi,
-                    [e.target.name]: e.target.value.toUpperCase()
-                }
-            }
-        })
+    onChangeOI = async (e) => {
+        this.setState({ [e.target.name]: e.target.value })
 
-        if (e.target.name === "org_Categoria" && e.target.value === "FEMENIL") {
-            helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetMujeresBySector/${localStorage.getItem('sector')}`)
+        if (e.target.name === "org_Id" && e.target.value === "0") {
+            this.setState({
+                cargo: "0",
+                per_Id_Persona: "0",
+                personas: [],
+                mostrarCargosSuplentes: false
+            })
+        }
+
+        if (e.target.name === "org_Id" && e.target.value !== "0")
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/${e.target.value}`)
                 .then(res => {
-                    this.setState({ mujeres: res.data.mujeres })
+                    if (res.data.orgInt.org_Tipo_Organismo === "FEMENIL") {
+                        helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetMujeresBySector/${localStorage.getItem('sector')}`)
+                            .then(res => {
+                                this.setState({ personas: res.data.mujeres })
+                            }))
+                    }
+                    if (res.data.orgInt.org_Tipo_Organismo === "JUVENIL") {
+                        helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetJovenesBySector/${localStorage.getItem('sector')}`)
+                            .then(res => {
+                                this.setState({ personas: res.data.jovenes })
+                            }))
+                    }
+                    if (res.data.orgInt.org_Tipo_Organismo === "INFANTIL") {
+                        helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetNinosBySector/${localStorage.getItem('sector')}`)
+                            .then(res => {
+                                this.setState({ personas: res.data.ninos })
+                            }))
+                    }
+                    if (res.data.orgInt.org_Categoria === "SOCIEDAD") {
+                        this.setState({ mostrarCargosSuplentes: true })
+                    }
+                    else {
+                        this.setState({ mostrarCargosSuplentes: false })
+                    }
                 }))
-        }
-
-        if (e.target.name === "org_Categoria" && e.target.value === "JUVENIL") {
-            helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetJovenesBySector/${localStorage.getItem('sector')}`)
-                .then(res => {
-                    this.setState({ jovenes: res.data.jovenes })
-                }))
-        }
-
-        if (e.target.name === "org_Categoria" && e.target.value === "INFANTIL") {
-            helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetNinosBySector/${localStorage.getItem('sector')}`)
-                .then(res => {
-                    this.setState({ ninos: res.data.ninos })
-                }))
-        }
-
-        if (e.target.name === "org_Tipo_Organismo" && e.target.value === "DEPARTAMENTO") {
-            this.setState({ showDeptoInfantil: true })
-        }
-
-        if (e.target.name === "org_Tipo_Organismo" && e.target.value !== "DEPARTAMENTO") {
-            this.setState({ showDeptoInfantil: false })
-        }
-    }
-
-    onChangeOID = (e) => {
-        this.setState({
-            organismoInterno: {
-                ...this.state.organismoInterno,
-                oid: {
-                    ...this.state.organismoInterno.oid,
-                    [e.target.name]: e.target.value.toUpperCase()
-                }
-            }
-        })
     }
 
     getOrganismosInternosBySector = async () => {
@@ -146,30 +110,35 @@ export default class OrganismoInterno extends Component {
         e.preventDefault()
 
         this.setState({
-            org_Tipo_OrganismoInvalid: this.state.organismoInterno.oi.org_Tipo_Organismo === "0" ? true : false,
-            org_CategoriaInvalid: this.state.organismoInterno.oi.org_Categoria === "0" ? true : false,
-            org_NombreInvalid: this.state.organismoInterno.oi.org_Nombre === "" ? true : false,
-            org_Fecha_OrganizacionInvalid: this.state.organismoInterno.oi.org_Fecha_Organizacion === "" ? true : false,
-            oid_PresidenteInvalid: this.state.organismoInterno.oid.oid_Presidente === "0" ? true : false,
-            oid_SecretarioInvalid: this.state.organismoInterno.oid.oid_Secretario === "0" ? true : false,
-            oid_TesoreroInvalid: this.state.organismoInterno.oid.oid_Tesorero === "0" ? true : false
+            org_IdInvalid: this.state.org_Id === "0" ? true : false,
+            cargoInvalid: this.state.cargo === "0" ? true : false,
+            per_Id_PersonaInvalid: this.state.per_Id_Persona === "0" ? true : false
         })
 
-        if (this.state.organismoInterno.oi.org_Tipo_Organismo === "0"
-            || this.state.organismoInterno.oi.org_Categoria === "0"
-            || this.state.organismoInterno.oi.org_Nombre === ""
-            || this.state.organismoInterno.oi.org_Fecha_Organizacion === ""
-            || this.state.organismoInterno.oi.oid_Presidente === "0"
-            || this.state.organismoInterno.oi.oid_Secretario === "0"
-            || this.state.organismoInterno.oi.oid_Tesorero === "0") {
+        if (this.state.org_Id === "0"
+            || this.state.cargo === "0"
+            || this.state.per_Id_Persona === "0") {
             return false
         }
 
-        await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Organismo_Interno`, this.state.organismoInterno)
+        var asignacion = {
+            cargo: this.state.cargo,
+            per_Id_Persona: this.state.per_Id_Persona
+        }
+
+        await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Organismo_Interno/${this.state.org_Id}`, asignacion)
             .then(res => {
                 if (res.data.status === "success") {
-                    this.mostrarFormulario()
                     this.getOrganismosInternosBySector()
+                    this.setState({
+                        org_Id: "0",
+                        cargo: "0",
+                        per_Id_Persona: "0",
+                        org_IdInvalid: false,
+                        cargoInvalid: false,
+                        per_Id_PersonaInvalid: false,
+                        showForm: false
+                    })
                 }
                 else {
                     alert(res.data.mensaje)
@@ -178,21 +147,31 @@ export default class OrganismoInterno extends Component {
         )
     }
 
-    borrarOrganismo = async (id) => {
-        await helpers.validaToken().then(helpers.authAxios.delete(`${helpers.url_api}/Organismo_Interno/${id}`)
+    borrarAsignacion = async (objeto, puesto) => {
+        var asignacion = {
+            cargo: puesto,
+            per_Id_Persona: 0
+        }
+
+        await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Organismo_Interno/${objeto.oi.org_Id}`, asignacion)
             .then(res => {
                 if (res.data.status === "success") {
-                    this.mostrarFormulario()
                     this.getOrganismosInternosBySector()
+                    this.setState({
+                        org_Id: "0",
+                        cargo: "0",
+                        per_Id_Persona: "0",
+                        org_IdInvalid: false,
+                        cargoInvalid: false,
+                        per_Id_PersonaInvalid: false,
+                        showForm: false
+                    })
                 }
                 else {
                     alert(res.data.mensaje)
                 }
-            }))
-    }
-
-    editarOrganismo = (id) => {
-        console.log(id)
+            })
+        )
     }
 
     render() {
@@ -207,7 +186,7 @@ export default class OrganismoInterno extends Component {
                                 onClick={this.mostrarFormulario}
                                 hidden={this.state.showForm}
                             >
-                                Agregar organismo interno
+                                Asignar cargo
                             </Button>
                         </Col>
                     </Row>
@@ -230,19 +209,24 @@ export default class OrganismoInterno extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="3">
-                                                * TIPO DE ORGANISMO:
+                                                * ORGANISMO INTERNO:
                                             </Col>
                                             <Col xs="9">
                                                 <Input
                                                     type="select"
-                                                    name="org_Tipo_Organismo"
+                                                    name="org_Id"
                                                     onChange={this.onChangeOI}
-                                                    value={this.state.organismoInterno.oi.org_Tipo_Organismo}
-                                                    invalid={this.state.org_Tipo_OrganismoInvalid}
+                                                    value={this.state.org_Id}
+                                                    invalid={this.state.org_IdInvalid}
                                                 >
                                                     <option value="0">Seleccione el tipo de organismo</option>
-                                                    <option value="SOCIEDAD">Sociedad</option>
-                                                    <option value="DEPARTAMENTO">Departamento</option>
+                                                    {this.state.organismosInternos.map((orgInt) => {
+                                                        return (
+                                                            <React.Fragment key={orgInt.oi.org_Id}>
+                                                                <option value={orgInt.oi.org_Id}>{orgInt.oi.org_Tipo_Organismo} {orgInt.oi.org_Categoria} {orgInt.oi.org_Nombre}</option>
+                                                            </React.Fragment>
+                                                        )
+                                                    })}
                                                 </Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
@@ -252,24 +236,29 @@ export default class OrganismoInterno extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="3">
-                                                * CATEGORIA:
+                                                * CARGO:
                                             </Col>
                                             <Col xs="9">
                                                 <Input
                                                     type="select"
-                                                    name="org_Categoria"
+                                                    name="cargo"
                                                     onChange={this.onChangeOI}
-                                                    value={this.state.organismoInterno.oi.org_Categoria}
-                                                    invalid={this.state.org_CategoriaInvalid}
+                                                    value={this.state.cargo}
+                                                    invalid={this.state.cargoInvalid}
                                                 >
                                                     <option value="0">Seleccione una categoria</option>
-                                                    <option value="FEMENIL">Femenil</option>
-                                                    <option value="JUVENIL">Juvenil</option>
-
-                                                    {this.state.showDeptoInfantil &&
-                                                        <option value="INFANTIL">Infantil</option>
+                                                    <option value="presidente">Presidente</option>
+                                                    {this.state.mostrarCargosSuplentes &&
+                                                        <option value="vicePresidente">Vice-Presidente</option>
                                                     }
-
+                                                    <option value="secretario">Secretario</option>
+                                                    {this.state.mostrarCargosSuplentes &&
+                                                        <option value="subSecretario">Sub-Secretario</option>
+                                                    }
+                                                    <option value="tesorero">Tesorero</option>
+                                                    {this.state.mostrarCargosSuplentes &&
+                                                        <option value="subTesorero">Sub-Tesorero</option>
+                                                    }
                                                 </Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
@@ -279,418 +268,29 @@ export default class OrganismoInterno extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="3">
-                                                * NOMBRE:
+                                                * PERSONA:
                                             </Col>
                                             <Col xs="9">
                                                 <Input
-                                                    type="text"
-                                                    name="org_Nombre"
+                                                    type="select"
+                                                    name="per_Id_Persona"
                                                     onChange={this.onChangeOI}
-                                                    value={this.state.organismoInterno.oi.org_Nombre}
-                                                    invalid={this.state.org_NombreInvalid}
-                                                />
+                                                    value={this.state.per_Id_Persona}
+                                                    invalid={this.state.per_Id_PersonaInvalid}
+                                                >
+                                                    <option value="0">Selecciona una persona</option>
+                                                    {this.state.personas.map((p) => {
+                                                        return (
+                                                            <React.Fragment key={p.per_Id_Persona}>
+                                                                <option value={p.per_Id_Persona}> {p.per_Nombre} {p.per_Apellido_Paterno} {p.per_Apellido_Materno} </option>
+                                                            </React.Fragment>
+                                                        )
+                                                    })}
+                                                </Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
                                         </Row>
                                     </FormGroup>
-
-                                    <FormGroup>
-                                        <Row>
-                                            <Col xs="3">
-                                                * FECHA DE ORGANIZACIÓN:
-                                            </Col>
-                                            <Col xs="3">
-                                                <Input
-                                                    type="date"
-                                                    name="org_Fecha_Organizacion"
-                                                    onChange={this.onChangeOI}
-                                                    value={this.state.organismoInterno.oi.org_Fecha_Organizacion}
-                                                    invalid={this.state.org_Fecha_OrganizacionInvalid}
-                                                />
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-
-                                    <FormGroup>
-                                        <Row>
-                                            <Col xs="4">
-                                                <Input
-                                                    type="select"
-                                                    name="oid_Presidente"
-                                                    onChange={this.onChangeOID}
-                                                    value={this.state.organismoInterno.oid.oid_Presidente}
-                                                    invalid={this.state.oid_PresidenteInvalid}
-                                                >
-                                                    <option value="0">Seleccione una persona</option>
-                                                    {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.mujeres.map((mujer) => {
-                                                                    return (
-                                                                        <React.Fragment key={mujer.per_Id_Persona}>
-                                                                            <option value={mujer.per_Id_Persona}>
-                                                                                {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-
-                                                    {this.state.organismoInterno.oi.org_Categoria === "JUVENIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.jovenes.map((joven) => {
-                                                                    return (
-                                                                        <React.Fragment key={joven.per_Id_Persona}>
-                                                                            <option value={joven.per_Id_Persona}>
-                                                                                {joven.per_Nombre} {joven.per_Apellido_Paterno} {joven.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-
-                                                    {this.state.organismoInterno.oi.org_Categoria === "INFANTIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.ninos.map((nino) => {
-                                                                    return (
-                                                                        <React.Fragment key={nino.per_Id_Persona}>
-                                                                            <option value={nino.per_Id_Persona}>
-                                                                                {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-
-                                                </Input>
-                                                <Label>
-                                                    * Presidente
-                                                </Label>
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="4">
-                                                <Input
-                                                    type="select"
-                                                    name="oid_Secretario"
-                                                    onChange={this.onChangeOID}
-                                                    value={this.state.organismoInterno.oid.oid_Secretario}
-                                                    invalid={this.state.oid_SecretarioInvalid}
-                                                >
-                                                    <option value="0">Seleccione una persona</option>
-                                                    {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.mujeres.map((mujer) => {
-                                                                    return (
-                                                                        <React.Fragment key={mujer.per_Id_Persona}>
-                                                                            <option value={mujer.per_Id_Persona}>
-                                                                                {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-
-                                                    {this.state.organismoInterno.oi.org_Categoria === "JUVENIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.jovenes.map((joven) => {
-                                                                    return (
-                                                                        <React.Fragment key={joven.per_Id_Persona}>
-                                                                            <option value={joven.per_Id_Persona}>
-                                                                                {joven.per_Nombre} {joven.per_Apellido_Paterno} {joven.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-
-                                                    {this.state.organismoInterno.oi.org_Categoria === "INFANTIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.ninos.map((nino) => {
-                                                                    return (
-                                                                        <React.Fragment key={nino.per_Id_Persona}>
-                                                                            <option value={nino.per_Id_Persona}>
-                                                                                {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-                                                </Input>
-                                                <Label>
-                                                    * Secretario
-                                                </Label>
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="4">
-                                                <Input
-                                                    type="select"
-                                                    name="oid_Tesorero"
-                                                    onChange={this.onChangeOID}
-                                                    value={this.state.organismoInterno.oid.oid_Tesorero}
-                                                    invalid={this.state.oid_SecretarioInvalid}
-                                                >
-                                                    <option value="0">Seleccione una persona</option>
-                                                    {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.mujeres.map((mujer) => {
-                                                                    return (
-                                                                        <React.Fragment key={mujer.per_Id_Persona}>
-                                                                            <option value={mujer.per_Id_Persona}>
-                                                                                {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-
-                                                    {this.state.organismoInterno.oi.org_Categoria === "JUVENIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.jovenes.map((joven) => {
-                                                                    return (
-                                                                        <React.Fragment key={joven.per_Id_Persona}>
-                                                                            <option value={joven.per_Id_Persona}>
-                                                                                {joven.per_Nombre} {joven.per_Apellido_Paterno} {joven.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-
-                                                    {this.state.organismoInterno.oi.org_Categoria === "INFANTIL" &&
-                                                        <>
-                                                            {
-                                                                this.state.ninos.map((nino) => {
-                                                                    return (
-                                                                        <React.Fragment key={nino.per_Id_Persona}>
-                                                                            <option value={nino.per_Id_Persona}>
-                                                                                {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno}
-                                                                            </option>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    }
-                                                </Input>
-                                                <Label>
-                                                    * Tesorero
-                                                </Label>
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-
-                                    {this.state.organismoInterno.oi.org_Tipo_Organismo === "DEPARTAMENTO" &&
-                                        <FormGroup>
-                                            <Row>
-                                                <Col xs="4">
-                                                    <Input
-                                                        type="select"
-                                                        name="oid_Vice_Presidente"
-                                                        onChange={this.onChangeOID}
-                                                        value={this.state.organismoInterno.oid.oid_Vice_Presidente}
-                                                    >
-                                                        <option value="0">Seleccione una persona</option>
-                                                        {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.mujeres.map((mujer) => {
-                                                                        return (
-                                                                            <React.Fragment key={mujer.per_Id_Persona}>
-                                                                                <option value={mujer.per_Id_Persona}>
-                                                                                    {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-
-                                                        {this.state.organismoInterno.oi.org_Categoria === "JUVENIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.jovenes.map((joven) => {
-                                                                        return (
-                                                                            <React.Fragment key={joven.per_Id_Persona}>
-                                                                                <option value={joven.per_Id_Persona}>
-                                                                                    {joven.per_Nombre} {joven.per_Apellido_Paterno} {joven.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-
-                                                        {this.state.organismoInterno.oi.org_Categoria === "INFANTIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.ninos.map((nino) => {
-                                                                        return (
-                                                                            <React.Fragment key={nino.per_Id_Persona}>
-                                                                                <option value={nino.per_Id_Persona}>
-                                                                                    {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-                                                    </Input>
-                                                    <Label>
-                                                        * Vice-Presidente
-                                                    </Label>
-                                                </Col>
-                                                <Col xs="4">
-                                                    <Input
-                                                        type="select"
-                                                        name="oid_Sub_Secretario"
-                                                        onChange={this.onChangeOID}
-                                                        value={this.state.organismoInterno.oid.oid_Sub_Secretario}
-                                                    >
-                                                        <option value="0">Seleccione una persona</option>
-                                                        {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.mujeres.map((mujer) => {
-                                                                        return (
-                                                                            <React.Fragment key={mujer.per_Id_Persona}>
-                                                                                <option value={mujer.per_Id_Persona}>
-                                                                                    {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-
-                                                        {this.state.organismoInterno.oi.org_Categoria === "JUVENIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.jovenes.map((joven) => {
-                                                                        return (
-                                                                            <React.Fragment key={joven.per_Id_Persona}>
-                                                                                <option value={joven.per_Id_Persona}>
-                                                                                    {joven.per_Nombre} {joven.per_Apellido_Paterno} {joven.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-
-                                                        {this.state.organismoInterno.oi.org_Categoria === "INFANTIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.ninos.map((nino) => {
-                                                                        return (
-                                                                            <React.Fragment key={nino.per_Id_Persona}>
-                                                                                <option value={nino.per_Id_Persona}>
-                                                                                    {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-                                                    </Input>
-                                                    <Label>
-                                                        * Sub-Secretario
-                                                    </Label>
-                                                </Col>
-                                                <Col xs="4">
-                                                    <Input
-                                                        type="select"
-                                                        name="oid_Sub_Tesorero"
-                                                        onChange={this.onChangeOID}
-                                                        value={this.state.organismoInterno.oid.oid_Sub_Tesorero}
-                                                    >
-                                                        <option value="0">Seleccione una persona</option>
-                                                        {this.state.organismoInterno.oi.org_Categoria === "FEMENIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.mujeres.map((mujer) => {
-                                                                        return (
-                                                                            <React.Fragment key={mujer.per_Id_Persona}>
-                                                                                <option value={mujer.per_Id_Persona}>
-                                                                                    {mujer.per_Nombre} {mujer.per_Apellido_Paterno} {mujer.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-
-                                                        {this.state.organismoInterno.oi.org_Categoria === "JUVENIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.jovenes.map((joven) => {
-                                                                        return (
-                                                                            <React.Fragment key={joven.per_Id_Persona}>
-                                                                                <option value={joven.per_Id_Persona}>
-                                                                                    {joven.per_Nombre} {joven.per_Apellido_Paterno} {joven.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-
-                                                        {this.state.organismoInterno.oi.org_Categoria === "INFANTIL" &&
-                                                            <>
-                                                                {
-                                                                    this.state.ninos.map((nino) => {
-                                                                        return (
-                                                                            <React.Fragment key={nino.per_Id_Persona}>
-                                                                                <option value={nino.per_Id_Persona}>
-                                                                                    {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno}
-                                                                                </option>
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </>
-                                                        }
-                                                    </Input>
-                                                    <Label>
-                                                        * Sub-Tesorero
-                                                    </Label>
-                                                </Col>
-                                            </Row>
-                                        </FormGroup>
-                                    }
-
                                 </CardBody>
                                 <CardFooter>
                                     <Row>
@@ -718,80 +318,180 @@ export default class OrganismoInterno extends Component {
                 }
 
                 {this.state.organismosInternos.length > 0 &&
-                    <FormGroup>
-                        <table className="table table-striped table-bordered table-sm">
-                            <thead className="text-center bg-gradient-info">
-                                <tr>
-                                    <th width="20%">NOMBRE</th>
-                                    <th width="10%">TIPO</th>
-                                    <th width="10%">CATEGORIA</th>
-                                    <th width="30%">DETALLE</th>
-                                    <th width="10%">ORGANIZACION</th>
-                                    <th width="10%">STATUS</th>
-                                    <th width="10%"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.organismosInternos.map((oic) => (
-                                    <tr key={oic.oi.org_Id}>
-                                        <td><b>{oic.oi.org_Nombre}</b></td>
-                                        <td className="text-center">{oic.oi.org_Tipo_Organismo}</td>
-                                        <td className="text-center">{oic.oi.org_Categoria}</td>
-                                        <td>
-                                            {oic.oid === null &&
-                                                <>SIN DATOS PARA MOSTRAR.</>
-                                            }
-                                            {oic.oid !== null &&
-                                                oic.oi.org_Tipo_Organismo === "DEPARTAMENTO" &&
+                    this.state.organismosInternos.map((obj) => (
+                        <FormGroup key={obj.oi.org_Id}>
+                            <Card>
+                                <CardHeader style={{ textAlign: "center" }}>
+                                    <h4>{obj.oi.org_Categoria} {obj.oi.org_Tipo_Organismo} {obj.oi.org_Nombre}</h4>
+                                </CardHeader>
+                                <CardBody>
+                                    <table className="table table-striped table-bordered table-sm">
+                                        <thead className="text-center bg-gradient-info">
+                                            <tr>
+                                                <th width="20%">CARGO</th>
+                                                <th width="60%">NOMBRE</th>
+                                                <th width="20%"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {obj.oi.org_Categoria === "DEPARTAMENTO" &&
                                                 <>
-                                                    <strong>Presidente:</strong> {oic.presidente !== null ? `${oic.presidente.per_Nombre} ${oic.presidente.per_Apellido_Paterno} ${oic.presidente.per_Apellido_Materno}` : "No asignado"}  <br />
-                                                    <strong>Secretario:</strong> {oic.secretario !== null ? `${oic.secretario.per_Nombre} ${oic.secretario.per_Apellido_Paterno} ${oic.secretario.per_Apellido_Materno}` : "No asignado"} <br />
-                                                    <strong>Tesorero: </strong> {oic.tesorero !== null ? `${oic.tesorero.per_Nombre} ${oic.tesorero.per_Apellido_Paterno} ${oic.tesorero.per_Apellido_Materno}` : "No asignado"}
+                                                    <tr>
+                                                        <td><strong>Presidente</strong></td>
+                                                        <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre} ${obj.presidente.per_Apellido_Paterno} ${obj.presidente.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.presidente !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "presidente")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Secretario</strong></td>
+                                                        <td>{obj.secretario !== null ? `${obj.secretario.per_Nombre} ${obj.secretario.per_Apellido_Paterno} ${obj.secretario.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.secretario !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "secretario")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Tesorero</strong></td>
+                                                        <td>{obj.tesorero !== null ? `${obj.tesorero.per_Nombre} ${obj.tesorero.per_Apellido_Paterno} ${obj.tesorero.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.tesorero !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "tesorero")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
                                                 </>
                                             }
-                                            {oic.oid !== null &&
-                                                oic.oi.org_Tipo_Organismo === "SOCIEDAD" &&
+                                            {obj.oi.org_Categoria === "SOCIEDAD" &&
                                                 <>
-                                                    <strong>Presidente:</strong> {oic.presidente !== null ? `${oic.presidente.per_Nombre} ${oic.presidente.per_Apellido_Paterno} ${oic.presidente.per_Apellido_Materno}` : "No asignado"}  <br />
-                                                    <strong>Vice-presidente:</strong> {oic.vicePresidente !== null ? `${oic.vicePresidente.per_Nombre} ${oic.vicePresidente.per_Apellido_Paterno} ${oic.vicePresidente.per_Apellido_Materno}` : "No asignado"}<br />
-                                                    <strong>Secretario:</strong> {oic.presidente !== null ? `${oic.presidente.per_Nombre} ${oic.presidente.per_Apellido_Paterno} ${oic.presidente.per_Apellido_Materno}` : "No asignado"}  <br />
-                                                    <strong>Sub-secretario:</strong> {oic.subSecretario !== null ? `${oic.subSecretario.per_Nombre} ${oic.subSecretario.per_Apellido_Paterno} ${oic.subSecretario.per_Apellido_Materno}` : "No asignado"} <br />
-                                                    <strong>Tesorero: </strong> {oic.tesorero !== null ? `${oic.tesorero.per_Nombre} ${oic.tesorero.per_Apellido_Paterno} ${oic.tesorero.per_Apellido_Materno}` : "No asignado"} <br />
-                                                    <strong>Sub-tesorero:</strong> {oic.subTesorero !== null ? `${oic.subTesorero.per_Nombre} ${oic.subTesorero.per_Apellido_Paterno} ${oic.subTesorero.per_Apellido_Materno}` : "No asginado"}
+                                                    <tr>
+                                                        <td><strong>Presidente</strong></td>
+                                                        <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre} ${obj.presidente.per_Apellido_Paterno} ${obj.presidente.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.presidente !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "presidente")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Vice-Presidente</strong></td>
+                                                        <td>{obj.vicePresidente !== null ? `${obj.vicePresidente.per_Nombre} ${obj.vicePresidente.per_Apellido_Paterno} ${obj.vicePresidente.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.vicePresidente !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "vicePresidente")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Secretario</strong></td>
+                                                        <td>{obj.secretario !== null ? `${obj.secretario.per_Nombre} ${obj.secretario.per_Apellido_Paterno} ${obj.secretario.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.secretario !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "secretario")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Sub-Secretario</strong></td>
+                                                        <td>{obj.subSecretario !== null ? `${obj.subSecretario.per_Nombre} ${obj.subSecretario.per_Apellido_Paterno} ${obj.subSecretario.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.subSecretario !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "subSecretario")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Tesorero</strong></td>
+                                                        <td>{obj.tesorero !== null ? `${obj.tesorero.per_Nombre} ${obj.tesorero.per_Apellido_Paterno} ${obj.tesorero.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.tesorero !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "tesorero")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Sub-Tesorero</strong></td>
+                                                        <td>{obj.subTesorero !== null ? `${obj.subTesorero.per_Nombre} ${obj.subTesorero.per_Apellido_Paterno} ${obj.subTesorero.per_Apellido_Materno}` : "No asignado"}</td>
+                                                        <td>
+                                                            {obj.subTesorero !== null ?
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => this.borrarAsignacion(obj, "subTesorero")}
+                                                                >
+                                                                    Borrar asignación
+                                                                </Button>
+                                                                : ""
+                                                            }
+                                                        </td>
+                                                    </tr>
                                                 </>
                                             }
-                                            {oic.oid !== null &&
-                                                oic.oi.org_Tipo_Organismo === "AGRUPACION" &&
-                                                <>
-                                                    <strong>Director: </strong> {oic.director.per_Nombre} {oic.director.per_Apellido_Paterno} {oic.director.per_Apellido_Materno}
-                                                </>
-                                            }
-                                        </td>
-                                        <td className="text-center">{oic.oi.org_Fecha_Organizacion}</td>
-                                        <td className="text-center">{oic.oi.org_Activo === true ? "ACTIVO" : "INACTIVO"}</td>
-                                        <td>
-                                            <Button
-                                                type="button"
-                                                color="secondary"
-                                                style={{ marginRight: '3px' }}
-                                                onClick={() => this.editarOrganismo(oic.oi.org_Id)}
-                                            >
-                                                <span className="fa fa-edit"></span>
-                                            </Button>
-
-                                            <Button
-                                                type="button"
-                                                color="danger"
-                                                onClick={() => this.borrarOrganismo(oic.oi.org_Id)}
-                                            >
-                                                <span className="fa fa-times"></span>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </FormGroup>
+                                        </tbody>
+                                    </table>
+                                </CardBody>
+                            </Card>
+                        </FormGroup >
+                    ))
                 }
 
                 {this.state.organismosInternos.length < 1 &&
@@ -806,7 +506,7 @@ export default class OrganismoInterno extends Component {
                         {this.state.mensajeDelProceso}
                     </ModalBody>
                 </Modal>
-            </Container>
+            </Container >
         )
     }
 }
