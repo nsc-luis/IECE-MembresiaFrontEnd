@@ -65,12 +65,15 @@ const helpers = {
         }
     }),
 
+    //Versión de la Aplicación Publicada
+    version: 1.4,
+
     validaToken: () => {
         let timestampNow = moment(new Date()).unix();
         let tokenExpires = jwt_decode(localStorage.getItem("token")).exp;
 
         // FECHA DEL TOKEN MENOS 10 MIN
-        let tokenExpiresLessTen = moment(tokenExpires*1000).subtract(10, 'minutes').unix();
+        let tokenExpiresLessTen = moment(tokenExpires * 1000).subtract(10, 'minutes').unix();
         if (timestampNow > tokenExpiresLessTen) {
             localStorage.removeItem('token');
             localStorage.removeItem('infoSesion');

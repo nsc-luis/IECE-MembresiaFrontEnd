@@ -288,6 +288,37 @@ class ResumenMembresia extends Component {
                     this.setState({ hogares: contador });
                 })
             )
+
+
+
+            //Consulta el Nombre del Obispo del Distrito y el Titulo del Lider que aparecerá en el PDF
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
+                .then(res => {
+                    this.setState({
+                        infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
+                        gradoMinistro: "OBISPO"
+                    });
+                })
+            )
+
+            //Consulta el Secretario del Distrito
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
+                .then(res => {
+                    this.setState({
+                        infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
+                    });
+                })
+            )
+
+            //Setea el Título que aparecerá en el archivo PDF
+            this.setState({
+                infoSector: {
+                    ...this.state.infoSector,
+                    sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
+                }
+            });
+
+
         }
         else {
             e.persist();

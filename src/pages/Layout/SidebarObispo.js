@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import helpers from '../../components/Helpers';
 
 class SidebarObispo extends Component {
     // infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
@@ -26,6 +27,9 @@ class SidebarObispo extends Component {
                         </div>
                         <div className="sidebar-brand-text mx-3">IECE</div>
                     </Link>
+                    <div className="text-center" style={{ fontSize: '0.8rem', color: '#fff' }}>
+                        Versión {helpers.version}
+                    </div>
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
@@ -220,6 +224,17 @@ class SidebarObispo extends Component {
                             <span>Lista de Personal Administrativo y Comisiones</span>
                         </Link>
                     </li>
+
+
+                    <li className="nav-item">
+                        <Link className="nav-link"
+                            to="/ReporteOrganismosInternos"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Organismos Internos")}>
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista de Organismos Internos</span>
+                        </Link>
+                    </li>
+
 
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReporteMovimientoEstadistico"

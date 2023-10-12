@@ -43,6 +43,16 @@ export default class OrganismoInterno extends Component {
         this.setState({ modalShow: !this.state.modalShow })
     }
 
+    handleCancelar = () => {
+        window.scrollTo(0, 0);
+        this.setState({
+            org_Id: "0",
+            cargo: "0",
+            per_Id_Persona: "0",
+            showForm: !this.state.showForm
+        })
+    }
+
     mostrarFormulario = () => {
         this.setState({ showForm: !this.state.showForm })
     }
@@ -55,32 +65,34 @@ export default class OrganismoInterno extends Component {
                 cargo: "0",
                 per_Id_Persona: "0",
                 personas: [],
-                mostrarCargosSuplentes: false
+                mostrarCargosSuplentes: false,
+
             })
         }
 
         if (e.target.name === "org_Id" && e.target.value !== "0")
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/${e.target.value}`)
                 .then(res => {
-                    if (res.data.orgInt.org_Tipo_Organismo === "FEMENIL") {
+                    console.log("Data: ", res.data);
+                    if (res.data.orgInt.org_Categoria === "FEMENIL") {
                         helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetMujeresBySector/${localStorage.getItem('sector')}`)
                             .then(res => {
                                 this.setState({ personas: res.data.mujeres })
                             }))
                     }
-                    if (res.data.orgInt.org_Tipo_Organismo === "JUVENIL") {
+                    if (res.data.orgInt.org_Categoria === "JUVENIL") {
                         helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetJovenesBySector/${localStorage.getItem('sector')}`)
                             .then(res => {
                                 this.setState({ personas: res.data.jovenes })
                             }))
                     }
-                    if (res.data.orgInt.org_Tipo_Organismo === "INFANTIL") {
+                    if (res.data.orgInt.org_Categoria === "INFANTIL") {
                         helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetNinosBySector/${localStorage.getItem('sector')}`)
                             .then(res => {
                                 this.setState({ personas: res.data.ninos })
                             }))
                     }
-                    if (res.data.orgInt.org_Categoria === "SOCIEDAD") {
+                    if (res.data.orgInt.org_Tipo_Organismo === "SOCIEDAD") {
                         this.setState({ mostrarCargosSuplentes: true })
                     }
                     else {
@@ -93,6 +105,7 @@ export default class OrganismoInterno extends Component {
         try {
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetBySector/${localStorage.getItem('sector')}`)
                 .then(res => {
+                    console.log("REspuesta: ", res.data.organismosInternos)
                     if (res.data.status === "success") {
                         this.setState({ organismosInternos: res.data.organismosInternos })
                     }
@@ -177,6 +190,21 @@ export default class OrganismoInterno extends Component {
     render() {
         return (
             <Container>
+
+                <FormGroup>
+                    <Row>
+                        <Col xs="12">
+                            <Alert color="warning">
+                                <strong>AVISO: </strong>
+                                <ul>
+                                    <li>Para regsitrar un Nuevo Cargo Administrativo de un Organismo Interno, presione el Botón <strong>"Registrar Cargo Nuevo"</strong>.</li>
+                                    <li>Para dar de Baja un Cargo Administrativo ya existente, seleccione el Botón <strong>"Dar de Baja"</strong> en el cargo respectivo.</li>
+                                    <li>Para dar de Alta a un Nuevo Organismo Interno bastará con enviar el Acta de Organización respectiva a las Dirección General.</li>
+                                </ul>
+                            </Alert>
+                        </Col>
+                    </Row>
+                </FormGroup>
                 <FormGroup>
                     <Row>
                         <Col xs="12" style={{ textAlign: 'right' }}>
@@ -186,7 +214,7 @@ export default class OrganismoInterno extends Component {
                                 onClick={this.mostrarFormulario}
                                 hidden={this.state.showForm}
                             >
-                                Asignar cargo
+                                Registrar Cargo Nuevo
                             </Button>
                         </Col>
                     </Row>
@@ -251,13 +279,13 @@ export default class OrganismoInterno extends Component {
                                                     {this.state.mostrarCargosSuplentes &&
                                                         <option value="vicePresidente">Vice-Presidente</option>
                                                     }
-                                                    <option value="secretario">Secretario</option>
+                                                    <option value="secretario">Secretario(a)</option>
                                                     {this.state.mostrarCargosSuplentes &&
-                                                        <option value="subSecretario">Sub-Secretario</option>
+                                                        <option value="subSecretario">Sub-Secretario(a)</option>
                                                     }
-                                                    <option value="tesorero">Tesorero</option>
+                                                    <option value="tesorero">Tesorero(a)</option>
                                                     {this.state.mostrarCargosSuplentes &&
-                                                        <option value="subTesorero">Sub-Tesorero</option>
+                                                        <option value="subTesorero">Sub-Tesorero(a)</option>
                                                     }
                                                 </Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
@@ -299,7 +327,7 @@ export default class OrganismoInterno extends Component {
                                                 type="button"
                                                 color="secondary"
                                                 className="entreBotones"
-                                                onClick={this.mostrarFormulario}
+                                                onClick={this.handleCancelar}
                                             >
                                                 Cancelar
                                             </Button>
@@ -307,7 +335,7 @@ export default class OrganismoInterno extends Component {
                                                 type="submit"
                                                 color="success"
                                             >
-                                                <span className="fa fa-users faIconMarginRight"></span>Agregar organismo
+                                                <span className="fa fa-users faIconMarginRight"></span>Registrar Cargo
                                             </Button>
                                         </Col>
                                     </Row>
@@ -322,7 +350,7 @@ export default class OrganismoInterno extends Component {
                         <FormGroup key={obj.oi.org_Id}>
                             <Card>
                                 <CardHeader style={{ textAlign: "center" }}>
-                                    <h4>{obj.oi.org_Categoria} {obj.oi.org_Tipo_Organismo} {obj.oi.org_Nombre}</h4>
+                                    <h4>{obj.oi.org_Tipo_Organismo} {obj.oi.org_Categoria} '<b>{obj.oi.org_Nombre}</b>'</h4>
                                 </CardHeader>
                                 <CardBody>
                                     <table className="table table-striped table-bordered table-sm">
@@ -330,55 +358,56 @@ export default class OrganismoInterno extends Component {
                                             <tr>
                                                 <th width="20%">CARGO</th>
                                                 <th width="60%">NOMBRE</th>
-                                                <th width="20%"></th>
+                                                <th width="20%">ACCIÓN</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {obj.oi.org_Categoria === "DEPARTAMENTO" &&
+                                            {obj.oi.org_Tipo_Organismo === "DEPARTAMENTO" &&
                                                 <>
                                                     <tr>
                                                         <td><strong>Presidente</strong></td>
-                                                        <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre} ${obj.presidente.per_Apellido_Paterno} ${obj.presidente.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.presidente !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "presidente")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Secretario</strong></td>
-                                                        <td>{obj.secretario !== null ? `${obj.secretario.per_Nombre} ${obj.secretario.per_Apellido_Paterno} ${obj.secretario.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td><strong>Secretario(a)</strong></td>
+                                                        <td>{obj.secretario !== null ? `${obj.secretario.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.secretario !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "secretario")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Tesorero</strong></td>
-                                                        <td>{obj.tesorero !== null ? `${obj.tesorero.per_Nombre} ${obj.tesorero.per_Apellido_Paterno} ${obj.tesorero.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td><strong>Tesorero(a)</strong></td>
+                                                        <td>{obj.tesorero !== null ? `${obj.tesorero.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.tesorero !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "tesorero")}
+
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
@@ -386,19 +415,19 @@ export default class OrganismoInterno extends Component {
                                                     </tr>
                                                 </>
                                             }
-                                            {obj.oi.org_Categoria === "SOCIEDAD" &&
+                                            {obj.oi.org_Tipo_Organismo === "SOCIEDAD" &&
                                                 <>
                                                     <tr>
                                                         <td><strong>Presidente</strong></td>
-                                                        <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre} ${obj.presidente.per_Apellido_Paterno} ${obj.presidente.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.presidente !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "presidente")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
@@ -406,79 +435,79 @@ export default class OrganismoInterno extends Component {
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Vice-Presidente</strong></td>
-                                                        <td>{obj.vicePresidente !== null ? `${obj.vicePresidente.per_Nombre} ${obj.vicePresidente.per_Apellido_Paterno} ${obj.vicePresidente.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td>{obj.vicePresidente !== null ? `${obj.vicePresidente.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.vicePresidente !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "vicePresidente")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Secretario</strong></td>
-                                                        <td>{obj.secretario !== null ? `${obj.secretario.per_Nombre} ${obj.secretario.per_Apellido_Paterno} ${obj.secretario.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td><strong>Secretario(a)</strong></td>
+                                                        <td>{obj.secretario !== null ? `${obj.secretario.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.secretario !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "secretario")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Sub-Secretario</strong></td>
-                                                        <td>{obj.subSecretario !== null ? `${obj.subSecretario.per_Nombre} ${obj.subSecretario.per_Apellido_Paterno} ${obj.subSecretario.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td><strong>Sub-Secretario(a)</strong></td>
+                                                        <td>{obj.subSecretario !== null ? `${obj.subSecretario.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.subSecretario !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "subSecretario")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Tesorero</strong></td>
-                                                        <td>{obj.tesorero !== null ? `${obj.tesorero.per_Nombre} ${obj.tesorero.per_Apellido_Paterno} ${obj.tesorero.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td><strong>Tesorero(a)</strong></td>
+                                                        <td>{obj.tesorero !== null ? `${obj.tesorero.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.tesorero !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "tesorero")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Sub-Tesorero</strong></td>
-                                                        <td>{obj.subTesorero !== null ? `${obj.subTesorero.per_Nombre} ${obj.subTesorero.per_Apellido_Paterno} ${obj.subTesorero.per_Apellido_Materno}` : "No asignado"}</td>
-                                                        <td>
+                                                        <td><strong>Sub-Tesorero(a)</strong></td>
+                                                        <td>{obj.subTesorero !== null ? `${obj.subTesorero.per_Nombre_Completo}` : "--"}</td>
+                                                        <td className='text-center'>
                                                             {obj.subTesorero !== null ?
                                                                 <Button
                                                                     type="button"
                                                                     className="btn btn-danger btn-sm"
                                                                     onClick={() => this.borrarAsignacion(obj, "subTesorero")}
                                                                 >
-                                                                    Borrar asignación
+                                                                    Dar de Baja
                                                                 </Button>
                                                                 : ""
                                                             }
@@ -496,7 +525,7 @@ export default class OrganismoInterno extends Component {
 
                 {this.state.organismosInternos.length < 1 &&
                     <h4>
-                        Aún no hay organismos internos para mostrar.
+                        No hay Organismos Internos registrados en este Sector.
                     </h4>
                 }
 
