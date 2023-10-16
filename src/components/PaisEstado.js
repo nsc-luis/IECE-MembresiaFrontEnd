@@ -55,6 +55,7 @@ class PaisEstado extends React.Component {
         const {
             domicilio,
             onChangeDomicilio,
+            onBlurDomicilio,
             boolNvoEstado,
             handleChangeEstado,
             nvoEstado_Disponible
@@ -117,6 +118,7 @@ class PaisEstado extends React.Component {
                             style={{ backgroundColor: '#feffdd' }}
                             value={domicilio.nvoEstado}
                             onChange={onChangeDomicilio}
+                            onBlur={onBlurDomicilio}
                         />
                         <label>Nuevo Estado *</label>
                     </div>

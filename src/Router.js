@@ -25,6 +25,7 @@ import ReporteOficiosProfesiones from './pages/Reporte/ReporteOficiosProfesiones
 import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
 import ReportePersonalMinisterial from './pages/Reporte/ReportePersonalMinisterial';
 import ReportePersonalAdministrativo from './pages/Reporte/ReportePersonalAdministrativo';
+import ReporteOrganismosInternos from './pages/Reporte/ReporteOrganismosInternos';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import ResumenTransacciones from './pages/Reporte/ResumenTransacciones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
@@ -52,6 +53,7 @@ import Administracion from './pages/PersonalAdministrativo/Administracion';
 import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDistritales';
 import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
 import OrganismoInterno from './pages/OrganismoInterno'
+
 // import App from './App';
 /* import helpers from './components/Helpers'; */
 
@@ -133,7 +135,7 @@ class Router extends Component {
                         <Route exact path="/ReporteCumpleaños" component={ReporteCumpleaños} />
                         <Route exact path="/ReportePersonalMinisterial" component={ReportePersonalMinisterial} />
                         <Route exact path="/ReportePersonalAdministrativo" component={ReportePersonalAdministrativo} />
-
+                        <Route exact path="/ReporteOrganismosInternos" component={ReporteOrganismosInternos} />
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />

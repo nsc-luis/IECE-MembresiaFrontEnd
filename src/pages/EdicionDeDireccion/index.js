@@ -122,6 +122,16 @@ class EdicionDeDireccion extends Component {
         }
     }
 
+    handleBlurDomicilio = (e) => {
+        this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
+            domicilio: {
+                ...this.state.domicilio,
+                [e.target.name]: e.target.value.toUpperCase().trim(),
+            }
+        })
+    }
+
+
     onChangeDomicilio = async (e) => {
         //console.log("input: ", e.target.name, e.target.value.toUpperCase())
 
@@ -382,6 +392,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Calle"
                                                                 value={this.state.domicilio.hd_Calle}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Calle *</Label>
@@ -392,6 +403,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Numero_Exterior"
                                                                 value={this.state.domicilio.hd_Numero_Exterior}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Número Exterior</Label>
@@ -402,6 +414,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Numero_Interior"
                                                                 value={this.state.domicilio.hd_Numero_Interior}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Número Interior</Label>
@@ -416,6 +429,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Tipo_Subdivision"
                                                                 value={this.state.domicilio.hd_Tipo_Subdivision}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             >
                                                                 <option value="COL.">COLONIA</option>
@@ -440,6 +454,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Subdivision"
                                                                 value={this.state.domicilio.hd_Subdivision}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Nombre del Asentamiento</Label>
@@ -450,6 +465,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Localidad"
                                                                 value={this.state.domicilio.hd_Localidad}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Localidad/Poblado</Label>
@@ -464,6 +480,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Municipio_Ciudad"
                                                                 value={this.state.domicilio.hd_Municipio_Ciudad}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Municipio/Ciudad *</Label>
@@ -474,6 +491,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_CP"
                                                                 value={this.state.domicilio.hd_CP}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Código Postal</Label>
@@ -484,6 +502,7 @@ class EdicionDeDireccion extends Component {
                                                                 name="hd_Telefono"
                                                                 value={this.state.domicilio.hd_Telefono}
                                                                 onChange={this.onChangeDomicilio}
+                                                                onBlur={this.handleBlurDomicilio}
                                                                 readOnly={this.state.boolHabilitaEdicion}
                                                             />
                                                             <Label>Teléfono de Casa</Label>
@@ -504,6 +523,7 @@ class EdicionDeDireccion extends Component {
                                                         <PaisEstado
                                                             domicilio={this.state.domicilio}
                                                             onChangeDomicilio={this.onChangeDomicilio}
+                                                            onBlurDomicilio={this.handleBlurDomicilio}
                                                             boolNvoEstado={this.state.boolNvoEstado}
                                                             handleChangeEstado={this.handleChangeEstado}
                                                             nvoEstado_Disponible={this.state.nvoEstado_Disponible}

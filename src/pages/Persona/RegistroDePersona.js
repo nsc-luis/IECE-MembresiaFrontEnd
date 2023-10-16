@@ -238,6 +238,16 @@ class RegistroDePersonal extends Component {
         formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
     }
 
+    handleBlurDomicilio = (e) => {
+        this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
+            domicilio: {
+                ...this.state.domicilio,
+                [e.target.name]: e.target.value.toUpperCase().trim(),
+            }
+        })
+    }
+
+
     handleChangeDomicilio = (e) => {
         if (e.target.name === "pais_Id_Pais") { //Si el elemento que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
             this.setState({
@@ -314,6 +324,16 @@ class RegistroDePersonal extends Component {
 
     ChangeFechaBautismoInvalida = (bol) => {
         this.setState({ fechaBautismoInvalida: bol });
+    }
+
+    handleBlur = (e) => {
+
+        this.setState({
+            form: {
+                ...this.state.form,
+                [e.target.name]: e.target.value.toUpperCase().trim()
+            }
+        })
     }
 
     handleChange = (e) => {
@@ -1022,12 +1042,15 @@ class RegistroDePersonal extends Component {
 
                 <PersonaForm
                     onChange={this.handleChange}
+                    onBlur={this.handleBlur}
                     FrmValidaPersona={this.state.FrmValidaPersona}
                     bolPersonaEncontrada={this.state.bolPersonaEncontrada}
                     setFrmValidaPersona={this.setFrmValidaPersona}
                     setBolPersonaEncontrada={this.setBolPersonaEncontrada}
                     form={this.state.form}
                     onChangeDomicilio={this.handleChangeDomicilio}
+
+                    onBlurDomicilio={this.handleBlurDomicilio}
                     domicilio={this.state.domicilio}
                     /* hogar={this.state.hogar} */
                     categoriaSeleccionada={this.state.categoriaSeleccionada}

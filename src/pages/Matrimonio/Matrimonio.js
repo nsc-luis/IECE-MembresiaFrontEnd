@@ -220,6 +220,18 @@ class Matrimonio extends Component {
         }
     }
 
+
+    handleBlur = (e) => {
+
+        this.setState({
+            matLegal: {
+                ...this.state.matLegal,
+                [e.target.name]: e.target.value.toUpperCase().trim()
+            }
+        })
+    }
+
+
     onChange = (e) => {
         console.log("LibroActa: ", e.target.name, e.target.value)
         this.setState({
@@ -387,6 +399,17 @@ class Matrimonio extends Component {
 
         this.fnGetDatosDelHogar(idHogar);
     }
+
+
+    handleBlurDomicilio = (e) => {
+        this.setState({ //Carga el Objeto 'domicilio' con cada input que se va llenando desde lso componentes HogarPersonaDomicilio y PaisEstado.
+            domicilio: {
+                ...this.state.domicilio,
+                [e.target.name]: e.target.value.toUpperCase().trim(),
+            }
+        })
+    }
+
 
     handleChangeDomicilio = (e) => {
         if (e.target.name === "pais_Id_Pais") { //Si el elemento que cambio es País, resetea el Id_Estado a '0 y el boolNvoEstado a 'false'.
@@ -691,6 +714,7 @@ class Matrimonio extends Component {
                                                                         name="mat_Nombre_Contrayente_Hombre_Foraneo"
                                                                         type="text"
                                                                         onChange={this.onChange}
+                                                                        onBlur={this.handleBlur}
                                                                         value={this.state.matLegal.mat_Nombre_Contrayente_Hombre_Foraneo}
                                                                         invalid={this.state.matNombreContrayenteHombreForaneoInvalid}
                                                                     />
@@ -763,6 +787,7 @@ class Matrimonio extends Component {
                                                                     <Input
                                                                         name="mat_Nombre_Contrayente_Mujer_Foraneo"
                                                                         onChange={this.onChange}
+                                                                        onBlur={this.handleBlur}
                                                                         type="text"
                                                                         value={this.state.matLegal.mat_Nombre_Contrayente_Mujer_Foraneo}
                                                                         invalid={this.state.matNombreContrayenteMujerForaneoInvalid}
@@ -797,6 +822,7 @@ class Matrimonio extends Component {
                                                 <Input
                                                     name="mat_Numero_Acta"
                                                     onChange={this.onChange}
+                                                    onBlur={this.handleBlur}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Numero_Acta}
                                                     autoComplete="nope"
@@ -810,6 +836,7 @@ class Matrimonio extends Component {
                                                 <Input
                                                     name="mat_Libro_Acta"
                                                     onChange={this.onChange}
+                                                    onBlur={this.handleBlur}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Libro_Acta}
                                                     autoComplete="nope"
@@ -825,6 +852,7 @@ class Matrimonio extends Component {
                                                 <Input
                                                     name="mat_Oficialia"
                                                     onChange={this.onChange}
+                                                    onBlur={this.handleBlur}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Oficialia}
                                                     autoComplete="nope"
@@ -838,6 +866,7 @@ class Matrimonio extends Component {
                                                 <Input
                                                     name="mat_Registro_Civil"
                                                     onChange={this.onChange}
+                                                    onBlur={this.handleBlur}
                                                     type="text"
                                                     value={this.state.matLegal.mat_Registro_Civil}
                                                     autoComplete="nope"
@@ -869,6 +898,7 @@ class Matrimonio extends Component {
                                                     type="text"
                                                     name="mat_Apellido_Casada"
                                                     onChange={this.onChange}
+                                                    onBlur={this.handleBlur}
                                                     className="form-control"
                                                     value={this.state.matLegal.mat_Apellido_Casada}
                                                     autoComplete="nope"
@@ -901,6 +931,7 @@ class Matrimonio extends Component {
                                                 <Input
                                                     name="mat_Nombre_Hijos"
                                                     onChange={this.onChange}
+                                                    onBlur={this.handleBlur}
                                                     type="textarea"
                                                     value={this.state.matLegal.mat_Nombre_Hijos}
                                                     autoComplete="nope"
@@ -935,6 +966,7 @@ class Matrimonio extends Component {
                                         <HogarPersonaDomicilio
                                             domicilio={this.state.domicilio}
                                             onChangeDomicilio={this.handleChangeDomicilio}
+                                            onBlurDomicilio={this.handleBlurDomicilio}
                                             handle_hd_Id_Hogar={this.handle_hd_Id_Hogar}
                                             hogar={this.state.hogar}
                                             handleChangeEstado={this.handleChangeEstado}

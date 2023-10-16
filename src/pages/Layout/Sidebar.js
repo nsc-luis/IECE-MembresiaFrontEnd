@@ -241,6 +241,9 @@ class Sidebar extends Component {
                         </div>
                         <div className="sidebar-brand-text mx-3">IECE</div>
                     </Link>
+                    <div className="text-center sidebar-brand-text" style={{ fontSize: '0.8rem', color: '#fff' }}>
+                        Versión {helpers.version}
+                    </div>
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
@@ -593,17 +596,6 @@ class Sidebar extends Component {
                     </li>
 
                     <li className="nav-item">
-                        <Link
-                            className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Organismo Interno.')}
-                            to="/OrganismoInterno"
-                        >
-                            <i className="fas fa-address-book"></i>
-                            <span>Organismo Interno</span>
-                        </Link>
-                    </li>
-
-                    <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMinisterial" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-user-tie"></i>
                             <span>Personal Ministerial</span>
@@ -659,6 +651,16 @@ class Sidebar extends Component {
                         </div>
                     </li>
 
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Organismo Interno.')}
+                            to="/OrganismoInterno"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Organismos Internos</span>
+                        </Link>
+                    </li>
 
 
                     {/* Divider */}
@@ -711,6 +713,10 @@ class Sidebar extends Component {
                                     to="/ReportePersonalAdministrativo"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Personal Administrativo")}
                                 >Lista de Personal Administrativo y Comisiones</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteOrganismosInternos"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Organismos Internos")}
+                                >Lista de Organismos Internos</Link>
                                 <Link className="collapse-item text-wrap"
                                     to="/ReporteMovimientoEstadistico"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}
