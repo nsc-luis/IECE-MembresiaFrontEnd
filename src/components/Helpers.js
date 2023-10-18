@@ -66,7 +66,7 @@ const helpers = {
     }),
 
     //Versión de la Aplicación Publicada
-    version: 1.4,
+    version: 1.5,
 
     validaToken: () => {
         let timestampNow = moment(new Date()).unix();
