@@ -650,10 +650,10 @@ class PersonaForm extends Component {
 
                                                 <FormGroup>
                                                     <div className="row">
-                                                        <div className="col-sm-2">
+                                                        <div className="col-md-2">
                                                             <label><strong>*</strong>Categoría</label>
                                                         </div>
-                                                        <div className="col-sm-4">
+                                                        <div className="col-md-4">
                                                             <Input type="select"
                                                                 name="per_Categoria"
                                                                 onChange={onChange}
@@ -710,10 +710,10 @@ class PersonaForm extends Component {
 
                                                 <FormGroup>
                                                     <div className="row">
-                                                        <div className="col-sm-2">
+                                                        <div className="col-md-2">
                                                             <label><strong>*</strong> Nombre(s)</label>
                                                         </div>
-                                                        <div className="col-sm-4">
+                                                        <div className="col-md-4">
                                                             <Input
                                                                 type="text"
                                                                 name="per_Nombre"
@@ -735,10 +735,10 @@ class PersonaForm extends Component {
 
                                                 <FormGroup>
                                                     <div className="row">
-                                                        <div className="col-sm-2">
+                                                        <div className="col-md-2">
                                                             <label><strong>*</strong> Apellido Paterno o Apellido Principal</label>
                                                         </div>
-                                                        <div className="col-sm-4">
+                                                        <div className="col-md-4">
                                                             <Input
                                                                 type="text"
                                                                 name="per_Apellido_Paterno"
@@ -762,10 +762,10 @@ class PersonaForm extends Component {
 
                                                 <FormGroup>
                                                     <div className="row">
-                                                        <div className="col-sm-2">
+                                                        <div className="col-md-2">
                                                             <label>Apellido Materno o Apellido Secundario</label>
                                                         </div>
-                                                        <div className="col-sm-4">
+                                                        <div className="col-md-4">
                                                             <Input
                                                                 type="text"
                                                                 name="per_Apellido_Materno"
@@ -790,10 +790,10 @@ class PersonaForm extends Component {
 
                                                 <FormGroup>
                                                     <div className="row">
-                                                        <div className="col-sm-2">
+                                                        <div className="col-md-2">
                                                             <label><strong>*</strong> Fecha Nacimiento</label>
                                                         </div>
-                                                        <div className="col-sm-4">
+                                                        <div className="col-md-4">
                                                             <Input
                                                                 type="date"
                                                                 name="per_Fecha_Nacimiento"
@@ -816,7 +816,7 @@ class PersonaForm extends Component {
                                                 {/* Boton para verificar duplicados */}
                                                 <FormGroup>
                                                     <div className="row">
-                                                        <div className="col-sm-2">
+                                                        <div className="col-md-2">
                                                             <Button
                                                                 type="button"
                                                                 onClick={handle_verificarDuplicados}

@@ -11,7 +11,6 @@ class ComisionesLocales extends Component {
 
     constructor(props) {
         super(props);
-        const fechaActual = new Date().toLocaleDateString();
         // Supongamos que tienes un array de datos con información de las comisiones, nombres e jerarquía.
         this.state = {
             comisiones: [],
@@ -24,7 +23,7 @@ class ComisionesLocales extends Component {
                 jerarquia: 0,
                 activa: true,
                 descripcion_Adicional: "",
-                fecha_Registro: fechaActual
+                fecha_Registro: new Date().toLocaleDateString()
             },
             submitBtnDisable: false,
             mostrarBotonAgregarIntegrante: true,
@@ -190,30 +189,36 @@ class ComisionesLocales extends Component {
                 Integrante_Id: this.state.integranteComision.integrante_Id,
                 Jerarquia_Integrante: this.state.integranteComision.jerarquia,
                 Descripcion_Adicional: this.state.integranteComision.descripcion_Adicional,
-                Fecha_Registro: this.state.integranteComision.fecha_Registro
+                Fecha_Registro: new Date().toISOString(),
             }
 
-            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Integrante_Comision_Local/PostIntegrante_Comision_Local`, comisionEntity)
+            console.log("comisión: ", comisionEntity)
+            console.log("URL:", `${helpers.url_api}/Integrante_Comision_Local/PostIntegrante_Comision_Local`)
+            console.log("URL:", helpers.url_api + "/persona/AddPersonaHogar")
 
+            try {
+                await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Integrante_Comision_Local/PostIntegrante_Comision_Local`, comisionEntity)
+                    .then(res => {
+                        console.log("Se agregó un Integrante ", res)
 
+                        if (res.data.status === "success") {
+                            //Aparecerá un Mensaje de espera
+                            this.setState({
+                                mensajeDelProceso: "Procesando...",
+                                modalShow: true
+                            })
 
-
-                .then(res => {
-                    console.log("Se agregó un Integrante ", res)
-
-                    if (res.data.status === "success") {
-                        //Aparecerá un Mensaje de espera
-                        this.setState({
-                            mensajeDelProceso: "Procesando...",
-                            modalShow: true
-                        })
-
-                        console.log("Se actualiza la lista de comisiones ", res)
-                        this.getComisionesLocalesBySector();
-                        this.handle_BtnAgregarMostrarFormulario();
-                    }
-                })
-            )
+                            console.log("Se actualiza la lista de comisiones ", res)
+                            this.getComisionesLocalesBySector();
+                            this.handle_BtnAgregarMostrarFormulario();
+                        }
+                    })
+                )
+            }
+            catch (error) {
+                alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
+                setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 3000);
+            }
         }
     }
 

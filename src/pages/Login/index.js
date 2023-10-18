@@ -224,22 +224,24 @@ class Login extends Component {
                                     }
                                     <FormGroup>
                                         <Row >
-                                            <Col sm="8"></Col>
-                                            <Col sm="4" >
+                                            <Col md="6"></Col>
+                                            <Col md="3" >
                                                 <Button
                                                     type="button"
-                                                    className="btnForm"
+                                                    className="btnForm btn-block"
                                                     onClick={this.handleLogoff}
                                                 >
                                                     Cancelar
                                                 </Button>
+                                            </Col>
+                                            <Col md="3">
                                                 <Button
-
+                                                    className="btnForm btn-block"
                                                     type="submit"
                                                     color="primary"
                                                 >
                                                     <span className="fa fa-user faIconButton"></span>
-                                                    Iniciar sesión
+                                                    Iniciar Sesión
                                                 </Button>
                                             </Col>
                                         </Row>

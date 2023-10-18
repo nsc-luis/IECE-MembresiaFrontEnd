@@ -580,8 +580,8 @@ class ResumenMembresia extends Component {
                                         Personal Bautizado
                                     </CardTitle>
                                 </CardHeader>
-                                <CardBody className="mx-auto d-block">
-                                    <PieChart width={400} height={180} >
+                                <CardBody className="mx-auto d-block ">
+                                    <PieChart width={400} height={250} >
                                         <Pie
                                             data={this.state.resumenBautizados}
                                             cx="50%"
@@ -596,7 +596,7 @@ class ResumenMembresia extends Component {
                                                 <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
                                             ))}
                                         </Pie>
-                                        <Legend layout="vertical" align="right" verticalAlign="middle" />
+                                        <Legend layout="vertical" align="center" verticalAlign="bottom" />
                                         <Tooltip />
                                     </PieChart>
                                 </CardBody>
@@ -610,7 +610,7 @@ class ResumenMembresia extends Component {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardBody className="mx-auto d-block">
-                                    <PieChart width={400} height={180}>
+                                    <PieChart width={400} height={250}>
                                         <Pie
                                             data={this.state.resumenNoBautizados}
                                             cx="50%"
@@ -625,7 +625,7 @@ class ResumenMembresia extends Component {
                                                 <Cell key={`cell-${index}`} fill={this.COLORS[index % this.COLORS.length]} />
                                             ))}
                                         </Pie>
-                                        <Legend layout="vertical" align="right" verticalAlign="middle" />
+                                        <Legend layout="vertical" align="center" verticalAlign="bottom" />
                                         <Tooltip />
                                     </PieChart>
                                 </CardBody>

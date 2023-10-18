@@ -10,7 +10,6 @@ import './style.css';
 class ComisionesDistritales extends Component {
     constructor(props) {
         super(props);
-        const fechaActual = new Date().toLocaleDateString();
         // Supongamos que tienes un array de datos con información de las comisiones, nombres e jerarquía.
         this.state = {
             comisiones: [],
@@ -23,7 +22,7 @@ class ComisionesDistritales extends Component {
                 jerarquia: 0,
                 activa: true,
                 descripcion_Adicional: "",
-                fecha_Registro: fechaActual
+                fecha_Registro: new Date().toLocaleDateString()
             },
             submitBtnDisable: false,
             mostrarBotonAgregarIntegrante: true,
@@ -193,7 +192,7 @@ class ComisionesDistritales extends Component {
                 Integrante_Id: this.state.integranteComision.integrante_Id,
                 Jerarquia_Integrante: this.state.integranteComision.jerarquia,
                 Descripcion_Adicional: this.state.integranteComision.descripcion_Adicional,
-                Fecha_Registro: this.state.integranteComision.fecha_Registro
+                Fecha_Registro: new Date().toISOString(),
             }
 
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Integrante_Comision_Distrital/PostIntegrante_Comision_Distrital`, comisionEntity)
