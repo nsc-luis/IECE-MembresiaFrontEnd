@@ -596,6 +596,18 @@ class Sidebar extends Component {
                     </li>
 
                     <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Personal Ministerial')}
+                            to="/RegistroPersonalMinisterial"
+                        >
+                            <i className="fas fa-address-book"></i>
+                            <span>Personal Ministerial</span>
+                        </Link>
+                    </li>
+
+
+                    {/* <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMinisterial" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-user-tie"></i>
                             <span>Personal Ministerial</span>
@@ -618,7 +630,7 @@ class Sidebar extends Component {
                                 </Link>
                             </div>
                         </div>
-                    </li>
+                    </li> */}
 
 
                     <li className="nav-item">

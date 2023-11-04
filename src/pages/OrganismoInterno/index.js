@@ -199,7 +199,7 @@ export default class OrganismoInterno extends Component {
                                 <ul>
                                     <li>Para regsitrar un Nuevo Cargo Administrativo de un Organismo Interno, presione el Botón <strong>"Registrar Cargo Nuevo"</strong>.</li>
                                     <li>Para dar de Baja un Cargo Administrativo ya existente, seleccione el Botón <strong>"Dar de Baja"</strong> en el cargo respectivo.</li>
-                                    <li>Para dar de Alta a un Nuevo Organismo Interno bastará con enviar el Acta de Organización respectiva a las Dirección General.</li>
+                                    <li>Para dar de Alta a un Nuevo Organismo Interno bastará con enviar el Acta de Organización respectiva a la Dirección General.</li>
                                 </ul>
                             </Alert>
                         </Col>

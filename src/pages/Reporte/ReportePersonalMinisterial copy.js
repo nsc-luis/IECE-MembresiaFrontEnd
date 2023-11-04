@@ -98,7 +98,6 @@ export default function ReportePersonalBautizado() {
     const getPersonalMinisterialDistrito = async () => {
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialByDistrito/${dto}`)
             .then(res => {
-                console.log("respuestaAPIFoto: ", res.data.administrativo);
                 if (res.data.status === "success")
                     setPersonalMinisterial(res.data.administrativo)
                 else {
@@ -111,9 +110,7 @@ export default function ReportePersonalBautizado() {
     const getPersonalMinisterialSector = async (sec) => {
 
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialBySector/${sec}`)
-
             .then(res => {
-
                 if (res.data.status === "success")
                     setPersonalMinisterial(res.data.administrativo)
                 else {
@@ -185,7 +182,7 @@ export default function ReportePersonalBautizado() {
         }
         else {
             doc.text(`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`, 140, 17, { align: "center" })
-            doc.text(entidadTitulo, 140, 23, { align: "center" })
+            doc.text(entidadTitulo, 140, 22, { align: "center" })
         }
         doc.line(10, 32, 200, 32);
 
@@ -201,15 +198,7 @@ export default function ReportePersonalBautizado() {
         personalMinisterial.map((persona) => {
             if (persona.pem_Grado_Ministerial === "ANCIANO") {
                 doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
-                if (sector == null) {
-                    doc.text(`${persona.sector} `, 100, yAxis);
-                    doc.addImage(persona.imagen, 'JPG', 140, yAxis - 4, 8, 8);
-                } else {
-                    doc.addImage(persona.imagen, 'JPG', 100, yAxis - 4, 8, 8);
-                }
-
-
-                yAxis += 9;
+                yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
                     doc.addPage();
@@ -230,13 +219,7 @@ export default function ReportePersonalBautizado() {
         personalMinisterial.map((persona) => {
             if (persona.pem_Grado_Ministerial === "DIÁCONO") {
                 doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
-                if (sector == null) {
-                    doc.text(`${persona.sector} `, 100, yAxis);
-                    doc.addImage(persona.imagen, 'JPG', 140, yAxis - 4, 8, 8);
-                } else {
-                    doc.addImage(persona.imagen, 'JPG', 100, yAxis - 4, 8, 8);
-                }
-                yAxis += 9;
+                yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
                     doc.addPage();
@@ -257,13 +240,7 @@ export default function ReportePersonalBautizado() {
         personalMinisterial.map((persona) => {
             if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DIÁCONO A PRUEBA") {
                 doc.text(`${index}.- ${persona.pem_Nombre} `, 20, yAxis);
-                if (sector == null) {
-                    doc.text(`${persona.sector} `, 100, yAxis);
-                    doc.addImage(persona.imagen, 'JPG', 140, yAxis - 4, 8, 8);
-                } else {
-                    doc.addImage(persona.imagen, 'JPG', 100, yAxis - 4, 8, 8);
-                }
-                yAxis += 9;
+                yAxis += 4;
                 index++;
                 if (yAxis >= pageHeight - 10) {
                     doc.addPage();
@@ -371,23 +348,10 @@ export default function ReportePersonalBautizado() {
                             <Card>
                                 <CardBody>
                                     <h5>
-                                        <ol type="0">
+                                        <ol type="1">
                                             {personalMinisterial.map((persona) => {
                                                 if (persona.pem_Grado_Ministerial === "ANCIANO") {
-                                                    return <Row>
-                                                        <Col md="6">
-                                                            <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
-                                                        </Col>
-                                                        {sector == null && <Col md="3">
-                                                            <span key={persona.sector}>{persona.sector} </span>
-                                                        </Col>}
-                                                        <Col md="2">
-                                                            <img style={{ width: '50px', height: '50px' }} src={`data:${persona.MIMEType};base64,${persona.imagen}`} alt="Imagen de ministro" type="image/jpg"></img>
-                                                        </Col>
-                                                        {/* <Col col-2>
-                                                            <img style={{ width: '50px', height: 'auto' }} src={helpers.url_api + "/Foto/FotoMinistro/" + persona.pem_Id_Ministro} alt="Imagen de ministro" type="image/jpg"></img>
-                                                        </Col> */}
-                                                    </Row>
+                                                    return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
                                                 }
                                             })}
                                         </ol>
@@ -404,20 +368,7 @@ export default function ReportePersonalBautizado() {
                                         <ol type="1">
                                             {personalMinisterial.map((persona) => {
                                                 if (persona.pem_Grado_Ministerial === "DIÁCONO") {
-                                                    return <Row>
-                                                        <Col md="6">
-                                                            <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
-                                                        </Col>
-                                                        {sector == null && <Col md="3">
-                                                            <span key={persona.sector}>{persona.sector} </span>
-                                                        </Col>}
-                                                        <Col md="2">
-                                                            <img style={{ width: '50px', height: '50px' }} src={`data:${persona.MIMEType};base64,${persona.imagen}`} alt="Imagen de ministro" type="image/jpg"></img>
-                                                        </Col>
-                                                        {/* <Col col-2>
-                                                            <img style={{ width: '50px', height: 'auto' }} src={helpers.url_api + "/Foto/FotoMinistro/" + persona.pem_Id_Ministro} alt="Imagen de ministro" type="image/jpg"></img>
-                                                        </Col> */}
-                                                    </Row>
+                                                    return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
                                                 }
                                             })}
                                         </ol>
@@ -434,20 +385,7 @@ export default function ReportePersonalBautizado() {
                                         <ol type="1">
                                             {personalMinisterial.map((persona) => {
                                                 if (persona.pem_Grado_Ministerial === "AUXILIAR" || persona.pem_Grado_Ministerial === "DIÁCONO A PRUEBA") {
-                                                    return <Row>
-                                                        <Col md="6">
-                                                            <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
-                                                        </Col>
-                                                        {sector == null && <Col md="3">
-                                                            <span key={persona.sector}>{persona.sector} </span>
-                                                        </Col>}
-                                                        <Col md="2">
-                                                            <img style={{ width: '50px', height: '50px' }} src={`data:${persona.MIMEType};base64,${persona.imagen}`} alt="Imagen de ministro" type="image/jpg"></img>
-                                                        </Col>
-                                                        {/* <Col col-2>
-                                                            <img style={{ width: '50px', height: 'auto' }} src={helpers.url_api + "/Foto/FotoMinistro/" + persona.pem_Id_Ministro} alt="Imagen de ministro" type="image/jpg"></img>
-                                                        </Col> */}
-                                                    </Row>
+                                                    return <li key={persona.pem_Id_Ministro}>{persona.pem_Nombre} </li>
                                                 }
                                             })}
                                         </ol>

@@ -566,6 +566,7 @@ class RegistroDePersonal extends Component {
             else { //Si la foto no excede 3MB y si es de los formatos permitidos
                 let formData = new FormData();
                 formData.append('image', e.target.files[0]);
+                console.log("formData:", formData);
                 this.setState({
                     formDataFoto: formData,
                     foto: URL.createObjectURL(e.target.files[0]),
