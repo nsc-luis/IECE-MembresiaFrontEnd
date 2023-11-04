@@ -87,6 +87,18 @@ class AltaCambioDomicilio extends Component {
             await helpers.validaToken().then(helpers.authAxios.get("/Hogar_Persona/GetMiembros/" + id)
                 .then(res => {
                     this.setState({ MiembrosDelHogar: res.data })
+                    let jerarquias = [];
+                    for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
+                        jerarquias.push(<option value={i}>{i}</option>)
+                    }
+
+                    this.setState({
+                        JerarquiasDisponibles: jerarquias,
+                        hogar: {
+                            ...this.state.hogar,
+                            hp_Jerarquia: jerarquias.length
+                        }
+                    })
                 })
             )
             await helpers.validaToken().then(helpers.authAxios.get("/Hogar_Persona/GetDatosHogarDomicilio/" + id)
@@ -94,18 +106,7 @@ class AltaCambioDomicilio extends Component {
                     this.setState({ DatosHogarDomicilio: res.data.miembros })
                 })
             )
-            let jerarquias = [];
-            for (let i = 1; i < this.state.MiembrosDelHogar.length + 2; i++) {
-                jerarquias.push(<option value={i}>{i}</option>)
-            }
 
-            this.setState({
-                JerarquiasDisponibles: jerarquias,
-                hogar: {
-                    ...this.state.hogar,
-                    hp_Jerarquia: jerarquias.length
-                }
-            })
         } else {
             this.setState({
                 MiembrosDelHogar: [],
@@ -133,7 +134,7 @@ class AltaCambioDomicilio extends Component {
                     this.setState({
                         hogar: {
                             ...this.state.hogar,
-                            hp_Jerarquia: res.data.length
+                            hp_Jerarquia: res.data.length + 1
                         }
                     })
                 })

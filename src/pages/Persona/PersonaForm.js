@@ -9,7 +9,7 @@ import HogarPersonaDomicilio from './HogarPersonaDomicilio';
 import Modal from 'react-modal';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button,
-    FormFeedback, /* CardTitle, */ Card, CardBody, CardHeader
+    FormFeedback, /* CardTitle, */ Card, CardBody, CardHeader, Alert
 } from 'reactstrap';
 
 class PersonaForm extends Component {
@@ -639,15 +639,26 @@ class PersonaForm extends Component {
                             {FrmValidaPersona &&
                                 <Row>
                                     <Col xs="12">
+                                        <FormGroup>
+                                            <Row>
+                                                <Col xs="12">
+                                                    <Alert color="warning">
+                                                        <strong>AVISO: </strong>
+                                                        <ul>
+                                                            <li>Esta primer etapa en el Registro de membresía, forma una Homoclave que ayuda a prevenir duplicación de Personas. Se requiere que escriban con la ortografía correcta el Nombre y Apellido Principal y la fecha de Nacimiento con presición.</li>
+                                                            <li>Si aparce una Alerta de que alguien más tiene una coincidencia en la Homoclave, asegúrese de no Duplicar a una Persona. Es posible que otro Sector ya había la había registrado.</li>
+                                                            <li>Los campos marcados con <strong>*</strong> son requeridos.</li>
+                                                        </ul>
+                                                    </Alert>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+
                                         <Card className="border-info acceso-directo">
                                             <CardHeader>
-                                                <h5><strong>Datos Personales</strong></h5>
+                                                <h5><strong>Datos Personales</strong> - (Etapa de Conformación de Homoclave y Prevensión de Duplicaciones) </h5>
                                             </CardHeader>
                                             <CardBody>
-                                                <div className="alert alert-warning mt-3" role="alert">
-                                                    <h5><strong>Nota: </strong>Los campos marcados con <strong>*</strong> son requeridos.</h5>
-                                                </div>
-
                                                 <FormGroup>
                                                     <div className="row">
                                                         <div className="col-md-2">
@@ -916,7 +927,11 @@ class PersonaForm extends Component {
                                             <div className="row mx-auto mt-3">
                                                 <div className="col-sm-12">
                                                     <div className="card border-info acceso-directo">
+                                                        <CardHeader>
+                                                            <h5><strong>Datos Personales</strong></h5>
+                                                        </CardHeader>
                                                         <div className="card-body">
+
                                                             <FormGroup>
                                                                 <div className="row">
                                                                     <div className="col-sm-4">

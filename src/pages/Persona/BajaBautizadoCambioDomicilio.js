@@ -139,6 +139,20 @@ class BajaBautizadoCambioDomicilio extends Component {
 
         return (
             <Container>
+                <FormGroup>
+                    <Row>
+                        <Col xs="12">
+                            <Alert color="warning">
+                                <strong>AVISO: </strong>
+                                <ul>
+                                    <li><strong>Tipo de Destino Interno</strong> aplica a cambios de domicilio en el mismo Distrito. Esta Baja se contabilizan a nivel Sector pero no a nivel Distrito.</li>
+                                    <li><strong>Tipo de Destino Externo</strong> aplica a cambios de domicilio a otro Distrito. Esta Baja Se contabiliza a nivel Sector y a nivel Distrito</li>
+                                    <li>Este tipo de Baja de Personal, activa una bandera para que esta persona pueda ser vista desde otros Sectores o Distritos.</li>
+                                </ul>
+                            </Alert>
+                        </Col>
+                    </Row>
+                </FormGroup>
                 <Card>
                     <Form onSubmit={this.bajaBautizadoCambioDomicilio}>
                         <CardBody>
@@ -180,7 +194,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                             <FormGroup>
                                 <Row>
                                     <Col xs="3">
-                                        * Tipo destino:
+                                        * Tipo de Destino:
                                     </Col>
                                     <Col xs="9">
                                         <Input

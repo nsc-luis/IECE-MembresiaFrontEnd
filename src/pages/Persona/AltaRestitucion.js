@@ -116,7 +116,7 @@ class AltaRestitucion extends Component {
                     this.setState({
                         hogar: {
                             ...this.state.hogar,
-                            hp_Jerarquia: res.data.length
+                            hp_Jerarquia: res.data.length + 1
                         }
                     })
                 });

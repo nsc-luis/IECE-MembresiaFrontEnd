@@ -80,15 +80,26 @@ class ListaDePersonal extends Component {
     }
 
     getSecretarioSector = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${localStorage.getItem('sector')}`)
 
-            .then(res => {
+        if (localStorage.getItem('sector') !== null) {
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetSecretarioBySector/${localStorage.getItem('sector')}`)
 
-                if (res.data.status === "success" && res.data.infoSecretario.length > 0) {
-                    this.setState({ infoSecretario: res.data.infoSecretario[0].pem_Nombre })
-                }
-            })
-        )
+                .then(res => {
+
+                    if (res.data.status === "success" && res.data.infoSecretario.length > 0) {
+                        this.setState({ infoSecretario: res.data.infoSecretario[0].pem_Nombre })
+                    }
+                })
+            )
+        }
+        else {
+            helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem('dto'))
+                .then(res => {
+                    this.setState({ infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "" })
+                })
+            );
+        }
+
     }
 
     handle_LinkEncabezado = (seccion, componente) => {

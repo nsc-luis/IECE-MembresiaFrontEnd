@@ -7,7 +7,7 @@ import {
 import { Link } from 'react-router-dom';
 import './style.css';
 
-export default class Administracion extends Component {
+export default class AdministracionDistrital extends Component {
 
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     constructor(props) {
