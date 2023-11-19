@@ -3,7 +3,23 @@
     padding-left: 30px;
 }
 .contenedor-seccion{
-    border: 3px double black;
+    border: 4px double black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.botones-inferiores{
+    justify-content: center;
+    text-align: center;
+    margin: 5px;
+}
+.paginador{
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    font-weight: bold;
 }
 .logo-informe{
     width: 100%;
@@ -11,16 +27,35 @@
 }
 .titulo{
     justify-content: center;
+    font-weight: bold;
 }
 .subtitulos{
     justify-content: space-between;
     text-align: center;
-}
-.lista-elementos{
-
+    font-weight: bold;
+    margin-top: 10px;
 }
 .elemento{
     align-items: center;
     margin-top: 4px;
     margin-bottom: 4px;
+}
+.checkbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pie-informe{
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.nombre-pastor{
+    justify-content: center;
+    text-decoration: underline;
+}
+.hint-pastor{
+    justify-content: center;
+    font-size: smaller;
+    margin-bottom: 15px;
 }
