@@ -443,6 +443,8 @@ class PersonaForm extends Component {
         // FUNCION QUE REVISA DUPLICADOS DEACUERDO A RFC (SIN HOMOCLAVE)
         const handle_verificarDuplicados = (e) => {
 
+            console.log("fechas: ", !helpers.regex.formatoFecha.test(helpers.fnFormatoFecha3(form.per_Fecha_Nacimiento)));
+
             if (form.per_Categoria == 0) {
                 handleCampoInvalido("categoriaSeleccionada", false);
                 return false
@@ -468,6 +470,7 @@ class PersonaForm extends Component {
                 handleCampoInvalido("per_Fecha_Nacimiento_NoValido", true)
                 return false
             }
+
             //Si todos los campos obligatorios están llenos.
             if (categoriaSeleccionada
                 && !per_Nombre_NoValido
