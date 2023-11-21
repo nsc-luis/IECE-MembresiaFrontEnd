@@ -26,6 +26,7 @@ import ReporteCumpleaños from './pages/Reporte/ReporteCumpleaños';
 import ReportePersonalMinisterial from './pages/Reporte/ReportePersonalMinisterial';
 import ReportePersonalAdministrativo from './pages/Reporte/ReportePersonalAdministrativo';
 import ReporteOrganismosInternos from './pages/Reporte/ReporteOrganismosInternos';
+import ReporteSantuarioyCasaPastoral from './pages/Reporte/ReporteSantuarioyCasaPastoral';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import ResumenTransacciones from './pages/Reporte/ResumenTransacciones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
@@ -53,6 +54,7 @@ import Administracion from './pages/PersonalAdministrativo/Administracion';
 import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDistritales';
 import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
 import OrganismoInterno from './pages/OrganismoInterno'
+import SantuarioyCasaPastoral from './pages/SantuariosyCasasPastorales';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -112,23 +114,20 @@ class Router extends Component {
                         <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
                         <Route exact path="/Auxiliares" component={Auxiliares} />
                         <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
-                        <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} />
+                        {/* <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} /> */}
                         <Route exact path="/OrganismoInterno" component={OrganismoInterno} />
-
                         <Route exact path="/Administracion" component={Administracion} />
                         <Route exact path="/AdministracionDistrital" component={AdministracionDistrital} />
-                        {/* <Route exact path="/TesoreroDelSector" component={TesoreroDelSector} />
-                        <Route exact path="/SecretarioDelSector" component={SecretarioDelSector} /> */}
-                        <Route exact path="/TesoreroDelDistrito" component={TesoreroDelDistrito} />
-                        <Route exact path="/SecretarioDelDistrito" component={SecretarioDelDistrito} />
+                        {/* <Route exact path="/TesoreroDelDistrito" component={TesoreroDelDistrito} />
+                        <Route exact path="/SecretarioDelDistrito" component={SecretarioDelDistrito} /> */}
                         <Route exact path="/ComisionesLocales" component={ComisionesLocales} />
                         <Route exact path="/ComisionesDistritales" component={ComisionesDistritales} />
+                        <Route exact path="/SantuarioyCasaPastoral" component={SantuarioyCasaPastoral} />
 
                         {/* REPORTES */}
                         <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
                         <Route exact path="/RptBautizados" component={RptBautizados} />
                         <Route exact path="/ResumenTransacciones" component={ResumenTransacciones} />
-                        {/* COMPONENTES DE VICTOR */}
                         <Route exact path="/ReportePersonalBautizado" component={ReportePersonalBautizado} />
                         <Route exact path="/ReportePersonalNoBautizado" component={ReportePersonalNoBautizado} />
                         <Route exact path="/ReporteOficiosProfesiones" component={ReporteOficiosProfesiones} />
@@ -136,6 +135,7 @@ class Router extends Component {
                         <Route exact path="/ReportePersonalMinisterial" component={ReportePersonalMinisterial} />
                         <Route exact path="/ReportePersonalAdministrativo" component={ReportePersonalAdministrativo} />
                         <Route exact path="/ReporteOrganismosInternos" component={ReporteOrganismosInternos} />
+                        <Route exact path="/ReporteSantuarioyCasaPastoral" component={ReporteSantuarioyCasaPastoral} />
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />

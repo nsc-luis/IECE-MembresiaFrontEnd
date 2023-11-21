@@ -125,6 +125,20 @@ class RegistrarTransaccionesHistoricas extends Component {
     render() {
         return (
             <Container>
+                <FormGroup>
+                    <Row>
+                        <Col xs="12">
+                            <Alert color="warning">
+                                <strong>AVISO: </strong>
+                                <ul>
+                                    <li>Esta funcionalidad sirve para Registrar Transacciones antiguas, estas sólo se reflejarán en el Historial de la Persona, pero no afecta su Estatus.</li>
+                                    <li>Un ejemplo es: Registrar una Excomunión ocurrida en el pasado. Esta se reflejará en el historial eclesiástico de la Persona, pero no se afectaría su estatus de "En Comunión", permanecerá Activa y En Comunión.</li>
+                                </ul>
+                            </Alert>
+                        </Col>
+                    </Row>
+                </FormGroup>
+
                 <Row>
                     <Col xs="12">
                         <Card>
@@ -144,10 +158,10 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     </FormGroup>
                                     <FormGroup>
                                         <Row>
-                                            <Col xs="3">
+                                            <Col xs="5">
                                                 <Label>* Transacción:</Label>
                                             </Col>
-                                            <Col xs="9">
+                                            <Col xs="7">
                                                 <Input
                                                     type="select"
                                                     name="ct_Id_Codigo"
@@ -181,10 +195,10 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     </FormGroup>
                                     <FormGroup>
                                         <Row>
-                                            <Col xs="3">
-                                                <label>* Distrito</label>
+                                            <Col xs="5">
+                                                <label>* Distrito donde ocurrió esta Transacción Extemporanea</label>
                                             </Col>
-                                            <Col xs="9">
+                                            <Col xs="7">
                                                 <Input
                                                     type="select"
                                                     name="dis_Id_Distrito"
@@ -221,10 +235,10 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     }
                                     <FormGroup>
                                         <Row>
-                                            <Col xs="3">
-                                                <Label>* Persona:</Label>
+                                            <Col xs="5">
+                                                <Label>* Persona a la atañe la Transacción Extemporanea:</Label>
                                             </Col>
-                                            <Col xs="9">
+                                            <Col xs="7">
                                                 <Input
                                                     type="select"
                                                     name="per_Id_Persona"
@@ -247,10 +261,10 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     </FormGroup>
                                     <FormGroup>
                                         <Row>
-                                            <Col xs="3">
+                                            <Col xs="5">
                                                 <Label>Comentario:</Label>
                                             </Col>
-                                            <Col xs="9">
+                                            <Col xs="7">
                                                 <Input
                                                     type="text"
                                                     name="comentarioTransaccion"
@@ -262,8 +276,8 @@ class RegistrarTransaccionesHistoricas extends Component {
                                     </FormGroup>
                                     <FormGroup>
                                         <Row>
-                                            <Col xs="3">
-                                                <Label>* Fecha:</Label>
+                                            <Col xs="5">
+                                                <Label>* Fecha en que ocurrió la Transacción (Debe coincidir con las Actas correspondientes):</Label>
                                             </Col>
                                             <Col xs="3">
                                                 <Input
@@ -278,7 +292,7 @@ class RegistrarTransaccionesHistoricas extends Component {
                                         </Row>
                                     </FormGroup>
                                     <FormGroup>
-                                        <Row>
+                                        <Row className="justify-content-end">
                                             <Button
                                                 color="secondary"
                                                 type="button"

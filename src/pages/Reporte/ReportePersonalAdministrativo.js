@@ -441,9 +441,11 @@ export default function ReportePersonalAdministrativo() {
                     <CardBody>
                         <Table responsive hover id="table1" data-cols-width="30,40,20">
                             <thead className="text-center bg-gradient-info">
-                                <th >CARGO</th>
-                                <th >NOMBRE</th>
-                                <th >GRADO</th>
+                                <tr>
+                                    <th >CARGO</th>
+                                    <th >NOMBRE</th>
+                                    <th >GRADO</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {personalAdministrativo.map((obj, index) => {
