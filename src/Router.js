@@ -55,6 +55,7 @@ import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDist
 import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
 import OrganismoInterno from './pages/OrganismoInterno'
 import SantuarioyCasaPastoral from './pages/SantuariosyCasasPastorales';
+import Misiones from './pages/Misiones';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -113,6 +114,7 @@ class Router extends Component {
                         {/* TRANSACCIONES ESPECIALES */}
                         <Route exact path="/RegistrarTransaccionesHistoricas" component={RegistrarTransaccionesHistoricas} />
                         <Route exact path="/Auxiliares" component={Auxiliares} />
+                        <Route exact path="/Misiones" component={Misiones} />
                         <Route exact path="/RegistroPersonalMinisterial" component={RegistroPersonalMinisterial} />
                         {/* <Route exact path="/BajaPersonalMinisterial" component={BajaPersonalMinisterial} /> */}
                         <Route exact path="/OrganismoInterno" component={OrganismoInterno} />

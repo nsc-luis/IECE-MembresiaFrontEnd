@@ -613,6 +613,17 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link
                             className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Misiones del sector')}
+                            to="/Misiones"
+                        >
+                            <i className="fas fa-home"></i>
+                            <span>Misiones del sector</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
                             onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Santuario y Casa Pastoral')}
                             to="/SantuarioyCasaPastoral"
                         >
