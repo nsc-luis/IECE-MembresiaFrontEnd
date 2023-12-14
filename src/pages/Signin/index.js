@@ -172,8 +172,10 @@ class Login extends Component {
                                                 width="100" height="100"
                                             />
 
-                                            <h1 className="h4 text-gray-900 mb-4">IECE MEMBRESIA</h1>
-
+                                            <h1 className="h4 text-gray-900 mb-1">IECE MEMBRESIA</h1>
+                                            <div className="text-center mb-4" style={{ fontSize: '0.8rem', color: '#000' }}>
+                                                Versión {helpers.version}
+                                            </div>
                                         </Col>
                                         <Col xs="3" />
                                     </Row>

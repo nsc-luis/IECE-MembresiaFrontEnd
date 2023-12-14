@@ -28,6 +28,8 @@ class SantuarioyCasaPastoral extends Component {
             usu_Id_Usuario: JSON.parse(localStorage.getItem('infoSesion')).pem_Id_Ministro,
             nvoEstado_Disponible: true,
             boolHabilitaEdicion: false,
+            mensajeDelProceso: "",
+
         };
         this.infoSesion = JSON.parse(localStorage.getItem("infoSesion"));
     }
@@ -35,6 +37,7 @@ class SantuarioyCasaPastoral extends Component {
     componentDidMount() {
         this.getTemploConFoto();
         this.getCasaPastoral();
+        window.scrollTo(0, 0);
         //this.inicializacionVariables()
     }
 
@@ -127,11 +130,22 @@ class SantuarioyCasaPastoral extends Component {
     }
 
     getTemploConFoto = async () => {
+        this.setState({
+            mensajeDelProceso: "Procesando...",
+            modalShow: true
+        })
+
+
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Templo/GetTemployDomicilioBySector/${localStorage.getItem('sector')}`)
             .then(res => {
                 console.log("templo", res.santuarioConFoto);
                 if (res.data.status === "success")
-                    this.setState({ santuario: res.data.santuarioConFoto[0] })
+                    this.setState({
+                        santuario: res.data.santuarioConFoto[0],
+                        mensajeDelProceso: "",
+                        modalShow: false
+
+                    })
                 else {
                     this.setState({ santuario: null })
 
