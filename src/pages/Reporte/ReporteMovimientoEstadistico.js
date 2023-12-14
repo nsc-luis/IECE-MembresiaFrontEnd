@@ -2,7 +2,7 @@ import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button, Input,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, FormGroup
+    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, FormGroup, Modal, ModalBody
 } from 'reactstrap';
 
 import React, { Fragment, useEffect, useState } from 'react';
@@ -58,6 +58,9 @@ export default function ReporteMovimientoEstadistico() {
     const [lider, setLider] = useState("")
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
     const [entidadTitulo, setEntidadTitulo] = useState("")
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
 
 
     //Llamadas en render
@@ -129,6 +132,10 @@ export default function ReporteMovimientoEstadistico() {
     }
 
     const getDataSector = async (sec) => {
+
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
         params.idSectorDistrito = sec
         console.log("Sector: ", params.idSectorDistrito);
         await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", params)
@@ -136,8 +143,10 @@ export default function ReporteMovimientoEstadistico() {
                 console.log("DatosApi: ", res.data);
                 setDataGeneral(res.data.datos)
                 orderData(res.data.datos)
-
                 setExcelData(res.data.datos)
+                setMensajeDelProceso("")
+                setModalShow(false)
+
 
                 console.log("res-data-datos: ", res.data.datos);
 
@@ -147,11 +156,18 @@ export default function ReporteMovimientoEstadistico() {
     }
 
     const getDataDistrito = async () => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
+
         params.idSectorDistrito = dto
         await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", params)
             .then(res => {
                 orderData(res.data.datos)
                 setExcelData(res.data.datos)
+                setMensajeDelProceso("")
+                setModalShow(false)
+
             }))
     }
 
@@ -586,7 +602,7 @@ export default function ReporteMovimientoEstadistico() {
                                             </td>
                                         </tr>
 
-                                        <TableRow label={'Matrimonios'} data={matrimonios} total={matrimonios ? matrimonios.length / 2 : 0} />
+                                        <TableRow label={'Matrimonios'} data={matrimonios} total={matrimonios ? matrimonios.length : 0} />
 
                                         <tr className="subCategoriasReportes">
                                             <td colSpan="12">
@@ -664,6 +680,13 @@ export default function ReporteMovimientoEstadistico() {
                     </Row>
                 </div>
             </Container>
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+            </Modal>
+
         </>
     )
 }

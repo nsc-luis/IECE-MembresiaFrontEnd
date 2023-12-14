@@ -2,7 +2,7 @@ import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button, FormGroup, Input,
-    CardTitle, Card, CardBody, Table, /* UncontrolledCollapse, */ Row, Col
+    CardTitle, Card, CardBody, Table, Modal, ModalBody, /* UncontrolledCollapse, */ Row, Col
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
@@ -24,6 +24,8 @@ export default function ReporteCumpleaños() {
     const [lider, setLider] = useState("")
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
     const [entidadTitulo, setEntidadTitulo] = useState("")
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
     //Llamadas en render
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -88,17 +90,27 @@ export default function ReporteCumpleaños() {
     }
 
     const getPersonasDistrito = () => {
+
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
+
         helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
                 const sortedData = res.data.map(d => (d.persona)).sort((a, b) => {
                     return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
                 })
                 setPersonas(sortedData.filter(per => per.per_Activo === true))
+                setMensajeDelProceso("")
+                setModalShow(false)
             })
         );
     }
 
     const getPersonasSector = (sec) => {
+
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
 
         helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
@@ -106,6 +118,8 @@ export default function ReporteCumpleaños() {
                     return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
                 })
                 setPersonas(sortedData.filter(per => per.per_Activo === true))
+                setMensajeDelProceso("")
+                setModalShow(false)
             })
         );
     }
@@ -316,6 +330,18 @@ export default function ReporteCumpleaños() {
                     </CardBody>
                 </Card>
             </Container>
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                {/* <ModalHeader>
+                        Solo prueba.
+                    </ModalHeader> */}
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+                {/* <ModalFooter>
+                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
+                    </ModalFooter> */}
+            </Modal>
         </>
     )
 }

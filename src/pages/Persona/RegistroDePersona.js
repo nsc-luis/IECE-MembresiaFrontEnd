@@ -806,8 +806,15 @@ class RegistroDePersonal extends Component {
     }
 
     fnEditaPersona = async (datos) => {
-        if (datos.per_Estado_Civil === "SOLTERO(A) CON HIJOS"
-            || datos.per_Estado_Civil === "CONCUBINATO") {
+        if (datos.per_Estado_Civil === "CONCUBINATO") {
+            datos.per_Fecha_Boda_Civil = "";
+            datos.per_Fecha_Boda_Eclesiastica = "";
+            datos.per_Num_Acta_Boda_Civil = "";
+            datos.per_Oficialia_Boda_Civil = "";
+            datos.per_Registro_Civil = "";
+            datos.per_Libro_Acta_Boda_Civil = "";
+        }
+        if (datos.per_Estado_Civil === "SOLTERO(A) CON HIJOS") {
             datos.per_Fecha_Boda_Civil = "";
             datos.per_Fecha_Boda_Eclesiastica = "";
             datos.per_Num_Acta_Boda_Civil = "";

@@ -4,7 +4,7 @@ import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input, CardHeader,
+    FormGroup, Input, CardHeader, Modal, ModalBody
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
@@ -28,6 +28,9 @@ export default function ReporteOrganismosInternos() {
     const [entidadTitulo, setEntidadTitulo] = useState("")
     const [lider, setLider] = useState("")
     const [organismosInternos, setOrganismosInternos] = useState([])
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
     //Llamadas en render
 
     useEffect(() => {
@@ -89,11 +92,17 @@ export default function ReporteOrganismosInternos() {
 
     const getOrganismosInternosByDistrito = async (dis) => {
         try {
+            setMensajeDelProceso("Procesando...")
+            setModalShow(true)
+
+
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetByDistrito/${dis}`)
                 .then(res => {
                     console.log("REspuesta: ", res.data.organismosInternos)
                     if (res.data.status === "success") {
                         setOrganismosInternos(res.data.organismosInternos)
+                        setMensajeDelProceso("")
+                        setModalShow(false)
                     }
                     else {
                         alert(res.data.mensaje)
@@ -108,11 +117,16 @@ export default function ReporteOrganismosInternos() {
 
     const getOrganismosInternosBySector = async (sec) => {
         try {
+            setMensajeDelProceso("Procesando...")
+            setModalShow(true)
+
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetBySector/${sec}`)
                 .then(res => {
                     console.log("REspuesta: ", res.data.organismosInternos)
                     if (res.data.status === "success") {
                         setOrganismosInternos(res.data.organismosInternos)
+                        setMensajeDelProceso("")
+                        setModalShow(false)
                     }
                     else {
                         alert(res.data.mensaje)
@@ -583,6 +597,19 @@ export default function ReporteOrganismosInternos() {
                     </CardBody>
                 </Card>
             </Container >
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                {/* <ModalHeader>
+                        Solo prueba.
+                    </ModalHeader> */}
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+                {/* <ModalFooter>
+                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
+                    </ModalFooter> */}
+            </Modal>
+
         </>
     )
 }

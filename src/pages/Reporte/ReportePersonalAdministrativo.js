@@ -3,7 +3,7 @@ import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input
+    FormGroup, Input, Modal, ModalBody
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
@@ -26,6 +26,9 @@ export default function ReportePersonalAdministrativo() {
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
     const [entidadTitulo, setEntidadTitulo] = useState("")
     const [lider, setLider] = useState("")
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
     //Llamadas en render
 
     useEffect(() => {
@@ -98,41 +101,62 @@ export default function ReportePersonalAdministrativo() {
     }
 
     const getComisionesDistrito = (dto) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
         helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Distrital/GetComisionesByDistrito/" + dto)
             .then(res => {
                 console.log("respuesta: ", res.data.comisiones)
                 setComisiones(res.data.comisiones)
+                setMensajeDelProceso("")
+                setModalShow(false)
+                window.scrollTo(0, 0)
             })
         );
     }
 
     const getComisionesSector = (sec) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
 
         helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Local/GetComisionesBySector/" + sec)
             .then(res => {
                 console.log("respuesta: ", res.data.comisiones)
                 setComisiones(res.data.comisiones)
+                setMensajeDelProceso("")
+                setModalShow(false)
+                window.scrollTo(0, 0)
             })
         );
     }
 
     const getPersonalAdministrativoSector = (sec) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
 
         helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioBySector/" + sec)
             .then(res => {
                 console.log("respuesta: ", res.data.administrativo)
                 setPersonalAdministrativo(res.data.administrativo)
+                setMensajeDelProceso("")
+                setModalShow(false)
+                window.scrollTo(0, 0)
             })
         );
     }
 
 
     const getPersonalAdministrativoDistrito = (dto) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
 
         helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioByDistrito/" + dto)
             .then(res => {
                 console.log("respuesta: ", res.data.administrativo)
                 setPersonalAdministrativo(res.data.administrativo)
+                setMensajeDelProceso("")
+                setModalShow(false)
+                window.scrollTo(0, 0)
             })
         );
     }
@@ -280,7 +304,7 @@ export default function ReportePersonalAdministrativo() {
 
 
     return (
-
+        window.scrollTo(0, 0),
         <>
 
             <Container lg>
@@ -484,6 +508,13 @@ export default function ReportePersonalAdministrativo() {
                     </CardBody>
                 </Card>
             </Container>
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+            </Modal>
+
         </>
     )
 }

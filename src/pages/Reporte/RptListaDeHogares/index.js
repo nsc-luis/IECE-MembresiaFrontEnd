@@ -37,7 +37,10 @@ class RptListaDeHogares extends Component {
             distrito: {},
             sectores: [],
             sectorSeleccionado: localStorage.getItem('sector') ? localStorage.getItem('sector') : "todos",
-            lider: ""
+            lider: "",
+            modalShow: false,
+            mensajeDelProceso: ""
+
         }
     }
 
@@ -132,6 +135,12 @@ class RptListaDeHogares extends Component {
 
 
     getPersonas = async () => {
+        this.setState({
+            mensajeDelProceso: "Procesando...",
+            modalShow: true
+        })
+
+
         await helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
                 //Filtro de hogares 
@@ -143,7 +152,12 @@ class RptListaDeHogares extends Component {
                         filteredElements.push(element)
                     }
                 })
-                this.setState({ data: filteredElements })
+                this.setState({
+                    data: filteredElements,
+                    mensajeDelProceso: "",
+                    modalShow: false
+
+                })
             })
         )
     }
@@ -156,6 +170,11 @@ class RptListaDeHogares extends Component {
 
     getListaHogares = async () => {
         if (localStorage.getItem('sector') === null) { //Para Sesión de Obispo
+            this.setState({
+                mensajeDelProceso: "Procesando...",
+                modalShow: true
+            })
+
 
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresByDistrito/" + localStorage.getItem('dto'))
                 .then(res => {
@@ -164,11 +183,19 @@ class RptListaDeHogares extends Component {
                             if (a.indice < b.indice) { return -1; }
                             if (a.indice > b.indice) { return 1; }
                             return 0;
-                        })
+                        }),
+                        mensajeDelProceso: "",
+                        modalShow: false
+
                     });
                 })
             )
         } else { //Para Sesión de Pastor
+            this.setState({
+                mensajeDelProceso: "Procesando...",
+                modalShow: true
+            })
+
             await helpers.validaToken().then(helpers.authAxios.get(this.url + "/HogarDomicilio/GetListaHogaresBySector/" + localStorage.getItem('sector'))
                 .then(res => {
                     this.setState({
@@ -176,7 +203,9 @@ class RptListaDeHogares extends Component {
                             if (a.indice < b.indice) { return -1; }
                             if (a.indice > b.indice) { return 1; }
                             return 0;
-                        })
+                        }),
+                        mensajeDelProceso: "",
+                        modalShow: false
                     });
                 })
             )
@@ -480,6 +509,13 @@ class RptListaDeHogares extends Component {
                             </Row>
                         </div>
                     </Container>
+                    {/*Modal success*/}
+                    <Modal isOpen={this.state.modalShow}>
+                        <ModalBody>
+                            {this.state.mensajeDelProceso}
+                        </ModalBody>
+                    </Modal>
+
                 </>
             )
         } else if (this.state.data.length === 0 && this.state.status === 'success') {

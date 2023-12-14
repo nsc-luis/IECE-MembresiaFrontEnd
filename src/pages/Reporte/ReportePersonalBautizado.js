@@ -3,10 +3,10 @@ import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input
+    FormGroup, Input, Modal, ModalBody
 } from 'reactstrap';
 
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import moment from 'moment/min/moment-with-locales';
@@ -25,11 +25,19 @@ export default function ReportePersonalBautizado() {
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
     const [entidadTitulo, setEntidadTitulo] = useState("")
     const [lider, setLider] = useState("")
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
     //Llamadas en render
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
     }, [])
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0);
+    }, [personas, infoDis, infoSecretario, sectores, sectorSeleccionado]); // Agrega aquí todas tus variables de estado
+
 
     useEffect(() => {
 
@@ -93,6 +101,9 @@ export default function ReportePersonalBautizado() {
     }
 
     const getPersonasDistrito = () => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
 
         helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
@@ -102,11 +113,16 @@ export default function ReportePersonalBautizado() {
                         if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
                         return 0;
                     }))
+                setMensajeDelProceso("")
+                setModalShow(false)
+
             })
         );
     }
 
     const getPersonasSector = (sec) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
 
         helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
@@ -117,6 +133,8 @@ export default function ReportePersonalBautizado() {
                         if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
                         return 0;
                     }))
+                setMensajeDelProceso("")
+                setModalShow(false)
             })
         );
     }
@@ -302,6 +320,7 @@ export default function ReportePersonalBautizado() {
         doc.save("ReportePersonalBautizado.pdf");
     }
     return (
+
         <>
             <Container lg>
                 <FormGroup>
@@ -497,6 +516,14 @@ export default function ReportePersonalBautizado() {
                     </CardBody>
                 </Card>
             </Container>
+
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+            </Modal>
+
         </>
     )
 }
