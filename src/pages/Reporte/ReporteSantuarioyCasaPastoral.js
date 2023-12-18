@@ -4,7 +4,7 @@ import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input, CardHeader, CardFooter, Label
+    FormGroup, Input, CardHeader, CardFooter, Label, Modal, ModalBody
 } from 'reactstrap';
 
 import React, { Fragment, useEffect, useState, } from 'react';
@@ -33,6 +33,9 @@ export default function ReporteSantuarioyCasaPastoral() {
     const [santuario, setSantuario] = useState([])
     const [direccion, setDireccion] = useState([])
     const [domicilio, setDomicilio] = useState([])
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
     //Llamadas en render
 
     useEffect(() => {
@@ -107,11 +110,18 @@ export default function ReporteSantuarioyCasaPastoral() {
 
     const getTemploConFotoBySector = async (sec) => {
         try {
+            setMensajeDelProceso("Procesando...")
+            setModalShow(true)
+
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Templo/GetTemployDomicilioBySector/${sec}`)
                 .then(res => {
                     console.log("templo", res.santuarioConFoto);
-                    if (res.data.status === "success")
+                    if (res.data.status === "success") {
                         setSantuarioConFoto(res.data.santuarioConFoto)
+                        setMensajeDelProceso("")
+                        setModalShow(false)
+
+                    }
                     else {
                         setSantuarioConFoto(null)
 
@@ -126,6 +136,9 @@ export default function ReporteSantuarioyCasaPastoral() {
 
     const getCasaPastoralBySector = async (sec) => {
         try {
+            setMensajeDelProceso("Procesando...")
+            setModalShow(true)
+
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/CasaPastoral/GetCasaPastoralyDomicilioBySector/${sec}`)
                 .then(res => {
                     console.log("respuesta", res.data);
@@ -133,13 +146,12 @@ export default function ReporteSantuarioyCasaPastoral() {
                         setCasaPastoralConDomicilio(res.data.casaPastoralConDomicilio)
                         //setDomicilio(res.data.casaPastoralConDomicilio.domicilio)
                         //setDireccion(res.data.casaPastoralConDomicilio.direccion)
+                        setMensajeDelProceso("")
+                        setModalShow(false)
 
                     }
                     else if (res.data.status == "notFound") {
                         reseteo_casaPastoral();
-
-
-
                     }
                 })
             )
@@ -151,11 +163,17 @@ export default function ReporteSantuarioyCasaPastoral() {
 
     const getTemplosConFotoByDistrito = async (dis) => {
         try {
+            setMensajeDelProceso("Procesando...")
+            setModalShow(true)
+
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Templo/GetTemployDomicilioByDistrito/${dis}`)
                 .then(res => {
                     console.log("templo", res.data.santuarioConFoto);
-                    if (res.data.status === "success")
+                    if (res.data.status === "success") {
                         setSantuarioConFoto(res.data.santuarioConFoto)
+                        setMensajeDelProceso("")
+                        setModalShow(false)
+                    }
                     else {
                         setSantuarioConFoto(null)
 
@@ -170,6 +188,9 @@ export default function ReporteSantuarioyCasaPastoral() {
 
     const getCasasPastoralesByDistrito = async (dis) => {
         try {
+            setMensajeDelProceso("Procesando...")
+            setModalShow(true)
+
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/CasaPastoral/GetCasaPastoralyDomicilioByDistrito/${dis}`)
                 .then(res => {
                     console.log("respuesta", res.data);
@@ -177,7 +198,8 @@ export default function ReporteSantuarioyCasaPastoral() {
                         setCasaPastoralConDomicilio(res.data.casaPastoralConDomicilio)
                         //setDomicilio(res.data.casaPastoralConDomicilio.domicilio)
                         //setDireccion(res.data.casaPastoralConDomicilio.direccion)
-
+                        setMensajeDelProceso("")
+                        setModalShow(false)
                     }
                     else if (res.data.status == "notFound") {
                         reseteo_casaPastoral();
@@ -444,7 +466,7 @@ export default function ReporteSantuarioyCasaPastoral() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReportePersonalBautizado.pdf");
+        doc.save("Santuario y Casa Pastoral.pdf");
     }
 
 
@@ -774,8 +796,12 @@ export default function ReporteSantuarioyCasaPastoral() {
                                                 </>
                                                 :
                                                 <tr>
-                                                    <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{`${obj.sector.sec_Tipo_Sector} ${obj.sector.sec_Numero}: ${obj.sector.sec_Alias} `}</td>
-                                                    <td><strong>No hay casa pastoral registrada </strong></td>
+                                                    {obj.casaPastoral !== null ?
+                                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{`${obj.sector.sec_Tipo_Sector} ${obj.sector.sec_Numero}: ${obj.sector.sec_Alias} `}</td>
+                                                        :
+                                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{entidadTitulo}</td>
+                                                    }
+                                                    <td ><strong>No hay casa pastoral registrada </strong></td>
                                                 </tr>
                                             }
                                         </>
@@ -788,6 +814,13 @@ export default function ReporteSantuarioyCasaPastoral() {
                     </CardBody>
                 </Card>
             </Container >
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+            </Modal>
+
         </>
     )
 }

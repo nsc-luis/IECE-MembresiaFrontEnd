@@ -22,7 +22,7 @@ class Sidebar extends Component {
             modalBajaNoBautizadoAlejamiento: false,
             modalBajaNoBautizadoCambioDomicilio: false,
             modalEstableceVisibilidadAbierta: false,
-            formEstableceVisibilidadAbierta: {}
+            formEstableceVisibilidadAbierta: {},
         }
     }
 
@@ -48,6 +48,7 @@ class Sidebar extends Component {
     handle_LinkEncabezado = (seccion, componente) => {
         localStorage.setItem('seccion', seccion);
         localStorage.setItem('componente', componente);
+        window.scrollTo(0, 0)
     }
 
     openModalEditaPersona = async () => {
@@ -229,6 +230,7 @@ class Sidebar extends Component {
     }
 
     render() {
+        const { menuColapsado } = this.state;
         //console.log("PersonaSeleccionada: ", this.state.personaSeleccionada);
         return (
             <React.Fragment>
