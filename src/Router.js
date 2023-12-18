@@ -56,6 +56,7 @@ import AdministracionDistrital from './pages/PersonalAdministrativo/Administraci
 import OrganismoInterno from './pages/OrganismoInterno'
 import SantuarioyCasaPastoral from './pages/SantuariosyCasasPastorales';
 import Misiones from './pages/Misiones';
+import RegistroVisitantes from './pages/RegistroVisitantes';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -92,6 +93,7 @@ class Router extends Component {
                         <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />
                         {/* MOVIMIENTOS ESTADISTICOS */}
                         <Route exact path="/RegistroDePersona" component={RegistroDePersona} />
+                        <Route exact path="/RegistroVisitantes" component={RegistroVisitantes} />
                         <Route exact path="/AltaRestitucion" component={AltaRestitucion} />
                         <Route exact path="/AltaReactivacion" component={AltaReactivacion} />
                         <Route exact path="/AltaCambioDomicilio" component={AltaCambioDomicilio} />
