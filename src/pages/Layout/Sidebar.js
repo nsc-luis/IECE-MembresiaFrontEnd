@@ -615,22 +615,22 @@ class Sidebar extends Component {
                     <li className="nav-item">
                         <Link
                             className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Misiones del sector')}
-                            to="/Misiones"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Santuario y Casa Pastoral')}
+                            to="/SantuarioyCasaPastoral"
                         >
-                            <i className="fas fa-home"></i>
-                            <span>Misiones del sector</span>
+                            <i className="fas fa-place-of-worship"></i>
+                            <span>Santuario y Casa pastoral</span>
                         </Link>
                     </li>
 
                     <li className="nav-item">
                         <Link
                             className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Santuario y Casa Pastoral')}
-                            to="/SantuarioyCasaPastoral"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Misiones del Sector')}
+                            to="/Misiones"
                         >
-                            <i className="fas fa-place-of-worship"></i>
-                            <span>Santuario y Casa pastoral</span>
+                            <i className="fas fa-home"></i>
+                            <span>Misiones del Sector</span>
                         </Link>
                     </li>
 
@@ -693,6 +693,10 @@ class Sidebar extends Component {
                                     to="/ReporteSantuarioyCasaPastoral"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Santuario y Casa Pastoral de la Iglesia")}
                                 >Reporte de Santuario y Casa Pastoral</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteMisiones"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Misiones de Evangelismo")}
+                                >Lista de Misiones</Link>
                                 <Link className="collapse-item text-wrap"
                                     to="/ReporteMovimientoEstadistico"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}

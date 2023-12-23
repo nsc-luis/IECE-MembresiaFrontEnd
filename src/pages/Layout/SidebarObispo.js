@@ -245,6 +245,15 @@ class SidebarObispo extends Component {
                     </li>
 
                     <li className="nav-item">
+                        <Link className="nav-link"
+                            to="/ReporteMisiones"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Misiones")}>
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista de Misiones</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
                         <Link className="nav-link" to="/ReporteMovimientoEstadistico"
                             onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}>
                             <i className="fas fa-fw fa-clipboard-list"></i>

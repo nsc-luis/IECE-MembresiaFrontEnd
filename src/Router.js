@@ -27,6 +27,7 @@ import ReportePersonalMinisterial from './pages/Reporte/ReportePersonalMinisteri
 import ReportePersonalAdministrativo from './pages/Reporte/ReportePersonalAdministrativo';
 import ReporteOrganismosInternos from './pages/Reporte/ReporteOrganismosInternos';
 import ReporteSantuarioyCasaPastoral from './pages/Reporte/ReporteSantuarioyCasaPastoral';
+import ReporteMisiones from './pages/Reporte/ReporteMisiones';
 import ReporteMovimientoEstadistico from './pages/Reporte/ReporteMovimientoEstadistico';
 import ResumenTransacciones from './pages/Reporte/ResumenTransacciones';
 import SolicitudDeRestablecimiento from './pages/CambiarContrasena/SolicitudDeRestablecimiento';
@@ -126,6 +127,7 @@ class Router extends Component {
                         <Route exact path="/ComisionesDistritales" component={ComisionesDistritales} />
                         <Route exact path="/SantuarioyCasaPastoral" component={SantuarioyCasaPastoral} />
 
+
                         {/* REPORTES */}
                         <Route exact path="/RptListaDeHogares" component={RptListaDeHogares} />
                         <Route exact path="/RptBautizados" component={RptBautizados} />
@@ -138,6 +140,7 @@ class Router extends Component {
                         <Route exact path="/ReportePersonalAdministrativo" component={ReportePersonalAdministrativo} />
                         <Route exact path="/ReporteOrganismosInternos" component={ReporteOrganismosInternos} />
                         <Route exact path="/ReporteSantuarioyCasaPastoral" component={ReporteSantuarioyCasaPastoral} />
+                        <Route exact path="/ReporteMisiones" component={ReporteMisiones} />
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />

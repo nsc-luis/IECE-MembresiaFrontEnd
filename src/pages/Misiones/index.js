@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
     Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter,
-    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
+    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader, ModalHeader
 } from 'reactstrap';
 
 export default class Misiones extends Component {
@@ -14,8 +14,13 @@ export default class Misiones extends Component {
             showForm: false,
             ms_Alias: "",
             ms_AliasInvalid: false,
+            ms_NumeroInvalid: false,
+            ms_Numero: "",
             editandoMision: false,
-            currentMision: {}
+            numeroMisiones: [],
+            currentMision: {},
+            modal_Confirmacion_Baja: false,
+            misionADarDeBaja: {}
         }
     }
     componentDidMount() {
@@ -34,19 +39,32 @@ export default class Misiones extends Component {
             ms_Alias: "",
             showForm: !this.state.showForm,
             ms_AliasInvalid: false,
+            ms_NumeroInvalid: false,
             editandoMision: false
         })
     }
     onChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
+        // this.setState({
+        //     [e.target.name]: e.target.value
+        // })
+
+        if (e.target.name === 'ms_Alias') {
+            this.setState({
+                [e.target.name]: e.target.value.toUpperCase()
+            });
+        } else {
+            this.setState({
+                [e.target.name]: e.target.value
+            });
+        }
     }
+
     getMisiones = async () => {
         try {
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Mision_Sector/${localStorage.getItem("sector")}`)
                 .then(res => {
                     this.setState({ misiones: res.data.misiones })
+                    this.numeroDeMisiones()
                 }))
         }
         catch (err) {
@@ -56,17 +74,21 @@ export default class Misiones extends Component {
     enviarInfo = async (e) => {
         e.preventDefault()
         this.setState({
-            ms_AliasInvalid: this.state.ms_Alias === "" ? true : false
+            ms_AliasInvalid: this.state.ms_Alias === "" || this.state.ms_Alias === null ? true : false,
+            ms_NumeroInvalid: this.state.ms_Numero == "" || this.state.ms_Numero == 0 ? true : false
         })
+
         if (this.state.ms_Alias === "") {
             return false
         }
+
         let info = {
             ms_Alias: this.state.ms_Alias,
             sec_Id_Sector: localStorage.getItem("sector"),
-            Usu_Usuario: this.infoSesion.pem_Id_Ministro
+            usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
         }
-        if (!this.state.editandoMision) {
+
+        if (!this.state.editandoMision) { //Si no es Edición, sino Alta procede a registrar nueva misión
             try {
                 await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Mision_Sector`, info)
                     .then(res => {
@@ -79,7 +101,13 @@ export default class Misiones extends Component {
                 alert("Error:\nNo se ha sido posible conectarse a la base de datos del sistema. Intente mas tarde.")
             }
         }
-        else {
+        else { //Si es Edición, procede a editar misión
+            let info = {
+                ms_Alias: this.state.ms_Alias,
+                ms_Numero: this.state.ms_Numero,
+                sec_Id_Sector: localStorage.getItem("sector"),
+                usu_Id_Usuario: this.infoSesion.pem_Id_Ministro
+            }
             try {
                 await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Mision_Sector/${this.state.currentMision.ms_Id}`, info)
                     .then(res => {
@@ -89,29 +117,58 @@ export default class Misiones extends Component {
                     }))
             }
             catch (err) {
-                alert("Error:\nNo se ha sido posible conectarse a la base de datos del sistema. Intente mas tarde.")
+                alert("Error:\nNo ha sido posible conectarse a la base de datos del sistema. Intente mas tarde.")
             }
         }
-        
+
     }
+    numeroDeMisiones = () => {
+        const numerosArray = Array.from(
+            { length: this.state.misiones.length },
+            (_, index) => index + 1
+        );
+
+        this.setState({ numeroMisiones: numerosArray });
+    }
+
+
+
     formParaEditar = (info) => {
-        this.setState({ 
+
+        this.setState({
             ms_Alias: info.ms_Alias,
+            ms_Numero: info.ms_Numero,
             editandoMision: true,
             currentMision: info
         })
+
         this.mostrarFormulario()
     }
-    baja = async(info) => {
+
+    baja = async () => {
         try {
-            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Mision_Sector/BajaDeMision/${info.ms_Id}`)
+            await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Mision_Sector/BajaDeMision/${this.state.misionADarDeBaja.ms_Id}`)
                 .then(res => {
                     this.getMisiones()
+                    this.setState({ modal_Confirmacion_Baja: false })
                 }))
         }
         catch (err) {
             alert("Error:\nNo se ha sido posible conectarse a la base de datos del sistema. Intente mas tarde.")
         }
+    }
+
+    bajaTentativa = (sector) => {
+        console.log("Baja Tentativa");
+        this.setState({
+            modal_Confirmacion_Baja: true,
+            misionADarDeBaja: sector,
+            showForm: false,
+        })
+    }
+
+    closemodal_Confirmacion_Baja = () => {
+        this.setState({ modal_Confirmacion_Baja: false })
     }
 
     render() {
@@ -126,7 +183,7 @@ export default class Misiones extends Component {
                                 onClick={this.mostrarFormulario}
                                 hidden={this.state.showForm}
                             >
-                                Registrar nueva mision
+                                Registrar nueva Misión
                             </Button>
                         </Col>
                     </Row>
@@ -134,7 +191,10 @@ export default class Misiones extends Component {
 
                 {this.state.showForm &&
                     <FormGroup>
-                        <Card>
+                        <Card className="border-info">
+                            <CardHeader>
+                                <h4 className="text-center pt-2">EDICIÓN DE MISIÓN DEL SECTOR</h4>
+                            </CardHeader>
                             <Form onSubmit={this.enviarInfo}>
                                 <CardBody>
                                     <FormGroup>
@@ -147,12 +207,37 @@ export default class Misiones extends Component {
                                         </Row>
                                     </FormGroup>
                                     <FormGroup>
+                                        {this.state.editandoMision &&
+                                            <Row>
+                                                <Col xs="3">
+                                                    * Número de Misión:
+                                                </Col>
+                                                <Col xs="2">
+                                                    <Input
+                                                        className="form-control mb-2"
+                                                        type="select"
+                                                        name="ms_Numero"
+                                                        onChange={this.onChange}
+                                                        value={this.state.ms_Numero}
+                                                        invalid={this.state.ms_NumeroInvalid}
+                                                    >
+                                                        {this.state.numeroMisiones.map(numero => (
+                                                            <option key={numero} value={numero}>
+                                                                {numero}
+                                                            </option>
+                                                        ))}
+                                                    </Input>
+                                                    <FormFeedback>Este campo es requerido</FormFeedback>
+                                                </Col>
+                                            </Row>
+                                        }
                                         <Row>
                                             <Col xs="3">
-                                                * Nombre de mision:
+                                                * Nombre de Misión:
                                             </Col>
                                             <Col xs="9">
                                                 <Input
+                                                    className="form-control "
                                                     type="text"
                                                     name="ms_Alias"
                                                     onChange={this.onChange}
@@ -190,18 +275,18 @@ export default class Misiones extends Component {
                 }
 
                 {this.state.misiones.length > 0 &&
-                    <Card>
+                    <Card className="border-info">
                         <CardHeader>
-                            <h4>Misiones del sector</h4>
+                            <h4 className="text-center pt-2">MISIONES DEL SECTOR</h4>
                         </CardHeader>
                         <CardBody>
-                            <Table>
-                                <thead>
+                            <Table className="table table-striped table-bordered table-sm bt-0">
+                                <thead className="text-center bg-gradient-info">
                                     <tr>
-                                        <th>Numero de mision</th>
-                                        <th>Alias de mision</th>
-                                        <th>Estado</th>
-                                        <th></th>
+                                        <th>No. de Misión</th>
+                                        <th>Alias de Misión</th>
+                                        <th>Estatus</th>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -211,21 +296,21 @@ export default class Misiones extends Component {
                                                 <td>{mision.ms_Numero}</td>
                                                 <td>{mision.ms_Alias}</td>
                                                 <td>{mision.ms_Activo === true ? "Activo" : "Inactivo"}</td>
-                                                <td>
+                                                <td className="text-center p-2">
                                                     <Button
+                                                        className=" m-2"
                                                         color="success"
                                                         type="button"
                                                         onClick={() => this.formParaEditar(mision)}
                                                     >
-                                                        <span className="fa fa-edit"></span>
                                                         Editar
                                                     </Button>
                                                     <Button
+                                                        className=" m-2"
                                                         color="danger"
                                                         type="button"
-                                                        onClick={() => this.baja(mision)}
+                                                        onClick={() => this.bajaTentativa(mision)}
                                                     >
-                                                        <span className="fa fa-times"></span>
                                                         Baja
                                                     </Button>
                                                 </td>
@@ -240,6 +325,25 @@ export default class Misiones extends Component {
                 {this.state.misiones.length < 1 &&
                     <h4>No Hay misiones registradas de este Sector</h4>
                 }
+
+                <Modal isOpen={this.state.modal_Confirmacion_Baja} className="card">
+                    <ModalHeader className="card-header">
+                        <h2>Confirmación</h2>
+                    </ModalHeader>
+                    <ModalBody className="card-body">
+                        <div >
+                            <div >
+                                <p>¿Estas seguro de querer dar de Baja la Misión<strong> {this.state.misionADarDeBaja.ms_Alias}</strong>?</p>
+                            </div>
+                        </div>
+                    </ModalBody>
+
+                    <div className="modal-buttons">
+                        <button className="btn btn-secondary m-3" onClick={this.closemodal_Confirmacion_Baja}>Cancelar</button>
+                        <button className="btn btn-danger m-3 " onClick={this.baja} >Continuar</button>
+                    </div>
+                </Modal>
+
             </Container>
         )
     }
