@@ -33,6 +33,7 @@ export default class Misiones extends Component {
     mostrarFormulario = () => {
         this.setState({ showForm: !this.state.showForm })
     }
+
     handleCancelar = () => {
         window.scrollTo(0, 0);
         this.setState({
@@ -176,6 +177,20 @@ export default class Misiones extends Component {
             <Container>
                 <FormGroup>
                     <Row>
+                        <Col xs="12">
+                            <Alert color="warning">
+                                <strong>AVISO: </strong>
+                                <ul>
+                                    <li>Para registrar una Misión, presione el Botón <strong>"Registrar Nueva Misión"</strong>.</li>
+                                    <li>Para dar de Baja una Misión ya existente, presione el Botón <strong>"Baja"</strong> en el renglón correspondiente.</li>
+                                    <li>Para dar de Editar el Número o Nombre de una Misión, presione el Botón <strong>"Editar"</strong> en el renglón correspondiente.</li>
+                                </ul>
+                            </Alert>
+                        </Col>
+                    </Row>
+                </FormGroup>
+                <FormGroup>
+                    <Row>
                         <Col xs="12" style={{ textAlign: 'right' }}>
                             <Button
                                 type="button"
@@ -183,7 +198,7 @@ export default class Misiones extends Component {
                                 onClick={this.mostrarFormulario}
                                 hidden={this.state.showForm}
                             >
-                                Registrar nueva Misión
+                                Registrar Nueva Misión
                             </Button>
                         </Col>
                     </Row>
@@ -193,7 +208,7 @@ export default class Misiones extends Component {
                     <FormGroup>
                         <Card className="border-info">
                             <CardHeader>
-                                <h4 className="text-center pt-2">EDICIÓN DE MISIÓN DEL SECTOR</h4>
+                                <h4 className="text-center pt-2"> {this.state.editandoMision ? 'EDICIÓN DE MISIÓN DEL SECTOR' : 'ALTA DE MISIÓN DEL SECTOR'}</h4>
                             </CardHeader>
                             <Form onSubmit={this.enviarInfo}>
                                 <CardBody>
@@ -292,13 +307,13 @@ export default class Misiones extends Component {
                                 <tbody>
                                     {this.state.misiones.map((mision) => {
                                         return (
-                                            <tr key={mision.ms_Id}>
+                                            <tr key={mision.ms_Id} className="mb-3">
                                                 <td>{mision.ms_Numero}</td>
                                                 <td>{mision.ms_Alias}</td>
                                                 <td>{mision.ms_Activo === true ? "Activo" : "Inactivo"}</td>
                                                 <td className="text-center p-2">
                                                     <Button
-                                                        className=" m-2"
+                                                        className="m-2"
                                                         color="success"
                                                         type="button"
                                                         onClick={() => this.formParaEditar(mision)}
@@ -306,7 +321,7 @@ export default class Misiones extends Component {
                                                         Editar
                                                     </Button>
                                                     <Button
-                                                        className=" m-2"
+                                                        className="m-2"
                                                         color="danger"
                                                         type="button"
                                                         onClick={() => this.bajaTentativa(mision)}
@@ -323,7 +338,7 @@ export default class Misiones extends Component {
                     </Card>
                 }
                 {this.state.misiones.length < 1 &&
-                    <h4>No Hay misiones registradas de este Sector</h4>
+                    <h4>NO HAY MISIONES REGISTRADAS DE ESTE SECTROR</h4>
                 }
 
                 <Modal isOpen={this.state.modal_Confirmacion_Baja} className="card">
