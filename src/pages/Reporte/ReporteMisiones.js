@@ -313,7 +313,7 @@ export default function ReporteMisiones() {
                 }))
             } else {
                 yAxis += 4;
-                doc.text('No Hay misiones registradas ', 25, yAxis);
+                doc.text('NO HAY MISIONES REGISTRADAS', 25, yAxis);
             }
         }
 
@@ -421,7 +421,7 @@ export default function ReporteMisiones() {
                                                 {
                                                     misiones.map(((mision, index) => {
                                                         return <fragment>
-                                                            <li className="list-group d-flex justify-content-between align-items-start">
+                                                            <li className="list-group d-flex justify-content-between align-items-start ">
                                                                 <div className="ms-2 me-auto mb-2">
                                                                     <ul className="list-unstyled pl-4" >
                                                                         <li className="font-weight-normal" style={{ fontSize: '1.2rem' }} key={index}> MISIÓN {mision.ms_Numero}: {mision.ms_Alias}</li>
@@ -435,7 +435,7 @@ export default function ReporteMisiones() {
 
                                             </ul>
                                         </h5> :
-                                        <h4>{sector == null ? 'No Hay misiones registradas de este Distrito' : 'No Hay misiones registradas de este Sector'}</h4>
+                                        <h4>{sector == null ? 'NO HAY MISIONES REGISTRADAS EN ESTE DISTRITO' : 'NO HAY MISIONES REGISTRADAS DE ESTE SECTOR'}</h4>
                                     }
                                 </CardBody>
                             </Card>
@@ -453,17 +453,17 @@ export default function ReporteMisiones() {
                                                 {
                                                     misionesSectores.map(((mision, index) => {
                                                         return <fragment>
-                                                            <li className="list-group d-flex justify-content-between align-items-start">
+                                                            <li className="list-group d-flex justify-content-between align-items-start mb-3">
                                                                 <div className="ms-2 me-auto mb-2">
                                                                     <div className="font-weight-normal" style={{ fontSize: '1.2rem' }} key={index}>{mision.sectores.sec_Tipo_Sector} {mision.sectores.sec_Numero}: {mision.sectores.sec_Alias}</div>
                                                                     {mision.misiones.length > 0 ?
                                                                         mision.misiones.map((mission, index) => {
                                                                             return <ul className="list-unstyled pl-4" >
-                                                                                <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}> Misión {mission.ms_Numero}: {mission.ms_Alias}</li>
+                                                                                <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}> MISIÓN {mission.ms_Numero}: {mission.ms_Alias}</li>
                                                                             </ul>
                                                                         }) :
                                                                         <ul className="list-unstyled pl-4" >
-                                                                            <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}>No hay misiones registradas en este Sector</li>
+                                                                            <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}>NO HAY MISIONES REGISTRADAS EN ESTE SECTOR</li>
                                                                         </ul>}
                                                                 </div>
                                                             </li>
@@ -524,7 +524,7 @@ export default function ReporteMisiones() {
                                     return (
 
                                         <tr key={index}>
-                                            <td><b>Misión {obj.ms_Numero}</b></td>
+                                            <td><b>MISIÓN {obj.ms_Numero}</b></td>
                                             <td>{obj.ms_Alias != null ? obj.ms_Alias : ""}</td>
                                         </tr>
                                     )
@@ -539,7 +539,7 @@ export default function ReporteMisiones() {
                             </tbody>
                         </Table>
 
-                        <table responsive hover id="table2" data-cols-width="60,60">
+                        <table responsive hover id="table2" data-cols-width="60,60" >
                             <thead className="text-center bg-gradient-info">
                                 <tr>
                                     <th>SECTOR</th>
@@ -550,22 +550,22 @@ export default function ReporteMisiones() {
                                 {misionesSectores ? misionesSectores.map(mision => (
                                     <>
                                         <tr>
-                                            <td>Misión  {mision.sectores.sec_Tipo_Sector} {mision.sectores.sec_Numero}: {mision.sectores.sec_Alias} </td>
+                                            <td>MISIÓN  {mision.sectores.sec_Tipo_Sector} {mision.sectores.sec_Numero}: {mision.sectores.sec_Alias} </td>
                                         </tr>
                                         {mision.misiones.map((mission, index) => {
                                             return mission ? <tr>
                                                 <td></td>
-                                                <td>Misión {mission.ms_Numero}: {mission.ms_Alias} </td>
-                                            </tr> : <tr >
+                                                <td>MISIÓN {mission.ms_Numero}: {mission.ms_Alias} </td>
+                                            </tr> : <tr>
                                                 <td></td>
-                                                <td>No hay misiones registradas</td>
+                                                <td>NO HAY MISIONES REGISTRADAS</td>
                                             </tr>
                                         })}
                                     </>
                                 )) :
                                     (
-                                        <tr >
-                                            <td><b>No ha misiones registradas</b></td>
+                                        <tr className="spacer">
+                                            <td><b>NO HAY MISIONES REGISTRADAS</b></td>
                                             <td></td>
                                         </tr>
                                     )}
