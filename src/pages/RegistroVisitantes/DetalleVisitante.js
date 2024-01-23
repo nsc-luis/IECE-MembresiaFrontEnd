@@ -15,6 +15,7 @@ export default class DetalleVisitante extends Component {
             notas: [],
             showDlgNota: false,
             nota: {
+                n_Id: 0,
                 n_Fecha_Nota: null,
                 n_Nota: "",
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro,
@@ -77,13 +78,15 @@ export default class DetalleVisitante extends Component {
             showDlgNota: false,
             nota: {
                 ...this.state.nota,
+                n_Id: 0,
                 n_Fecha_Nota: null,
                 n_Nota: "",
                 usu_Id_Usuario: this.infoSesion.pem_Id_Ministro,
                 vp_Id_Visitante: this.props.idVisitante
             },
             n_Fecha_NotaInvalid: false,
-            n_NotaInvalid: false
+            n_NotaInvalid: false,
+            editarNota: false
         })
     }
 
