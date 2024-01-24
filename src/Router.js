@@ -54,6 +54,7 @@ import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDist
 import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
 import OrganismoInterno from './pages/OrganismoInterno'
 import InformeAnualPastor from './pages/InformeAnualPastor/InformeAnualPastor';
+import InformeAnualPastorLista from './pages/InformeAnualPastor/InformeAnualPastorLista';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -140,6 +141,7 @@ class Router extends Component {
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
 
                         {/* Informe Anual Pastor*/}
+                        <Route exact path="/InformeAnualPastorLista" component={InformeAnualPastorLista} />
                         <Route exact path="/InformeAnualPastor" component={InformeAnualPastor} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />

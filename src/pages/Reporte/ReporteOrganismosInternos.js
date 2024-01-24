@@ -33,6 +33,7 @@ export default function ReporteOrganismosInternos() {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
+    
 
     useEffect(() => {
 
