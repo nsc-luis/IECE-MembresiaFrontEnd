@@ -16,6 +16,19 @@ class InformeAnualPastor extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            informe: {
+                idInforme: 0,
+                idTipoUsuario: 0, //1 Pastor 2 Obispo
+                mes: null,
+                anio: null,
+                idDistrito: 0,
+                idSector: 0,
+                lugarReunion: null,
+                fechaReunion: null,
+                status: 0,
+                usu_id_usuario: 0,
+                fechaRegistro: null,
+            },
             sector: {
                 sec_Numero: 0,
                 sec_Alias: ''
@@ -100,10 +113,11 @@ class InformeAnualPastor extends Component {
     }
 
     componentDidMount(){
+        const { id } = this.props.match.params;
         this.obtenerDatosEstadisticos();
         this.getDistrito();
         this.getSector();
-        this.obtenerInformes();
+        this.obtenerInforme(id);
     }
 
     getDistrito = async () => {
@@ -144,9 +158,10 @@ class InformeAnualPastor extends Component {
         );
     }
 
-    obtenerInformes = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get("/InformeAnualPastor")
+    obtenerInforme = async (id) => {
+        await helpers.validaToken().then(helpers.authAxios.get("/InformeAnualPastor/" + id)
             .then(res => {
+                this.state.informe = res.data;
                 console.log(res);
             })
         );
@@ -195,7 +210,7 @@ class InformeAnualPastor extends Component {
                                         <p>
                                             INFORME QUE RINDE EL PASTOR DEL SECTOR NO. <b>{this.state.sector.sec_Numero}</b> CON BASE EN: <b> {this.state.sector.sec_Alias + ' '} </b>
                                             AL DISTRITO NUMERO <b>{this.state.distrito.dis_Numero}</b> CON ASIENTO EN <b>{this.state.distrito.dis_Alias}</b> DEL TRABAJO Y MOVIMIENTO REGISTRADO
-                                            DURANTE EL MES DE ________ DE ______________.
+                                            DURANTE EL MES DE {this.state.informe.mes} DE {this.state.informe.anio}.
                                             </p>
                                         </Col>
                                     </Row>

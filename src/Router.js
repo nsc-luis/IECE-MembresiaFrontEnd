@@ -142,7 +142,7 @@ class Router extends Component {
 
                         {/* Informe Anual Pastor*/}
                         <Route exact path="/InformeAnualPastorLista" component={InformeAnualPastorLista} />
-                        <Route exact path="/InformeAnualPastor" component={InformeAnualPastor} />
+                        <Route exact path="/InformeAnualPastor/:id" component={InformeAnualPastor} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
