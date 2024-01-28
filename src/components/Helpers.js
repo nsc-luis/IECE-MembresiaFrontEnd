@@ -8,7 +8,7 @@ const helpers = {
     // EXPRESIONES REGULARES
     regex: {
         alphaSpaceRequired: /^[a-zA-Z]{2}[a-zA-ZÑ\d\s]{0,37}$/,
-        formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/,
+        formatoFecha: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:19\d{2}|20\d{2}))$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:19\d{2}|20\d{2}))$/,
         formatoEmail: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         formatoTelefono: /^(\+\d{1,3})*(\(\d{2,3}\))*\d{7,25}$/,
         //formatoPassword: /^(?=.{6,20}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*_-+=()]).*/
@@ -45,8 +45,7 @@ const helpers = {
 
     // URLs PARA PRUEBA
     url_api: "http://" + window.location.hostname + ":59239/api",
-    // url_api: "http://" + window.location.hostname + ":81/webapi/api",
-    // url_api: "http://iece-membresia.ddns.net:81/webapi/api", //URL para probar Victor
+    //url_api: "http://" + window.location.hostname + ":81/webapi/api",
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
@@ -59,7 +58,7 @@ const helpers = {
 
     authAxios: axios.create({
         baseURL: "http://" + window.location.hostname + ":59239/api",
-        // baseURL: "http://" + window.location.hostname + ":81/webapi/api",
+        //baseURL: "http://" + window.location.hostname + ":81/webapi/api",
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             contentType: 'application/json'
@@ -67,7 +66,7 @@ const helpers = {
     }),
 
     //Versión de la Aplicación Publicada
-    version: 1.5,
+    version: 1.6,
 
     validaToken: () => {
         let timestampNow = moment(new Date()).unix();

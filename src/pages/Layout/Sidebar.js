@@ -22,7 +22,7 @@ class Sidebar extends Component {
             modalBajaNoBautizadoAlejamiento: false,
             modalBajaNoBautizadoCambioDomicilio: false,
             modalEstableceVisibilidadAbierta: false,
-            formEstableceVisibilidadAbierta: {}
+            formEstableceVisibilidadAbierta: {},
         }
     }
 
@@ -48,6 +48,7 @@ class Sidebar extends Component {
     handle_LinkEncabezado = (seccion, componente) => {
         localStorage.setItem('seccion', seccion);
         localStorage.setItem('componente', componente);
+        window.scrollTo(0, 0)
     }
 
     openModalEditaPersona = async () => {
@@ -178,6 +179,11 @@ class Sidebar extends Component {
         //document.location.href = "/AltaCambioDomicilioNB";
     }
 
+    handle_RegistroVisitante = () => {
+        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Registro de visitante");
+        //document.location.href = "/AltaCambioDomicilioNB";
+    }
+
     estableceVisibilidadAbierta = async (e) => {
         e.preventDefault();
         try {
@@ -224,6 +230,7 @@ class Sidebar extends Component {
     }
 
     render() {
+        const { menuColapsado } = this.state;
         //console.log("PersonaSeleccionada: ", this.state.personaSeleccionada);
         return (
             <React.Fragment>
@@ -346,6 +353,7 @@ class Sidebar extends Component {
                                         <Link className="collapse-item" onClick={this.handle_AltaPersonaNoBautizada} to="/RegistroDePersona">Nuevo Ingreso</Link>
                                         <Link className="collapse-item" to="/AltaReactivacion" onClick={this.handle_Reactivacion}>Reativación</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilioNB" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
+                                        <Link className="collapse-item" to="/RegistroVisitantes" onClick={this.handle_RegistroVisitante}>Registro de visitantes</Link>
                                     </div>
                                 </div>
                             </div>
@@ -522,50 +530,13 @@ class Sidebar extends Component {
                             onClick={() => this.handle_LinkEncabezado('Hogares', 'Revinculación persona-hogar.')}
                         >
                             <i className="fas fa-house-user"></i>
-                            <span>Revinculación Persona-Hogar</span>
+                            <span>Revinculación Persona-Hogar y cambio de Jerarquía</span>
                         </Link>
                     </li>
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
 
-                    {/* Heading */}
-                    {/*  <div className="sidebar-heading">
-                        Sector
-                    </div>
-                    
-                    <li className="nav-item">
-                        <Link
-                            className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Sección: Sector', 'Agrupaciones musicales.')}
-                            to="/AgrupacionesMusicales"
-                        >
-                            <i className="fas fa-address-book"></i>
-                            <span>Agrupaciones musicales</span>
-                        </Link>
-                    </li>
-
-                    <li className="nav-item">
-                        <Link
-                            className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Sección: Sector', 'Sociedades.')}
-                            to="/Sociedades"
-                        >
-                            <i className="fas fa-address-book"></i>
-                            <span>Sociedades</span>
-                        </Link>
-                    </li>
-
-                    <li className="nav-item">
-                        <Link
-                            className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Sección: Sector', 'Comisiones.')}
-                            to="/Comisiones"
-                        >
-                            <i className="fas fa-address-book"></i>
-                            <span>Comisiones</span>
-                        </Link>
-                    </li> */}
 
                     {/* Heading */}
                     <div className="sidebar-heading">
@@ -601,41 +572,14 @@ class Sidebar extends Component {
                             onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Personal Ministerial')}
                             to="/RegistroPersonalMinisterial"
                         >
-                            <i className="fas fa-address-book"></i>
+                            <i className="fas fa-user-tie"></i>
                             <span>Personal Ministerial</span>
                         </Link>
                     </li>
 
-
-                    {/* <li className="nav-item">
-                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseMinisterial" aria-expanded="true" aria-controls="collapsePages">
-                            <i className="fas fa-user-tie"></i>
-                            <span>Personal Ministerial</span>
-                        </Link>
-                        <div id="collapseMinisterial" className="collapse" aria-labelledby="headingMinisterial" data-parent="#accordionSidebar">
-                            <div className="bg-white py-2 collapse-inner rounded">
-                                <Link
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Alta de Personal Ministerial')}
-                                    to="/RegistroPersonalMinisterial"
-                                    className="collapse-item"
-                                >
-                                    <span>Alta de Personal Ministerial</span>
-                                </Link>
-                                <Link
-                                    onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Baja de Personal Ministerial')}
-                                    to="/BajaPersonalMinisterial"
-                                    className="collapse-item"
-                                >
-                                    <span>Baja de Personal Ministerial</span>
-                                </Link>
-                            </div>
-                        </div>
-                    </li> */}
-
-
                     <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseAdministrativo" aria-expanded="true" aria-controls="collapsePages">
-                            <i className="fas fa-user-tie"></i>
+                            <i className="fas fa-chalkboard-teacher"></i>
                             <span>Personal Administrativo y Comisiones</span>
                         </Link>
                         <div id="collapseAdministrativo" className="collapse" aria-labelledby="headingAdministrativo" data-parent="#accordionSidebar">
@@ -669,8 +613,30 @@ class Sidebar extends Component {
                             onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Organismo Interno.')}
                             to="/OrganismoInterno"
                         >
-                            <i className="fas fa-address-book"></i>
+                            <i className="fas fa-users"></i>
                             <span>Organismos Internos</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Santuario y Casa Pastoral')}
+                            to="/SantuarioyCasaPastoral"
+                        >
+                            <i className="fas fa-place-of-worship"></i>
+                            <span>Santuario y Casa pastoral</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Misiones del Sector')}
+                            to="/Misiones"
+                        >
+                            <i className="fas fa-home"></i>
+                            <span>Misiones del Sector</span>
                         </Link>
                     </li>
 
@@ -729,6 +695,14 @@ class Sidebar extends Component {
                                     to="/ReporteOrganismosInternos"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Organismos Internos")}
                                 >Lista de Organismos Internos</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteSantuarioyCasaPastoral"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Santuario y Casa Pastoral de la Iglesia")}
+                                >Reporte de Santuario y Casa Pastoral</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteMisiones"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Misiones de Evangelismo")}
+                                >Lista de Misiones</Link>
                                 <Link className="collapse-item text-wrap"
                                     to="/ReporteMovimientoEstadistico"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}

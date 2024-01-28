@@ -6,17 +6,18 @@ import {
     FormGroup, Input, Modal, ModalBody
 } from 'reactstrap';
 
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 
-export default function ReportePersonalAdministrativo() {
+export default function ReporteMisiones() {
     //Estados
-    const [comisiones, setComisiones] = useState([])
-    const [personalAdministrativo, setPersonalAdministrativo] = useState([])
+    const [misiones, setMisiones] = useState([])
+    const [misionesSectores, setMisionesSectores] = useState([])
+    const [numeroMisiones, setNumeroMisiones] = useState("")
     const [infoDis, setInfoDis] = useState([])
     const [infoSec, setInfoSec] = useState([])
     const [infoSecretario, setInfoSecretario] = useState({})
@@ -28,20 +29,23 @@ export default function ReportePersonalAdministrativo() {
     const [lider, setLider] = useState("")
     const [mensajeDelProceso, setMensajeDelProceso] = useState("")
     const [modalShow, setModalShow] = useState(false)
+    const elementToFocus = useRef(null);
 
     //Llamadas en render
-
     useEffect(() => {
         window.scrollTo(0, 0)
+        if (elementToFocus.current) {
+            elementToFocus.current.focus();
+        }
     }, [])
 
     useEffect(() => {
 
         if (sector == null) { //Para Sesión Obispo
             console.log("inicia programa")
-            getComisionesDistrito(dto);
-            getPersonalAdministrativoDistrito(dto);
-            getInfoDistrito()
+            getMisionesDistrito(dto);
+            getInfoDistrito();
+            getMisionesDeSectores(dto);
             setSectorSeleccionado("todos");
             setLider("OBISPO");
             setEntidadTitulo("")
@@ -60,8 +64,7 @@ export default function ReportePersonalAdministrativo() {
             );
 
         } else { //Para Sesión Pastor
-            getComisionesSector(sector);
-            getPersonalAdministrativoSector(sector);
+            getMisionesSector(sector);
             getInfoDistrito()
             setLider("PASTOR")
 
@@ -100,14 +103,65 @@ export default function ReportePersonalAdministrativo() {
         )
     }
 
-    const getComisionesDistrito = (dto) => {
+    const numeroDeMisiones = () => {
+        const numerosArray = Array.from(
+            { length: misiones.length },
+            (_, index) => index + 1
+        );
+
+        setNumeroMisiones(numerosArray);
+    }
+
+    const getMisionesDistrito = async (dto) => {
+
         setMensajeDelProceso("Procesando...")
         setModalShow(true)
 
-        helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Distrital/GetComisionesByDistrito/" + dto)
+        try {
+
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Sector/GetMsionesDeDistrito/${dto}`)
+                .then(res => {
+                    setMisiones(res.data.misiones ? res.data.misiones : [])
+                    numeroDeMisiones()
+                    setMensajeDelProceso("")
+                    setModalShow(false)
+                    window.scrollTo(0, 0)
+                }))
+        }
+        catch (err) {
+            alert("Error:\nNo se ha sido posible conectarse a la base de datos del sistema. Intente mas tarde.")
+        }
+    }
+
+    const getMisionesDeSectores = async (dto) => {
+
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
+        try {
+
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Mision_Sector/GetMisionesSectores/${dto}`)
+                .then(res => {
+                    setMisionesSectores(res.data.misiones ? res.data.misiones : [])
+                    numeroDeMisiones()
+                    setMensajeDelProceso("")
+                    setModalShow(false)
+                    window.scrollTo(0, 0)
+                }))
+        }
+        catch (err) {
+            alert("Error:\nNo se ha sido posible conectarse a la base de datos del sistema. Intente mas tarde.")
+        }
+    }
+
+    const getMisionesSector = async (sec) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
+        await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Mision_Sector/${sec}`)
             .then(res => {
-                console.log("respuesta: ", res.data.comisiones)
-                setComisiones(res.data.comisiones)
+                setMisiones(res.data.misiones)
+                numeroDeMisiones()
                 setMensajeDelProceso("")
                 setModalShow(false)
                 window.scrollTo(0, 0)
@@ -115,63 +169,16 @@ export default function ReportePersonalAdministrativo() {
         );
     }
 
-    const getComisionesSector = (sec) => {
-        setMensajeDelProceso("Procesando...")
-        setModalShow(true)
-
-        helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Local/GetComisionesBySector/" + sec)
-            .then(res => {
-                console.log("respuesta: ", res.data.comisiones)
-                setComisiones(res.data.comisiones)
-                setMensajeDelProceso("")
-                setModalShow(false)
-                window.scrollTo(0, 0)
-            })
-        );
-    }
-
-    const getPersonalAdministrativoSector = (sec) => {
-        setMensajeDelProceso("Procesando...")
-        setModalShow(true)
-
-        helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioBySector/" + sec)
-            .then(res => {
-                console.log("respuesta: ", res.data.administrativo)
-                setPersonalAdministrativo(res.data.administrativo)
-                setMensajeDelProceso("")
-                setModalShow(false)
-                window.scrollTo(0, 0)
-            })
-        );
-    }
-
-
-    const getPersonalAdministrativoDistrito = (dto) => {
-        setMensajeDelProceso("Procesando...")
-        setModalShow(true)
-
-        helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioByDistrito/" + dto)
-            .then(res => {
-                console.log("respuesta: ", res.data.administrativo)
-                setPersonalAdministrativo(res.data.administrativo)
-                setMensajeDelProceso("")
-                setModalShow(false)
-                window.scrollTo(0, 0)
-            })
-        );
-    }
 
     const handle_sectorSeleccionado = async (e) => {
 
         if (e.target.value !== "todos") {
             console.log("Sector Seleccionado: ", e.target.value)
-            getComisionesSector(e.target.value)
-            getPersonalAdministrativoSector(e.target.value)
+            getMisionesSector(e.target.value)
             setSectorSeleccionado(e.target.value);
             getTitulo(e.target.value)
         } else {
-            getComisionesDistrito();
-            getPersonalAdministrativoDistrito(dto)
+            getMisionesDistrito();
             setSectorSeleccionado("todos");
             setEntidadTitulo("TODOS LOS SECTORES");
         }
@@ -200,9 +207,9 @@ export default function ReportePersonalAdministrativo() {
     const downloadTable = () => {
         const table1 = document.getElementById("table1");
         const table2 = document.getElementById("table2");
-        const book = TableToExcel.tableToBook(table1, { sheet: { name: "Administración" } });
-        TableToExcel.tableToSheet(book, table2, { sheet: { name: "Comisiones" } });
-        TableToExcel.save(book, "PersonalMinisterialyComisiones.xlsx")
+        const book = TableToExcel.tableToBook(table1, { sheet: { name: "Misiones" } });
+        TableToExcel.tableToSheet(book, table2, { sheet: { name: "Misiones de Sectores" } });
+        TableToExcel.save(book, "Lista de Misiones.xlsx")
     };
 
     const reportePersonalBautizadoPDF = () => {
@@ -211,7 +218,7 @@ export default function ReportePersonalAdministrativo() {
         const doc = new jsPDF("p", "mm", "letter");
         let pageHeight = doc.internal.pageSize.height;
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("LISTA DE PERSONAL ADMINISTRATIVO Y COMISIONES", 140, 9, { align: "center", maxWidth: 110 });
+        doc.text("LISTA DE MISIONES", 140, 9, { align: "center", maxWidth: 110 });
         doc.setFontSize(10);
 
         if (sector) {
@@ -227,56 +234,89 @@ export default function ReportePersonalAdministrativo() {
         let yAxis = 35
         doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
         doc.rect(10, yAxis, 190, 4, "F");
-        doc.setFont("", "", "bold");
-        yAxis += 3;
-        doc.text("ADMINISTRACIÓN", 15, yAxis);
-        yAxis += 7;
-        personalAdministrativo.map(((cargo, index) => {
-            if (cargo.datosPersonalMinisterial != null) {
-                doc.setFont("", "", "bold");
-                doc.text(`${cargo.cargo}`, 20, yAxis);
-                doc.setFont("", "", "normal");
-                yAxis += 4;
-                doc.text(`${cargo.datosPersonalMinisterial.pem_Nombre}`, 25, yAxis);
-                yAxis += 4;
-                index++;
-                if (yAxis >= pageHeight - 10) {
-                    doc.addPage();
-                    yAxis = 15 // Restart height position
-                }
-            }
-        }))
 
-
-        index = 1;
-        yAxis += 7;
-        doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
-        doc.rect(10, yAxis, 190, 4, "F");
-        doc.setFont("", "", "bold");
-        yAxis += 3;
-        doc.text("COMISIONES", 15, yAxis);
-        yAxis += 7;
-        comisiones.map((comision) => {
+        if (misiones.length > 0) {
             doc.setFont("", "", "bold");
-            if (comision.integrantes.length > 0) {
-                doc.text(`${comision.comision}`, 20, yAxis);
-                comision.integrantes.map((integrante) => {
+            yAxis += 3;
+            if (sector !== null) { //Si el reporte es de Sector aparece una leyenda y si es de Dto. aparece otra.
+                doc.text(`MISIONES DEL SECTOR`, 15, yAxis);
+            } else {
+                doc.text(`MISIONES DEL DISTRITO`, 15, yAxis);
+            }
+            yAxis += 7;
+            misiones.map(((mision, index) => {
+                if (mision != null) {
+                    doc.setFont("", "", "bold");
+                    doc.text(`MISIÓN ${mision.ms_Numero}: ${mision.ms_Alias}`, 20, yAxis);
                     doc.setFont("", "", "normal");
                     yAxis += 4;
-                    doc.text(`${integrante.integrante}`, 25, yAxis);
-                })
-                yAxis += 4;
-                index++;
-                if (yAxis >= pageHeight - 10) {
-                    doc.addPage();
-                    yAxis = 15 // Restart height position
+                    index++;
+                    if (yAxis >= pageHeight - 10) {
+                        doc.addPage();
+                        yAxis = 15 // Restart height position
+                    }
                 }
+            }))
+        } else {
+            if (sector !== null) { //Si el reporte es de Sector aparece una leyenda y si es de Dto. aparece otra.
+                yAxis += 4;
+                doc.text('NO HAY MISIONES REGISTRADAS EN ESTE SECTOR', 25, yAxis);
+            } else {
+                yAxis += 4;
+                doc.text('NO HAY MISIONES REGISTRADAS EN ESTE DISTRITO', 25, yAxis);
             }
-        })
+        }
+
+        if (sector !== null) {//Si el reporte es de Sector, se crea un espacio en blanco para que firmas aparezcan mas abajo.
+            yAxis += 100;
+        }
 
         yAxis += 2;
         //doc.rect(75, yAxis, 15, 4);
         yAxis += 3;
+
+        if (sector == null) {
+            if (misionesSectores !== null) {
+                doc.setFillColor(191, 201, 202) // Codigos de color RGB (red, green, blue)
+                doc.rect(10, yAxis, 190, 4, "F");
+                doc.setFont("", "", "bold");
+                yAxis += 3;
+                if (sector === null) { //Si el reporte es de Sector aparece una leyenda y si es de Dto. aparece otra.
+                    doc.text(`MISIONES DE LOS SECTORES`, 15, yAxis);
+                }
+                yAxis += 7;
+                misionesSectores.map(((mision, index) => {
+                    if (mision != null) {
+                        doc.setFont("", "", "bold");
+                        doc.text(`${mision.sectores.sec_Tipo_Sector} ${mision.sectores.sec_Numero}: ${mision.sectores.sec_Alias}`, 20, yAxis);
+                        if (mision.misiones.length > 0) {
+                            mision.misiones.map((mission, index) => {
+                                doc.setFont("", "", "normal");
+                                yAxis += 4;
+                                doc.text(`MISIÓN  ${mission.ms_Numero} :  ${mission.ms_Alias.toUpperCase()}`, 25, yAxis);
+                            })
+                        } else {
+                            doc.setFont("", "", "normal");
+                            yAxis += 4;
+                            doc.text('NO HAY MISIONES REGISTRADAS EN ESTE SECTOR', 25, yAxis);
+                            yAxis += 4;
+                        }
+
+                        yAxis += 8;
+
+                        index++;
+                        if (yAxis >= pageHeight - 10) {
+                            doc.addPage();
+                            yAxis = 15 // Restart height position
+                        }
+                    }
+                }))
+            } else {
+                yAxis += 4;
+                doc.text('NO HAY MISIONES REGISTRADAS', 25, yAxis);
+            }
+        }
+
 
         if (yAxis >= pageHeight - 30) {
             doc.addPage();
@@ -314,6 +354,7 @@ export default function ReportePersonalAdministrativo() {
                             <Input
                                 type="select"
                                 name="idDistrito"
+
                             >
                                 <option value="1">{`${infoDis.dis_Tipo_Distrito} ${infoDis.dis_Numero}: ${infoDis.dis_Alias}`}</option>
                             </Input>
@@ -355,8 +396,8 @@ export default function ReportePersonalAdministrativo() {
                             <img src={logo} alt="Logo" width="100%" className="ml-3"></img>
                         </Col>
                         <Col lg="6" >
-                            <CardTitle className="text-center" tag="h3">
-                                LISTA DE PERSONAL ADMINISTRATIVO Y COMISIONES
+                            <CardTitle className="text-center" tag="h3" ref={elementToFocus}>
+                                LISTA DE MISIONES DE EVANGELISMO
                                 <FormGroup>
                                     <Row>
                                         <h1></h1>
@@ -368,69 +409,77 @@ export default function ReportePersonalAdministrativo() {
                         </Col>
                     </Row>
                     <CardBody>
+
                         <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Button size="md" className="text-left categoriasReportes " block id="adultos_hombres">ADMINISTRACIÓN</Button>
+                            <Button size="md" className="text-left categoriasReportes " block id="adultos_hombres">{sector == null ? 'MISIONES DEL DISTRITO:' : 'MISONES DEL SECTOR:'}</Button>
 
                             <Card>
                                 <CardBody>
-                                    <h5>
-                                        <ul type="1">
-                                            {
-                                                personalAdministrativo.map(((cargo, index) => {
-                                                    if (cargo.datosPersonalMinisterial != null) {
+                                    {misiones.length > 0 ?
+                                        <h5>
+                                            <ul type="1">
+                                                {
+                                                    misiones.map(((mision, index) => {
                                                         return <fragment>
-                                                            <li className="list-group d-flex justify-content-between align-items-start">
+                                                            <li className="list-group d-flex justify-content-between align-items-start ">
                                                                 <div className="ms-2 me-auto mb-2">
-                                                                    <div className="font-weight-bold" style={{ fontSize: '1.2rem' }} key={index}>{cargo.cargo}</div>
-                                                                    <ul className="list-unstyled pl-3" >
-                                                                        <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}>{cargo.datosPersonalMinisterial.pem_Nombre}</li>
+                                                                    <ul className="list-unstyled pl-4" >
+                                                                        <li className="font-weight-normal" style={{ fontSize: '1.2rem' }} key={index}> MISIÓN {mision.ms_Numero}: {mision.ms_Alias}</li>
                                                                     </ul>
                                                                 </div>
                                                             </li>
                                                         </fragment>
-                                                    }
-                                                }))
-                                            }
 
-                                        </ul>
-                                    </h5>
+                                                    }))
+                                                }
+
+                                            </ul>
+                                        </h5> :
+                                        <h4>{sector == null ? 'NO HAY MISIONES REGISTRADAS EN ESTE DISTRITO' : 'NO HAY MISIONES REGISTRADAS DE ESTE SECTOR'}</h4>
+                                    }
                                 </CardBody>
                             </Card>
+
+
                         </UncontrolledCollapse>
 
-                        <Button size="md" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">COMISIONES</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
-                            <Card>
-                                <CardBody>
-                                    <h5>
-                                        <ul type="1">
-                                            {
-                                                comisiones.map((comision => {
-                                                    if (comision.integrantes.length > 0) {
+                        {sector == null && misionesSectores ?
+                            <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
+                                <Button size="md" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">MISIONES DE SECTORES </Button>
+                                <Card>
+                                    <CardBody>
+                                        <h5>
+                                            <ul type="1">
+                                                {
+                                                    misionesSectores.map(((mision, index) => {
                                                         return <fragment>
-                                                            <li className="list-group d-flex justify-content-between align-items-start">
+                                                            <li className="list-group d-flex justify-content-between align-items-start mb-3">
                                                                 <div className="ms-2 me-auto mb-2">
-                                                                    <div className="font-weight-bold" style={{ fontSize: '1.2rem' }} key={comision.comision_Id}>{comision.comision}</div>
-                                                                    <ol>
-                                                                        {comision.integrantes.map((integrante => {
-                                                                            return <fragment>
-                                                                                <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={integrante.integrante_comision_Id}>{integrante.integrante}</li>
-                                                                            </fragment>
-                                                                        }))}
-                                                                    </ol>
+                                                                    <div className="font-weight-normal" style={{ fontSize: '1.2rem' }} key={index}>{mision.sectores.sec_Tipo_Sector} {mision.sectores.sec_Numero}: {mision.sectores.sec_Alias}</div>
+                                                                    {mision.misiones.length > 0 ?
+                                                                        mision.misiones.map((mission, index) => {
+                                                                            return <ul className="list-unstyled pl-4" >
+                                                                                <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}> MISIÓN {mission.ms_Numero}: {mission.ms_Alias}</li>
+                                                                            </ul>
+                                                                        }) :
+                                                                        <ul className="list-unstyled pl-4" >
+                                                                            <li className="font-weight-light" style={{ fontSize: '1.1rem' }} key={index}>NO HAY MISIONES REGISTRADAS EN ESTE SECTOR</li>
+                                                                        </ul>}
                                                                 </div>
                                                             </li>
                                                         </fragment>
-                                                    }
-                                                }))
-                                            }
 
-                                        </ul>
-                                    </h5>
-                                </CardBody>
-                            </Card>
-                        </UncontrolledCollapse>
+                                                    }))
+                                                }
 
+                                            </ul>
+                                        </h5>
+                                    </CardBody>
+                                </Card>
+                            </UncontrolledCollapse> :
+                            <h4></h4>
+                        }
+                        <div className="pb-7"></div>
                         <h4 className="text-center m-4">Justicia y Verdad</h4>
                         <h4 className="text-center m-4">a {moment().format('LL')}</h4>
 
@@ -458,50 +507,68 @@ export default function ReportePersonalAdministrativo() {
                 {/* TABLA PARA EXCEL */}
                 <Card hidden body>
                     <CardTitle className="text-center" tag="h3">
-                        Reporte de Personal Administrativo
+                        Listas de Misiones de Evangelismo
                         <h5>Distrito: {JSON.parse(localStorage.getItem("infoSesion")).dis_Alias}</h5>
                         {sector ? <h5>Sector: {JSON.parse(localStorage.getItem("infoSesion")).sec_Alias}</h5> : null}
                     </CardTitle>
                     <CardBody>
-                        <Table responsive hover id="table1" data-cols-width="30,40,20">
+                        <Table responsive hover id="table1" data-cols-width="30,40">
                             <thead className="text-center bg-gradient-info">
                                 <tr>
-                                    <th >CARGO</th>
+                                    <th >MISION</th>
                                     <th >NOMBRE</th>
-                                    <th >GRADO</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {personalAdministrativo.map((obj, index) => {
+                                {misiones ? misiones.map((obj, index) => {
                                     return (
+
                                         <tr key={index}>
-                                            <td><b>{obj.cargo}</b></td>
-                                            <td>{obj.datosPersonalMinisterial != null ? obj.datosPersonalMinisterial.pem_Nombre : ""}</td>
-                                            <td>{obj.datosPersonalMinisterial != null ? obj.datosPersonalMinisterial.pem_Grado_Ministerial : ""}</td>
+                                            <td><b>MISIÓN {obj.ms_Numero}</b></td>
+                                            <td>{obj.ms_Alias != null ? obj.ms_Alias : ""}</td>
                                         </tr>
                                     )
-                                })}
+                                }) :
+                                    (
+                                        <tr >
+                                            <td><b>No ha misiones registradas</b></td>
+                                            <td></td>
+                                        </tr>
+                                    )
+                                }
                             </tbody>
                         </Table>
 
-                        <table responsive hover id="table2" data-cols-width="30,40,20">
+                        <table responsive hover id="table2" data-cols-width="60,60" >
                             <thead className="text-center bg-gradient-info">
                                 <tr>
-                                    <th>COMISIÓN</th>
-                                    <th >NOMBRE</th>
-                                    <th >ORDEN/JERARQUÍA</th>
+                                    <th>SECTOR</th>
+                                    <th>MISIÓN</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {comisiones.map((item) => (
-                                    item.integrantes.map((persona) => {
-                                        return <tr>
-                                            <td>{persona.comision} </td>
-                                            <td>{persona.integrante} </td>
-                                            <td>{persona.jerarquia} </td>
+                                {misionesSectores ? misionesSectores.map(mision => (
+                                    <>
+                                        <tr>
+                                            <td>MISIÓN  {mision.sectores.sec_Tipo_Sector} {mision.sectores.sec_Numero}: {mision.sectores.sec_Alias} </td>
                                         </tr>
-                                    })
-                                ))}
+                                        {mision.misiones.map((mission, index) => {
+                                            return mission ? <tr>
+                                                <td></td>
+                                                <td>MISIÓN {mission.ms_Numero}: {mission.ms_Alias} </td>
+                                            </tr> : <tr>
+                                                <td></td>
+                                                <td>NO HAY MISIONES REGISTRADAS</td>
+                                            </tr>
+                                        })}
+                                    </>
+                                )) :
+                                    (
+                                        <tr className="spacer">
+                                            <td><b>NO HAY MISIONES REGISTRADAS</b></td>
+                                            <td></td>
+                                        </tr>
+                                    )}
                             </tbody>
                         </table>
 

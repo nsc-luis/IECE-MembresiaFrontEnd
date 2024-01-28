@@ -1,7 +1,7 @@
 import helpers from "../../components/Helpers";
 import {
     Container, Button, FormGroup, Input,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, Modal, ModalBody
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
@@ -23,6 +23,9 @@ export default function ReportePersonalNoBautizado() {
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
     const [entidadTitulo, setEntidadTitulo] = useState("")
     const [lider, setLider] = useState("")
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
     //Llamadas en render
 
     useEffect(() => {
@@ -87,6 +90,9 @@ export default function ReportePersonalNoBautizado() {
     }
 
     const getPersonasDistrito = () => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
 
         helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
@@ -96,12 +102,17 @@ export default function ReportePersonalNoBautizado() {
                         if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
                         return 0;
                     }))
+                setMensajeDelProceso("")
+                setModalShow(false)
 
             })
         );
     }
 
     const getPersonasSector = (sec) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
 
         helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
@@ -112,6 +123,9 @@ export default function ReportePersonalNoBautizado() {
                         if (a.persona.apellidoPrincipal > b.persona.apellidoPrincipal) { return 1; }
                         return 0;
                     }))
+                setMensajeDelProceso("")
+                setModalShow(false)
+
             })
         );
     }
@@ -485,6 +499,13 @@ export default function ReportePersonalNoBautizado() {
                     </CardBody>
                 </Card>
             </Container>
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+            </Modal>
+
         </>
     )
 }

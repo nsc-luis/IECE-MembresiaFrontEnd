@@ -443,7 +443,7 @@ export default class RegistroPersonalMinisterial extends Component {
                                         <ul>
                                             <li>Para dar de Alta a un Nuevo Elemento, presione el Botón <strong>"Alta de Personal"</strong>.</li>
                                             <li>Para dar de Baja a algún Auxiliar, seleccione el Botón <strong>"Baja de Personal"</strong>.</li>
-                                            <li>Si no aparece la foto de algún Elemento del Personal Ministerial, envíela al correo <strong>soporte@iece.mx</strong>. La fotografía debe ser con fondo blanco y el Elemento con atuendo oficial y buena presentación.</li>
+                                            <li>Si no aparece la foto de algún Elemento del Personal Ministerial, envíela al correo <strong>soporte@iece.mx</strong> para completar su registro. La fotografía debe ser con fondo blanco y el Elemento con atuendo oficial y buena presentación.</li>
                                         </ul>
                                     </Alert>
                                 </Col>
@@ -616,6 +616,8 @@ export default class RegistroPersonalMinisterial extends Component {
                                     <strong>Nota: </strong>
                                     <ul>
                                         <li>Sólo puede dar de Baja a <strong>Auxiliares</strong> que aparecen en esta Pantalla</li>
+                                        <li>Si la baja es sólo porque el Elemento ya no pertenece a este Sector, asegúrese de elegir como causa la opción "Por Cambio de Domicilio"</li>
+                                        <li>Las bajas de Personal Ministerial por conceptos diferentes a "Cambio de Domicilio" afectarán el estatus de este Elemento, indicando que dejó de ser un Auxiliar, donde quiera que radique.</li>
                                     </ul>
                                 </Alert>
 
@@ -664,11 +666,12 @@ export default class RegistroPersonalMinisterial extends Component {
                                                 value={this.state.formBaja.causaDeBaja}
                                             >
                                                 <option value="0">ELIJA UNA CAUSA</option>
+                                                <option value="CAMBIO DE DOMICILIO">DEFUNCIÓN</option>
                                                 <option value="DEFUNCIÓN">DEFUNCIÓN</option>
                                                 <option value="CESE">CESE</option>
                                                 <option value="CESE Y EXCOMUNIÓN">CESE Y EXCOMUNIÓN</option>
                                                 <option value="RENUNCIA AL MINISTERIO">RENUNCIA AL MINISTERIO</option>
-                                                <option value="SUSPENCION TEMPORAL DEL MINISTERIO">SUSPENCION TEMPORAL DEL MINISTERIO</option>
+                                                <option value="SUSPENCIÓN TEMPORAL DEL MINISTERIO">SUSPENCION TEMPORAL DEL MINISTERIO</option>
                                             </Input>
                                         </div>
                                         <div className="col col-md-1"></div>
@@ -711,10 +714,7 @@ export default class RegistroPersonalMinisterial extends Component {
                                 </Row>
 
                             </CardFooter>
-
                         </Card>
-
-
                     </FormGroup>
 
                 }

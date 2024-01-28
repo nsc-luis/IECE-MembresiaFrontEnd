@@ -2,7 +2,7 @@ import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button, FormGroup, Input,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col
+    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, Modal, ModalBody
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
@@ -26,6 +26,9 @@ export default function ReporteOficiosProfesiones() {
     const [lider, setLider] = useState("")
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null)
     const [entidadTitulo, setEntidadTitulo] = useState("")
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
 
     //Llamadas en render
     useEffect(() => {
@@ -75,6 +78,10 @@ export default function ReporteOficiosProfesiones() {
     }, [])
 
     const getPersonasSector = async (sec) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
+
         await helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 console.log("Profesiones1: ", res.data.filter((per) => (per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')))
@@ -85,6 +92,9 @@ export default function ReporteOficiosProfesiones() {
                         return 0;
                     })
                 )
+                setMensajeDelProceso("")
+                setModalShow(false)
+
             })
         );
     }
@@ -100,6 +110,10 @@ export default function ReporteOficiosProfesiones() {
 
 
     const getPersonasDistrito = () => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
+
         helpers.validaToken().then(helpers.authAxios.get("/Persona/GetByDistrito/" + dto)
             .then(res => {
                 setPersonas(res.data
@@ -110,6 +124,9 @@ export default function ReporteOficiosProfesiones() {
                         return 0;
                     })
                 )
+                setMensajeDelProceso("")
+                setModalShow(false)
+
             })
         );
     }
@@ -353,6 +370,19 @@ export default function ReporteOficiosProfesiones() {
                     </CardBody>
                 </Card>
             </Container>
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                {/* <ModalHeader>
+                        Solo prueba.
+                    </ModalHeader> */}
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+                {/* <ModalFooter>
+                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
+                    </ModalFooter> */}
+            </Modal>
+
         </>
     )
 }

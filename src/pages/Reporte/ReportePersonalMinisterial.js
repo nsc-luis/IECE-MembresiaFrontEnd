@@ -3,7 +3,7 @@ import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input
+    FormGroup, Input, Modal, ModalBody
 } from 'reactstrap';
 
 import React, { useEffect, useState, } from 'react';
@@ -26,6 +26,9 @@ export default function ReportePersonalBautizado() {
     const [entidadTitulo, setEntidadTitulo] = useState("")
     const [lider, setLider] = useState("")
     const [personalMinisterial, setPersonalMinisterial] = useState([])
+    const [mensajeDelProceso, setMensajeDelProceso] = useState("")
+    const [modalShow, setModalShow] = useState(false)
+
 
     //Llamadas en render
 
@@ -96,11 +99,18 @@ export default function ReportePersonalBautizado() {
     }
 
     const getPersonalMinisterialDistrito = async () => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
+
+
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialByDistrito/${dto}`)
             .then(res => {
                 console.log("respuestaAPIFoto: ", res.data.administrativo);
-                if (res.data.status === "success")
+                if (res.data.status === "success") {
                     setPersonalMinisterial(res.data.administrativo)
+                    setMensajeDelProceso("")
+                    setModalShow(false)
+                }
                 else {
                     alert("Error:\nNo se pudo consultar la lista del Personal Ministerial, favor de reportar o intentar mas tarde.")
                 }
@@ -109,13 +119,19 @@ export default function ReportePersonalBautizado() {
     }
 
     const getPersonalMinisterialSector = async (sec) => {
+        setMensajeDelProceso("Procesando...")
+        setModalShow(true)
 
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialBySector/${sec}`)
 
             .then(res => {
 
-                if (res.data.status === "success")
+                if (res.data.status === "success") {
                     setPersonalMinisterial(res.data.administrativo)
+                    setMensajeDelProceso("")
+                    setModalShow(false)
+
+                }
                 else {
                     alert("Error:\nNo se pudo consultar la lista del Personal Ministerial, favor de reportar o intentar mas tarde.")
                 }
@@ -512,6 +528,13 @@ export default function ReportePersonalBautizado() {
                     </CardBody>
                 </Card>
             </Container>
+            {/*Modal success*/}
+            <Modal isOpen={modalShow}>
+                <ModalBody>
+                    {mensajeDelProceso}
+                </ModalBody>
+            </Modal>
+
         </>
     )
 }

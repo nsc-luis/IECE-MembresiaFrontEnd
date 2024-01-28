@@ -235,6 +235,23 @@ class SidebarObispo extends Component {
                         </Link>
                     </li>
 
+                    <li className="nav-item">
+                        <Link className="nav-link"
+                            to="/ReporteSantuarioyCasaPastoral"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Santuario y Casa Pastoral de la Iglesia")}>
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Reporte de Santuario y Casa Pastoral</span>
+                        </Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link"
+                            to="/ReporteMisiones"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Misiones")}>
+                            <i className="fas fa-fw fa-clipboard-list"></i>
+                            <span>Lista de Misiones</span>
+                        </Link>
+                    </li>
 
                     <li className="nav-item">
                         <Link className="nav-link" to="/ReporteMovimientoEstadistico"
