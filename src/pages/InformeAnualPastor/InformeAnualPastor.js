@@ -37,6 +37,7 @@ class InformeAnualPastor extends Component {
                 dis_Numero: 0,
                 dis_Alias: ''
             },
+            misiones: [],
             visitasPastor: {
                 porPastor: 0,
                 porAncianoAux: 0,
@@ -139,6 +140,7 @@ class InformeAnualPastor extends Component {
         this.getDistrito();
         this.getSector();
         this.obtenerInforme(id);
+        this.obtenerMisiones();
     }
 
     getDistrito = async () => {
@@ -188,30 +190,79 @@ class InformeAnualPastor extends Component {
         );
     }
 
+    obtenerMisiones = async (id) => {
+        await helpers.validaToken().then(helpers.authAxios.get("/Mision_Sector/" + localStorage.getItem('sector'))
+            .then(res => {
+                this.state.misiones = res.data.misiones.map( m => (
+                    {
+                        ...m,
+                        cultos: 0,
+                    }
+                ));
+                console.log(this.state.misiones);
+            })
+        );
+    }
+
     handleChange(event) {
         event.persist();
-        console.log(event);
         const { name, value } = event.target;
-
+    
         // Divide el nombre para obtener un array de claves
         const keys = name.split('.');
-
+    
         // Crea una copia profunda del estado actual
         const newState = { ...this.state };
-
-        // Utiliza las claves para acceder al objeto específico que deseas actualizar
+    
+        // Accede al objeto o array específico
         let currentObject = newState;
-        for (let i = 0; i < keys.length - 1; i++) {
+        for (let i = 0; i < keys.length - 2; i++) { // -2 para dejar fuera el índice y la propiedad final
             currentObject = currentObject[keys[i]];
         }
-
-        // Actualiza la propiedad específica
-        currentObject[keys[keys.length - 1]] = value;
-
+    
+        // Si el segundo último elemento es un número, es un índice de un array
+        const maybeIndex = parseInt(keys[keys.length - 2], 10);
+        if (!isNaN(maybeIndex)) {
+            // Actualiza el valor en el array
+            currentObject[maybeIndex][keys[keys.length - 1]] = Number(value);
+        } else {
+            // Caso de propiedad de objeto regular
+            currentObject[keys[keys.length - 2]][keys[keys.length - 1]] = value;
+        }
+    
         // Actualiza el estado con la nueva copia
         this.setState(newState);
         console.log(newState);
     }
+
+    actualizarInforme = async (e) => {
+        e.preventDefault()
+        const data = {
+            idInforme: this.state.informe.idInforme,
+            idTipoUsuario: 1,
+            idDistrito: this.state.informe.idDistrito,
+            idSector: this.state.informe.idSector,
+            lugarReunion: this.state.informe.lugarReunion,
+            fechaReunion: this.state.informe.fechaReunion,
+            status: this.state.informe.status,
+            usu_id_usuario: this.infoSesion.pem_Id_Ministro,
+            fechaRegistro: null,
+            visitasPastor: this.state.visitasPastor
+        }
+
+        await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor", data)
+            .then(res => {
+                if (res.data.status === "success") {
+                    console.log(res);
+                }
+                else {
+                    alert(res.data.mensaje)
+                }
+            })
+        )
+    }
+
+    
 
     render() {
         return (
@@ -231,7 +282,7 @@ class InformeAnualPastor extends Component {
                                             <p>
                                                 INFORME QUE RINDE EL PASTOR DEL SECTOR NO. <b>{this.state.sector.sec_Numero}</b> CON BASE EN: <b> {this.state.sector.sec_Alias + ' '} </b>
                                                 AL DISTRITO NUMERO <b>{this.state.distrito.dis_Numero}</b> CON ASIENTO EN <b>{this.state.distrito.dis_Alias}</b> DEL TRABAJO Y MOVIMIENTO REGISTRADO
-                                                DURANTE EL MES DE {this.state.informe.mes} DE {this.state.informe.anio}.
+                                                DURANTE EL MES DE <b>{this.state.informe.mes}</b> DE <b>{this.state.informe.anio}.</b>
                                             </p>
                                         </Col>
                                     </Row>
@@ -484,132 +535,25 @@ class InformeAnualPastor extends Component {
                                             </Row>
                                             <Row className='lista-elementos'>
                                                 <Col xs="6" sm="6" lg="6">
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 1
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 2
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 3
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 4
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 5
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 6
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 7
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 8
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Mision 9
-                                                        </Col>
-                                                        <Col xs="6" sm="6" lg="6">
-                                                            <Input type='text' min={0} max={9999}></Input>
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
-                                                        </Col>
-                                                    </Row>
+                                                    {this.state.misiones.length > 0 && this.state.misiones.map((obj, index) => (
+                                                        <Row className='elemento' key={obj.ms_Id}>
+                                                            <Col xs="2" sm="2" lg="2" className='text-center'>
+                                                                Misión {obj.ms_Numero}
+                                                            </Col>
+                                                            <Col xs="6" sm="6" lg="6" className='text-center'>
+                                                                {obj.ms_Alias}
+                                                            </Col>
+                                                            <Col xs="2" sm="2" lg="2" className='text-center'>
+                                                                Cultos
+                                                            </Col>
+                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name={`misiones.${index}.cultos`}
+                                                                value={this.state.misiones[index].cultos}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                            </Col>
+                                                        </Row>
+                                                    ))}
                                                 </Col>
                                                 <Col xs="6" sm="6" lg="6">
                                                     <Row className='elemento'>
@@ -702,7 +646,14 @@ class InformeAnualPastor extends Component {
                                                     </Row>
                                                 </Col>
                                             </Row>
-
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className="entreBotones"
+                                                onClick={this.actualizarInforme}
+                                            >
+                                                Guardar cambios
+                                            </Button>
                                         </Col>
                                     </Row>
                                     <Row className='contenedor-seccion'>
@@ -1493,7 +1444,7 @@ class InformeAnualPastor extends Component {
                                                     Lugar de reunión:
                                                 </Col>
                                                 <Col xs="4" sm="4" lg="4">
-                                                    <Input type='text'></Input>
+                                                    {this.state.informe.lugarReunion}
                                                 </Col>
                                                 <Col xs="2" sm="2" lg="2">
                                                     Fecha de reunión:
