@@ -68,13 +68,13 @@ export default class DetalleVisitante extends Component {
     }
 
     showDlgNota = () => {
-        this.setState({ 
+        this.setState({
             showDlgNota: !this.state.showDlgNota
         })
     }
 
     hideDlgNota = () => {
-        this.setState({ 
+        this.setState({
             showDlgNota: false,
             nota: {
                 ...this.state.nota,
@@ -105,10 +105,10 @@ export default class DetalleVisitante extends Component {
         if (this.state.editarNota) {
             try {
                 await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Nota/${this.state.nota.n_Id}`, this.state.nota)
-                .then(res=>{
-                    this.getNotas(this.props.idVisitante)
-                    this.hideDlgNota()
-                }))
+                    .then(res => {
+                        this.getNotas(this.props.idVisitante)
+                        this.hideDlgNota()
+                    }))
             }
             catch (err) {
                 alert("Error:\n" + err)
@@ -117,10 +117,10 @@ export default class DetalleVisitante extends Component {
         else {
             try {
                 await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Nota`, this.state.nota)
-                .then(res=>{
-                    this.getNotas(this.props.idVisitante)
-                    this.hideDlgNota()
-                }))
+                    .then(res => {
+                        this.getNotas(this.props.idVisitante)
+                        this.hideDlgNota()
+                    }))
             }
             catch (err) {
                 alert("Error:\n" + err)
@@ -131,11 +131,11 @@ export default class DetalleVisitante extends Component {
     borrarNota = async (idNota) => {
         try {
             await helpers.validaToken().then(helpers.authAxios.delete(`${helpers.url_api}/Nota/${idNota}`)
-            .then(res=>{
-                this.getNotas(this.props.idVisitante)
-                this.hideDlgNota()
+                .then(res => {
+                    this.getNotas(this.props.idVisitante)
+                    this.hideDlgNota()
 
-            }))
+                }))
         }
         catch (err) {
             alert("Error:\n" + err)
@@ -182,8 +182,8 @@ export default class DetalleVisitante extends Component {
                                 {this.state.visitante.vp_Nombre}
                             </Col>
                             <Col xs="4">
-                                <span className={this.state.visitante.vp_Tipo_Visitante === "PERMANENTE" ? "fa fa-check faIconMarginRight" : "fa fa-times faIconMarginRight"}></span>
-                                Permanente
+                                <span className="fa fa-check faIconMarginRight"></span>
+                                {this.state.visitante.vp_Tipo_Visitante}
                             </Col>
                         </Row>
                     </FormGroup>
@@ -197,8 +197,8 @@ export default class DetalleVisitante extends Component {
                             </Col>
                             <Col xs="3" />
                             <Col xs="4">
-                                <span className={this.state.visitante.vp_Tipo_Visitante === "OCASIONAL" ? "fa fa-check faIconMarginRight" : "fa fa-times faIconMarginRight"}></span>
-                                Ocasional
+                                <span className={this.state.visitante.vp_Activo === true ? "fa fa-check faIconMarginRight" : "fa fa-times faIconMarginRight"}></span>
+                                Activo
                             </Col>
                         </Row>
                     </FormGroup>
@@ -209,10 +209,6 @@ export default class DetalleVisitante extends Component {
                             </Col>
                             <Col xs="6" className="border border-dark">
                                 {this.state.visitante.vp_Direccion}
-                            </Col>
-                            <Col xs="4">
-                                <span className={this.state.visitante.vp_Activo === true ? "fa fa-check faIconMarginRight" : "fa fa-times faIconMarginRight"}></span>
-                                Activo
                             </Col>
                         </Row>
                     </FormGroup>
@@ -303,8 +299,9 @@ export default class DetalleVisitante extends Component {
                                     <Col xs="10">
                                         <Input
                                             name="n_Nota"
-                                            type="text"
+                                            type="textarea"
                                             onChange={this.onChange}
+                                            rows="3"
                                             value={this.state.nota.n_Nota}
                                             invalid={this.state.n_NotaInvalid}
                                         />

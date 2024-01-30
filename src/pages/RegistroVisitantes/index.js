@@ -22,8 +22,9 @@ export default class RegistroVisitantes extends Component {
                 vp_Direccion: "",
                 vp_Tipo_Visitante: "0",
                 sec_Id_Sector: localStorage.getItem('sector'),
-                Usu_Id_Usuario: this.infoSesion.pem_Id_Ministro,
+                usu_Id_Usuario: this.infoSesion.pem_Id_Ministro,
             },
+            prioridades: 0,
             n_Nota: "",
             Fecha_Registro: null,
             vp_Numero_ListaInvalid: false,
@@ -135,7 +136,8 @@ export default class RegistroVisitantes extends Component {
     showDetalle = (idVisitante) => {
         this.setState({
             idVisitante: idVisitante,
-            showDetalle: true
+            showDetalle: true,
+            showForm: false
         })
     }
 
@@ -151,7 +153,7 @@ export default class RegistroVisitantes extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Visitante/VisitanteBySector/${localStorage.getItem("sector")}`)
                 .then(res => {
                     const prioridades = []
-                    for (var i = 1; i <= res.data.visitantes.length + 1; i++) {
+                    for (var i = 1; i <= res.data.visitantes.length; i++) {
                         prioridades.push({ llave: i, valor: i })
                     }
                     this.setState({
@@ -202,13 +204,13 @@ export default class RegistroVisitantes extends Component {
         
         if (!this.state.editarRegistro) {
             this.setState({
-                vp_Numero_ListaInvalid: this.state.currentVisitante.vp_Numero_Lista === "0", true: false,
+                //vp_Numero_ListaInvalid: this.state.currentVisitante.vp_Numero_Lista === "0", true: false,
                 vp_NombreInvalid: this.state.currentVisitante.vp_Nombre === "" ? true : false,
                 vp_Tipo_VisitanteInvalid: this.state.currentVisitante.vp_Tipo_Visitante === "0" ? true : false,
                 Fecha_RegistroInvalid: this.state.Fecha_Registro === "" || this.state.Fecha_Registro === null ? true : false
             })
-            if (this.state.currentVisitante.vp_Numero_Lista === "0"
-                || this.state.currentVisitante.vp_Nombre === ""
+            if (/* this.state.currentVisitante.vp_Numero_Lista === "0"
+                ||  */this.state.currentVisitante.vp_Nombre === ""
                 || this.state.currentVisitante.vp_Tipo_Visitante === "0"
                 || this.state.Fecha_Registro === null) {
                 return false
@@ -217,9 +219,9 @@ export default class RegistroVisitantes extends Component {
             let VisitanteNota = {
                 visitante: this.state.currentVisitante,
                 n_Nota: this.state.n_Nota,
-                N_Fecha_Nota: this.state.Fecha_Registro
+                n_Fecha_Nota: this.state.Fecha_Registro
             }
-
+            
             try {
                 await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Visitante/NuevoVisitante`, VisitanteNota)
                     .then(res => {
@@ -234,18 +236,18 @@ export default class RegistroVisitantes extends Component {
         }
         else {
             this.setState({
-                vp_Numero_ListaInvalid: this.state.currentVisitante.vp_Numero_Lista === "0", true: false,
+                //vp_Numero_ListaInvalid: this.state.currentVisitante.vp_Numero_Lista === "0", true: false,
                 vp_NombreInvalid: this.state.currentVisitante.vp_Nombre === "" ? true : false,
                 vp_Tipo_VisitanteInvalid: this.state.currentVisitante.vp_Tipo_Visitante === "0" ? true : false
             })
-            if (this.state.currentVisitante.vp_Numero_Lista === "0"
-                || this.state.currentVisitante.vp_Nombre === ""
+            if (/* this.state.currentVisitante.vp_Numero_Lista === "0"
+                ||  */this.state.currentVisitante.vp_Nombre === ""
                 || this.state.currentVisitante.vp_Tipo_Visitante === "0") {
                 return false
             }
 
             try {
-                await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Visitante`, this.state.currentVisitante)
+                await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/Visitante/${this.state.currentVisitante.vp_Id_Visitante}`, this.state.currentVisitante)
                     .then(res => {
                         this.handleCancelar()
                         this.getVisitantes()
@@ -360,7 +362,7 @@ export default class RegistroVisitantes extends Component {
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
                                             <Col xs="2">
-                                                * Numero en la lista
+                                                Numero en la lista
                                             </Col>
                                             <Col xs="4">
                                                 <Input
@@ -407,10 +409,11 @@ export default class RegistroVisitantes extends Component {
                                                     <Col xs="2">
                                                         Nota inicial:
                                                     </Col>
-                                                    <Col xs="8">
+                                                    <Col xs="10">
                                                         <Input
-                                                            type="text"
+                                                            type="textarea"
                                                             name="n_Nota"
+                                                            rows="3"
                                                             onChange={this.onChange}
                                                             value={this.state.n_Nota}
                                                         /* invalid={this.state.n_NotaInvalid} */
@@ -457,9 +460,10 @@ export default class RegistroVisitantes extends Component {
                                         <thead className="bg-info">
                                             <tr>
                                                 <th style={{ width: "10%" }}>Prioridad</th>
-                                                <th style={{ width: "50%" }}>Nombre</th>
+                                                <th style={{ width: "35%" }}>Nombre</th>
+                                                <th style={{ width: "15%" }}>Tipo</th>
                                                 <th style={{ width: "15%" }}>Estado</th>
-                                                <th style={{ width: "35%" }}></th>
+                                                <th style={{ width: "25%" }}></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -468,6 +472,7 @@ export default class RegistroVisitantes extends Component {
                                                     <tr key={visitante.vp_Id_Visitante}>
                                                         <td>{visitante.vp_Numero_Lista}</td>
                                                         <td>{visitante.vp_Nombre}</td>
+                                                        <td>{visitante.vp_Tipo_Visitante}</td>
                                                         <td>{visitante.vp_Activo === true ? "Activo" : "Inactivo"}</td>
                                                         <td>
                                                             <Button
@@ -565,7 +570,8 @@ export default class RegistroVisitantes extends Component {
                                 <Col xs="10">
                                     <Input
                                         name="n_Nota"
-                                        type="text"
+                                        type="textarea"
+                                        rows="3"
                                         onChange={this.onChangeBaja}
                                         value={this.state.bajaVisitante.n_Nota}
                                         invalid={this.state.bajaVisitante_n_NotaInvalid}
