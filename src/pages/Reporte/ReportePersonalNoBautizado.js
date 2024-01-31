@@ -185,7 +185,7 @@ export default function ReportePersonalNoBautizado() {
         let pageHeight = doc.internal.pageSize.height;
 
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("REPORTE DE PERSONAL NO BAUTIZADO", 85, 10);
+        doc.text("LISTA DE PERSONAL NO BAUTIZADO", 85, 10);
 
         doc.setFontSize(10);
         if (sector) {

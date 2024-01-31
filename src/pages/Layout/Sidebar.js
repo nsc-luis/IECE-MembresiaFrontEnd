@@ -179,10 +179,10 @@ class Sidebar extends Component {
         //document.location.href = "/AltaCambioDomicilioNB";
     }
 
-    handle_RegistroVisitante = () => {
-        this.handle_LinkEncabezado("Sección: Movimientos estadísticos", "Registro de visitante");
+    /* handle_RegistroVisitante = () => {
+        this.handle_LinkEncabezado("Sección: Transacciones especiales", "Registro de visitante");
         //document.location.href = "/AltaCambioDomicilioNB";
-    }
+    } */
 
     estableceVisibilidadAbierta = async (e) => {
         e.preventDefault();
@@ -353,7 +353,6 @@ class Sidebar extends Component {
                                         <Link className="collapse-item" onClick={this.handle_AltaPersonaNoBautizada} to="/RegistroDePersona">Nuevo Ingreso</Link>
                                         <Link className="collapse-item" to="/AltaReactivacion" onClick={this.handle_Reactivacion}>Reativación</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilioNB" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
-                                        <Link className="collapse-item" to="/RegistroVisitantes" onClick={this.handle_RegistroVisitante}>Registro de visitantes</Link>
                                     </div>
                                 </div>
                             </div>
@@ -554,6 +553,15 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li> */}
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Registro de visitantes.')}
+                            to="/RegistroVisitantes">
+                            <i className="fas fa-user-cog"></i>
+                            <span>Registro de visitantes</span>
+                        </Link>
+                    </li>
 
                     <li className="nav-item">
                         <Link

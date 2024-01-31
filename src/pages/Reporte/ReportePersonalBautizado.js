@@ -193,7 +193,7 @@ export default function ReportePersonalBautizado() {
         const doc = new jsPDF("p", "mm", "letter");
         let pageHeight = doc.internal.pageSize.height;
         doc.addImage(logo, 'PNG', 10, 5, 70, 20);
-        doc.text("REPORTE DE PERSONAL BAUTIZADO", 85, 10);
+        doc.text("LISTA DE PERSONAL BAUTIZADO", 85, 10);
         doc.setFontSize(10);
 
         if (sector) {
@@ -383,9 +383,8 @@ export default function ReportePersonalBautizado() {
                         </Col>
                     </Row>
                     <CardBody>
+                        <Button size="lg" className="text-left categoriasReportes " block id="adultos_hombres">Adultos hombres: {countPersons("ADULTO_HOMBRE")}</Button>
                         <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Button size="lg" className="text-left categoriasReportes " block id="adultos_hombres">Adultos hombres: {countPersons("ADULTO_HOMBRE")}</Button>
-
                             <Card>
                                 <CardBody>
                                     <h5>

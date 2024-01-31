@@ -338,7 +338,7 @@ export default class Misiones extends Component {
                     </Card>
                 }
                 {this.state.misiones.length < 1 &&
-                    <h4>NO HAY MISIONES REGISTRADAS DE ESTE SECTROR</h4>
+                    <h4>NO HAY MISIONES REGISTRADAS DE ESTE SECTOR</h4>
                 }
 
                 <Modal isOpen={this.state.modal_Confirmacion_Baja} className="card">
