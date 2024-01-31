@@ -368,9 +368,8 @@ export default function ReportePersonalAdministrativo() {
                         </Col>
                     </Row>
                     <CardBody>
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Button size="md" className="text-left categoriasReportes " block id="adultos_hombres">ADMINISTRACIÓN</Button>
-
+                        <Button size="md" className="text-left categoriasReportes " block id="administracion">ADMINISTRACIÓN</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#administracion">
                             <Card>
                                 <CardBody>
                                     <h5>
@@ -398,8 +397,8 @@ export default function ReportePersonalAdministrativo() {
                             </Card>
                         </UncontrolledCollapse>
 
-                        <Button size="md" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">COMISIONES</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
+                        <Button size="md" className="text-left categoriasReportes mt-2" block id="comisiones">COMISIONES</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#comisiones">
                             <Card>
                                 <CardBody>
                                     <h5>

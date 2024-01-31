@@ -381,9 +381,8 @@ export default function ReportePersonalBautizado() {
                         </Col>
                     </Row>
                     <CardBody>
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Button size="lg" className="text-left categoriasReportes " block id="adultos_hombres">Ancianos: {countPersons("ANCIANO")}</Button>
-
+                        <Button size="lg" className="text-left categoriasReportes " block id="ancianos">Ancianos: {countPersons("ANCIANO")}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#ancianos">
                             <Card>
                                 <CardBody>
                                     <h5>
@@ -412,8 +411,8 @@ export default function ReportePersonalBautizado() {
                             </Card>
                         </UncontrolledCollapse>
 
-                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="adultos_mujeres">Diáconos: {countPersons("DIÁCONO")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_mujeres">
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="diaconos">Diáconos: {countPersons("DIÁCONO")}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#diaconos">
                             <Card>
                                 <CardBody>
                                     <h5>
@@ -442,8 +441,8 @@ export default function ReportePersonalBautizado() {
                             </Card>
                         </UncontrolledCollapse>
                         <hr></hr>
-                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="jovenes_hombres">Auxiliares: {countPersons("AUXILIAR") + countPersons("DIÁCONO A PRUEBA")}</Button>
-                        <UncontrolledCollapse defaultOpen toggler="#jovenes_hombres">
+                        <Button size="lg" className="text-left categoriasReportes mt-2" block id="auxiliares">Auxiliares: {countPersons("AUXILIAR") + countPersons("DIÁCONO A PRUEBA")}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#auxiliares">
                             <Card>
                                 <CardBody>
                                     <h5>

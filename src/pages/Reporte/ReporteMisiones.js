@@ -409,10 +409,8 @@ export default function ReporteMisiones() {
                         </Col>
                     </Row>
                     <CardBody>
-
-                        <UncontrolledCollapse defaultOpen toggler="#adultos_hombres">
-                            <Button size="md" className="text-left categoriasReportes " block id="adultos_hombres">{sector == null ? 'MISIONES DEL DISTRITO:' : 'MISONES DEL SECTOR:'}</Button>
-
+                        <Button size="md" className="text-left categoriasReportes " block id="misiones">{sector == null ? 'MISIONES DEL DISTRITO:' : 'MISONES DEL SECTOR:'}</Button>
+                        <UncontrolledCollapse defaultOpen toggler="#misiones">
                             <Card>
                                 <CardBody>
                                     {misiones.length > 0 ?
