@@ -40,7 +40,7 @@ class InformeAnualPastor extends Component {
             misiones: [],
             visitasPastor: {
                 porPastor: 0,
-                porAncianoAux: 0,
+                porAncianosAux: 0,
                 porDiaconos: 0,
                 porAuxiliares: 0
             },
@@ -140,7 +140,6 @@ class InformeAnualPastor extends Component {
         this.getDistrito();
         this.getSector();
         this.obtenerInforme(id);
-        this.obtenerMisiones();
     }
 
     getDistrito = async () => {
@@ -185,6 +184,13 @@ class InformeAnualPastor extends Component {
         await helpers.validaToken().then(helpers.authAxios.get("/InformeAnualPastor/" + id)
             .then(res => {
                 this.state.informe = res.data;
+                this.state.visitasPastor = res.data.visitasPastor !== null ? res.data.visitasPastor : this.state.visitasPastor ;
+                this.state.cultosSector = res.data.cultosSector !== null ? res.data.cultosSector : this.state.cultosSector;
+                this.state.estudiosSector.estudios = res.data.estudiosSector !== null ? res.data.estudiosSector : this.state.estudiosSector.estudios;
+                this.state.estudiosSector.conferencias = res.data.conferenciasSector !== null ? res.data.conferenciasSector : this.state.estudiosSector.conferencias;
+                this.state.trabajoEvangelismo = res.data.trabajoEvangelismo !== null ? res.data.trabajoEvangelismo : this.state.trabajoEvangelismo;
+                this.state.misiones = res.data.cultosMisionSector !== null ? res.data.cultosMisionSector : this.state.cultosMisionSector;
+                this.obtenerMisiones();
                 console.log(res);
             })
         );
@@ -193,12 +199,17 @@ class InformeAnualPastor extends Component {
     obtenerMisiones = async (id) => {
         await helpers.validaToken().then(helpers.authAxios.get("/Mision_Sector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.state.misiones = res.data.misiones.map( m => (
-                    {
+                const cultosMisionCopia = [...this.state.misiones]
+                this.state.misiones = res.data.misiones.map( m => {
+                    const cultoMision = cultosMisionCopia.find(f => f.ms_Id_MisionSector === m.ms_Id)
+                    return{
                         ...m,
-                        cultos: 0,
+                        ms_Id_MisionSector: m.ms_Id,
+                        idInforme: cultoMision ? cultoMision.idInforme : 0,
+                        cultos: cultoMision ? cultoMision.cultos : 0,
                     }
-                ));
+                }
+                );
                 console.log(this.state.misiones);
             })
         );
@@ -247,12 +258,17 @@ class InformeAnualPastor extends Component {
             status: this.state.informe.status,
             usu_id_usuario: this.infoSesion.pem_Id_Ministro,
             fechaRegistro: null,
-            visitasPastor: this.state.visitasPastor
+            visitasPastor: this.state.visitasPastor,
+            cultosSector: this.state.cultosSector,
+            estudiosSector: this.state.estudiosSector.estudios,
+            conferenciasSector: this.state.estudiosSector.conferencias,
+            trabajoEvangelismo: this.state.trabajoEvangelismo,
+            CultosMisionSector: this.state.misiones,
         }
 
-        await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor", data)
+        await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
             .then(res => {
-                if (res.data.status === "success") {
+                if (res.status === 200) {
                     console.log(res);
                 }
                 else {
@@ -332,8 +348,8 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='visitasPastor.porAncianoAux'
-                                                                value={this.state.visitasPastor.porAncianoAux}
+                                                                name='visitasPastor.porAncianosAux'
+                                                                value={this.state.visitasPastor.porAncianosAux}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>

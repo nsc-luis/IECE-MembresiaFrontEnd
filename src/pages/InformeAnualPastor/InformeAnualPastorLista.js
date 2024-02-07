@@ -96,7 +96,7 @@ class InformeAnualPastorLista extends Component {
 
         await helpers.validaToken().then(helpers.authAxios.post("/InformeAnualPastor", this.state.nuevoInforme)
             .then(res => {
-                if (res.data.status === "success") {
+                if (res.status === 200) {
                     this.obtenerInformes();
                     this.handleCancelar();
                     this.setState({
