@@ -166,6 +166,32 @@ const helpers = {
                     );
                 }
             });
+    },
+
+    modalDeCarga: {
+        overlay: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: '#626567',
+            opacity: '60%'
+        },
+        content: {
+            top: '10%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            paddingRight: '10em',
+            paddingLeft: '10em',
+            transform: 'translate(-50%, -50%)',
+            opacity: '100%',
+            borderRadius: '10px',
+            fontWeight: 'bold',
+            fontSize: '15px'
+        }
     }
 }
 

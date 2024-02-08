@@ -6,7 +6,7 @@ import {
     Button, FormFeedback, Table,
     Modal, ModalFooter, ModalBody, ModalHeader, FormGroup
 } from 'reactstrap';
-import axios from 'axios';
+import ReactModal from 'react-modal';
 import logo from '../../../assets/images/IECE_LogoOficial.jpg'
 import './style.css';
 import moment from 'moment/min/moment-with-locales';
@@ -96,25 +96,25 @@ class RptListaDeHogares extends Component {
     }
 
     handle_sectorSeleccionado = async (e) => {
-        console.log("Se seleccionó un Sector", e.target.value)
+        //console.log("Se seleccionó un Sector", e.target.value)
         if (e.target.value === "todos") {//Si se seleccionó "Todos los Sectores"
             this.setState({ sectorSeleccionado: e.target.value });
-            console.log("Sector: ", e.target.value)
+            //console.log("Sector: ", e.target.value)
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresByDistrito/' + localStorage.getItem('dto'))
                 .then(res => {
                     // console.log(res.data.value);
                     this.setState({ infoListaHogares: res.data.listahogares })
-                    console.log("Hogares: ", res.data.listahogares)
+                    //console.log("Hogares: ", res.data.listahogares)
                     //this.arreglarLista();
                     this.getInfoSector();
                 })
             );
         } else { //Si se seleccionó sólo 1 Sector en específico
             this.setState({ sectorSeleccionado: e.target.value });
-            console.log("Sector: ", e.target.value);
+            //console.log("Sector: ", e.target.value);
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/HogarDomicilio/GetListaHogaresBySector/' + e.target.value)
                 .then(res => {
-                    console.log("Hogares: ", res.data.listahogares)
+                    //console.log("Hogares: ", res.data.listahogares)
                     // console.log(res.data.value);
                     this.setState({
                         infoListaHogares: res.data.listahogares
@@ -140,7 +140,6 @@ class RptListaDeHogares extends Component {
             modalShow: true
         })
 
-
         await helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sector)
             .then(res => {
                 //Filtro de hogares 
@@ -156,8 +155,8 @@ class RptListaDeHogares extends Component {
                     data: filteredElements,
                     mensajeDelProceso: "",
                     modalShow: false
-
                 })
+                window.scrollTo(0, 0);
             })
         )
     }
@@ -186,8 +185,8 @@ class RptListaDeHogares extends Component {
                         }),
                         mensajeDelProceso: "",
                         modalShow: false
-
                     });
+                    window.scrollTo(0, 0);
                 })
             )
         } else { //Para Sesión de Pastor
@@ -207,6 +206,7 @@ class RptListaDeHogares extends Component {
                         mensajeDelProceso: "",
                         modalShow: false
                     });
+                    window.scrollTo(0, 0);
                 })
             )
             this.setState({ sec_Id_Sector: localStorage.getItem('sector') });
@@ -510,11 +510,12 @@ class RptListaDeHogares extends Component {
                         </div>
                     </Container>
                     {/*Modal success*/}
-                    <Modal isOpen={this.state.modalShow}>
-                        <ModalBody>
-                            {this.state.mensajeDelProceso}
-                        </ModalBody>
-                    </Modal>
+                    <ReactModal 
+                        isOpen={this.state.modalShow}
+                        style={helpers.modalDeCarga}
+                    >
+                        {this.state.mensajeDelProceso}
+                    </ReactModal>
 
                 </>
             )

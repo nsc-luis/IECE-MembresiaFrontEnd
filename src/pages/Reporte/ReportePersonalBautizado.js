@@ -5,7 +5,7 @@ import {
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
     FormGroup, Input, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -30,17 +30,12 @@ export default function ReportePersonalBautizado() {
 
     //Llamadas en render
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [])
-
     useLayoutEffect(() => {
-        window.scrollTo(0, 0);
     }, [personas, infoDis, infoSecretario, sectores, sectorSeleccionado]); // Agrega aquí todas tus variables de estado
 
 
     useEffect(() => {
-
+        window.scrollTo(0, 0);
         if (sector == null) { //Para Sesión Obispo
             console.log("inicia programa")
             getPersonasDistrito();
@@ -91,11 +86,11 @@ export default function ReportePersonalBautizado() {
     }, [])
 
     const getInfoDistrito = () => {
-        console.log("Dto: ", dto)
+        //console.log("Dto: ", dto)
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
-                console.log("Distrito: ", res.data)
+                //console.log("Distrito: ", res.data)
             })
         )
     }
@@ -135,6 +130,7 @@ export default function ReportePersonalBautizado() {
                     }))
                 setMensajeDelProceso("")
                 setModalShow(false)
+                window.scrollTo(0, 0)
             })
         );
     }
@@ -517,12 +513,12 @@ export default function ReportePersonalBautizado() {
             </Container>
 
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }

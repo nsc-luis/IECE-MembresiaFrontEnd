@@ -4,7 +4,7 @@ import {
     Container, Button, FormGroup, Input,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -81,10 +81,9 @@ export default function ReporteOficiosProfesiones() {
         setMensajeDelProceso("Procesando...")
         setModalShow(true)
 
-
         await helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
-                console.log("Profesiones1: ", res.data.filter((per) => (per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')))
+                //console.log("Profesiones1: ", res.data.filter((per) => (per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO')))
                 setPersonas(res.data.filter((per) => (per.persona.per_Activo === true && per.persona.profesionOficio1[0].pro_Sub_Categoria != 'OTRO'))
                     .sort(function (a, b) {
                         if (a.persona.profesionOficio1[0].pro_Sub_Categoria < b.persona.profesionOficio1[0].pro_Sub_Categoria) { return -1; }
@@ -94,7 +93,7 @@ export default function ReporteOficiosProfesiones() {
                 )
                 setMensajeDelProceso("")
                 setModalShow(false)
-
+                window.scrollTo(0, 0);
             })
         );
     }
@@ -371,18 +370,12 @@ export default function ReporteOficiosProfesiones() {
                 </Card>
             </Container>
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                {/* <ModalHeader>
-                        Solo prueba.
-                    </ModalHeader> */}
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-                {/* <ModalFooter>
-                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
-                    </ModalFooter> */}
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }
