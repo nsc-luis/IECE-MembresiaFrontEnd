@@ -6,7 +6,7 @@ import {
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
     FormGroup, Input, CardHeader, CardFooter, Label, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { Fragment, useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -37,13 +37,6 @@ export default function ReporteSantuarioyCasaPastoral() {
     const [modalShow, setModalShow] = useState(false)
 
     //Llamadas en render
-
-    useEffect(() => {
-        window.scrollTo(0, 0)
-        //setEntidadTitulo("TODOS LOS SECTORES");
-    }, [])
-
-
     const reseteo_casaPastoral = () => {
         setCasaPastoralConDomicilio([{
             casaPastoral: null,
@@ -54,7 +47,7 @@ export default function ReporteSantuarioyCasaPastoral() {
     };
 
     useEffect(() => {
-
+        window.scrollTo(0, 0)
         if (sector == null) { //Para Sesión Obispo
             console.log("inicia programa")
             getTemplosConFotoByDistrito(dto)
@@ -115,12 +108,12 @@ export default function ReporteSantuarioyCasaPastoral() {
 
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Templo/GetTemployDomicilioBySector/${sec}`)
                 .then(res => {
-                    console.log("templo", res.santuarioConFoto);
+                    //console.log("templo", res.santuarioConFoto);
                     if (res.data.status === "success") {
                         setSantuarioConFoto(res.data.santuarioConFoto)
                         setMensajeDelProceso("")
                         setModalShow(false)
-
+                        window.scrollTo(0, 0)
                     }
                     else {
                         setSantuarioConFoto(null)
@@ -141,14 +134,14 @@ export default function ReporteSantuarioyCasaPastoral() {
 
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/CasaPastoral/GetCasaPastoralyDomicilioBySector/${sec}`)
                 .then(res => {
-                    console.log("respuesta", res.data);
+                    //console.log("respuesta", res.data);
                     if (res.data.status === "success") {
                         setCasaPastoralConDomicilio(res.data.casaPastoralConDomicilio)
                         //setDomicilio(res.data.casaPastoralConDomicilio.domicilio)
                         //setDireccion(res.data.casaPastoralConDomicilio.direccion)
                         setMensajeDelProceso("")
                         setModalShow(false)
-
+                        window.scrollTo(0, 0)
                     }
                     else if (res.data.status == "notFound") {
                         reseteo_casaPastoral();
@@ -214,11 +207,11 @@ export default function ReporteSantuarioyCasaPastoral() {
     }
 
     const getInfoDistrito = () => {
-        console.log("Dto: ", dto)
+        //console.log("Dto: ", dto)
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
-                console.log("Distrito: ", res.data)
+                //console.log("Distrito: ", res.data)
                 //setEntidadTitulo(res.data.dis_Tipo_Distrito + " " + (res.data.dis_Tipo_Distrito == "MISION" ? "" : "No. " + res.data.dis_Numero + ": ") + res.data.dis_Alias)
             })
         )
@@ -815,12 +808,12 @@ export default function ReporteSantuarioyCasaPastoral() {
                 </Card>
             </Container >
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }

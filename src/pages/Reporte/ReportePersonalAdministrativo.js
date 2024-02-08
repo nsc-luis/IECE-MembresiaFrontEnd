@@ -5,7 +5,7 @@ import {
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
     FormGroup, Input, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -30,22 +30,17 @@ export default function ReportePersonalAdministrativo() {
     const [modalShow, setModalShow] = useState(false)
 
     //Llamadas en render
-
     useEffect(() => {
         window.scrollTo(0, 0)
-    }, [])
-
-    useEffect(() => {
 
         if (sector == null) { //Para Sesión Obispo
-            console.log("inicia programa")
+            //console.log("inicia programa")
             getComisionesDistrito(dto);
             getPersonalAdministrativoDistrito(dto);
             getInfoDistrito()
             setSectorSeleccionado("todos");
             setLider("OBISPO");
             setEntidadTitulo("")
-
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
@@ -58,6 +53,7 @@ export default function ReportePersonalAdministrativo() {
                     setInfoSecretario(res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : "")
                 })
             );
+
 
         } else { //Para Sesión Pastor
             getComisionesSector(sector);
@@ -86,15 +82,14 @@ export default function ReportePersonalAdministrativo() {
 
             getTitulo(sector)
         }
-
     }, [])
 
     const getInfoDistrito = () => {
-        console.log("Dto: ", dto)
+        //console.log("Dto: ", dto)
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
-                console.log("Distrito: ", res.data)
+                //console.log("Distrito: ", res.data)
                 //setEntidadTitulo(res.data.dis_Tipo_Distrito + " " + (res.data.dis_Tipo_Distrito == "MISION" ? "" : "No. " + res.data.dis_Numero + ": ") + res.data.dis_Alias)
             })
         )
@@ -106,11 +101,10 @@ export default function ReportePersonalAdministrativo() {
 
         helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Distrital/GetComisionesByDistrito/" + dto)
             .then(res => {
-                console.log("respuesta: ", res.data.comisiones)
+                //console.log("respuesta: ", res.data.comisiones)
                 setComisiones(res.data.comisiones)
                 setMensajeDelProceso("")
                 setModalShow(false)
-                window.scrollTo(0, 0)
             })
         );
     }
@@ -121,7 +115,7 @@ export default function ReportePersonalAdministrativo() {
 
         helpers.validaToken().then(helpers.authAxios.get("/Integrante_Comision_Local/GetComisionesBySector/" + sec)
             .then(res => {
-                console.log("respuesta: ", res.data.comisiones)
+                //console.log("respuesta: ", res.data.comisiones)
                 setComisiones(res.data.comisiones)
                 setMensajeDelProceso("")
                 setModalShow(false)
@@ -136,13 +130,14 @@ export default function ReportePersonalAdministrativo() {
 
         helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioBySector/" + sec)
             .then(res => {
-                console.log("respuesta: ", res.data.administrativo)
+                //console.log("respuesta: ", res.data.administrativo)
                 setPersonalAdministrativo(res.data.administrativo)
                 setMensajeDelProceso("")
                 setModalShow(false)
                 window.scrollTo(0, 0)
             })
         );
+
     }
 
 
@@ -152,11 +147,11 @@ export default function ReportePersonalAdministrativo() {
 
         helpers.validaToken().then(helpers.authAxios.get("/PersonalMinisterial/GetPersonalAdministrativoSecundarioByDistrito/" + dto)
             .then(res => {
-                console.log("respuesta: ", res.data.administrativo)
+                //console.log("respuesta: ", res.data.administrativo)
                 setPersonalAdministrativo(res.data.administrativo)
                 setMensajeDelProceso("")
-                setModalShow(false)
-                window.scrollTo(0, 0)
+                //setModalShow(false)
+                //window.scrollTo(0, 0)
             })
         );
     }
@@ -164,7 +159,7 @@ export default function ReportePersonalAdministrativo() {
     const handle_sectorSeleccionado = async (e) => {
 
         if (e.target.value !== "todos") {
-            console.log("Sector Seleccionado: ", e.target.value)
+            //console.log("Sector Seleccionado: ", e.target.value)
             getComisionesSector(e.target.value)
             getPersonalAdministrativoSector(e.target.value)
             setSectorSeleccionado(e.target.value);
@@ -178,12 +173,12 @@ export default function ReportePersonalAdministrativo() {
     }
 
     const getTitulo = (sector) => {
-        console.log("SectorParaTitulo: ", sectores);
+        //console.log("SectorParaTitulo: ", sectores);
         sectores.map(sec => {
 
             if (sec.sec_Id_Sector == sector) {
                 setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
-                console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+                //console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }
         })
     }
@@ -304,9 +299,8 @@ export default function ReportePersonalAdministrativo() {
 
 
     return (
-        window.scrollTo(0, 0),
+        //window.scrollTo(0, 0),
         <>
-
             <Container lg>
                 <FormGroup>
                     <Row>
@@ -509,12 +503,12 @@ export default function ReportePersonalAdministrativo() {
                 </Card>
             </Container>
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }

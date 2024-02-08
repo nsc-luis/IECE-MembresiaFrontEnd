@@ -5,7 +5,7 @@ import {
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
     FormGroup, Input, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -31,15 +31,10 @@ export default function ReportePersonalBautizado() {
 
 
     //Llamadas en render
-
     useEffect(() => {
         window.scrollTo(0, 0)
-    }, [])
-
-    useEffect(() => {
 
         if (sector == null) { //Para Sesión Obispo
-            console.log("inicia programa")
             getPersonalMinisterialDistrito();
             getInfoDistrito()
             setSectorSeleccionado("todos");
@@ -85,15 +80,14 @@ export default function ReportePersonalBautizado() {
 
             getTitulo(sector)
         }
-
     }, [])
 
     const getInfoDistrito = () => {
-        console.log("Dto: ", dto)
+        //console.log("Dto: ", dto)
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
-                console.log("Distrito: ", res.data)
+                //console.log("Distrito: ", res.data)
             })
         )
     }
@@ -102,10 +96,9 @@ export default function ReportePersonalBautizado() {
         setMensajeDelProceso("Procesando...")
         setModalShow(true)
 
-
         await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/PersonalMinisterial/GetPersonalMinisterialByDistrito/${dto}`)
             .then(res => {
-                console.log("respuestaAPIFoto: ", res.data.administrativo);
+                //console.log("respuestaAPIFoto: ", res.data.administrativo);
                 if (res.data.status === "success") {
                     setPersonalMinisterial(res.data.administrativo)
                     setMensajeDelProceso("")
@@ -128,13 +121,13 @@ export default function ReportePersonalBautizado() {
 
                 if (res.data.status === "success") {
                     setPersonalMinisterial(res.data.administrativo)
-                    setMensajeDelProceso("")
-                    setModalShow(false)
-
                 }
                 else {
                     alert("Error:\nNo se pudo consultar la lista del Personal Ministerial, favor de reportar o intentar mas tarde.")
                 }
+                setMensajeDelProceso("")
+                setModalShow(false)
+                window.scrollTo(0, 0)
             })
         )
     }
@@ -142,7 +135,7 @@ export default function ReportePersonalBautizado() {
     const handle_sectorSeleccionado = async (e) => {
 
         if (e.target.value !== "todos") {
-            console.log("Sector Seleccionado: ", e.target.value)
+            //console.log("Sector Seleccionado: ", e.target.value)
             getPersonalMinisterialSector(e.target.value)
             setSectorSeleccionado(e.target.value);
             getTitulo(e.target.value)
@@ -154,12 +147,12 @@ export default function ReportePersonalBautizado() {
     }
 
     const getTitulo = (sector) => {
-        console.log("SectorParaTitulo: ", sectores);
+        //console.log("SectorParaTitulo: ", sectores);
         sectores.map(sec => {
 
             if (sec.sec_Id_Sector == sector) {
                 setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
-                console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+                //console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }
         })
     }
@@ -529,12 +522,12 @@ export default function ReportePersonalBautizado() {
                 </Card>
             </Container>
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }

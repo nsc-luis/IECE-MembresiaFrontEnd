@@ -6,7 +6,7 @@ import {
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
     FormGroup, Input, CardHeader, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -32,13 +32,8 @@ export default function ReporteOrganismosInternos() {
     const [modalShow, setModalShow] = useState(false)
 
     //Llamadas en render
-
     useEffect(() => {
         window.scrollTo(0, 0)
-    }, [])
-
-    useEffect(() => {
-
         if (sector == null) { //Para Sesión Obispo
             console.log("inicia programa")
             getOrganismosInternosByDistrito(dto)
@@ -122,11 +117,12 @@ export default function ReporteOrganismosInternos() {
 
             await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Organismo_Interno/GetBySector/${sec}`)
                 .then(res => {
-                    console.log("REspuesta: ", res.data.organismosInternos)
+                    //console.log("REspuesta: ", res.data.organismosInternos)
                     if (res.data.status === "success") {
                         setOrganismosInternos(res.data.organismosInternos)
                         setMensajeDelProceso("")
                         setModalShow(false)
+                        window.scrollTo(0, 0)
                     }
                     else {
                         alert(res.data.mensaje)
@@ -139,11 +135,11 @@ export default function ReporteOrganismosInternos() {
     }
 
     const getInfoDistrito = () => {
-        console.log("Dto: ", dto)
+        //console.log("Dto: ", dto)
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
-                console.log("Distrito: ", res.data)
+                //console.log("Distrito: ", res.data)
                 //setEntidadTitulo(res.data.dis_Tipo_Distrito + " " + (res.data.dis_Tipo_Distrito == "MISION" ? "" : "No. " + res.data.dis_Numero + ": ") + res.data.dis_Alias)
             })
         )
@@ -598,18 +594,12 @@ export default function ReporteOrganismosInternos() {
                 </Card>
             </Container >
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                {/* <ModalHeader>
-                        Solo prueba.
-                    </ModalHeader> */}
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-                {/* <ModalFooter>
-                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
-                    </ModalFooter> */}
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }

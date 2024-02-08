@@ -3,7 +3,7 @@ import {
     Container, Button, FormGroup, Input,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -27,13 +27,8 @@ export default function ReportePersonalNoBautizado() {
     const [modalShow, setModalShow] = useState(false)
 
     //Llamadas en render
-
     useEffect(() => {
         window.scrollTo(0, 0)
-    }, [])
-
-    useEffect(() => {
-
         if (sector === null) {
             setSectorSeleccionado("todos");
             getPersonasDistrito();
@@ -80,11 +75,11 @@ export default function ReportePersonalNoBautizado() {
     }, [])
 
     const getInfoDistrito = () => {
-        console.log("Dto: ", dto)
+        //console.log("Dto: ", dto)
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
-                console.log("Distrito: ", res.data)
+                //console.log("Distrito: ", res.data)
             })
         )
     }
@@ -125,7 +120,7 @@ export default function ReportePersonalNoBautizado() {
                     }))
                 setMensajeDelProceso("")
                 setModalShow(false)
-
+                window.scrollTo(0, 0);
             })
         );
     }
@@ -500,12 +495,12 @@ export default function ReportePersonalNoBautizado() {
                 </Card>
             </Container>
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }

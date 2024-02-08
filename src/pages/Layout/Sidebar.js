@@ -48,7 +48,6 @@ class Sidebar extends Component {
     handle_LinkEncabezado = (seccion, componente) => {
         localStorage.setItem('seccion', seccion);
         localStorage.setItem('componente', componente);
-        window.scrollTo(0, 0)
     }
 
     openModalEditaPersona = async () => {
@@ -147,6 +146,7 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
+        window.location.reload();
     }
 
     handle_AltaRestitucion = () => {
@@ -166,6 +166,7 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
+        window.location.reload();
     }
 
     handle_Reactivacion = () => {
@@ -338,7 +339,13 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" onClick={this.handle_AltaPersonaBautizada} to="/RegistroDePersona">Bautismo</Link>
+                                        <Link 
+                                            className="collapse-item" 
+                                            onClick={this.handle_AltaPersonaBautizada} 
+                                            to="/RegistroDePersona"
+                                        >
+                                            Bautismo
+                                        </Link>
                                         <Link className="collapse-item" to="/AltaRestitucion" onClick={this.handle_AltaRestitucion}>Restitución</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilio" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
                                     </div>
