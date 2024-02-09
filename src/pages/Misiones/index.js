@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
-    Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter,
-    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader, ModalHeader
+    Container, Button, Input, Modal, ModalBody, Alert, CardFooter,
+    Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader, ModalHeader
 } from 'reactstrap';
 
 export default class Misiones extends Component {
@@ -76,7 +76,7 @@ export default class Misiones extends Component {
         e.preventDefault()
         this.setState({
             ms_AliasInvalid: this.state.ms_Alias === "" || this.state.ms_Alias === null ? true : false,
-            ms_NumeroInvalid: this.state.ms_Numero == "" || this.state.ms_Numero == 0 ? true : false
+            ms_NumeroInvalid: this.state.ms_Numero === "" || this.state.ms_Numero === 0 ? true : false
         })
 
         if (this.state.ms_Alias === "") {

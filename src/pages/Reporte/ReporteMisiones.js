@@ -3,7 +3,7 @@ import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input, Modal, ModalBody
+    FormGroup, Input
 } from 'reactstrap';
 import ReactModal from 'react-modal';
 import React, { useEffect, useState, useRef } from 'react';

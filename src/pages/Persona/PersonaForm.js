@@ -631,7 +631,7 @@ class PersonaForm extends Component {
         }
 
         return (
-            console.log("nombre:", form.per_Nombre !== undefined ? form.per_Nombre.length : ""),
+            console.log("Variable:", form),
             <React.Fragment>
                 {/* <h2 className="text-info">{tituloAgregarEditar}</h2> */}
 

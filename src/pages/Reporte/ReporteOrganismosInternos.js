@@ -34,14 +34,11 @@ export default function ReporteOrganismosInternos() {
     //Llamadas en render
     useEffect(() => {
         window.scrollTo(0, 0)
-<<<<<<< HEAD
     }, [])
-    
+
 
     useEffect(() => {
 
-=======
->>>>>>> NavegacionMejorada
         if (sector == null) { //Para Sesión Obispo
             console.log("inicia programa")
             getOrganismosInternosByDistrito(dto)

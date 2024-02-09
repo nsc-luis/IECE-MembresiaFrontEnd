@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
-    Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter, ModalHeader, ModalFooter,
-    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
+    Container, Button, Input, Modal, ModalBody, Alert, CardFooter, ModalHeader, ModalFooter,
+    Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup
 } from 'reactstrap';
 import DetalleVisitante from './DetalleVisitante';
 import './style.css'
@@ -52,6 +52,9 @@ export default class RegistroVisitantes extends Component {
     componentDidMount() {
         this.getVisitantes();
         window.scrollTo(0, 0);
+        this.setState({
+
+        })
     }
 
     mostrarFormulario = () => {
@@ -160,8 +163,8 @@ export default class RegistroVisitantes extends Component {
                     }
                     this.setState({
                         visitantes: res.data.visitantes,
-                        visitantesPermanentes: res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'PERMANENTE' && visitante.visitante.vp_Activo),
-                        visitantesOcasionales: res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'OCASIONAL' && visitante.visitante.vp_Activo),
+                        visitantesPermanentes: res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'PERMANENTE' && visitante.visitante.vp_Activo),
+                        visitantesOcasionales: res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'OCASIONAL' && visitante.visitante.vp_Activo),
                         prioridades: prioridades
                     })
                 })
@@ -488,7 +491,7 @@ export default class RegistroVisitantes extends Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'PERMANENTE' && visitante.visitante.vp_Activo).map((visitante, index) => {
+                                            {this.state.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'PERMANENTE' && visitante.visitante.vp_Activo).map((visitante, index) => {
                                                 return (
                                                     <tr key={visitante.vp_Id_Visitante}>
                                                         <td className='text center'>{index + 1}</td>
@@ -543,7 +546,7 @@ export default class RegistroVisitantes extends Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'OCASIONAL' && visitante.visitante.vp_Activo).map((visitante, index) => {
+                                            {this.state.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'OCASIONAL' && visitante.visitante.vp_Activo).map((visitante, index) => {
                                                 return (
                                                     <tr key={visitante.vp_Id_Visitante}>
                                                         <td className='text center'>{index + 1}</td>

@@ -146,7 +146,8 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
-        window.location.reload();
+        document.location.href = "/RegistroDePersona";
+        //window.location.reload();
     }
 
     handle_AltaRestitucion = () => {
@@ -166,7 +167,8 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
-        window.location.reload();
+        window.location = "/RegistroDePersona";
+        //window.location.reload();
     }
 
     handle_Reactivacion = () => {
@@ -339,9 +341,9 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link 
-                                            className="collapse-item" 
-                                            onClick={this.handle_AltaPersonaBautizada} 
+                                        <Link
+                                            className="collapse-item"
+                                            onClick={this.handle_AltaPersonaBautizada}
                                             to="/RegistroDePersona"
                                         >
                                             Bautismo

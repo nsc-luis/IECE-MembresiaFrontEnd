@@ -1,13 +1,12 @@
 import Layout from "../Layout";
-
 import helpers from "../../components/Helpers";
 import {
     Container, Button,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input, CardHeader, Modal, ModalBody
+    CardTitle, Card, CardBody, Table, Row, Col,
+    FormGroup, Input, CardHeader
 } from 'reactstrap';
-
-import React, { useEffect, useState, } from 'react';
+import ReactModal from 'react-modal';
+import React, { useEffect, useState, useRef } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import moment from 'moment/min/moment-with-locales';
@@ -32,11 +31,15 @@ export default function ReporteVisitantes() {
     const [visitantesOcasionales, setVisitantesOcasionales] = useState([])
     const [mensajeDelProceso, setMensajeDelProceso] = useState("")
     const [modalShow, setModalShow] = useState(false)
+    const elementToFocus = useRef(null);
 
     //Llamadas en render
 
     useEffect(() => {
         window.scrollTo(0, 0)
+        if (elementToFocus.current) {
+            elementToFocus.current.focus();
+        }
     }, [])
 
 
@@ -53,7 +56,7 @@ export default function ReporteVisitantes() {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR"))
                 })
             )
 
@@ -94,6 +97,8 @@ export default function ReporteVisitantes() {
 
 
     const getVisitantesByDistrito = async (dis) => {
+
+
         try {
             setMensajeDelProceso("Procesando...")
             setModalShow(true)
@@ -103,8 +108,8 @@ export default function ReporteVisitantes() {
                     console.log("REspuesta: ", res.data.visitantes)
                     if (res.data.status === "success") {
                         setVisitantes(res.data.visitantes)
-                        setVisitantesPermanentes(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'PERMANENTE' && visitante.visitante.vp_Activo))
-                        setVisitantesOcasionales(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'OCASIONAL' && visitante.visitante.vp_Activo))
+                        setVisitantesPermanentes(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'PERMANENTE' && visitante.visitante.vp_Activo))
+                        setVisitantesOcasionales(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'OCASIONAL' && visitante.visitante.vp_Activo))
                         setMensajeDelProceso("")
                         setModalShow(false)
                     }
@@ -129,10 +134,11 @@ export default function ReporteVisitantes() {
                     console.log("REspuesta: ", res.data.visitantes)
                     if (res.data.status === "success") {
                         setVisitantes(res.data.visitantes)
-                        setVisitantesPermanentes(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'PERMANENTE' && visitante.visitante.vp_Activo))
-                        setVisitantesOcasionales(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante == 'OCASIONAL' && visitante.visitante.vp_Activo))
+                        setVisitantesPermanentes(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'PERMANENTE' && visitante.visitante.vp_Activo))
+                        setVisitantesOcasionales(res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'OCASIONAL' && visitante.visitante.vp_Activo))
                         setMensajeDelProceso("")
                         setModalShow(false)
+                        window.scrollTo(0, 0)
                     }
                     else {
                         alert(res.data.mensaje)
@@ -174,20 +180,11 @@ export default function ReporteVisitantes() {
         console.log("SectorParaTitulo: ", sectores);
         sectores.map(sec => {
 
-            if (sec.sec_Id_Sector == sector) {
+            if (sec.sec_Id_Sector === sector) {
                 setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
                 console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }
         })
-    }
-
-    const downloadTable1 = () => {
-        TableToExcel.convert(document.getElementById("table1"), {
-            name: "Personal_Bautizado.xlsx",
-            sheet: {
-                name: "Hoja 1"
-            }
-        });
     }
 
     const downloadTable = () => {
@@ -369,7 +366,7 @@ export default function ReporteVisitantes() {
                                 LISTA DE VISITANTES
                                 <FormGroup>
                                     <Row>
-                                        <h1></h1>
+                                        <h1> </h1>
                                     </Row>
                                 </FormGroup>
 
@@ -556,17 +553,12 @@ export default function ReporteVisitantes() {
                 </Card>
             </Container >
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                {/* <ModalHeader>
-                        Solo prueba.
-                    </ModalHeader> */}
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-                {/* <ModalFooter>
-                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
-                    </ModalFooter> */}
-            </Modal>
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
 
         </>
     )
