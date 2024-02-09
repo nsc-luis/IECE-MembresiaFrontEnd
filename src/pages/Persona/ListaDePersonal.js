@@ -331,7 +331,6 @@ class ListaDePersonal extends Component {
     }
 
     handle_filtroPorNombre = (e) => {
-
         this.setState({ fNombre: e.target.value });
         if (e.target.value !== '' && e.target.value.length > 2) {
 

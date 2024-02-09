@@ -553,15 +553,6 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li> */}
-                    <li className="nav-item">
-                        <Link
-                            className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Registro de visitantes.')}
-                            to="/RegistroVisitantes">
-                            <i className="fas fa-user-cog"></i>
-                            <span>Registro de visitantes</span>
-                        </Link>
-                    </li>
 
                     <li className="nav-item">
                         <Link
@@ -648,6 +639,16 @@ class Sidebar extends Component {
                         </Link>
                     </li>
 
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Visitantes')}
+                            to="/RegistroVisitantes">
+                            <i className="fas fa-user-cog"></i>
+                            <span>Visitantes</span>
+                        </Link>
+                    </li>
+
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
@@ -711,6 +712,10 @@ class Sidebar extends Component {
                                     to="/ReporteMisiones"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Misiones de Evangelismo")}
                                 >Lista de Misiones</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteVisitantes"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Visitantes")}
+                                >Lista de Visitantes</Link>
                                 <Link className="collapse-item text-wrap"
                                     to="/ReporteMovimientoEstadistico"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}

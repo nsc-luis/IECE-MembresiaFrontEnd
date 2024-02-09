@@ -156,100 +156,112 @@ export default class DetalleVisitante extends Component {
         return (
             <>
                 <Card>
-                    <FormGroup>
-                        <Row>
-                            <Col xs="9">
-                                <h4>Datos del visitante</h4>
-                            </Col>
-                            <Col xs="3" style={{ textAlign: 'right' }}>
-                                <Button
-                                    type="button"
-                                    color="primary"
-                                    onClick={this.showDlgNota}
-                                >
-                                    <span className='fas fa-plus-circle'></span>
-                                    Agregar nota
-                                </Button>
-                            </Col>
-                        </Row>
-                    </FormGroup>
-                    <FormGroup>
-                        <Row>
-                            <Col xs="2" className="negrita">
-                                Nombre:
-                            </Col>
-                            <Col xs="6" className="border border-dark">
-                                {this.state.visitante.vp_Nombre}
-                            </Col>
-                            <Col xs="4">
-                                <span className="fa fa-check faIconMarginRight"></span>
-                                {this.state.visitante.vp_Tipo_Visitante}
-                            </Col>
-                        </Row>
-                    </FormGroup>
-                    <FormGroup>
-                        <Row>
-                            <Col xs="2" className="negrita">
-                                No. contacto:
-                            </Col>
-                            <Col xs="3" className="border border-dark">
-                                {this.state.visitante.vp_Telefono_Contacto}
-                            </Col>
-                            <Col xs="3" />
-                            <Col xs="4">
-                                <span className={this.state.visitante.vp_Activo === true ? "fa fa-check faIconMarginRight" : "fa fa-times faIconMarginRight"}></span>
-                                Activo
-                            </Col>
-                        </Row>
-                    </FormGroup>
-                    <FormGroup>
-                        <Row>
-                            <Col xs="2" className="negrita">
-                                Direccion:
-                            </Col>
-                            <Col xs="6" className="border border-dark">
-                                {this.state.visitante.vp_Direccion}
-                            </Col>
-                        </Row>
-                    </FormGroup>
+                    <CardBody>
+                        <FormGroup>
+                            <Row>
+                                <Col xs="12" className='text-center pt-2 pb-2'>
+                                    <h4>DETALLE DEL VISITANTE</h4>
+                                </Col>
+                            </Row>
+                        </FormGroup>
 
-                    <h4 style={{ textAlign: "center" }}>Notas / Comentarios</h4>
-                    <Table className="table table-striped border bt-0">
-                        <thead className="bg-info">
-                            <tr>
-                                <th style={{ width: "15%" }}>Fecha</th>
-                                <th style={{ width: "65%" }}>Nota</th>
-                                <th style={{ width: "20%" }}></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.state.notas.map((nota) => {
-                                return (
-                                    <tr key={nota.n_Id}>
-                                        <td>{nota.n_Fecha_Nota}</td>
-                                        <td>{nota.n_Nota}</td>
-                                        <Button
-                                            type="button"
-                                            color="success"
-                                            className='btnMargenDerecho'
-                                            onClick={() => this.dlgEditarNota(nota)}
-                                        >
-                                            <span className="fa fa-edit"></span>
-                                            Editar
-                                        </Button>
-                                        <Button
-                                            type="button"
-                                            color="danger"
-                                            onClick={() => this.borrarNota(nota.n_Id)}
-                                        >
-                                            <span className="fa fa-times"></span>
-                                            Borrar
-                                        </Button>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </Table>
+                        <FormGroup>
+                            <Row>
+                                <Col xs="2" className="negrita">
+                                    Nombre:
+                                </Col>
+                                <Col xs="6" className="border border-dark">
+                                    {this.state.visitante.vp_Nombre}
+                                </Col>
+                                <Col xs="4">
+                                    <span className="fa fa-check faIconMarginRight"></span>
+                                    {this.state.visitante.vp_Tipo_Visitante}
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                        <FormGroup>
+                            <Row>
+                                <Col xs="2" className="negrita">
+                                    No. contacto:
+                                </Col>
+                                <Col xs="3" className="border border-dark">
+                                    {this.state.visitante.vp_Telefono_Contacto}
+                                </Col>
+                                <Col xs="3" />
+                                <Col xs="4">
+                                    <span className={this.state.visitante.vp_Activo === true ? "fa fa-check faIconMarginRight" : "fa fa-times faIconMarginRight"}></span>
+                                    Activo
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                        <FormGroup>
+                            <Row>
+                                <Col xs="2" className="negrita">
+                                    Direccion:
+                                </Col>
+                                <Col xs="6" className="border border-dark">
+                                    {this.state.visitante.vp_Direccion}
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                    </CardBody>
+                </Card>
+
+                <Row className='pt-2'>
+                    <Col xs="12" style={{ textAlign: 'right' }}>
+                        <Button
+                            type="button"
+                            color="primary"
+                            onClick={this.showDlgNota}
+                        >
+                            <span className='fas fa-plus-circle'></span>
+                            Agregar Nota/Comentario
+                        </Button>
+                    </Col>
+                </Row>
+
+                <Card>
+                    <CardHeader>
+                        <h4 style={{ textAlign: "center" }}>NOTAS / COMENTARIOS</h4>
+                    </CardHeader>
+                    <CardBody>
+                        <Table className="table table-striped border bt-0">
+                            <thead className="bg-info">
+                                <tr>
+                                    <th style={{ width: "15%" }}>Fecha</th>
+                                    <th style={{ width: "65%" }}>Nota</th>
+                                    <th style={{ width: "20%" }}></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.notas.map((nota) => {
+                                    return (
+                                        <tr key={nota.n_Id}>
+                                            <td>{nota.n_Fecha_Nota}</td>
+                                            <td>{nota.n_Nota}</td>
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className='btnMargenDerecho'
+                                                onClick={() => this.dlgEditarNota(nota)}
+                                            >
+                                                <span className="fa fa-edit"></span>
+                                                Editar
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                color="danger"
+                                                onClick={() => this.borrarNota(nota.n_Id)}
+                                            >
+                                                <span className="fa fa-times"></span>
+                                                Borrar
+                                            </Button>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </Table>
+                    </CardBody>
                 </Card>
                 <FormGroup>
                     <Row>
@@ -268,7 +280,7 @@ export default class DetalleVisitante extends Component {
                 <Modal isOpen={this.state.showDlgNota} size="lg">
                     <Form onSubmit={this.guardarNota}>
                         <ModalHeader>
-                            <h2>Datos de la nota</h2>
+                            <h2>Nota/Comentario de Seguimiento</h2>
                         </ModalHeader>
                         <ModalBody>
                             <Alert color="warning">

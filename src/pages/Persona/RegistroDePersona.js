@@ -327,7 +327,6 @@ class RegistroDePersonal extends Component {
     }
 
     handleBlur = (e) => {
-
         this.setState({
             form: {
                 ...this.state.form,
