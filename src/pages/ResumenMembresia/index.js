@@ -1,6 +1,5 @@
 import React, { Component, Box, Tipography } from 'react';
 import helpers from '../../components/Helpers';
-import axios from 'axios';
 import {
     Form, FormGroup, Input, Button, Row, Col, Label, ResponsiveContainer,
     Container, FormFeedback, Card, CardBody, CardTitle, CardHeader, CardFooter,

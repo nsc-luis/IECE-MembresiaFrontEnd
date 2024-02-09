@@ -4,6 +4,7 @@ import {
     Container, Button, Input, Modal, ModalBody,
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, FormGroup
 } from 'reactstrap';
+import ReactModal from 'react-modal'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 import '../../assets/css/index.css';
 import TableToExcel from "@linways/table-to-excel";
@@ -1028,11 +1029,12 @@ class ResumenTransacciones extends Component {
                         </CardBody>
                     </Card>
                 </Container>
-                <Modal isOpen={this.state.modal}>
-                    <ModalBody>
-                        Procesando...
-                    </ModalBody>
-                </Modal>
+                <ReactModal
+                isOpen={this.state.modal}
+                style={helpers.modalDeCarga}
+            >
+                Procesando...
+            </ReactModal>
             </>
         )
     }

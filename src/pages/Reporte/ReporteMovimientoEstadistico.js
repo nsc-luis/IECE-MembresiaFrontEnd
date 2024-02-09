@@ -4,7 +4,7 @@ import {
     Container, Button, Input,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, FormGroup, Modal, ModalBody
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { Fragment, useEffect, useState } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -103,7 +103,7 @@ export default function ReporteMovimientoEstadistico() {
             getDataSector(sector);
             await helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
                 .then(resDto => {
-                    console.log("InfoDis: ", resDto.data);
+                    //console.log("InfoDis: ", resDto.data);
                     setInfoDis(resDto.data)
 
                 }))
@@ -146,10 +146,8 @@ export default function ReporteMovimientoEstadistico() {
                 setExcelData(res.data.datos)
                 setMensajeDelProceso("")
                 setModalShow(false)
-
-
-                console.log("res-data-datos: ", res.data.datos);
-
+                window.scrollTo(0, 0)
+                //console.log("res-data-datos: ", res.data.datos);
             })
 
         )
@@ -681,12 +679,12 @@ export default function ReporteMovimientoEstadistico() {
                 </div>
             </Container>
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-            </Modal>
-
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }
