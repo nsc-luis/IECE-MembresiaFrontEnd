@@ -103,6 +103,29 @@ class InformeAnualPastor extends Component {
                 coros: 0,
                 gruposDeCanto: 0,
             },
+            adquisicionesSector: {
+                predios: 0,
+                casas: 0,
+                edificios: 0,
+                templos: 0,
+                vehiculos: 0
+            },
+            sesiones: {
+                enElDistrito: 0,
+                conElPersonalDocente: 0,
+                conSociedadesFemeniles: 0,
+                conSociedadesJuveniles: 0,
+                conDepartamentosInfantiles: 0,
+                conCorosYGruposDeCanto: 0
+            },
+            reuniones: {
+                enElDistrito: 0,
+                conElPersonalDocente: 0,
+                conSociedadesFemeniles: 0,
+                conSociedadesJuveniles: 0,
+                conDepartamentosInfantiles: 0,
+                conCorosYGruposDeCanto: 0
+            },
             datosEstadisticos: {
                 altasBautizados: {
                     altaHogar: 0,
@@ -203,6 +226,9 @@ class InformeAnualPastor extends Component {
                 this.state.trabajoEvangelismo = res.data.trabajoEvangelismo !== null ? res.data.trabajoEvangelismo : this.state.trabajoEvangelismo;
                 this.state.misiones = res.data.cultosMisionSector !== null ? res.data.cultosMisionSector : this.state.cultosMisionSector;
                 this.state.organizaciones = res.data.organizaciones !== null ? res.data.organizaciones : this.state.organizaciones;
+                this.state.adquisicionesSector = res.data.adquisicionesSector !== null ? res.data.adquisicionesSector : this.state.adquisicionesSector;
+                this.state.sesiones = res.data.sesiones !== null ? res.data.sesiones : this.state.sesiones;
+                this.state.reuniones = res.data.reuniones !== null ? res.data.reuniones : this.state.reuniones;
                 this.obtenerMisiones();
                 this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
@@ -298,6 +324,9 @@ class InformeAnualPastor extends Component {
             trabajoEvangelismo: this.state.trabajoEvangelismo,
             CultosMisionSector: this.state.misiones,
             organizaciones: this.state.organizaciones,
+            adquisicionesSector: this.state.adquisicionesSector,
+            reuniones: this.state.reuniones,
+            sesiones: this.state.sesiones,
         }
 
         await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
@@ -1122,7 +1151,10 @@ class InformeAnualPastor extends Component {
                                                             Predios
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesSector.predios'
+                                                                value={this.state.adquisicionesSector.predios}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1130,7 +1162,10 @@ class InformeAnualPastor extends Component {
                                                             Casas
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesSector.casas'
+                                                                value={this.state.adquisicionesSector.casas}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1138,7 +1173,10 @@ class InformeAnualPastor extends Component {
                                                             Edificios
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesSector.edificios'
+                                                                value={this.state.adquisicionesSector.edificios}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1146,7 +1184,10 @@ class InformeAnualPastor extends Component {
                                                             Templos
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesSector.templos'
+                                                                value={this.state.adquisicionesSector.templos}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1154,7 +1195,10 @@ class InformeAnualPastor extends Component {
                                                             Vehículos
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesSector.vehiculos'
+                                                                value={this.state.adquisicionesSector.vehiculos}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -1183,10 +1227,16 @@ class InformeAnualPastor extends Component {
                                                             En el Distrito
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='sesiones.enElDistrito'
+                                                                value={this.state.sesiones.enElDistrito}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='reuniones.enElDistrito'
+                                                                value={this.state.reuniones.enElDistrito}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1194,10 +1244,16 @@ class InformeAnualPastor extends Component {
                                                             Con el personal docente
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='sesiones.conElPersonalDocente'
+                                                                value={this.state.sesiones.conElPersonalDocente}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='reuniones.conElPersonalDocente'
+                                                                value={this.state.reuniones.conElPersonalDocente}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1205,10 +1261,16 @@ class InformeAnualPastor extends Component {
                                                             Con Sociedades o Dept. femenil
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='sesiones.conSociedadesFemeniles'
+                                                                value={this.state.sesiones.conSociedadesFemeniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='reuniones.conSociedadesFemeniles'
+                                                                value={this.state.reuniones.conSociedadesFemeniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1216,10 +1278,16 @@ class InformeAnualPastor extends Component {
                                                             Con Sociedades o Depto. Juvenil
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='sesiones.conSociedadesJuveniles'
+                                                                value={this.state.sesiones.conSociedadesJuveniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='reuniones.conSociedadesJuveniles'
+                                                                value={this.state.reuniones.conSociedadesJuveniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1227,10 +1295,16 @@ class InformeAnualPastor extends Component {
                                                             Con Depto. infantil
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='sesiones.conDepartamentosInfantiles'
+                                                                value={this.state.sesiones.conDepartamentosInfantiles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='reuniones.conDepartamentosInfantiles'
+                                                                value={this.state.reuniones.conDepartamentosInfantiles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1238,10 +1312,16 @@ class InformeAnualPastor extends Component {
                                                             Con Coros y Grupos de canto
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='sesiones.conCorosYGruposDeCanto'
+                                                                value={this.state.sesiones.conCorosYGruposDeCanto}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='reuniones.conCorosYGruposDeCanto'
+                                                                value={this.state.reuniones.conCorosYGruposDeCanto}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                 </Col>
