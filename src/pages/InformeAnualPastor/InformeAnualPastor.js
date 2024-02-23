@@ -126,6 +126,24 @@ class InformeAnualPastor extends Component {
                 conDepartamentosInfantiles: 0,
                 conCorosYGruposDeCanto: 0
             },
+            construccionesInicio :{
+                idTipoFaseConstruccion: 1,
+                colocacionPrimeraPiedra: 0,
+                templo: 0,
+                casaDeOracion: 0,
+                casaPastoral: 0,
+                anexos: 0,
+                remodelacion: 0
+            },
+            construccionesConclusion:{
+                idTipoFaseConstruccion: 2,
+                colocacionPrimeraPiedra: 0,
+                templo: 0,
+                casaDeOracion: 0,
+                casaPastoral: 0,
+                anexos: 0,
+                remodelacion: 0
+            },
             datosEstadisticos: {
                 altasBautizados: {
                     altaHogar: 0,
@@ -229,6 +247,8 @@ class InformeAnualPastor extends Component {
                 this.state.adquisicionesSector = res.data.adquisicionesSector !== null ? res.data.adquisicionesSector : this.state.adquisicionesSector;
                 this.state.sesiones = res.data.sesiones !== null ? res.data.sesiones : this.state.sesiones;
                 this.state.reuniones = res.data.reuniones !== null ? res.data.reuniones : this.state.reuniones;
+                this.state.construccionesInicio = res.data.construccionesInicio !== null ? res.data.construccionesInicio : this.state.construccionesInicio;
+                this.state.construccionesConclusion = res.data.construccionesConclusion !== null ? res.data.construccionesConclusion : this.state.construccionesConclusion;
                 this.obtenerMisiones();
                 this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
@@ -327,6 +347,8 @@ class InformeAnualPastor extends Component {
             adquisicionesSector: this.state.adquisicionesSector,
             reuniones: this.state.reuniones,
             sesiones: this.state.sesiones,
+            construccionesInicio: this.state.construccionesInicio,
+            construccionesConclusion: this.state.construccionesConclusion,
         }
 
         await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
@@ -1340,10 +1362,16 @@ class InformeAnualPastor extends Component {
                                                             Colocación de 1a. Piedra
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesInicio.colocacionPrimeraPiedra'
+                                                                value={this.state.construccionesInicio.colocacionPrimeraPiedra}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesConclusion.colocacionPrimeraPiedra'
+                                                                value={this.state.construccionesConclusion.colocacionPrimeraPiedra}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1351,10 +1379,16 @@ class InformeAnualPastor extends Component {
                                                             Templo
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesInicio.templo'
+                                                                value={this.state.construccionesInicio.templo}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesConclusion.templo'
+                                                                value={this.state.construccionesConclusion.templo}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1362,10 +1396,16 @@ class InformeAnualPastor extends Component {
                                                             Casa de Oración
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesInicio.casaDeOracion'
+                                                                value={this.state.construccionesInicio.casaDeOracion}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesConclusion.casaDeOracion'
+                                                                value={this.state.construccionesConclusion.casaDeOracion}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1373,10 +1413,16 @@ class InformeAnualPastor extends Component {
                                                             Casa pastoral
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesInicio.casaPastoral'
+                                                                value={this.state.construccionesInicio.casaPastoral}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesConclusion.casaPastoral'
+                                                                value={this.state.construccionesConclusion.casaPastoral}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1384,10 +1430,16 @@ class InformeAnualPastor extends Component {
                                                             Anexos
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesInicio.anexos'
+                                                                value={this.state.construccionesInicio.anexos}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesConclusion.anexos'
+                                                                value={this.state.construccionesConclusion.anexos}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1395,10 +1447,16 @@ class InformeAnualPastor extends Component {
                                                             Remodelación
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesInicio.remodelacion'
+                                                                value={this.state.construccionesInicio.remodelacion}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number'></Input>
+                                                        <Input type='number' min={0} max={9999}
+                                                                name='construccionesConclusion.remodelacion'
+                                                                value={this.state.construccionesConclusion.remodelacion}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                 </Col>
