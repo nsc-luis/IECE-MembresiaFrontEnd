@@ -42,6 +42,8 @@ class InformeAnualPastor extends Component {
             },
             misiones: [],
             desgloseMoviemientoEstadistico: [],
+            otraActividadTextArea: "",
+            otrasActividades: [],
             visitasPastor: {
                 porPastor: 0,
                 porAncianosAux: 0,
@@ -330,6 +332,26 @@ class InformeAnualPastor extends Component {
             })
 
         )
+    }
+
+    agregarActividad(){
+        const nuevaActividad = {
+            idOtraActividad: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1,
+            idInforme : 0,
+            descripcion: this.state.otraActividadTextArea,
+            numDeOrder: 0
+        }
+        this.state.otrasActividades.push(nuevaActividad);
+        this.setState({
+            otraActividadTextArea: ''
+        });
+    }
+
+    handleOtraActividad(event) {
+        const { name, value } = event.target;
+        this.setState({
+            [name]: value
+        });
     }
 
     handleChange(event) {
@@ -1749,9 +1771,22 @@ class InformeAnualPastor extends Component {
                                             <Row className='titulo'>
                                                 OTRAS ACTIVIDADES
                                             </Row>
-                                            <Row>
-                                                <Input type='textarea'></Input>
-                                            </Row>
+                                        </Col>
+                                        <Col xs="11" sm="11" lg="11">
+                                            <Input style={{ maxHeight: '20em', minHeight: '2em' }} className='m-2' type='textarea'
+                                            name='otraActividadTextArea'
+                                            value={this.state.otraActividadTextArea}
+                                            onChange={(e) => this.handleOtraActividad(e)}></Input>
+                                        </Col>
+                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                            <Button color='success' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-check'></span></Button>
+                                        </Col>
+                                        <Col xs="12" sm="12" lg="12">
+                                            <ListGroup>
+                                                {this.state.otrasActividades.length > 0 && this.state.otrasActividades.map((obj, index) => (
+                                                    <ListGroupItem key={obj.idOtraActividad}>{index + 1}.-{obj.descripcion}</ListGroupItem>
+                                                ))}
+                                            </ListGroup>
                                         </Col>
                                     </Row>
                                     <Row>
@@ -1779,7 +1814,7 @@ class InformeAnualPastor extends Component {
                                                     Fecha de reunión:
                                                 </Col>
                                                 <Col xs="4" sm="4" lg="4">
-                                                <Input type='date'
+                                                    <Input type='date'
                                                         name='informe.fechaReunion'
                                                         value={this.state.informe.fechaReunion}
                                                         onChange={(e) => this.handleChange(e)}></Input>
