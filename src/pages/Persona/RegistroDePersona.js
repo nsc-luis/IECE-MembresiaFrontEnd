@@ -327,11 +327,10 @@ class RegistroDePersonal extends Component {
     }
 
     handleBlur = (e) => {
-
         this.setState({
             form: {
                 ...this.state.form,
-                [e.target.name]: e.target.value.toUpperCase().trim()
+                [e.target.name]: e.target.value.trim()
             }
         })
     }

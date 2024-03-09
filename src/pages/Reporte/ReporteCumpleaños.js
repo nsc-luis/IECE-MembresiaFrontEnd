@@ -2,9 +2,9 @@ import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button, FormGroup, Input,
-    CardTitle, Card, CardBody, Table, Modal, ModalBody, /* UncontrolledCollapse, */ Row, Col
+    CardTitle, Card, CardBody, Table, Modal, ModalBody, UncontrolledCollapse, Row, Col
 } from 'reactstrap';
-
+import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
@@ -76,15 +76,16 @@ export default function ReporteCumpleaños() {
             getTitulo(sector)
 
             console.log("Distrito al Final: ", infoDis)
+            window.scrollTo(0,0)
         }
     }, [])
 
     const getInfoDistrito = () => {
-        console.log("Dto: ", dto)
+        //console.log("Dto: ", dto)
         helpers.validaToken().then(helpers.authAxios.get("/Distrito/" + dto)
             .then(res => {
                 setInfoDis(res.data)
-                console.log("Distrito: ", res.data)
+                //console.log("Distrito: ", res.data)
             })
         )
     }
@@ -107,12 +108,12 @@ export default function ReporteCumpleaños() {
         );
     }
 
-    const getPersonasSector = (sec) => {
+    const getPersonasSector = async (sec) => {
 
         setMensajeDelProceso("Procesando...")
         setModalShow(true)
 
-        helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
+        await helpers.validaToken().then(helpers.authAxios.get("/Persona/GetBySector/" + sec)
             .then(res => {
                 const sortedData = res.data.map(d => (d.persona)).sort((a, b) => {
                     return moment(a.per_Fecha_Nacimiento).dayOfYear() - moment(b.per_Fecha_Nacimiento).dayOfYear()
@@ -120,6 +121,7 @@ export default function ReporteCumpleaños() {
                 setPersonas(sortedData.filter(per => per.per_Activo === true))
                 setMensajeDelProceso("")
                 setModalShow(false)
+                window.scrollTo(0, 0)
             })
         );
     }
@@ -331,17 +333,12 @@ export default function ReporteCumpleaños() {
                 </Card>
             </Container>
             {/*Modal success*/}
-            <Modal isOpen={modalShow}>
-                {/* <ModalHeader>
-                        Solo prueba.
-                    </ModalHeader> */}
-                <ModalBody>
-                    {mensajeDelProceso}
-                </ModalBody>
-                {/* <ModalFooter>
-                        <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
-                    </ModalFooter> */}
-            </Modal>
+            <ReactModal
+                isOpen={modalShow}
+                style={helpers.modalDeCarga}
+            >
+                {mensajeDelProceso}
+            </ReactModal>
         </>
     )
 }

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
-    Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter, ModalHeader, ModalFooter,
-    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
+    Container, Button, Input, Modal, ModalBody, Alert, CardFooter, ModalHeader, ModalFooter,
+    Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup
 } from 'reactstrap';
 import DetalleVisitante from './DetalleVisitante';
 import './style.css'
@@ -13,6 +13,8 @@ export default class RegistroVisitantes extends Component {
         super(props)
         this.state = {
             visitantes: [],
+            visitantesPermanentes: [],
+            visitantesOcasionales: [],
             showForm: false,
             currentVisitante: {
                 vp_Activo: 1,
@@ -50,6 +52,9 @@ export default class RegistroVisitantes extends Component {
     componentDidMount() {
         this.getVisitantes();
         window.scrollTo(0, 0);
+        this.setState({
+
+        })
     }
 
     mostrarFormulario = () => {
@@ -150,7 +155,7 @@ export default class RegistroVisitantes extends Component {
 
     getVisitantes = async () => {
         try {
-            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Visitante/VisitanteBySector/${localStorage.getItem("sector")}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`${helpers.url_api}/Visitante/VisitantesBySector/${localStorage.getItem("sector")}`)
                 .then(res => {
                     const prioridades = []
                     for (var i = 1; i <= res.data.visitantes.length; i++) {
@@ -158,6 +163,8 @@ export default class RegistroVisitantes extends Component {
                     }
                     this.setState({
                         visitantes: res.data.visitantes,
+                        visitantesPermanentes: res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'PERMANENTE' && visitante.visitante.vp_Activo),
+                        visitantesOcasionales: res.data.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'OCASIONAL' && visitante.visitante.vp_Activo),
                         prioridades: prioridades
                     })
                 })
@@ -178,7 +185,7 @@ export default class RegistroVisitantes extends Component {
 
     bajaVisitante = async () => {
         this.setState({
-            bajaVisitante_n_Fecha_NotaInvalid: this.state.bajaVisitante.n_Fecha_Nota === null ? true: false,
+            bajaVisitante_n_Fecha_NotaInvalid: this.state.bajaVisitante.n_Fecha_Nota === null ? true : false,
             bajaVisitante_n_NotaInvalid: this.state.bajaVisitante.n_Nota === "" ? true : false
         })
         if (this.state.bajaVisitante.n_Fecha_Nota === null
@@ -201,7 +208,7 @@ export default class RegistroVisitantes extends Component {
 
     enviarInfo = async (e) => {
         e.preventDefault()
-        
+
         if (!this.state.editarRegistro) {
             this.setState({
                 //vp_Numero_ListaInvalid: this.state.currentVisitante.vp_Numero_Lista === "0", true: false,
@@ -215,13 +222,13 @@ export default class RegistroVisitantes extends Component {
                 || this.state.Fecha_Registro === null) {
                 return false
             }
-            
+
             let VisitanteNota = {
                 visitante: this.state.currentVisitante,
                 n_Nota: this.state.n_Nota,
                 n_Fecha_Nota: this.state.Fecha_Registro
             }
-            
+
             try {
                 await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Visitante/NuevoVisitante`, VisitanteNota)
                     .then(res => {
@@ -261,8 +268,21 @@ export default class RegistroVisitantes extends Component {
     }
 
     render() {
+        console.log("visitantesPermanentes ", this.state.visitantesPermanentes)
         return (
             <Container>
+                <FormGroup>
+                    <Row>
+                        <Col xs="12">
+                            <Alert color="warning">
+                                <strong>AVISO: </strong>
+                                <ul>
+                                    <li>Para registrar una Visitante, presione el Botón <strong>"Registrar Nuevo Visitante"</strong>.</li>
+                                </ul>
+                            </Alert>
+                        </Col>
+                    </Row>
+                </FormGroup>
                 {!this.state.showDetalle &&
                     <FormGroup>
                         <Row>
@@ -273,7 +293,7 @@ export default class RegistroVisitantes extends Component {
                                     onClick={this.mostrarFormulario}
                                     hidden={this.state.showForm}
                                 >
-                                    Registrar nuevo visitante
+                                    Registrar Nuevo Visitante
                                 </Button>
                             </Col>
                         </Row>
@@ -297,7 +317,7 @@ export default class RegistroVisitantes extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="2">
-                                                * Nombre:
+                                                * Nombre Completo:
                                             </Col>
                                             <Col xs="4">
                                                 <Input
@@ -310,7 +330,7 @@ export default class RegistroVisitantes extends Component {
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
                                             <Col xs="2">
-                                                {/* *  */}Teléfono de contacto:
+                                                {/* *  */}Teléfono de Contacto:
                                             </Col>
                                             <Col xs="4">
                                                 <Input
@@ -327,7 +347,7 @@ export default class RegistroVisitantes extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="2">
-                                                {/* *  */}Direccion:
+                                                {/* *  */}Dirección Completa:
                                             </Col>
                                             <Col xs="8">
                                                 <Input
@@ -345,7 +365,7 @@ export default class RegistroVisitantes extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="2">
-                                                * Tipo de visitante:
+                                                * Tipo de Visitante:
                                             </Col>
                                             <Col xs="4">
                                                 <Input
@@ -356,32 +376,35 @@ export default class RegistroVisitantes extends Component {
                                                     invalid={this.state.vp_Tipo_VisitanteInvalid}
                                                 >
                                                     <option value="0">Selecciona una opcion</option>
-                                                    <option value="PERMANENTE">Permanente</option>
-                                                    <option value="OCASIONAL">Ocasional</option>
+                                                    <option value="PERMANENTE">PERMANENTE</option>
+                                                    <option value="OCASIONAL">OCASIONAL</option>
                                                 </Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
-                                            <Col xs="2">
-                                                Numero en la lista
-                                            </Col>
-                                            <Col xs="4">
-                                                <Input
-                                                    type="select"
-                                                    name="vp_Numero_Lista"
-                                                    onChange={this.onChange}
-                                                    value={this.state.currentVisitante.vp_Numero_Lista}
-                                                    invalid={this.state.vp_Numero_ListaInvalid}
-                                                >
-                                                    <option value="0">Selecciona una opcion</option>
-                                                    {this.state.prioridades.map((p) => {
-                                                        return (
-                                                            <option key={p.llave} value={p.llave}>{p.valor}</option>
-                                                        )
-                                                    })
-                                                    }
-                                                </Input>
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
+                                            {/* {this.state.editarRegistro === true &&
+                                                <>
+                                                    <Col xs="2">
+                                                        Número en la lista
+                                                    </Col>
+                                                    <Col xs="4">
+                                                        <Input
+                                                            type="select"
+                                                            name="vp_Numero_Lista"
+                                                            onChange={this.onChange}
+                                                            value={this.state.currentVisitante.vp_Numero_Lista}
+                                                            invalid={this.state.vp_Numero_ListaInvalid}
+                                                        >
+                                                            <option value="0">Selecciona una opcion</option>
+                                                            {this.state.prioridades.map((p) => {
+                                                                return (
+                                                                    <option key={p.llave} value={p.llave}>{p.valor}</option>
+                                                                )
+                                                            })
+                                                            }
+                                                        </Input>
+                                                        <FormFeedback>Este campo es requerido</FormFeedback>
+                                                    </Col>
+                                                </>} */}
                                         </Row>
                                     </FormGroup>
 
@@ -390,7 +413,7 @@ export default class RegistroVisitantes extends Component {
                                             <FormGroup>
                                                 <Row>
                                                     <Col xs="2">
-                                                        * Fecha de registro:
+                                                        * Fecha de Registro:
                                                     </Col>
                                                     <Col xs="4">
                                                         <Input
@@ -454,31 +477,33 @@ export default class RegistroVisitantes extends Component {
                         {
                             this.state.visitantes.length > 0 &&
                             <Card>
-                                <h4 style={{ textAlign: 'center' }}>Visitantes del sector</h4>
+
                                 <CardBody>
+                                    <h4 style={{ textAlign: 'center' }}>VISITANTES PERMANENTES</h4>
                                     <Table className="table table-striped border bt-0">
                                         <thead className="bg-info">
                                             <tr>
-                                                <th style={{ width: "10%" }}>Prioridad</th>
-                                                <th style={{ width: "35%" }}>Nombre</th>
-                                                <th style={{ width: "15%" }}>Tipo</th>
-                                                <th style={{ width: "15%" }}>Estado</th>
-                                                <th style={{ width: "25%" }}></th>
+                                                <th style={{ width: "10%" }} className='text center'>No.</th>
+                                                <th style={{ width: "35%" }} className='text center'>Nombre</th>
+                                                <th style={{ width: "10%" }} className='text center'>Tipo</th>
+                                                <th style={{ width: "10%" }} className='text center'>Estatus</th>
+                                                <th style={{ width: "35%" }} className='text center'>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.visitantes.map((visitante) => {
+                                            {this.state.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'PERMANENTE' && visitante.visitante.vp_Activo).map((visitante, index) => {
                                                 return (
                                                     <tr key={visitante.vp_Id_Visitante}>
-                                                        <td>{visitante.vp_Numero_Lista}</td>
-                                                        <td>{visitante.vp_Nombre}</td>
-                                                        <td>{visitante.vp_Tipo_Visitante}</td>
-                                                        <td>{visitante.vp_Activo === true ? "Activo" : "Inactivo"}</td>
-                                                        <td>
+                                                        <td className='text center'>{index + 1}</td>
+                                                        <td>{visitante.visitante.vp_Nombre}</td>
+                                                        <td className='text center'>{visitante.visitante.vp_Tipo_Visitante}</td>
+                                                        <td className='text center'>{visitante.visitante.vp_Activo === true ? "ACTIVO" : "INACTIVO"}</td>
+                                                        <td className='text center'>
                                                             <Button
                                                                 color="secondary"
                                                                 type="button"
-                                                                onClick={() => this.showDetalle(visitante.vp_Id_Visitante)}
+                                                                className='m-1'
+                                                                onClick={() => this.showDetalle(visitante.visitante.vp_Id_Visitante)}
                                                             >
                                                                 <span className="fa fa-person"></span>
                                                                 Detalle
@@ -486,7 +511,8 @@ export default class RegistroVisitantes extends Component {
                                                             <Button
                                                                 color="success"
                                                                 type="button"
-                                                                onClick={() => this.editarVisitante(visitante)}
+                                                                className='m-1'
+                                                                onClick={() => this.editarVisitante(visitante.visitante)}
                                                             >
                                                                 <span className="fa fa-edit"></span>
                                                                 Editar
@@ -494,7 +520,63 @@ export default class RegistroVisitantes extends Component {
                                                             <Button
                                                                 color="danger"
                                                                 type="button"
-                                                                onClick={() => this.dlgBajaVisitante(visitante)}
+                                                                className='m-1'
+                                                                onClick={() => this.dlgBajaVisitante(visitante.visitante)}
+                                                            >
+                                                                <span className="fa fa-times"></span>
+                                                                Baja
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </Table>
+                                </CardBody>
+                                <CardBody>
+                                    <h4 style={{ textAlign: 'center' }}>VISITANTES OCASIONALES</h4>
+                                    <Table>
+                                        <thead className="bg-info">
+                                            <tr>
+                                                <th style={{ width: "10%" }} className='text center'>No.</th>
+                                                <th style={{ width: "35%" }} className='text center'>Nombre</th>
+                                                <th style={{ width: "10%" }} className='text center'>Tipo</th>
+                                                <th style={{ width: "10%" }} className='text center'>Estatus</th>
+                                                <th style={{ width: "35%" }} className='text center'>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.visitantes.filter(visitante => visitante.visitante.vp_Tipo_Visitante === 'OCASIONAL' && visitante.visitante.vp_Activo).map((visitante, index) => {
+                                                return (
+                                                    <tr key={visitante.vp_Id_Visitante}>
+                                                        <td className='text center'>{index + 1}</td>
+                                                        <td>{visitante.visitante.vp_Nombre}</td>
+                                                        <td className='text center'>{visitante.visitante.vp_Tipo_Visitante}</td>
+                                                        <td className='text center'>{visitante.visitante.vp_Activo === true ? "ACTIVO" : "INACTIVO"}</td>
+                                                        <td className='text center'>
+                                                            <Button
+                                                                color="secondary"
+                                                                type="button"
+                                                                className='m-1'
+                                                                onClick={() => this.showDetalle(visitante.visitante.vp_Id_Visitante)}
+                                                            >
+                                                                <span className="fa fa-person"></span>
+                                                                Detalle
+                                                            </Button>
+                                                            <Button
+                                                                color="success"
+                                                                type="button"
+                                                                className='m-1'
+                                                                onClick={() => this.editarVisitante(visitante.visitante)}
+                                                            >
+                                                                <span className="fa fa-edit"></span>
+                                                                Editar
+                                                            </Button>
+                                                            <Button
+                                                                color="danger"
+                                                                type="button"
+                                                                className='m-1'
+                                                                onClick={() => this.dlgBajaVisitante(visitante.visitante)}
                                                             >
                                                                 <span className="fa fa-times"></span>
                                                                 Baja
@@ -593,7 +675,7 @@ export default class RegistroVisitantes extends Component {
                             type="button"
                             onClick={this.bajaVisitante}
                         >
-                            Aceptar
+                            Dar de Baja
                         </Button>
                     </ModalFooter>
                 </Modal>

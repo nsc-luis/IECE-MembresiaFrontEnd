@@ -48,7 +48,6 @@ class Sidebar extends Component {
     handle_LinkEncabezado = (seccion, componente) => {
         localStorage.setItem('seccion', seccion);
         localStorage.setItem('componente', componente);
-        window.scrollTo(0, 0)
     }
 
     openModalEditaPersona = async () => {
@@ -147,6 +146,8 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", true);
         localStorage.setItem("nvaAltaComunion", true);
+        document.location.href = "/RegistroDePersona";
+        //window.location.reload();
     }
 
     handle_AltaRestitucion = () => {
@@ -166,6 +167,8 @@ class Sidebar extends Component {
         localStorage.setItem("idPersona", "0");
         localStorage.setItem("nvaAltaBautizado", false);
         localStorage.setItem("nvaAltaComunion", false);
+        window.location = "/RegistroDePersona";
+        //window.location.reload();
     }
 
     handle_Reactivacion = () => {
@@ -338,7 +341,13 @@ class Sidebar extends Component {
                                 </Link>
                                 <div id="collapseAltaBautizado" className="collapse" aria-labelledby="headingBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
-                                        <Link className="collapse-item" onClick={this.handle_AltaPersonaBautizada} to="/RegistroDePersona">Bautismo</Link>
+                                        <Link
+                                            className="collapse-item"
+                                            onClick={this.handle_AltaPersonaBautizada}
+                                            to="/RegistroDePersona"
+                                        >
+                                            Bautismo
+                                        </Link>
                                         <Link className="collapse-item" to="/AltaRestitucion" onClick={this.handle_AltaRestitucion}>Restitución</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilio" onClick={this.handle_AltaCambioDomicilio}>Cambio de Domicilio</Link>
                                     </div>
@@ -553,15 +562,6 @@ class Sidebar extends Component {
                             <span>Habilitar Visibilidad Abierta</span>
                         </Link>
                     </li> */}
-                    <li className="nav-item">
-                        <Link
-                            className="nav-link"
-                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Registro de visitantes.')}
-                            to="/RegistroVisitantes">
-                            <i className="fas fa-user-cog"></i>
-                            <span>Registro de visitantes</span>
-                        </Link>
-                    </li>
 
                     <li className="nav-item">
                         <Link
@@ -648,6 +648,16 @@ class Sidebar extends Component {
                         </Link>
                     </li>
 
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            onClick={() => this.handle_LinkEncabezado('Transacciones especiales', 'Visitantes')}
+                            to="/RegistroVisitantes">
+                            <i className="fas fa-user-cog"></i>
+                            <span>Visitantes</span>
+                        </Link>
+                    </li>
+
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
@@ -711,6 +721,10 @@ class Sidebar extends Component {
                                     to="/ReporteMisiones"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Misiones de Evangelismo")}
                                 >Lista de Misiones</Link>
+                                <Link className="collapse-item text-wrap"
+                                    to="/ReporteVisitantes"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Lista de Visitantes")}
+                                >Lista de Visitantes</Link>
                                 <Link className="collapse-item text-wrap"
                                     to="/ReporteMovimientoEstadistico"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Reporte de Movimientos Estadísticos")}

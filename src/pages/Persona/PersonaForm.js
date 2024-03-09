@@ -631,6 +631,7 @@ class PersonaForm extends Component {
         }
 
         return (
+            console.log("Variable:", form),
             <React.Fragment>
                 {/* <h2 className="text-info">{tituloAgregarEditar}</h2> */}
 

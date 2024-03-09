@@ -4,6 +4,7 @@ import {
     Container, Button, Input, Modal, ModalBody,
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, FormGroup
 } from 'reactstrap';
+import ReactModal from 'react-modal'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 import '../../assets/css/index.css';
 import TableToExcel from "@linways/table-to-excel";
@@ -342,8 +343,8 @@ class ResumenTransacciones extends Component {
             if (p.persona.per_Bautizado === true) {
                 personas.Bautizados.Adulto_Hombre = p.persona.per_Categoria === "ADULTO_HOMBRE" ? personas.Bautizados.Adulto_Hombre + 1 : personas.Bautizados.Adulto_Hombre + 0;
                 personas.Bautizados.Adulto_Mujer = p.persona.per_Categoria === "ADULTO_MUJER" ? personas.Bautizados.Adulto_Mujer + 1 : personas.Bautizados.Adulto_Mujer + 0;
-                personas.Bautizados.Joven_Hombre = p.persona.per_Categoria === "Joven_Hombre" ? personas.Bautizados.Joven_Hombre + 1 : personas.Bautizados.Joven_Hombre + 0;
-                personas.Bautizados.Joven_Mujer = p.persona.per_Categoria === "Joven_Mujer" ? personas.Bautizados.Joven_Mujer + 1 : personas.Bautizados.Joven_Mujer + 0;
+                personas.Bautizados.Joven_Hombre = p.persona.per_Categoria === "JOVEN_HOMBRE" ? personas.Bautizados.Joven_Hombre + 1 : personas.Bautizados.Joven_Hombre + 0;
+                personas.Bautizados.Joven_Mujer = p.persona.per_Categoria === "JOVEN_MUJER" ? personas.Bautizados.Joven_Mujer + 1 : personas.Bautizados.Joven_Mujer + 0;
             }
             else {
                 personas.NoBautizados.Joven_Hombre = p.persona.per_Categoria === "JOVEN_HOMBRE" ? personas.NoBautizados.Joven_Hombre + 1 : personas.NoBautizados.Joven_Hombre + 0;
@@ -1028,11 +1029,12 @@ class ResumenTransacciones extends Component {
                         </CardBody>
                     </Card>
                 </Container>
-                <Modal isOpen={this.state.modal}>
-                    <ModalBody>
-                        Procesando...
-                    </ModalBody>
-                </Modal>
+                <ReactModal
+                isOpen={this.state.modal}
+                style={helpers.modalDeCarga}
+            >
+                Procesando...
+            </ReactModal>
             </>
         )
     }
