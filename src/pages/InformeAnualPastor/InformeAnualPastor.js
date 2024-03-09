@@ -400,7 +400,7 @@ class InformeAnualPastor extends Component {
         await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res);
+                    alert('Informe guardado con éxito.');
                 }
                 else {
                     alert(res.data.mensaje)
@@ -957,7 +957,7 @@ class InformeAnualPastor extends Component {
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.hogares'
                                                                 value={this.state.datosEstadisticos.hogares}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
 
