@@ -43,6 +43,7 @@ class InformeAnualPastor extends Component {
             misiones: [],
             visitantesPermantes: [],
             desgloseMoviemientoEstadistico: [],
+            indiceActividad: null,
             otraActividadTextArea: "",
             otrasActividades: [],
             visitasPastor: {
@@ -346,17 +347,45 @@ class InformeAnualPastor extends Component {
         )
     }
 
-    agregarActividad(){
-        const nuevaActividad = {
-            idOtraActividad: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1,
-            idInforme : 0,
-            descripcion: this.state.otraActividadTextArea,
-            numDeOrder: 0
+    agregarActividad() {
+        if (this.state.indiceActividad === null) {
+            const nuevaActividad = {
+                idOtraActividad: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1,
+                idInforme: 0,
+                descripcion: this.state.otraActividadTextArea,
+                numDeOrder: 0
+            }
+            this.state.otrasActividades.push(nuevaActividad);
+            this.setState({
+                otraActividadTextArea: ''
+            });
+        } else {
+            const nuevoArray = [...this.state.otrasActividades]
+            nuevoArray[this.state.indiceActividad] = { ...nuevoArray[this.state.indiceActividad], descripcion: this.state.otraActividadTextArea }
+            this.setState({ otrasActividades: nuevoArray });
+            this.setState({
+                otraActividadTextArea: ''
+            });
+            this.setState({
+                indiceActividad: null
+            })
         }
-        this.state.otrasActividades.push(nuevaActividad);
+    }
+
+    editarActividad(index) {
+        const actividad = this.state.otrasActividades[index];
         this.setState({
-            otraActividadTextArea: ''
+            indiceActividad: index
+        })
+        this.setState({
+            otraActividadTextArea: actividad.descripcion
         });
+    }
+
+    eliminarActividad(index) {
+        this.setState(prevState => ({
+            otrasActividades: prevState.otrasActividades.filter((_,i) => i!== index)
+        }));
     }
 
     handleOtraActividad(event) {
@@ -767,7 +796,7 @@ class InformeAnualPastor extends Component {
                                                             <Input type='number' min={0} max={9999}
                                                                 name='trabajoEvangelismo.visitantesPermanentes'
                                                                 value={this.state.trabajoEvangelismo.visitantesPermanentes}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                onChange={(e) => this.handleChange(e)} readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -825,18 +854,6 @@ class InformeAnualPastor extends Component {
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col className='text-right my-2'>
-                                                    <Button
-                                                        type="button"
-                                                        color="success"
-                                                        className=""
-                                                        onClick={this.actualizarInforme}
-                                                    >
-                                                        Guardar cambios
-                                                    </Button>
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -1154,6 +1171,18 @@ class InformeAnualPastor extends Component {
                                                     </ListGroup>
                                                 </Col>
                                             </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col className='text-right my-2'>
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className=""
+                                                onClick={this.actualizarInforme}
+                                            >
+                                                Guardar cambios
+                                            </Button>
                                         </Col>
                                     </Row>
                                 </FormGroup>
@@ -1786,20 +1815,36 @@ class InformeAnualPastor extends Component {
                                         </Col>
                                         <Col xs="11" sm="11" lg="11">
                                             <Input style={{ maxHeight: '20em', minHeight: '2em' }} className='m-2' type='textarea'
-                                            name='otraActividadTextArea'
-                                            value={this.state.otraActividadTextArea}
-                                            onChange={(e) => this.handleOtraActividad(e)}></Input>
+                                                name='otraActividadTextArea'
+                                                value={this.state.otraActividadTextArea}
+                                                onChange={(e) => this.handleOtraActividad(e)}></Input>
                                         </Col>
                                         <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
                                             <Button color='success' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-check'></span></Button>
                                         </Col>
                                         <Col xs="12" sm="12" lg="12">
-                                            <ListGroup>
+                                            <ListGroup className='m-2'>
                                                 {this.state.otrasActividades.length > 0 && this.state.otrasActividades.map((obj, index) => (
-                                                    <ListGroupItem key={obj.idOtraActividad}>{index + 1}.-{obj.descripcion}</ListGroupItem>
+                                                    <Row>
+                                                        <Col xs="10" sm="10" lg="10">
+                                                            <ListGroupItem key={obj.idOtraActividad}>{index + 1}.-{obj.descripcion}</ListGroupItem>
+                                                        </Col>
+                                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                                            <Button color='info' onClick={() => this.editarActividad(index)}><span className='fa fa-icon fa-edit'></span></Button>
+                                                        </Col>
+                                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                                            <Button color='danger' onClick={() => this.eliminarActividad(index)}><span className='fa fa-icon fa-times'></span></Button>
+                                                        </Col>
+                                                    </Row>
                                                 ))}
                                             </ListGroup>
                                         </Col>
+                                        {/* <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                            <Button color='info' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-edit'></span></Button>
+                                        </Col>
+                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                            <Button color='danger' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-times'></span></Button>
+                                        </Col> */}
                                     </Row>
                                     <Row>
                                         <Col xs="12" sm="12" lg="12">
@@ -1832,6 +1877,18 @@ class InformeAnualPastor extends Component {
                                                         onChange={(e) => this.handleChange(e)}></Input>
                                                 </Col>
                                             </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col className='text-right my-2'>
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className=""
+                                                onClick={this.actualizarInforme}
+                                            >
+                                                Guardar cambios
+                                            </Button>
                                         </Col>
                                     </Row>
                                 </FormGroup>
