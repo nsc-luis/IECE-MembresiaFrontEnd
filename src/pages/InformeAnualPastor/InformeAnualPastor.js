@@ -41,6 +41,7 @@ class InformeAnualPastor extends Component {
                 dis_Alias: ''
             },
             misiones: [],
+            visitantesPermantes: [],
             desgloseMoviemientoEstadistico: [],
             otraActividadTextArea: "",
             otrasActividades: [],
@@ -292,6 +293,7 @@ class InformeAnualPastor extends Component {
                 this.obtenerMisiones();
                 this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
+                this.obtenerVisitantes();
                 console.log(res);
             })
         );
@@ -312,6 +314,16 @@ class InformeAnualPastor extends Component {
                 }
                 );
                 console.log(this.state.misiones);
+            })
+        );
+    }
+
+    obtenerVisitantes = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get("/Visitante/VisitantesBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                const visitantes = res.data.visitantes;
+                this.state.visitantesPermantes = visitantes.filter(f => f.visitante.vp_Tipo_Visitante === 'PERMANENTE')
+                this.state.trabajoEvangelismo.visitantesPermanentes = this.state.visitantesPermantes.length
             })
         );
     }
