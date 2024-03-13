@@ -41,7 +41,11 @@ class InformeAnualPastor extends Component {
                 dis_Alias: ''
             },
             misiones: [],
+            visitantesPermantes: [],
             desgloseMoviemientoEstadistico: [],
+            indiceActividad: null,
+            otraActividadTextArea: "",
+            otrasActividades: [],
             visitasPastor: {
                 porPastor: 0,
                 porAncianosAux: 0,
@@ -290,6 +294,7 @@ class InformeAnualPastor extends Component {
                 this.obtenerMisiones();
                 this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
+                this.obtenerVisitantes();
                 console.log(res);
             })
         );
@@ -314,6 +319,16 @@ class InformeAnualPastor extends Component {
         );
     }
 
+    obtenerVisitantes = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get("/Visitante/VisitantesBySector/" + localStorage.getItem('sector'))
+            .then(res => {
+                const visitantes = res.data.visitantes;
+                this.state.visitantesPermantes = visitantes.filter(f => f.visitante.vp_Tipo_Visitante === 'PERMANENTE')
+                this.state.trabajoEvangelismo.visitantesPermanentes = this.state.visitantesPermantes.length
+            })
+        );
+    }
+
     obtenerMovimientosEstadisticos = async () => {
 
         const startDate = moment([this.state.informe.anio, this.state.informe.mes - 1]).startOf('month').format("YYYY-MM-DD");
@@ -330,6 +345,54 @@ class InformeAnualPastor extends Component {
             })
 
         )
+    }
+
+    agregarActividad() {
+        if (this.state.indiceActividad === null) {
+            const nuevaActividad = {
+                idOtraActividad: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1,
+                idInforme: 0,
+                descripcion: this.state.otraActividadTextArea,
+                numDeOrder: 0
+            }
+            this.state.otrasActividades.push(nuevaActividad);
+            this.setState({
+                otraActividadTextArea: ''
+            });
+        } else {
+            const nuevoArray = [...this.state.otrasActividades]
+            nuevoArray[this.state.indiceActividad] = { ...nuevoArray[this.state.indiceActividad], descripcion: this.state.otraActividadTextArea }
+            this.setState({ otrasActividades: nuevoArray });
+            this.setState({
+                otraActividadTextArea: ''
+            });
+            this.setState({
+                indiceActividad: null
+            })
+        }
+    }
+
+    editarActividad(index) {
+        const actividad = this.state.otrasActividades[index];
+        this.setState({
+            indiceActividad: index
+        })
+        this.setState({
+            otraActividadTextArea: actividad.descripcion
+        });
+    }
+
+    eliminarActividad(index) {
+        this.setState(prevState => ({
+            otrasActividades: prevState.otrasActividades.filter((_,i) => i!== index)
+        }));
+    }
+
+    handleOtraActividad(event) {
+        const { name, value } = event.target;
+        this.setState({
+            [name]: value
+        });
     }
 
     handleChange(event) {
@@ -400,7 +463,7 @@ class InformeAnualPastor extends Component {
         await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res);
+                    alert('Informe guardado con éxito.');
                 }
                 else {
                     alert(res.data.mensaje)
@@ -733,7 +796,7 @@ class InformeAnualPastor extends Component {
                                                             <Input type='number' min={0} max={9999}
                                                                 name='trabajoEvangelismo.visitantesPermanentes'
                                                                 value={this.state.trabajoEvangelismo.visitantesPermanentes}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                onChange={(e) => this.handleChange(e)} readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -791,18 +854,6 @@ class InformeAnualPastor extends Component {
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col className='text-right my-2'>
-                                                    <Button
-                                                        type="button"
-                                                        color="success"
-                                                        className=""
-                                                        onClick={this.actualizarInforme}
-                                                    >
-                                                        Guardar cambios
-                                                    </Button>
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -957,7 +1008,7 @@ class InformeAnualPastor extends Component {
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.hogares'
                                                                 value={this.state.datosEstadisticos.hogares}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
 
@@ -1120,6 +1171,18 @@ class InformeAnualPastor extends Component {
                                                     </ListGroup>
                                                 </Col>
                                             </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col className='text-right my-2'>
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className=""
+                                                onClick={this.actualizarInforme}
+                                            >
+                                                Guardar cambios
+                                            </Button>
                                         </Col>
                                     </Row>
                                 </FormGroup>
@@ -1749,10 +1812,39 @@ class InformeAnualPastor extends Component {
                                             <Row className='titulo'>
                                                 OTRAS ACTIVIDADES
                                             </Row>
-                                            <Row>
-                                                <Input type='textarea'></Input>
-                                            </Row>
                                         </Col>
+                                        <Col xs="11" sm="11" lg="11">
+                                            <Input style={{ maxHeight: '20em', minHeight: '2em' }} className='m-2' type='textarea'
+                                                name='otraActividadTextArea'
+                                                value={this.state.otraActividadTextArea}
+                                                onChange={(e) => this.handleOtraActividad(e)}></Input>
+                                        </Col>
+                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                            <Button color='success' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-check'></span></Button>
+                                        </Col>
+                                        <Col xs="12" sm="12" lg="12">
+                                            <ListGroup className='m-2'>
+                                                {this.state.otrasActividades.length > 0 && this.state.otrasActividades.map((obj, index) => (
+                                                    <Row>
+                                                        <Col xs="10" sm="10" lg="10">
+                                                            <ListGroupItem key={obj.idOtraActividad}>{index + 1}.-{obj.descripcion}</ListGroupItem>
+                                                        </Col>
+                                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                                            <Button color='info' onClick={() => this.editarActividad(index)}><span className='fa fa-icon fa-edit'></span></Button>
+                                                        </Col>
+                                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                                            <Button color='danger' onClick={() => this.eliminarActividad(index)}><span className='fa fa-icon fa-times'></span></Button>
+                                                        </Col>
+                                                    </Row>
+                                                ))}
+                                            </ListGroup>
+                                        </Col>
+                                        {/* <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                            <Button color='info' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-edit'></span></Button>
+                                        </Col>
+                                        <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
+                                            <Button color='danger' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-times'></span></Button>
+                                        </Col> */}
                                     </Row>
                                     <Row>
                                         <Col xs="12" sm="12" lg="12">
@@ -1779,12 +1871,24 @@ class InformeAnualPastor extends Component {
                                                     Fecha de reunión:
                                                 </Col>
                                                 <Col xs="4" sm="4" lg="4">
-                                                <Input type='date'
+                                                    <Input type='date'
                                                         name='informe.fechaReunion'
                                                         value={this.state.informe.fechaReunion}
                                                         onChange={(e) => this.handleChange(e)}></Input>
                                                 </Col>
                                             </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col className='text-right my-2'>
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className=""
+                                                onClick={this.actualizarInforme}
+                                            >
+                                                Guardar cambios
+                                            </Button>
                                         </Col>
                                     </Row>
                                 </FormGroup>
