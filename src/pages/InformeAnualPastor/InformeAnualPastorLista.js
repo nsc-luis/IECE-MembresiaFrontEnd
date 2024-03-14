@@ -37,7 +37,7 @@ class InformeAnualPastorLista extends Component {
                 fechaReunion: null,
                 status: 0,
                 usu_id_usuario: 0,
-                fechaRegistro: null,
+                fechaRegistro: new Date().toDateString(),
             }
         }
     }
@@ -57,7 +57,7 @@ class InformeAnualPastorLista extends Component {
                 this.setState({
                     distrito: res.data,
                     nuevoInforme: {
-                        ...this.state,
+                        ...this.state.nuevoInforme,
                         idDistrito: res.data.dis_Id_Distrito,
                         usu_id_usuario: this.infoSesion.pem_Id_Ministro
                     }
@@ -73,7 +73,7 @@ class InformeAnualPastorLista extends Component {
                 this.setState({
                     sector: res.data.sector[0],
                     nuevoInforme: {
-                        ...this.state,
+                        ...this.state.nuevoInforme,
                         idSector: res.data.sector[0].sec_Id_Sector,
                     }
                 })

@@ -291,6 +291,7 @@ class InformeAnualPastor extends Component {
                 this.state.regularizacionPatNac = res.data.regularizacionPatNac !== null ? res.data.regularizacionPatNac : this.state.regularizacionPatNac;
                 this.state.regularizacionPatIg = res.data.regularizacionPatIg !== null ? res.data.regularizacionPatIg : this.state.regularizacionPatIg;
                 this.state.movimientoEconomico = res.data.movimientoEconomico !== null ? res.data.movimientoEconomico : this.state.movimientoEconomico;
+                this.state.otrasActividades = res.data.otrasActividades !== null ? res.data.otrasActividades : this.state.otrasActividades;
                 this.obtenerMisiones();
                 this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
@@ -350,10 +351,10 @@ class InformeAnualPastor extends Component {
     agregarActividad() {
         if (this.state.indiceActividad === null) {
             const nuevaActividad = {
-                idOtraActividad: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1,
+                idOtraActividad: 0,
                 idInforme: 0,
                 descripcion: this.state.otraActividadTextArea,
-                numDeOrder: 0
+                numDeOrden: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1
             }
             this.state.otrasActividades.push(nuevaActividad);
             this.setState({
@@ -361,7 +362,7 @@ class InformeAnualPastor extends Component {
             });
         } else {
             const nuevoArray = [...this.state.otrasActividades]
-            nuevoArray[this.state.indiceActividad] = { ...nuevoArray[this.state.indiceActividad], descripcion: this.state.otraActividadTextArea }
+            nuevoArray[this.state.indiceActividad] = { ...nuevoArray[this.state.indiceActividad], descripcion: this.state.otraActividadTextArea, numDeOrden: this.state.indiceActividad + 1 }
             this.setState({ otrasActividades: nuevoArray });
             this.setState({
                 otraActividadTextArea: ''
@@ -458,6 +459,7 @@ class InformeAnualPastor extends Component {
             regularizacionPatNac: this.state.regularizacionPatNac,
             regularizacionPatIg: this.state.regularizacionPatIg,
             movimientoEconomico: this.state.movimientoEconomico,
+            otrasActividades: this.state.otrasActividades,
         }
 
         await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
@@ -1827,7 +1829,7 @@ class InformeAnualPastor extends Component {
                                                 {this.state.otrasActividades.length > 0 && this.state.otrasActividades.map((obj, index) => (
                                                     <Row>
                                                         <Col xs="10" sm="10" lg="10">
-                                                            <ListGroupItem key={obj.idOtraActividad}>{index + 1}.-{obj.descripcion}</ListGroupItem>
+                                                            <ListGroupItem key={obj.numDeOrden}>{index + 1}.-{obj.descripcion}</ListGroupItem>
                                                         </Col>
                                                         <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
                                                             <Button color='info' onClick={() => this.editarActividad(index)}><span className='fa fa-icon fa-edit'></span></Button>
