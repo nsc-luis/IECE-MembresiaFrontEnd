@@ -47,6 +47,7 @@ class InformeAnualPastorLista extends Component {
         this.getDistrito();
         this.getSector();
         this.obtenerInformes();
+        helpers.handle_LinkEncabezado("Seccion: Informes", "Listado de Informes Pastorales")
         console.log(this.infoSesion);
     }
 
@@ -287,9 +288,9 @@ class InformeAnualPastorLista extends Component {
                                                 <td>{obj.mes}</td>
                                                 <td className='text-center'>
                                                     <Link to={{
-                                                        pathname: "/InformeAnualPastor/" + obj.idInforme,
+                                                        pathname: "/InformePastor/" + obj.idInforme,
                                                         id: obj.idInforme
-                                                    }} className="btn btn-info btn-sm">
+                                                    }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
                                                         Detalles
                                                     </Link>
                                                 </td>
