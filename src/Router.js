@@ -56,8 +56,8 @@ import Administracion from './pages/PersonalAdministrativo/Administracion';
 import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDistritales';
 import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
 import OrganismoInterno from './pages/OrganismoInterno'
-import InformeAnualPastor from './pages/InformePastor/InformePastor';
-import InformeAnualPastorLista from './pages/InformePastor/InformePastorLista';
+import InformePastor from './pages/InformePastor/InformePastor';
+import InformePastorLista from './pages/InformePastor/InformePastorLista';
 import SantuarioyCasaPastoral from './pages/SantuariosyCasasPastorales';
 import Misiones from './pages/Misiones';
 import RegistroVisitantes from './pages/RegistroVisitantes';
@@ -148,9 +148,9 @@ class Router extends Component {
                         <Route exact path="/ReporteMisiones" component={ReporteMisiones} />
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
 
-                        {/* Informe Anual Pastor*/}
-                        <Route exact path="/InformesPastorales" component={InformeAnualPastorLista} />
-                        <Route exact path="/InformePastor/:id" component={InformeAnualPastor} />
+                        {/* Informe  Pastor*/}
+                        <Route exact path="/InformesPastorales" component={InformePastorLista} />
+                        <Route exact path="/InformePastor/:id" component={InformePastor} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />
                 </Switch>

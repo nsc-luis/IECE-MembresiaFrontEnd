@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-class InformeAnualPastorLista extends Component {
+class InformePastorLista extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxAnio = new Date().getFullYear() + 1;
     constructor(props) {
@@ -84,7 +84,7 @@ class InformeAnualPastorLista extends Component {
     }
 
     obtenerInformes = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get("/InformeAnualPastor")
+        await helpers.validaToken().then(helpers.authAxios.get("/Informe")
             .then(res => {
                 console.log(res);
                 this.setState({ informes: res.data })
@@ -95,7 +95,7 @@ class InformeAnualPastorLista extends Component {
     insertarInforme = async (e) => {
         e.preventDefault()
 
-        await helpers.validaToken().then(helpers.authAxios.post("/InformeAnualPastor", this.state.nuevoInforme)
+        await helpers.validaToken().then(helpers.authAxios.post("/Informe", this.state.nuevoInforme)
             .then(res => {
                 if (res.status === 200) {
                     this.obtenerInformes();
@@ -320,4 +320,4 @@ class InformeAnualPastorLista extends Component {
     }
 }
 
-export default InformeAnualPastorLista;
+export default InformePastorLista;

@@ -4,14 +4,12 @@ import {
     Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup,
     Form, FormGroup, CardBody, CardFooter, ListGroup, ListGroupItem, UncontrolledTooltip
 } from 'reactstrap';
-// import { Link } from 'react-router-dom';
-// import HogarPersonaDomicilio from './HogarPersonaDomicilio';
 import './style.css'
 
 import rutaLogo from '../../assets/images/IECE_LogoOficial.jpg'
 import moment from 'moment/moment';
 
-class InformeAnualPastor extends Component {
+class InformePastor extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxPaginas = 2;
     constructor(props) {
@@ -276,7 +274,7 @@ class InformeAnualPastor extends Component {
     }
 
     obtenerInforme = async (id) => {
-        await helpers.validaToken().then(helpers.authAxios.get("/InformeAnualPastor/" + id)
+        await helpers.validaToken().then(helpers.authAxios.get("/Informe/" + id)
             .then(res => {
                 this.state.informe = res.data;
                 this.state.informe.fechaReunion = moment(res.data.fechaReunion).format('YYYY-MM-DD');
@@ -469,7 +467,7 @@ class InformeAnualPastor extends Component {
             otrasActividades: this.state.otrasActividades,
         }
 
-        await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
+        await helpers.validaToken().then(helpers.authAxios.put("/Informe/" + data.idInforme, data)
             .then(res => {
                 if (res.status === 200) {
                     alert('Informe guardado con éxito.');
@@ -2010,4 +2008,4 @@ class InformeAnualPastor extends Component {
     }
 }
 
-export default InformeAnualPastor;
+export default InformePastor;
