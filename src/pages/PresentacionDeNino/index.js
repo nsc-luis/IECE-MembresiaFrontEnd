@@ -3,7 +3,7 @@ import {
     Container, Row, Col, Form, Input, Label,
     Button, FormFeedback, FormGroup, Card,
     CardHeader, CardBody, CardFooter,
-    Modal, ModalBody,
+    Modal, ModalBody, Alert
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import helpers from '../../components/Helpers';
@@ -23,7 +23,7 @@ class PresentacionDeNino extends Component {
             modalFrmPresentacion: true,
             bolAgregarPresentacion: true,
             currentPresentacion: {},
-            tituloModalFrmPresentacion: "Registro de Nueva Presentación de Niños",
+            tituloModalFrmPresentacion: "Registro de una Presentación de Niños",
             nombreNino: "",
             ninoSelectInvalido: false,
             fechaPresentacionInvalida: false,
@@ -33,7 +33,11 @@ class PresentacionDeNino extends Component {
             ministros: [],
             habilitaOtroMinistro: false,
             otroMinistro: "",
-            submitBtnDisable: false
+            submitBtnDisable: false,
+            optionFamiliaCristianaSelected: true,
+            optionFamiliaVisitanteSelected: false,
+            nombreNinoVisitante: "",
+            nombreNinoVisitanteInvalido: false
         }
         this.infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
         this.msjNinoSelectInvalido = "Debe seleccionar al Niño(a) para continuar.";
@@ -104,6 +108,9 @@ class PresentacionDeNino extends Component {
                 this.setState({ otroMinistro: "", habilitaOtroMinistro: false })
             }
         }
+        if (e.target.name === "nombreNinoVisitante") {
+            this.setState({ nombreNinoVisitante: e.target.value.toUpperCase() })
+        }
     }
 
     handle_OtroMinistro = (e) => { //Al cambiar el Input de Otro Mnistro, se graba en la varibale el Nombre del Ministro que se escribió
@@ -130,14 +137,16 @@ class PresentacionDeNino extends Component {
 
             this.setState({ //Verifica que los Inputs Obligatorios no vengan vacíos.
                 ministroOficianteInvalido: this.state.currentPresentacion.pdn_Ministro_Oficiante === '' ? true : false,
-                ninoSelectInvalido: this.state.currentPresentacion.per_Id_Persona === '0' ? true : false,
-                fechaPresentacionInvalida: this.state.currentPresentacion.pdn_Fecha_Presentacion === '' || this.state.currentPresentacion.pdn_Fecha_Presentacion === null ? true : false
+                ninoSelectInvalido: this.state.optionFamiliaCristianaSelected === true && this.state.currentPresentacion.per_Id_Persona === '0' ? true : false,
+                fechaPresentacionInvalida: this.state.currentPresentacion.pdn_Fecha_Presentacion === '' || this.state.currentPresentacion.pdn_Fecha_Presentacion === null ? true : false,
+                nombreNinoVisitanteInvalido: this.state.optionFamiliaVisitanteSelected === true && this.state.nombreNinoVisitante === "" ? true : false
             })
 
-            if (this.state.currentPresentacion.per_Id_Persona === "0") return false;
+            if (this.state.optionFamiliaCristianaSelected === true && this.state.currentPresentacion.per_Id_Persona === "0") return false;
             if (this.state.currentPresentacion.pdn_Fecha_Presentacion === "" || this.state.currentPresentacion.pdn_Fecha_Presentacion === null) return false;
             if (this.state.currentPresentacion.pdn_Ministro_Oficiante === "") return false;
             if (this.state.otroMinistro === "" && this.state.currentPresentacion.pdn_Ministro_Oficiante === "") return false;
+            if (this.state.optionFamiliaVisitanteSelected === true && this.state.nombreNinoVisitante === "") return false;
 
             //Para deshabilitar el botón y evitar multiples registros de Matrimonio y Ediciones de Persona
             this.ChangeSubmitBtnDisable(true)
@@ -145,75 +154,187 @@ class PresentacionDeNino extends Component {
             //Procede a enviar los datos de la Presentación a la API
             var info = this.state.currentPresentacion;
             info.pdn_Ministro_Oficiante = this.state.currentPresentacion.pdn_Ministro_Oficiante === "OTRO MINISTRO" ? this.state.otroMinistro : this.state.currentPresentacion.pdn_Ministro_Oficiante;
+            info.nombreNinoVisitante = this.state.nombreNinoVisitante
             console.log("MinistroOficianteaAPI: ", info.pdn_Ministro_Oficiante);
-            try {
-                helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
-                    .then(res => {
-                        if (res.data.status === "success") {
-                            alert("RECORDATORIO: Si se trata de un Nuevo Hijo en una Familia Cristiana, No olvide actualizar los datos de los Padres modificando el Número y Nombre de los Hijos.");
-                            setTimeout(() => {
-                                this.setState({
-                                    mensajeDelProceso: "Los datos fueron grabados satisfactoriamente.",
-                                    modalShow: true
-                                });
-                            }, 1000);
-                            setTimeout(() => {
-                                document.location.href = '/ListaDePersonal'
-                            }, 1500);
-                        } else {
-                            // alert(res.data.mensaje);
-                            alert("Error: No se pudo guardar. Revise los datos ingresados");
-                        }
-                    })
-                );
-            } catch (error) {
-                alert("Error: Hubo un problema en la comunicación con el servidor. Intente mas tarde.");
-                //setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
+            //Si es una Presentación de Niños de Familia Cristiana
+            if (this.state.optionFamiliaCristianaSelected === true) {
+                try {
+                    helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
+                        .then(res => {
+                            if (res.data.status === "success") {
+                                alert("RECORDATORIO: No olvide Actualizar, si es aplicable, los datos de los Padres modificando el Número y Nombre de los Hijos.");
+                                setTimeout(() => {
+                                    this.setState({
+                                        mensajeDelProceso: "Los datos fueron grabados satisfactoriamente.",
+                                        modalShow: true
+                                    });
+                                }, 1000);
+                                setTimeout(() => {
+                                    document.location.href = '/ListaDePersonal'
+                                }, 1500);
+                            } else {
+                                // alert(res.data.mensaje);
+                                alert("Error: No se pudo guardar. Revise los datos ingresados");
+                            }
+                        })
+                    );
+                } catch (error) {
+                    alert("Error: Hubo un problema en la comunicación con el servidor. Intente mas tarde.");
+                    //setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
+                }
+            }
+            else {
+                //Si es una Presentación de Niños de Visitantes
+                try {
+                    helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Presentacion_Nino/PresentacionNinoVisitante/${localStorage.getItem("sector")}/${this.infoSesion.mu_pem_Id_Pastor}`, info)
+                        .then(res => {
+                            if (res.data.status === "success") {
+                                alert("RECORDATORIO: Si se trata de un Nuevo Hijo en una Familia Cristiana, No olvide actualizar los datos de los Padres modificando el Número y Nombre de los Hijos.");
+                                setTimeout(() => {
+                                    this.setState({
+                                        mensajeDelProceso: "Los datos fueron grabados satisfactoriamente.",
+                                        modalShow: true
+                                    });
+                                }, 1000);
+                                setTimeout(() => {
+                                    document.location.href = '/ListaDePersonal'
+                                }, 1500);
+                            } else {
+                                // alert(res.data.mensaje);
+                                alert("Error: No se pudo guardar. Revise los datos ingresados");
+                            }
+                        })
+                    );
+                } catch (error) {
+                    alert("Error: Hubo un problema en la comunicación con el servidor. Intente mas tarde.");
+                    //setTimeout(() => { document.location.href = '/ListaDePersonal'; }, 1000);
+                }
             }
         }
     }
 
+    handleOptionChange = (option) => {
+        if (option === 'A') {
+            this.setState({
+                optionFamiliaCristianaSelected: true,
+                optionFamiliaVisitanteSelected: false
+            });
+        } else if (option === 'B') {
+            this.setState({
+                optionFamiliaCristianaSelected: false,
+                optionFamiliaVisitanteSelected: true
+            })
+        }
+        console.log("familiaCristiana:", this.state.optionFamiliaCristianaSelected)
+        console.log("familiaVisitante", this.state.optionFamiliaVisitanteSelected)
+    }
     render() {
-
         return (
             <>
                 <Container>
                     <Container isOpen={this.state.modalFrmPresentacion}>
+                        <FormGroup>
+                            <Row>
+                                <Col xs="12">
+                                    <Alert color="warning">
+                                        <strong>AVISO: </strong>
+                                        <ul>
+                                            <li>Para presentaciones de Niños de <strong>"Familia Cristiana"</strong> debe primeramente registrar al Niño en la membresía No Bautizada.</li>
+                                            <li>Para presentaciones de Niños de <strong>"Familia Visitante"</strong> debe escribir el Nombre completo a Texto libre. Sólo se registrará la Presentación del Niño(a), pero el Infante no se agregará a la membresía No Bautizada.</li>
+                                        </ul>
+                                    </Alert>
+                                </Col>
+                            </Row>
+                        </FormGroup>
                         <Form onSubmit={this.guardarPresentacion}>
                             <Card>
                                 <CardHeader className="text-center">
                                     <h1>{this.state.tituloModalFrmPresentacion}</h1>
                                 </CardHeader>
                                 <CardBody>
-                                    <FormGroup>
-                                        <Row>
-                                            <Col sm="4">
-                                                <Label>Niño(a):</Label>
-                                            </Col>
-                                            <Col sm="8">
-                                                <Input
-                                                    name="per_Id_Persona"
-                                                    type="select"
-                                                    value={this.state.currentPresentacion.per_Id_Persona}
-                                                    onChange={this.handle_onChange}
-                                                    invalid={this.state.ninoSelectInvalido}
-                                                >
-                                                    <option value="0">Selecciona un registro</option>
-                                                    {
-                                                        this.state.listaDeNinos.map(nino => {
-                                                            return (
-                                                                <React.Fragment key={nino.per_Id_Persona}>
-                                                                    <option value={nino.per_Id_Persona}> {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno} </option>
-                                                                </React.Fragment>
-                                                            )
-                                                        })
-                                                    }
-                                                </Input>
-                                                <FormFeedback>{this.state.msjNinoSelectInvalido}</FormFeedback>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                    {/* } */}
+                                    <Row>
+                                        <Col sm="4">
+                                            <Label>Tipo de Presentación:</Label>
+                                        </Col>
+                                        <Col className="pb-4">
+                                            <div className="form-check">
+                                                <input
+                                                    class="form-check-input "
+                                                    type="radio"
+                                                    checked={this.state.optionFamiliaCristianaSelected}
+                                                    onChange={() => this.handleOptionChange('A')}
+                                                />
+                                                <label class="form-check-label radio-label">
+                                                    Presentación de Niño(a) de <b>Familia Cristiana</b>
+                                                </label>
+                                            </div>
+
+                                            <div className="form-check">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    checked={this.state.optionFamiliaVisitanteSelected}
+                                                    onChange={() => this.handleOptionChange('B')}
+                                                />
+                                                <label class="form-check-label radio-label">
+                                                    Presentación de Niño(a) de <b>Familia Visitante</b>
+                                                </label>
+
+                                            </div>
+                                        </Col>
+                                    </Row>
+
+                                    {this.state.optionFamiliaCristianaSelected && !this.state.optionFamiliaVisitanteSelected &&
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Niño(a):</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        name="per_Id_Persona"
+                                                        type="select"
+                                                        value={this.state.currentPresentacion.per_Id_Persona}
+                                                        onChange={this.handle_onChange}
+                                                        invalid={this.state.ninoSelectInvalido}
+                                                    >
+                                                        <option value="0">Selecciona un registro</option>
+                                                        {
+                                                            this.state.listaDeNinos.map(nino => {
+                                                                return (
+                                                                    <React.Fragment key={nino.per_Id_Persona}>
+                                                                        <option value={nino.per_Id_Persona}> {nino.per_Nombre} {nino.per_Apellido_Paterno} {nino.per_Apellido_Materno} </option>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Input>
+                                                    <FormFeedback>{this.state.msjNinoSelectInvalido}</FormFeedback>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    }
+                                    {this.state.optionFamiliaVisitanteSelected && !this.state.optionFamiliaCristianaSelected &&
+                                        <FormGroup>
+                                            <Row>
+                                                <Col sm="4">
+                                                    <Label>Niño(a):</Label>
+                                                </Col>
+                                                <Col sm="8">
+                                                    <Input
+                                                        name="nombreNinoVisitante"
+                                                        type="text"
+                                                        value={this.state.nombreNinoVisitante}
+                                                        onChange={this.handle_onChange}
+                                                        invalid={this.state.nombreNinoVisitanteInvalido}
+                                                    >
+                                                    </Input>
+                                                    <FormFeedback>{this.state.msjNinoSelectInvalido}</FormFeedback>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    }
+
                                     <FormGroup>
                                         <Row>
                                             <Col sm="4">
@@ -282,37 +403,39 @@ class PresentacionDeNino extends Component {
                                     </FormGroup>
                                 </CardBody>
                                 <CardFooter>
-                                    <Link
-                                        to="/ListaDePersonal"
-                                    >
-                                        <Button type="button" color="secondary" className="entreBotones" >
-                                            Cancelar
+                                    <div className="text-right pb-3">
+                                        <Link
+                                            to="/ListaDePersonal"
+                                        >
+                                            <Button type="button" color="secondary" className="entreBotones" >
+                                                Cancelar
+                                            </Button>
+                                        </Link>
+                                        <Button
+                                            color="success"
+                                            type="submit"
+                                            disabled={this.state.submitBtnDisable}
+                                        >
+                                            <span className="fas fa-save  entreBotones"></span>Guardar
                                         </Button>
-                                    </Link>
-                                    <Button
-                                        color="success"
-                                        type="submit"
-                                        disabled={this.state.submitBtnDisable}
-                                    >
-                                        <span className="fas fa-save  entreBotones"></span>Guardar
-                                    </Button>
+                                    </div>
                                 </CardFooter>
                             </Card>
                         </Form>
                     </Container>
-                </Container>
+                </Container >
                 {/*Modal success*/}
-                <Modal isOpen={this.state.modalShow}>
+                < Modal isOpen={this.state.modalShow} >
                     {/* <ModalHeader>
                         Solo prueba.
                     </ModalHeader> */}
-                    <ModalBody>
+                    < ModalBody >
                         {this.state.mensajeDelProceso}
-                    </ModalBody>
+                    </ModalBody >
                     {/* <ModalFooter>
                         <Button color="secondary" onClick={this.handle_modalClose}>Cancel</Button>
                     </ModalFooter> */}
-                </Modal>
+                </Modal >
             </ >
         )
     }
