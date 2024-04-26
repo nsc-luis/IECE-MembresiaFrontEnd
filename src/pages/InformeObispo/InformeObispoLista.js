@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import helpers from "../../components/Helpers";
+import helpers from '../../components/Helpers';
 import {
     Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter,
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
 } from 'reactstrap';
+import './style.css'
 import { Link } from 'react-router-dom';
+import rutaLogo from '../../assets/images/IECE_LogoOficial.jpg'
+import moment from 'moment/moment';
 
-class InformePastorLista extends Component {
+class InformeObispoLista extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxAnio = new Date().getFullYear() + 1;
     constructor(props) {
@@ -28,7 +31,7 @@ class InformePastorLista extends Component {
             informes: [],
             nuevoInforme: {
                 idInforme: 0,
-                idTipoUsuario: 1, //1 Pastor 2 Obispo
+                idTipoUsuario: 2, //1 Pastor 2 Obispo
                 mes: null,
                 anio: null,
                 idDistrito: 0,
@@ -47,7 +50,7 @@ class InformePastorLista extends Component {
         this.getDistrito();
         this.getSector();
         this.obtenerInformes();
-        helpers.handle_LinkEncabezado("Seccion: Informes", "Listado de Informes Pastorales")
+        helpers.handle_LinkEncabezado("Seccion: Informes", "Listado de Informes de Obispo")
         console.log(this.infoSesion);
     }
 
@@ -84,14 +87,13 @@ class InformePastorLista extends Component {
     }
 
     obtenerInformes = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get("/Informe?idTipoUsuario=1")
+        await helpers.validaToken().then(helpers.authAxios.get("/Informe?idTipoUsuario=2",)
             .then(res => {
                 console.log(res);
                 this.setState({ informes: res.data })
             })
         );
     }
-
     insertarInforme = async (e) => {
         e.preventDefault()
 
@@ -103,7 +105,7 @@ class InformePastorLista extends Component {
                     this.setState({
                         nuevoInforme: {
                             idInforme: 0,
-                            idTipoUsuario: 1,
+                            idTipoUsuario: 2,
                             mes: 0,
                             anio: 0,
                             lugarReunion: '',
@@ -268,7 +270,7 @@ class InformePastorLista extends Component {
 
                 <Card>
                     <CardHeader style={{ textAlign: "center" }}>
-                        <h4>Informes Mensuales del sector: #{this.state.sector.sec_Numero} - {this.state.sector.sec_Alias}</h4>
+                        <h4>Informes Mensuales del distrito: #{this.state.distrito.dis_Numero} - {this.state.distrito.dis_Alias}</h4>
                     </CardHeader>
                     <FormGroup>
                         <CardBody>
@@ -288,9 +290,9 @@ class InformePastorLista extends Component {
                                                 <td>{obj.mes}</td>
                                                 <td className='text-center'>
                                                     <Link to={{
-                                                        pathname: "/InformePastor/" + obj.idInforme,
+                                                        pathname: "/InformeObispo/" + obj.idInforme,
                                                         id: obj.idInforme
-                                                    }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
+                                                    }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Obispo")}>
                                                         Detalles
                                                     </Link>
                                                 </td>
@@ -320,4 +322,4 @@ class InformePastorLista extends Component {
     }
 }
 
-export default InformePastorLista;
+export default InformeObispoLista;

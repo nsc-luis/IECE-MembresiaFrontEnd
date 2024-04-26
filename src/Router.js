@@ -61,6 +61,8 @@ import InformePastorLista from './pages/InformePastor/InformePastorLista';
 import SantuarioyCasaPastoral from './pages/SantuariosyCasasPastorales';
 import Misiones from './pages/Misiones';
 import RegistroVisitantes from './pages/RegistroVisitantes';
+import InformeObispo from './pages/InformeObispo/InformeObispo';
+import InformeObispoLista from './pages/InformeObispo/InformeObispoLista';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -151,6 +153,9 @@ class Router extends Component {
                         {/* Informe  Pastor*/}
                         <Route exact path="/InformesPastorales" component={InformePastorLista} />
                         <Route exact path="/InformePastor/:id" component={InformePastor} />
+                        {/* Informe Obispo */}
+                        <Route exact path="/InformeObispo/:id" component={InformeObispo} />
+                        <Route exact path="/InformesObispo" component={InformeObispoLista} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
