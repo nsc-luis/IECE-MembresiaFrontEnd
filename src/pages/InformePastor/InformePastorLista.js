@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-class InformeAnualPastorLista extends Component {
+class InformePastorLista extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxAnio = new Date().getFullYear() + 1;
     constructor(props) {
@@ -37,7 +37,7 @@ class InformeAnualPastorLista extends Component {
                 fechaReunion: null,
                 status: 0,
                 usu_id_usuario: 0,
-                fechaRegistro: null,
+                fechaRegistro: new Date().toDateString(),
             }
         }
     }
@@ -47,6 +47,7 @@ class InformeAnualPastorLista extends Component {
         this.getDistrito();
         this.getSector();
         this.obtenerInformes();
+        helpers.handle_LinkEncabezado("Seccion: Informes", "Listado de Informes Pastorales")
         console.log(this.infoSesion);
     }
 
@@ -57,7 +58,7 @@ class InformeAnualPastorLista extends Component {
                 this.setState({
                     distrito: res.data,
                     nuevoInforme: {
-                        ...this.state,
+                        ...this.state.nuevoInforme,
                         idDistrito: res.data.dis_Id_Distrito,
                         usu_id_usuario: this.infoSesion.pem_Id_Ministro
                     }
@@ -73,7 +74,7 @@ class InformeAnualPastorLista extends Component {
                 this.setState({
                     sector: res.data.sector[0],
                     nuevoInforme: {
-                        ...this.state,
+                        ...this.state.nuevoInforme,
                         idSector: res.data.sector[0].sec_Id_Sector,
                     }
                 })
@@ -83,7 +84,7 @@ class InformeAnualPastorLista extends Component {
     }
 
     obtenerInformes = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get("/InformeAnualPastor")
+        await helpers.validaToken().then(helpers.authAxios.get("/Informe?idTipoUsuario=1")
             .then(res => {
                 console.log(res);
                 this.setState({ informes: res.data })
@@ -94,7 +95,7 @@ class InformeAnualPastorLista extends Component {
     insertarInforme = async (e) => {
         e.preventDefault()
 
-        await helpers.validaToken().then(helpers.authAxios.post("/InformeAnualPastor", this.state.nuevoInforme)
+        await helpers.validaToken().then(helpers.authAxios.post("/Informe", this.state.nuevoInforme)
             .then(res => {
                 if (res.status === 200) {
                     this.obtenerInformes();
@@ -102,7 +103,7 @@ class InformeAnualPastorLista extends Component {
                     this.setState({
                         nuevoInforme: {
                             idInforme: 0,
-                            idTipoUsuario: 0,
+                            idTipoUsuario: 1,
                             mes: 0,
                             anio: 0,
                             lugarReunion: '',
@@ -287,9 +288,9 @@ class InformeAnualPastorLista extends Component {
                                                 <td>{obj.mes}</td>
                                                 <td className='text-center'>
                                                     <Link to={{
-                                                        pathname: "/InformeAnualPastor/" + obj.idInforme,
+                                                        pathname: "/InformePastor/" + obj.idInforme,
                                                         id: obj.idInforme
-                                                    }} className="btn btn-info btn-sm">
+                                                    }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
                                                         Detalles
                                                     </Link>
                                                 </td>
@@ -319,4 +320,4 @@ class InformeAnualPastorLista extends Component {
     }
 }
 
-export default InformeAnualPastorLista;
+export default InformePastorLista;

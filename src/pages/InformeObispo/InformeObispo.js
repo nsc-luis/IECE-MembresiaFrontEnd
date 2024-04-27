@@ -2,16 +2,14 @@ import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
     Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup,
-    Form, FormGroup, CardBody, CardFooter, ListGroup, ListGroupItem
+    Form, FormGroup, CardBody, CardFooter, ListGroup, ListGroupItem, UncontrolledTooltip
 } from 'reactstrap';
-// import { Link } from 'react-router-dom';
-// import HogarPersonaDomicilio from './HogarPersonaDomicilio';
 import './style.css'
 
 import rutaLogo from '../../assets/images/IECE_LogoOficial.jpg'
 import moment from 'moment/moment';
 
-class InformeAnualPastor extends Component {
+class InformeObispo extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxPaginas = 2;
     constructor(props) {
@@ -206,7 +204,14 @@ class InformeAnualPastor extends Component {
                     pasaapersonalbautizado: 0,
                     porbajadepadres: 0
                 },
-                hogares: 0,
+                hombresBautizados: 0,
+                mujeresBautizadas: 0,
+                jovenesHombresBautizados: 0,
+                jovenesHombresNoBautizados: 0,
+                jovenesMujeresBautizadas: 0,
+                jovenesMujeresNoBautizadas: 0,
+                ninas: 0,
+                ninos: 0,
                 personasBautizadas: 0,
                 personasNoBautizadas: 0,
                 matrimonios: 0,
@@ -269,7 +274,7 @@ class InformeAnualPastor extends Component {
     }
 
     obtenerInforme = async (id) => {
-        await helpers.validaToken().then(helpers.authAxios.get("/InformeAnualPastor/" + id)
+        await helpers.validaToken().then(helpers.authAxios.get("/Informe/" + id)
             .then(res => {
                 this.state.informe = res.data;
                 this.state.informe.fechaReunion = moment(res.data.fechaReunion).format('YYYY-MM-DD');
@@ -291,6 +296,7 @@ class InformeAnualPastor extends Component {
                 this.state.regularizacionPatNac = res.data.regularizacionPatNac !== null ? res.data.regularizacionPatNac : this.state.regularizacionPatNac;
                 this.state.regularizacionPatIg = res.data.regularizacionPatIg !== null ? res.data.regularizacionPatIg : this.state.regularizacionPatIg;
                 this.state.movimientoEconomico = res.data.movimientoEconomico !== null ? res.data.movimientoEconomico : this.state.movimientoEconomico;
+                this.state.otrasActividades = res.data.otrasActividades !== null ? res.data.otrasActividades : this.state.otrasActividades;
                 this.obtenerMisiones();
                 this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
@@ -350,10 +356,10 @@ class InformeAnualPastor extends Component {
     agregarActividad() {
         if (this.state.indiceActividad === null) {
             const nuevaActividad = {
-                idOtraActividad: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1,
+                idOtraActividad: 0,
                 idInforme: 0,
                 descripcion: this.state.otraActividadTextArea,
-                numDeOrder: 0
+                numDeOrden: this.state.otrasActividades.length === 0 ? 1 : this.state.otrasActividades[-1] + 1
             }
             this.state.otrasActividades.push(nuevaActividad);
             this.setState({
@@ -361,7 +367,7 @@ class InformeAnualPastor extends Component {
             });
         } else {
             const nuevoArray = [...this.state.otrasActividades]
-            nuevoArray[this.state.indiceActividad] = { ...nuevoArray[this.state.indiceActividad], descripcion: this.state.otraActividadTextArea }
+            nuevoArray[this.state.indiceActividad] = { ...nuevoArray[this.state.indiceActividad], descripcion: this.state.otraActividadTextArea, numDeOrden: this.state.indiceActividad + 1 }
             this.setState({ otrasActividades: nuevoArray });
             this.setState({
                 otraActividadTextArea: ''
@@ -384,7 +390,7 @@ class InformeAnualPastor extends Component {
 
     eliminarActividad(index) {
         this.setState(prevState => ({
-            otrasActividades: prevState.otrasActividades.filter((_,i) => i!== index)
+            otrasActividades: prevState.otrasActividades.filter((_, i) => i !== index)
         }));
     }
 
@@ -458,9 +464,10 @@ class InformeAnualPastor extends Component {
             regularizacionPatNac: this.state.regularizacionPatNac,
             regularizacionPatIg: this.state.regularizacionPatIg,
             movimientoEconomico: this.state.movimientoEconomico,
+            otrasActividades: this.state.otrasActividades,
         }
 
-        await helpers.validaToken().then(helpers.authAxios.put("/InformeAnualPastor/" + data.idInforme, data)
+        await helpers.validaToken().then(helpers.authAxios.put("/Informe/" + data.idInforme, data)
             .then(res => {
                 if (res.status === 200) {
                     alert('Informe guardado con éxito.');
@@ -482,25 +489,25 @@ class InformeAnualPastor extends Component {
                         <CardBody>
                             {this.state.pagina === 1 ?
                                 <FormGroup className='contenedor-informe'>
-                                    <Row>
-                                        <Col xs="12" sm="12" lg="12">
+                                    <Row className='flex justify-content-center'>
+                                        <Col xs="8" sm="8" lg="8">
                                             <img src={rutaLogo} className='logo-informe'></img>
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col xs="12" sm="12" lg="12">
-                                            <p>
-                                                INFORME QUE RINDE EL PASTOR DEL SECTOR NO. <b>{this.state.sector.sec_Numero}</b> CON BASE EN: <b> {this.state.sector.sec_Alias + ' '} </b>
-                                                AL DISTRITO NUMERO <b>{this.state.distrito.dis_Numero}</b> CON ASIENTO EN <b>{this.state.distrito.dis_Alias}</b> DEL TRABAJO Y MOVIMIENTO REGISTRADO
-                                                DURANTE EL MES DE <b>{this.state.informe.nombreMes}</b> DE <b>{this.state.informe.anio}.</b>
+                                            <p className='text-center'>
+                                                INFORME QUE RINDE EL OBISPO DEL DISTRITO NO. <b>{this.state.distrito.dis_Numero}</b> CON ASIENTO EN: <b> {this.state.distrito.dis_Alias + ' '} </b>
+                                                AL PRESIDENTE GENERAL DEL TRABAJO Y MOVIMIENTO REGISTRADO
+                                                DURANTE EL MES DE <b>{this.state.informe.nombreMes}</b> DEL AÑO <b>{this.state.informe.anio}.</b>
                                             </p>
                                         </Col>
                                     </Row>
+                                    <Row className='titulo'>
+                                        ACTIVIDADES DEL OBISPO
+                                    </Row>
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
-                                            <Row className='titulo'>
-                                                ACTIVIDADES DEL PERSONAL DOCENTE
-                                            </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="3" sm="3" lg="3">
                                                     VISITAS A HOGARES
@@ -531,9 +538,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='porPastor'
                                                                 name='visitasPastor.porPastor'
                                                                 value={this.state.visitasPastor.porPastor}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="porPastor"
+                                                            >
+                                                                Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -542,9 +556,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='porAncianosAux'
                                                                 name='visitasPastor.porAncianosAux'
                                                                 value={this.state.visitasPastor.porAncianosAux}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="porAncianosAux"
+                                                            >
+                                                                Aqui se ingresan la cantidad de visitas realizadas por los ancianos auxiliares en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -553,9 +574,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='porDiaconos'
                                                                 name='visitasPastor.porDiaconos'
                                                                 value={this.state.visitasPastor.porDiaconos}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="porDiaconos"
+                                                            >
+                                                                Aqui se ingresan la cantidad de visitas realizadas por los diáconos en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -564,9 +592,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='porAuxiliares'
                                                                 name='visitasPastor.porAuxiliares'
                                                                 value={this.state.visitasPastor.porAuxiliares}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="porAuxiliares"
+                                                            >
+                                                                Aqui se ingresan la cantidad de visitas realizadas por los auxiliares en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -577,9 +612,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='ordinarios'
                                                                 name='cultosSector.ordinarios'
                                                                 value={this.state.cultosSector.ordinarios}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="ordinarios"
+                                                            >
+                                                                Aqui se ingresan la cantidad de cultos ordinarios realizados en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -588,9 +630,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='especiales'
                                                                 name='cultosSector.especiales'
                                                                 value={this.state.cultosSector.especiales}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="especiales"
+                                                            >
+                                                                Aqui se ingresan la cantidad de cultos especiales realizados en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -599,9 +648,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='deAvivamiento'
                                                                 name='cultosSector.deAvivamiento'
                                                                 value={this.state.cultosSector.deAvivamiento}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="deAvivamiento"
+                                                            >
+                                                                Aqui se ingresan la cantidad de cultos de avivamiento realizados en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -610,9 +666,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='deAniversario'
                                                                 name='cultosSector.deAniversario'
                                                                 value={this.state.cultosSector.deAniversario}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="deAniversario"
+                                                            >
+                                                                Aqui se ingresan la cantidad de cultos de aniversario realizados en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -621,9 +684,16 @@ class InformeAnualPastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='porElDistrito'
                                                                 name='cultosSector.porElDistrito'
                                                                 value={this.state.cultosSector.porElDistrito}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="porElDistrito"
+                                                            >
+                                                                Aqui se ingresan la cantidad de cultos organizados por el Distrito realizados en este mes.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -1046,13 +1116,19 @@ class InformeAnualPastor extends Component {
                                                             Hombres
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='text' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.hombresBautizados'
+                                                                value={this.state.datosEstadisticos.hombresBautizados}
+                                                                readOnly></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             Hombres
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.jovenesHombresBautizados'
+                                                                value={this.state.datosEstadisticos.jovenesHombresBautizados}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1060,13 +1136,19 @@ class InformeAnualPastor extends Component {
                                                             Mujeres
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='text' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.mujeresBautizadas'
+                                                                value={this.state.datosEstadisticos.mujeresBautizadas}
+                                                                readOnly></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             Mujeres
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.jovenesMujeresBautizadas'
+                                                                value={this.state.datosEstadisticos.jovenesMujeresBautizadas}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1074,13 +1156,17 @@ class InformeAnualPastor extends Component {
                                                             Total
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='text' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.datosEstadisticos.hombresBautizados + this.state.datosEstadisticos.mujeresBautizadas}
+                                                                readOnly></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             Total
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.datosEstadisticos.jovenesHombresBautizados + this.state.datosEstadisticos.jovenesMujeresBautizadas}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -1090,13 +1176,19 @@ class InformeAnualPastor extends Component {
                                                             Hombres
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='text' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.jovenesHombresNoBautizados'
+                                                                value={this.state.datosEstadisticos.jovenesHombresNoBautizados}
+                                                                readOnly></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             Niños
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.ninos'
+                                                                value={this.state.datosEstadisticos.ninos}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1104,13 +1196,19 @@ class InformeAnualPastor extends Component {
                                                             Mujeres
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='text' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.jovenesMujeresNoBautizadas'
+                                                                value={this.state.datosEstadisticos.jovenesMujeresNoBautizadas}
+                                                                readOnly></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             Niñas
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='datosEstadisticos.ninas'
+                                                                value={this.state.datosEstadisticos.ninas}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1118,13 +1216,17 @@ class InformeAnualPastor extends Component {
                                                             Total
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='text' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.datosEstadisticos.jovenesHombresNoBautizados + this.state.datosEstadisticos.jovenesMujeresNoBautizadas}
+                                                                readOnly></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             Total
                                                         </Col>
                                                         <Col xs="2" sm="2" lg="2">
-                                                            <Input type='number' min={0} max={9999}></Input>
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.datosEstadisticos.ninos + this.state.datosEstadisticos.ninas}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -1138,7 +1240,7 @@ class InformeAnualPastor extends Component {
                                                         name='datosEstadisticos.personasBautizadas'
                                                         value={this.state.datosEstadisticos.personasBautizadas}
                                                         onChange={(e) => this.handleChange(e)}></Input> */}
-                                                    <span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas}</span>
+                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas}</span></u>
                                                 </Col>
                                                 <Col xs="4" sm="4" lg="4">
                                                     No. completo de personal no bautizado
@@ -1148,7 +1250,7 @@ class InformeAnualPastor extends Component {
                                                         name='datosEstadisticos.personasNoBautizadas'
                                                         value={this.state.datosEstadisticos.personasNoBautizadas}
                                                         onChange={(e) => this.handleChange(e)}></Input> */}
-                                                    <span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasNoBautizadas}</span>
+                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasNoBautizadas}</span></u>
                                                 </Col>
                                             </Row>
                                             <Row className='elemento'>
@@ -1156,7 +1258,7 @@ class InformeAnualPastor extends Component {
                                                     Número completo de personal que integra la iglesia
                                                 </Col>
                                                 <Col xs="2" sm="2" lg="2">
-                                                    <span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas + this.state.datosEstadisticos.personasNoBautizadas}</span>
+                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas + this.state.datosEstadisticos.personasNoBautizadas}</span></u>
                                                 </Col>
                                             </Row>
                                             <Row className='elemento'>
@@ -1827,7 +1929,7 @@ class InformeAnualPastor extends Component {
                                                 {this.state.otrasActividades.length > 0 && this.state.otrasActividades.map((obj, index) => (
                                                     <Row>
                                                         <Col xs="10" sm="10" lg="10">
-                                                            <ListGroupItem key={obj.idOtraActividad}>{index + 1}.-{obj.descripcion}</ListGroupItem>
+                                                            <ListGroupItem key={obj.numDeOrden}>{index + 1}.-{obj.descripcion}</ListGroupItem>
                                                         </Col>
                                                         <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
                                                             <Button color='info' onClick={() => this.editarActividad(index)}><span className='fa fa-icon fa-edit'></span></Button>
@@ -1906,4 +2008,4 @@ class InformeAnualPastor extends Component {
     }
 }
 
-export default InformeAnualPastor;
+export default InformeObispo;

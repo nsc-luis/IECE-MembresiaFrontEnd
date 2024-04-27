@@ -56,11 +56,13 @@ import Administracion from './pages/PersonalAdministrativo/Administracion';
 import ComisionesDistritales from './pages/PersonalAdministrativo/ComisionesDistritales';
 import AdministracionDistrital from './pages/PersonalAdministrativo/AdministracionDistrital';
 import OrganismoInterno from './pages/OrganismoInterno'
-import InformeAnualPastor from './pages/InformeAnualPastor/InformeAnualPastor';
-import InformeAnualPastorLista from './pages/InformeAnualPastor/InformeAnualPastorLista';
+import InformePastor from './pages/InformePastor/InformePastor';
+import InformePastorLista from './pages/InformePastor/InformePastorLista';
 import SantuarioyCasaPastoral from './pages/SantuariosyCasasPastorales';
 import Misiones from './pages/Misiones';
 import RegistroVisitantes from './pages/RegistroVisitantes';
+import InformeObispo from './pages/InformeObispo/InformeObispo';
+import InformeObispoLista from './pages/InformeObispo/InformeObispoLista';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -148,9 +150,12 @@ class Router extends Component {
                         <Route exact path="/ReporteMisiones" component={ReporteMisiones} />
                         <Route exact path="/ReporteMovimientoEstadistico" component={ReporteMovimientoEstadistico} />
 
-                        {/* Informe Anual Pastor*/}
-                        <Route exact path="/InformeAnualPastorLista" component={InformeAnualPastorLista} />
-                        <Route exact path="/InformeAnualPastor/:id" component={InformeAnualPastor} />
+                        {/* Informe  Pastor*/}
+                        <Route exact path="/InformesPastorales" component={InformePastorLista} />
+                        <Route exact path="/InformePastor/:id" component={InformePastor} />
+                        {/* Informe Obispo */}
+                        <Route exact path="/InformeObispo/:id" component={InformeObispo} />
+                        <Route exact path="/InformesObispo" component={InformeObispoLista} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />
                 </Switch>
