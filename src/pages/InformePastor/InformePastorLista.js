@@ -5,6 +5,7 @@ import {
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 class InformePastorLista extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
@@ -159,6 +160,25 @@ class InformePastorLista extends Component {
         console.log(newState);
     }
 
+    descargarInforme = async (informeId) => {
+        await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, {responseType:'blob'})
+            .then(res => {
+                console.log(res);
+                const url = window.URL.createObjectURL(res.data);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `InformePastorPorSector_${moment().format("yyyy-MM-DDThh-mm-ss")}.pdf`;
+                a.target = '_blank';  // This does not really affect the download
+                document.body.appendChild(a);
+                a.click();
+        
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+        )
+    }
+
     render() {
         return (
             <Container>
@@ -293,6 +313,12 @@ class InformePastorLista extends Component {
                                                     }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
                                                         Detalles
                                                     </Link>
+                                                    <Button
+                                                        color="danger"
+                                                        size="sm"
+                                                        onClick={() => this.descargarInforme(obj.idInforme)}>
+                                                        <span className="fas fa-file-pdf icon-btn-p"></span>
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         ))
