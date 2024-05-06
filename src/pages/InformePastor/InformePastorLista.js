@@ -10,6 +10,20 @@ import moment from 'moment';
 class InformePastorLista extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxAnio = new Date().getFullYear() + 1;
+    meses = [
+        { id: 1, mes: "Enero" },
+        { id: 2, mes: "Febrero" },
+        { id: 3, mes: "Marzo" },
+        { id: 4, mes: "Abril" },
+        { id: 5, mes: "Mayo" },
+        { id: 6, mes: "Junio" },
+        { id: 7, mes: "Julio" },
+        { id: 8, mes: "Agosto" },
+        { id: 9, mes: "Septiembre" },
+        { id: 10, mes: "Octubre" },
+        { id: 11, mes: "Noviembre" },
+        { id: 12, mes: "Diciembre" },
+    ];
     constructor(props) {
         super(props);
         this.state = {
@@ -50,6 +64,7 @@ class InformePastorLista extends Component {
         this.obtenerInformes();
         helpers.handle_LinkEncabezado("Seccion: Informes", "Listado de Informes Pastorales")
         console.log(this.infoSesion);
+        window.scrollTo(0, 0)
     }
 
     //Data
@@ -98,6 +113,10 @@ class InformePastorLista extends Component {
 
         await helpers.validaToken().then(helpers.authAxios.post("/Informe", this.state.nuevoInforme)
             .then(res => {
+                if(res.data.status === 'error'){
+                    alert(res.data.message)
+                    return
+                }
                 if (res.status === 200) {
                     this.obtenerInformes();
                     this.handleCancelar();
@@ -115,9 +134,6 @@ class InformePastorLista extends Component {
                         }
                     })
                     console.log(res);
-                }
-                else {
-                    alert(res.data.mensaje)
                 }
             })
         )
@@ -161,7 +177,7 @@ class InformePastorLista extends Component {
     }
 
     descargarInforme = async (informeId) => {
-        await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, {responseType:'blob'})
+        await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, { responseType: 'blob' })
             .then(res => {
                 console.log(res);
                 const url = window.URL.createObjectURL(res.data);
@@ -172,7 +188,7 @@ class InformePastorLista extends Component {
                 a.target = '_blank';  // This does not really affect the download
                 document.body.appendChild(a);
                 a.click();
-        
+
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
             })
@@ -226,14 +242,29 @@ class InformePastorLista extends Component {
                                             <Col xs="2" className='my-1 text-right'>
                                                 * MES:
                                             </Col>
-                                            <Col xs="2" className='my-1'>
-                                                <Input type='number' min={1} max={12}
+                                            <Col xs="3" className='my-1'>
+                                                {/* <Input type='number' min={1} max={12}
                                                     name='nuevoInforme.mes'
                                                     value={this.state.nuevoInforme.mes}
-                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                    onChange={(e) => this.handleChange(e)}></Input> */}
+                                                <Input
+                                                    type="select"
+                                                    name="nuevoInforme.mes"
+                                                    value={this.state.nuevoInforme.mes}
+                                                    onChange={(e) => this.handleChange(e)}
+                                                >
+                                                    <option value="0">Seleccione un mes</option>
+                                                    {this.meses.map(mes => {
+                                                        return (
+                                                            <React.Fragment key={mes.id}>
+                                                                <option value={mes.id}>{mes.id} - {mes.mes}</option>
+                                                            </React.Fragment>
+                                                        )
+                                                    })}
+                                                </Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
-                                            <Col xs="4"></Col>
+                                            <Col xs="3"></Col>
                                             <Col xs="2" className='my-1 text-right'>
                                                 * FECHA DE REUNIÓN:
                                             </Col>
@@ -314,10 +345,11 @@ class InformePastorLista extends Component {
                                                         Detalles
                                                     </Link>
                                                     <Button
-                                                        color="danger"
+                                                        color="primary"
                                                         size="sm"
+                                                        className='mx-3'
                                                         onClick={() => this.descargarInforme(obj.idInforme)}>
-                                                        <span className="fas fa-file-pdf icon-btn-p"></span>
+                                                        <span className="fas fa-file-word icon-btn-p"></span> Descargar
                                                     </Button>
                                                 </td>
                                             </tr>

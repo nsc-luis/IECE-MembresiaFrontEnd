@@ -479,6 +479,24 @@ class InformePastor extends Component {
         )
     }
 
+    descargarInforme = async (informeId) => {
+        await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, { responseType: 'blob' })
+            .then(res => {
+                console.log(res);
+                const url = window.URL.createObjectURL(res.data);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `InformePastorPorSector_${moment().format("yyyy-MM-DDThh-mm-ss")}.pdf`;
+                a.target = '_blank';  // This does not really affect the download
+                document.body.appendChild(a);
+                a.click();
+
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+        )
+    }
 
 
     render() {
@@ -489,6 +507,18 @@ class InformePastor extends Component {
                         <CardBody>
                             {this.state.pagina === 1 ?
                                 <FormGroup className='contenedor-informe'>
+                                    {
+                                        this.state.informe.idInforme > 0 ?
+                                            <Row className='flex justify-content-end'>
+                                                <Button
+                                                    color="primary"
+                                                    size="sm"
+                                                    onClick={() => this.descargarInforme(this.state.informe.idInforme)}>
+                                                    <span className="fas fa-file-word icon-btn-p"></span> Descargar
+                                                </Button>
+                                            </Row>
+                                            : ''
+                                    }
                                     <Row className='flex justify-content-center'>
                                         <Col xs="8" sm="8" lg="8">
                                             <img src={rutaLogo} className='logo-informe'></img>
