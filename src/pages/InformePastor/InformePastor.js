@@ -1320,6 +1320,18 @@ class InformePastor extends Component {
                                 </FormGroup>
                                 :
                                 <FormGroup className='contenedor-informe'>
+                                    {
+                                        this.state.informe.idInforme > 0 ?
+                                            <Row className='flex justify-content-end'>
+                                                <Button
+                                                    color="primary"
+                                                    size="sm"
+                                                    onClick={() => this.descargarInforme(this.state.informe.idInforme)}>
+                                                    <span className="fas fa-file-word icon-btn-p"></span> Descargar
+                                                </Button>
+                                            </Row>
+                                            : ''
+                                    }
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
