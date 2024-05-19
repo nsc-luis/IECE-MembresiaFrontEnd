@@ -44,6 +44,7 @@ class InformePastor extends Component {
             indiceActividad: null,
             otraActividadTextArea: "",
             otrasActividades: [],
+            actividadesEliminadas: [],
             visitasPastor: {
                 porPastor: 0,
                 porAncianosAux: 0,
@@ -389,6 +390,7 @@ class InformePastor extends Component {
     }
 
     eliminarActividad(index) {
+        this.state.actividadesEliminadas.push(this.state.otrasActividades[index])
         this.setState(prevState => ({
             otrasActividades: prevState.otrasActividades.filter((_, i) => i !== index)
         }));
@@ -465,15 +467,20 @@ class InformePastor extends Component {
             regularizacionPatIg: this.state.regularizacionPatIg,
             movimientoEconomico: this.state.movimientoEconomico,
             otrasActividades: this.state.otrasActividades,
+            actividadesEliminadas: this.state.actividadesEliminadas,
         }
 
         await helpers.validaToken().then(helpers.authAxios.put("/Informe/" + data.idInforme, data)
             .then(res => {
                 if (res.status === 200) {
                     alert('Informe guardado con éxito.');
+                    const { id } = this.props.match.params;
+                    this.obtenerInforme(id);
                 }
                 else {
                     alert(res.data.mensaje)
+                    const { id } = this.props.match.params;
+                    this.obtenerInforme(id);
                 }
             })
         )
