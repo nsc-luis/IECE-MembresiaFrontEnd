@@ -583,7 +583,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porPastor"
                                                             >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                Visitas a hogares realizadas exclusivamente por el Pastor.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -601,7 +601,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porAncianosAux"
                                                             >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por los ancianos auxiliares en este mes.
+                                                                Visitas a hogares realizadas por Ancianos Auxiliares.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -619,7 +619,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porDiaconos"
                                                             >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por los diáconos en este mes.
+                                                                Visitas a hogares realizadas por Diáconos.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -637,7 +637,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porAuxiliares"
                                                             >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por los auxiliares en este mes.
+                                                                Visitas a hogares realizadas por Auxiliares.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -657,7 +657,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="ordinarios"
                                                             >
-                                                                Aqui se ingresan la cantidad de cultos ordinarios realizados en este mes.
+                                                                Cultos en la base del Sector y que no requieren llevar Programa de culto.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -675,7 +675,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="especiales"
                                                             >
-                                                                Aqui se ingresan la cantidad de cultos especiales realizados en este mes.
+                                                                Cultos en la base del Sector que se realizan bajo un Programa de culto.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -693,7 +693,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="deAvivamiento"
                                                             >
-                                                                Aqui se ingresan la cantidad de cultos de avivamiento realizados en este mes.
+                                                                Cultos intencionados al cultivo del ánimo espiritual, fervor y devoción de la iglesia, tales como cultos de avivamiento espiritual y De derramamiento del Espíritu Santo.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -711,7 +711,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="deAniversario"
                                                             >
-                                                                Aqui se ingresan la cantidad de cultos de aniversario realizados en este mes.
+                                                                Cultos realizados en el Sector para conmemorar un Aniversario dentro de la jurisdicción local.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -729,7 +729,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porElDistrito"
                                                             >
-                                                                Aqui se ingresan la cantidad de cultos organizados por el Distrito realizados en este mes.
+                                                                Cultos realizados en el Sector, pero programados y llevados a cabo por el Distrito.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -758,15 +758,29 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='estudioVaronil'
                                                                 name='estudiosSector.estudios.varonil'
                                                                 value={this.state.estudiosSector.estudios.varonil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="estudioVaronil"
+                                                            >
+                                                                Cantidad de Estudios de la Guía Bíblica impartidos al Sector Varonil.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='confVaronil'
                                                                 name='estudiosSector.conferencias.varonil'
                                                                 value={this.state.estudiosSector.conferencias.varonil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="confVaronil"
+                                                            >
+                                                                Cantidad de Conferencias impartidos al Sector Varonil.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -775,15 +789,29 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='estudioFemenil'
                                                                 name='estudiosSector.estudios.femenil'
                                                                 value={this.state.estudiosSector.estudios.femenil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="estudioFemenil"
+                                                            >
+                                                                Cantidad de Estudios de la Guía Bíblica impartidos al Sector Femenil
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='confFemenil'
                                                                 name='estudiosSector.conferencias.femenil'
                                                                 value={this.state.estudiosSector.conferencias.femenil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="confFemenil"
+                                                            >
+                                                                Cantidad de Conferencias impartidos al Sector Femenil.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -792,15 +820,29 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='estudioJuvenil'
                                                                 name='estudiosSector.estudios.juvenil'
                                                                 value={this.state.estudiosSector.estudios.juvenil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="estudioJuvenil"
+                                                            >
+                                                                Cantidad de Estudios de la Guía Bíblica  impartidos al Sector Juvenil.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='confJuvenil'
                                                                 name='estudiosSector.conferencias.juvenil'
                                                                 value={this.state.estudiosSector.conferencias.juvenil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="confJuvenil"
+                                                            >
+                                                                Cantidad de Conferencias impartidos al Sector Juvenil.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -809,15 +851,29 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='estudioInfantil'
                                                                 name='estudiosSector.estudios.infantil'
                                                                 value={this.state.estudiosSector.estudios.infantil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="estudioInfantil"
+                                                            >
+                                                                Cantidad de Estudios de la Guía Bíblica  impartidos al Sector Infantil.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='confInfantil'
                                                                 name='estudiosSector.conferencias.infantil'
                                                                 value={this.state.estudiosSector.conferencias.infantil}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="confInfantil"
+                                                            >
+                                                                Cantidad de Conferencias impartidos al Sector Infantil.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -832,9 +888,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='confIglesia'
                                                                 name='estudiosSector.conferencias.iglesia'
                                                                 value={this.state.estudiosSector.conferencias.iglesia}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="confIglesia"
+                                                            >
+                                                                Cantidad de Conferencias impartida a la Congregación.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -865,9 +928,16 @@ class InformePastor extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
+                                                                    id='cultoMision'
                                                                     name={`misiones.${index}.cultos`}
                                                                     value={this.state.misiones[index].cultos}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="cultoMision"
+                                                                >
+                                                                    Cantidad de Cultos realizados en las misiones locales del Sector.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     ))}
@@ -879,9 +949,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='hogaresVisitados'
                                                                 name='trabajoEvangelismo.hogaresVisitados'
                                                                 value={this.state.trabajoEvangelismo.hogaresVisitados}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="hogaresVisitados"
+                                                            >
+                                                                Cantidad de visitas de evangelismo tanto a Visitantes Permanentes y Ocasionales como las realizadas en el trabajo de apertura de hogares (Casa por casa o por referencia).
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -890,9 +967,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='hogaresConquistados'
                                                                 name='trabajoEvangelismo.hogaresConquistados'
                                                                 value={this.state.trabajoEvangelismo.hogaresConquistados}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="hogaresConquistados"
+                                                            >
+                                                                Hogares que se lograron abrir a la predicación del evangelio, producto del trabajo de evangelismo Casa por Casa o por Referencia.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -901,9 +985,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='visitantesPermanentes'
                                                                 name='trabajoEvangelismo.visitantesPermanentes'
                                                                 value={this.state.trabajoEvangelismo.visitantesPermanentes}
                                                                 onChange={(e) => this.handleChange(e)} readOnly></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="visitantesPermanentes"
+                                                            >
+                                                                Cantidad de Visitantes que se considerán Permanentes en la asistencia a las actividades de la Iglesia.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -912,9 +1003,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='cultosLocalidad'
                                                                 name='trabajoEvangelismo.cultosPorLaLocalidad'
                                                                 value={this.state.trabajoEvangelismo.cultosPorLaLocalidad}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="cultosLocalidad"
+                                                            >
+                                                                Cantidad de Cultos realizados en el Sector que hayan sido por programa de Evangelismo.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -923,9 +1021,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='cultosHogar'
                                                                 name='trabajoEvangelismo.cultosDeHogar'
                                                                 value={this.state.trabajoEvangelismo.cultosDeHogar}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="cultosHogar"
+                                                            >
+                                                                Cantidad de Cultos de evangelismo realizados en los Hogares Cristianos, de Visitantes o Simpatizantes del evangelio.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -934,9 +1039,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='campanias'
                                                                 name='trabajoEvangelismo.campanias'
                                                                 value={this.state.trabajoEvangelismo.campanias}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="campanias"
+                                                            >
+                                                                Cantidad de campañas de evangelismo realizadas en el Sector, en el mes en curso.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -945,9 +1057,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='aperturaMision'
                                                                 name='trabajoEvangelismo.aperturaDeMisiones'
                                                                 value={this.state.trabajoEvangelismo.aperturaDeMisiones}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="aperturaMision"
+                                                            >
+                                                                Cantidad de misiones que oficialmente se hayan abierto o establecido como misiones del Sector (habiendose levantado acta respectiva).
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -956,9 +1075,16 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='bautismos'
                                                                 name='trabajoEvangelismo.bautismos'
                                                                 value={this.state.trabajoEvangelismo.bautismos}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="bautismos"
+                                                            >
+                                                                Cantidad de Bautismos de personal visitante del Sector que se hayan realizado en el mes en curso.
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -1305,7 +1431,7 @@ class InformePastor extends Component {
                                                 <Col xs="12" sm="12" lg="12">
                                                     <ListGroup>
                                                         {this.state.desgloseMoviemientoEstadistico.length > 0 && this.state.desgloseMoviemientoEstadistico.map((obj, index) => (
-                                                            <ListGroupItem key={obj.hte_Id_Transaccion}>{index + 1}.- <b>{obj.ct_Tipo}</b> por <b>{obj.ct_Subtipo}</b> corresponde a <b>{obj.per_Nombre} {obj.per_Apellido_Paterno} {obj.per_Apellido_Materno}</b> - {moment(obj.hte_Fecha_Transaccion).format("YYYY-MM-DD")}</ListGroupItem>
+                                                            <ListGroupItem key={obj.hte_Id_Transaccion}>{index + 1}.- <b>{obj.ct_Tipo}</b> por <b>{obj.ct_Subtipo}</b> corresponde a <b>{obj.per_Nombre} {obj.per_Apellido_Paterno} {obj.per_Apellido_Materno}</b></ListGroupItem>
                                                         ))}
                                                     </ListGroup>
                                                 </Col>
