@@ -737,6 +737,24 @@ class Sidebar extends Component {
                         </div>
                     </li>
 
+                     {/* Nav Item - Informes Collapse Menu */}
+                    <li className="nav-item">
+                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseInformes" aria-expanded="true" aria-controls="collapsePages">
+                            <i className="fas fa-fw fa-chart-bar"></i>
+                            <span>Informes</span>
+                        </Link>
+                        <div id="collapseInformes" className="collapse" aria-labelledby="headingInformes" data-parent="#accordionSidebar">
+                            <div className="bg-white py-2 collapse-inner rounded">
+                                <h6 className="collapse-header">Seleccione un informe:</h6>
+                                <Link className="collapse-item text-wrap"
+                                    to="/InformesPastorales"
+                                    onClick={() => this.handle_LinkEncabezado("Sección: Informes", "Listado de Informes Pastorales")}
+                                >Informes Pastorales
+                                </Link>
+                            </div>
+                        </div>
+                    </li>
+
                     {/* Divider */}
                     {/* <hr className="sidebar-divider" /> */}
 
