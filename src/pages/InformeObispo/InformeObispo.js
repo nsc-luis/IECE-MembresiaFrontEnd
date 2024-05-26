@@ -29,11 +29,12 @@ class InformeObispo extends Component {
                 usu_id_usuario: 0,
                 fechaRegistro: null,
             },
-            sector: {
-                sec_Id_Sector: 0,
-                sec_Numero: 0,
-                sec_Alias: ''
-            },
+            // sector: {
+            //     sec_Id_Sector: 0,
+            //     sec_Numero: 0,
+            //     sec_Alias: ''
+            // },
+            sectores: [],
             distrito: {
                 dis_Numero: 0,
                 dis_Alias: ''
@@ -230,7 +231,8 @@ class InformeObispo extends Component {
 
     componentDidMount() {
         this.getDistrito();
-        this.getSector();
+        // this.getSector();
+        this.getSectores();
     }
 
     getDistrito = async () => {
@@ -240,15 +242,28 @@ class InformeObispo extends Component {
                     distrito: res.data
                 })
                 console.log(res.data);
+                const { id } = this.props.match.params;
+                this.obtenerInforme(id);
+                console.log(res.data);
             })
         );
     }
 
-    getSector = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get('/Sector/' + localStorage.getItem('sector'))
+    // getSector = async () => {
+    //     await helpers.validaToken().then(helpers.authAxios.get('/Sector/' + localStorage.getItem('sector'))
+    //         .then(res => {
+    //             this.setState({
+    //                 sector: res.data.sector[0]
+    //             })
+    //         })
+    //     );
+    // }
+
+    getSectores = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
             .then(res => {
                 this.setState({
-                    sector: res.data.sector[0]
+                    sectores: res.data.sectores
                 })
                 const { id } = this.props.match.params;
                 this.obtenerInforme(id);
@@ -506,428 +521,141 @@ class InformeObispo extends Component {
                                     <Row className='titulo'>
                                         ACTIVIDADES DEL OBISPO
                                     </Row>
-                                    <Row className='contenedor-seccion'>
-                                        <Col xs="12" sm="12" lg="12">
-                                            <Row className='subtitulos'>
-                                                <Col xs="3" sm="3" lg="3">
-                                                    VISITAS A HOGARES
-                                                </Col>
-                                                <Col xs="3" sm="3" lg="3">
-                                                    CULTOS EN LA BASE
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    <Row>
-                                                        <Col xs="12" sm="12" lg="12">
-                                                            ESTUDIOS BIBLICOS Y CONFERENCIAS
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4"> </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            ESTUDIOS
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            CONFERENCIAS
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                            <Row className='lista-elementos'>
-                                                <Col xs="3" sm="3" lg="3">
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Por el pastor
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='porPastor'
-                                                                name='visitasPastor.porPastor'
-                                                                value={this.state.visitasPastor.porPastor}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="porPastor"
-                                                            >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Por Ancianos Auxiliares
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='porAncianosAux'
-                                                                name='visitasPastor.porAncianosAux'
-                                                                value={this.state.visitasPastor.porAncianosAux}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="porAncianosAux"
-                                                            >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por los ancianos auxiliares en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Por Diaconos
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='porDiaconos'
-                                                                name='visitasPastor.porDiaconos'
-                                                                value={this.state.visitasPastor.porDiaconos}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="porDiaconos"
-                                                            >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por los diáconos en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Por Auxiliares
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='porAuxiliares'
-                                                                name='visitasPastor.porAuxiliares'
-                                                                value={this.state.visitasPastor.porAuxiliares}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="porAuxiliares"
-                                                            >
-                                                                Aqui se ingresan la cantidad de visitas realizadas por los auxiliares en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col xs="3" sm="3" lg="3">
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Ordinarios
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='ordinarios'
-                                                                name='cultosSector.ordinarios'
-                                                                value={this.state.cultosSector.ordinarios}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="ordinarios"
-                                                            >
-                                                                Aqui se ingresan la cantidad de cultos ordinarios realizados en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Especiales
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='especiales'
-                                                                name='cultosSector.especiales'
-                                                                value={this.state.cultosSector.especiales}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="especiales"
-                                                            >
-                                                                Aqui se ingresan la cantidad de cultos especiales realizados en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            De avivamiento
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='deAvivamiento'
-                                                                name='cultosSector.deAvivamiento'
-                                                                value={this.state.cultosSector.deAvivamiento}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="deAvivamiento"
-                                                            >
-                                                                Aqui se ingresan la cantidad de cultos de avivamiento realizados en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            De aniversario
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='deAniversario'
-                                                                name='cultosSector.deAniversario'
-                                                                value={this.state.cultosSector.deAniversario}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="deAniversario"
-                                                            >
-                                                                Aqui se ingresan la cantidad de cultos de aniversario realizados en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Por el Distrito
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                id='porElDistrito'
-                                                                name='cultosSector.porElDistrito'
-                                                                value={this.state.cultosSector.porElDistrito}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                            <UncontrolledTooltip
-                                                                placement="right"
-                                                                target="porElDistrito"
-                                                            >
-                                                                Aqui se ingresan la cantidad de cultos organizados por el Distrito realizados en este mes.
-                                                            </UncontrolledTooltip>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Escuela dominical
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.estudios.escuelaDominical'
-                                                                value={this.state.estudiosSector.estudios.escuelaDominical}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.conferencias.escuelaDominical'
-                                                                value={this.state.estudiosSector.conferencias.escuelaDominical}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Varonil
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.estudios.varonil'
-                                                                value={this.state.estudiosSector.estudios.varonil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.conferencias.varonil'
-                                                                value={this.state.estudiosSector.conferencias.varonil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Femenil
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.estudios.femenil'
-                                                                value={this.state.estudiosSector.estudios.femenil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.conferencias.femenil'
-                                                                value={this.state.estudiosSector.conferencias.femenil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Juvenil
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.estudios.juvenil'
-                                                                value={this.state.estudiosSector.estudios.juvenil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.conferencias.juvenil'
-                                                                value={this.state.estudiosSector.conferencias.juvenil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Infantil
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.estudios.infantil'
-                                                                value={this.state.estudiosSector.estudios.infantil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.conferencias.infantil'
-                                                                value={this.state.estudiosSector.conferencias.infantil}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Iglesia
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.estudios.iglesia'
-                                                                value={this.state.estudiosSector.estudios.iglesia}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='estudiosSector.conferencias.iglesia'
-                                                                value={this.state.estudiosSector.conferencias.iglesia}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-
-                                        </Col>
-                                        <Col xs="12" sm="12" lg="12">
-                                            <Row className='subtitulos'>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    CULTOS EN LAS MISIONES
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    TRABAJO DE EVANGELISMO
-                                                </Col>
-                                            </Row>
-                                            <Row className='lista-elementos'>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    {this.state.misiones.length > 0 && this.state.misiones.map((obj, index) => (
-                                                        <Row className='elemento' key={obj.ms_Id}>
-                                                            <Col xs="2" sm="2" lg="2" className='text-center'>
-                                                                Misión {obj.ms_Numero}
+                                    {this.state.sectores.length > 0 && this.state.sectores.map((obj, index) => (
+                                        <Row key={obj.sec_Id_Sector} className='contenedor-seccion'>
+                                            <Col xs="12" sm="12" lg="12">
+                                                <Row className='subtitulos'>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        Visitas a:
+                                                    </Col>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        Cultos
+                                                    </Col>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        Conferencias
+                                                    </Col>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        Concentraciones
+                                                    </Col>
+                                                </Row>
+                                                <Row className='lista-elementos'>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sectores
                                                             </Col>
-                                                            <Col xs="6" sm="6" lg="6" className='text-center'>
-                                                                {obj.ms_Alias}
-                                                            </Col>
-                                                            <Col xs="2" sm="2" lg="2" className='text-center'>
-                                                                Cultos
-                                                            </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    name={`misiones.${index}.cultos`}
-                                                                    value={this.state.misiones[index].cultos}
+                                                                    id='visitasSectores'
+                                                                    name='visitasPastor.porPastor'
+                                                                    value={this.state.visitasPastor.porPastor}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasSectores"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
-                                                    ))}
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Hogares visitados
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.hogaresVisitados'
-                                                                value={this.state.trabajoEvangelismo.hogaresVisitados}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Hogares conquistados
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.hogaresConquistados'
-                                                                value={this.state.trabajoEvangelismo.hogaresConquistados}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Visitantes permanentes
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.visitantesPermanentes'
-                                                                value={this.state.trabajoEvangelismo.visitantesPermanentes}
-                                                                onChange={(e) => this.handleChange(e)} readOnly></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Cultos por la localidad
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.cultosPorLaLocalidad'
-                                                                value={this.state.trabajoEvangelismo.cultosPorLaLocalidad}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Cultos de Hogar
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.cultosDeHogar'
-                                                                value={this.state.trabajoEvangelismo.cultosDeHogar}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Campañas
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.campanias'
-                                                                value={this.state.trabajoEvangelismo.campanias}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Apertura de Misiones
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.aperturaDeMisiones'
-                                                                value={this.state.trabajoEvangelismo.aperturaDeMisiones}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Bautismos
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='trabajoEvangelismo.bautismos'
-                                                                value={this.state.trabajoEvangelismo.bautismos}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                    </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Hogares
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+                                                                    // value={this.state.visitasPastor.porPastor}
+                                                                    onChange={(e) => this.handleChange(e)}
+                                                                    ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Ordinarios
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasSectores'
+                                                                    name='visitasPastor.porPastor'
+                                                                    // value={this.state.visitasPastor.porPastor}
+                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasSectores"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Especiales
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                    ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                De Avivamiento
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                    ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Evangelismo
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                    ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        </Row>
+                                    ))}
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>

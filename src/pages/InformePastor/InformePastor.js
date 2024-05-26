@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup,
+    Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup, Modal, ModalBody,
     Form, FormGroup, CardBody, CardFooter, ListGroup, ListGroupItem, UncontrolledTooltip
 } from 'reactstrap';
 import './style.css'
@@ -15,6 +15,8 @@ class InformePastor extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            mensajeDelProceso: "Procesando...",
+            modalShow: false,
             informe: {
                 idInforme: 0,
                 idTipoUsuario: 0, //1 Pastor 2 Obispo
@@ -214,7 +216,9 @@ class InformePastor extends Component {
                 ninas: 0,
                 ninos: 0,
                 personasBautizadas: 0,
+                personasBautizadasAlFinalDelMes: 0,
                 personasNoBautizadas: 0,
+                personasNoBautizadasAlFinalDelMes: 0,
                 matrimonios: 0,
                 legalizaciones: 0,
                 presentaciones: 0,
@@ -487,6 +491,10 @@ class InformePastor extends Component {
     }
 
     descargarInforme = async (informeId) => {
+        this.setState({
+            mensajeDelProceso: "Procesando...",
+            modalShow: true
+        });
         await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, { responseType: 'blob' })
             .then(res => {
                 console.log(res);
@@ -501,6 +509,9 @@ class InformePastor extends Component {
 
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
+                this.setState({
+                    modalShow: false
+                });
             })
         )
     }
@@ -1106,7 +1117,7 @@ class InformePastor extends Component {
                                                 DATOS DEL ESTADO ACTUAL DE LA IGLESIA
                                             </Row>
                                             <Row className='titulo'>
-                                                Número de personal en comunión al principio del mes {this.state.informe.nombreMes}
+                                                <p>Número de personal en comunión al principio del mes: <u>{this.state.datosEstadisticos.personasBautizadas}</u></p>
                                             </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="6" sm="6" lg="6">
@@ -1205,7 +1216,7 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.bajasBautizados.excomunion'
-                                                                value={this.state.datosEstadisticos.bajasBautizados.excomunion}
+                                                                value={this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
@@ -1227,7 +1238,7 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.bajasBautizados.cambiodedomexterno'
-                                                                value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
+                                                                value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
@@ -1412,7 +1423,7 @@ class InformePastor extends Component {
                                                         name='datosEstadisticos.personasBautizadas'
                                                         value={this.state.datosEstadisticos.personasBautizadas}
                                                         onChange={(e) => this.handleChange(e)}></Input> */}
-                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas}</span></u>
+                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadasAlFinalDelMes}</span></u>
                                                 </Col>
                                                 <Col xs="4" sm="4" lg="4">
                                                     No. completo de personal no bautizado
@@ -1422,7 +1433,7 @@ class InformePastor extends Component {
                                                         name='datosEstadisticos.personasNoBautizadas'
                                                         value={this.state.datosEstadisticos.personasNoBautizadas}
                                                         onChange={(e) => this.handleChange(e)}></Input> */}
-                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasNoBautizadas}</span></u>
+                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasNoBautizadasAlFinalDelMes}</span></u>
                                                 </Col>
                                             </Row>
                                             <Row className='elemento'>
@@ -1430,7 +1441,7 @@ class InformePastor extends Component {
                                                     Número completo de personal que integra la iglesia
                                                 </Col>
                                                 <Col xs="2" sm="2" lg="2">
-                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas + this.state.datosEstadisticos.personasNoBautizadas}</span></u>
+                                                    <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadasAlFinalDelMes + this.state.datosEstadisticos.personasNoBautizadasAlFinalDelMes}</span></u>
                                                 </Col>
                                             </Row>
                                             <Row className='elemento'>
@@ -2552,6 +2563,11 @@ class InformePastor extends Component {
                     <span className='paginador'>Pagina {this.state.pagina} / {this.maxPaginas}</span>
                     <Button color='primary' onClick={() => this.togglePage(this.state.pagina + 1)}><span className='fa fa-icon fa-arrow-right'></span></Button>
                 </Row>
+                <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
             </Container>
         );
     }
