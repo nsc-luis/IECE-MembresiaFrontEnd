@@ -534,9 +534,9 @@ class InformePastor extends Component {
                                     <Row>
                                         <Col xs="12" sm="12" lg="12">
                                             <p>
-                                                INFORME QUE RINDE EL PASTOR DEL SECTOR NO. <b>{this.state.sector.sec_Numero}</b> CON BASE EN: <b> {this.state.sector.sec_Alias + ' '} </b>
-                                                AL DISTRITO NUMERO <b>{this.state.distrito.dis_Numero}</b> CON ASIENTO EN <b>{this.state.distrito.dis_Alias}</b> DEL TRABAJO Y MOVIMIENTO REGISTRADO
-                                                DURANTE EL MES DE <b>{this.state.informe.nombreMes}</b> DE <b>{this.state.informe.anio}.</b>
+                                                INFORME QUE RINDE EL PASTOR DEL SECTOR NO. <b style={{ textDecoration: 'underline' }}>{this.state.sector.sec_Numero}</b> CON BASE EN: <b style={{ textDecoration: 'underline' }}> {this.state.sector.sec_Alias + ' '} </b>
+                                                AL DISTRITO NUMERO <b style={{ textDecoration: 'underline' }}>{this.state.distrito.dis_Numero}</b > CON ASIENTO EN <b style={{ textDecoration: 'underline' }}>{this.state.distrito.dis_Alias}</b> DEL TRABAJO Y MOVIMIENTO REGISTRADO
+                                                DURANTE EL MES DE <b style={{ textDecoration: 'underline' }}>{this.state.informe.nombreMes ? this.state.informe.nombreMes.toUpperCase() : ''}</b> DE <b style={{ textDecoration: 'underline' }}>{this.state.informe.anio}.</b>
                                             </p>
                                         </Col>
                                     </Row>
@@ -571,7 +571,7 @@ class InformePastor extends Component {
                                                 <Col xs="3" sm="3" lg="3">
                                                     <Row className='elemento'>
                                                         <Col xs="8" sm="8" lg="8">
-                                                            Por el pastor
+                                                            Por el Pastor
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
@@ -601,7 +601,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porAncianosAux"
                                                             >
-                                                                Visitas a hogares realizadas por Ancianos Auxiliares.
+                                                                Visitas a hogares realizadas exclusivamente por Ancianos Auxiliares.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -619,7 +619,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porDiaconos"
                                                             >
-                                                                Visitas a hogares realizadas por Diáconos.
+                                                                Visitas a hogares realizadas exclusivamente por Diáconos.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -637,7 +637,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="porAuxiliares"
                                                             >
-                                                                Visitas a hogares realizadas por Auxiliares.
+                                                                Visitas a hogares realizadas exclusivamente por Auxiliares.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -755,9 +755,16 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='estudiosSector.conferencias.escuelaDominical'
+                                                                id='confDominical'
                                                                 readOnly
                                                                 value={this.state.estudiosSector.conferencias.escuelaDominical}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="confDominical"
+                                                            >
+                                                                N/A
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -787,7 +794,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="confVaronil"
                                                             >
-                                                                Cantidad de Conferencias impartidos al Sector Varonil.
+                                                                Cantidad de Conferencias impartidas al Sector Varonil.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -818,7 +825,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="confFemenil"
                                                             >
-                                                                Cantidad de Conferencias impartidos al Sector Femenil.
+                                                                Cantidad de Conferencias impartidas al Sector Femenil.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -836,7 +843,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="estudioJuvenil"
                                                             >
-                                                                Cantidad de Estudios de la Guía Bíblica  impartidos al Sector Juvenil.
+                                                                Cantidad de Estudios de la Guía Bíblica impartidos al Sector Juvenil.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
@@ -849,7 +856,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="confJuvenil"
                                                             >
-                                                                Cantidad de Conferencias impartidos al Sector Juvenil.
+                                                                Cantidad de Conferencias impartidas al Sector Juvenil.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -867,7 +874,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="estudioInfantil"
                                                             >
-                                                                Cantidad de Estudios de la Guía Bíblica  impartidos al Sector Infantil.
+                                                                Cantidad de Estudios de la Guía Bíblica impartidos al Sector Infantil.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
@@ -880,7 +887,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="confInfantil"
                                                             >
-                                                                Cantidad de Conferencias impartidos al Sector Infantil.
+                                                                Cantidad de Conferencias impartidas al Sector Infantil.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -891,9 +898,16 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='estudiosSector.estudios.iglesia'
+                                                                id='estIglesia'
                                                                 readOnly
                                                                 value={this.state.estudiosSector.estudios.iglesia}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="estIglesia"
+                                                            >
+                                                                N/A
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
@@ -905,7 +919,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="confIglesia"
                                                             >
-                                                                Cantidad de Conferencias impartida a la Congregación.
+                                                                Cantidad de Conferencias impartidas a la Congregación.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -945,7 +959,7 @@ class InformePastor extends Component {
                                                                     placement="right"
                                                                     target="cultoMision"
                                                                 >
-                                                                    Cantidad de Cultos realizados en las misiones locales del Sector.
+                                                                    Cantidad de Cultos realizados en las misiones locales del Sector. Si no aparecen alguna misión del Sector, asegúrese de darla de Alta desde la función 'Misiones del Sector'.
                                                                 </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
@@ -1002,7 +1016,7 @@ class InformePastor extends Component {
                                                                 placement="right"
                                                                 target="visitantesPermanentes"
                                                             >
-                                                                Cantidad de Visitantes que se considerán Permanentes en la asistencia a las actividades de la Iglesia.
+                                                                Cantidad de Visitantes que se considerán Permanentes en la asistencia a las actividades de la Iglesia. Este número se extrae automáticamente de la Lista de Visitantes Permanentes que se hayan registrado como tales en la función de 'Visitantes'.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -1086,13 +1100,15 @@ class InformePastor extends Component {
                                                             <Input type='number' min={0} max={9999}
                                                                 id='bautismos'
                                                                 name='trabajoEvangelismo.bautismos'
-                                                                value={this.state.trabajoEvangelismo.bautismos}
+                                                                //value={this.state.trabajoEvangelismo.bautismos}
+                                                                value={this.state.datosEstadisticos.altasBautizados.bautismo}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                             <UncontrolledTooltip
                                                                 placement="right"
                                                                 target="bautismos"
                                                             >
-                                                                Cantidad de Bautismos de personal visitante del Sector que se hayan realizado en el mes en curso.
+                                                                Cantidad de Bautismos de personal que exclusivamente pertenece a este Sector y que se hayan realizado en el mes en curso. Este número se extrae automáticamente de las Altas por Bautismo que se hayan registrado en el Sistema de Movimientos Estadísticos de la Membresía.
                                                             </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
@@ -1106,7 +1122,7 @@ class InformePastor extends Component {
                                                 DATOS DEL ESTADO ACTUAL DE LA IGLESIA
                                             </Row>
                                             <Row className='titulo'>
-                                                Número de personal en comunión al principio del mes {this.state.informe.nombreMes}
+                                                Número de personal en comunión al principio del mes
                                             </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="6" sm="6" lg="6">
@@ -1152,7 +1168,7 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="8" sm="8" lg="8" style={{ fontWeight: 'bold' }}>
                                                             Total de altas
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
@@ -1163,6 +1179,7 @@ class InformePastor extends Component {
                                                             <span className='font-weight-bold text-lg'>{ }</span>
                                                         </Col>
                                                     </Row>
+                                                    <br />
                                                     <Row className='elemento'>
                                                         <Col xs="8" sm="8" lg="8">
                                                             Matrimonios
@@ -1221,7 +1238,7 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="8" sm="8" lg="8" style={{ fontWeight: 'bold' }}>
                                                             Total de bajas
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
@@ -1231,6 +1248,7 @@ class InformePastor extends Component {
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
+                                                    <br />
                                                     <Row className='elemento'>
                                                         <Col xs="8" sm="8" lg="8">
                                                             Legalizaciones
@@ -1404,20 +1422,20 @@ class InformePastor extends Component {
                                                 </Col>
                                             </Row>
                                             <Row className='elemento'>
-                                                <Col xs="4" sm="4" lg="4">
+                                                <Col xs="5" sm="5" lg="5" style={{ fontWeight: 'bold' }}>
                                                     No. completo de personal bautizado
                                                 </Col>
-                                                <Col xs="2" sm="2" lg="2">
+                                                <Col xs="1" sm="1" lg="1">
                                                     {/* <Input type='number' min={0} max={9999}
                                                         name='datosEstadisticos.personasBautizadas'
                                                         value={this.state.datosEstadisticos.personasBautizadas}
                                                         onChange={(e) => this.handleChange(e)}></Input> */}
                                                     <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas}</span></u>
                                                 </Col>
-                                                <Col xs="4" sm="4" lg="4">
+                                                <Col xs="5" sm="5" lg="5" style={{ fontWeight: 'bold' }}>
                                                     No. completo de personal no bautizado
                                                 </Col>
-                                                <Col xs="2" sm="2" lg="2">
+                                                <Col xs="1" sm="1" lg="1">
                                                     {/* <Input type='number' min={0} max={9999}
                                                         name='datosEstadisticos.personasNoBautizadas'
                                                         value={this.state.datosEstadisticos.personasNoBautizadas}
@@ -1426,22 +1444,24 @@ class InformePastor extends Component {
                                                 </Col>
                                             </Row>
                                             <Row className='elemento'>
-                                                <Col xs="4" sm="4" lg="4">
+                                                <Col xs="5" sm="5" lg="5" style={{ fontWeight: 'bold' }}>
                                                     Número completo de personal que integra la iglesia
                                                 </Col>
-                                                <Col xs="2" sm="2" lg="2">
+                                                <Col xs="1" sm="1" lg="1">
                                                     <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas + this.state.datosEstadisticos.personasNoBautizadas}</span></u>
                                                 </Col>
                                             </Row>
+                                            <br />
+
                                             <Row className='elemento'>
                                                 <Col xs="12" sm="12" lg="12">
-                                                    <b>Desglose de movimiento estadístico</b>
+                                                    <b>DESGLOSE DE MOVIMIENTO ESTADÍSTICO</b>
                                                 </Col>
                                                 <Col xs="12" sm="12" lg="12">
                                                     <ListGroup>
-                                                        {this.state.desgloseMoviemientoEstadistico.length > 0 && this.state.desgloseMoviemientoEstadistico.map((obj, index) => (
+                                                        {this.state.desgloseMoviemientoEstadistico.length > 0 ? this.state.desgloseMoviemientoEstadistico.map((obj, index) => (
                                                             <ListGroupItem key={obj.hte_Id_Transaccion}>{index + 1}.- <b>{obj.ct_Tipo}</b> por <b>{obj.ct_Subtipo}</b> corresponde a <b>{obj.per_Nombre} {obj.per_Apellido_Paterno} {obj.per_Apellido_Materno}</b></ListGroupItem>
-                                                        ))}
+                                                        )) : <u>No hay Movimientos Estadísticos que desglosar.</u>}
                                                     </ListGroup>
                                                 </Col>
                                             </Row>
@@ -1715,7 +1735,7 @@ class InformePastor extends Component {
                                             </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="6" sm="6" lg="6">
-                                                    2.- SESIONES
+                                                    2.- SESIONES Y REUNIONES
                                                 </Col>
                                                 <Col xs="6" sm="6" lg="6">
                                                     6.- CONSTRUCCIONES
@@ -1769,10 +1789,17 @@ class InformePastor extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
+                                                                id='sesionPersonalDocente'
                                                                 name='sesiones.conElPersonalDocente'
                                                                 readOnly
                                                                 value={this.state.sesiones.conElPersonalDocente}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="sesionPersonalDocente"
+                                                            >
+                                                                N/A
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
@@ -1790,7 +1817,7 @@ class InformePastor extends Component {
                                                     </Row>
                                                     <Row className='elemento'>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            Con Sociedades o Dept. femenil
+                                                            Con Sociedad o Depto. femenil
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
@@ -1821,7 +1848,7 @@ class InformePastor extends Component {
                                                     </Row>
                                                     <Row className='elemento'>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            Con Sociedades o Depto. Juvenil
+                                                            Con Sociedad o Depto. Juvenil
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
@@ -1917,10 +1944,10 @@ class InformePastor extends Component {
                                                     <Row className='elemento'>
                                                         <Col xs="4" sm="4" lg="4"></Col>
                                                         <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            Inicio
+                                                            INICIO
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            Conclusión
+                                                            CONCLUSIÓN
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -1943,9 +1970,16 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='construccionesConclusion.colocacionPrimeraPiedra'
+                                                                id='conclusionColPrimeraPiedra'
                                                                 readOnly
                                                                 value={this.state.construccionesConclusion.colocacionPrimeraPiedra}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                            <UncontrolledTooltip
+                                                                placement="right"
+                                                                target="conclusionColPrimeraPiedra"
+                                                            >
+                                                                N/A
+                                                            </UncontrolledTooltip>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
@@ -2323,7 +2357,7 @@ class InformePastor extends Component {
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
-                                                MOVIMIENTO ECONOMICO
+                                                MOVIMIENTO ECONÓMICO
                                             </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="6" sm="6" lg="6">
@@ -2394,7 +2428,7 @@ class InformePastor extends Component {
                                                 <Col xs="6" sm="6" lg="6">
                                                     <Row className='elemento'>
                                                         <Col xs="8" sm="8" lg="8">
-                                                            Gastos de la admon.
+                                                            Gastos de la Admon.
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
@@ -2467,7 +2501,7 @@ class InformePastor extends Component {
                                                 placement="left"
                                                 target="otrasActividades"
                                             >
-                                                Desglose de actividades realizadas por el Pastor o efectuadas dentro de la jurisdiccion local y que no pudieron se reflejados en alguna sección o concepto predefinido del presente informe mensual pastoral. Tambien puede agregarse comentarios complementarios de aquellos conceptos que en los rubros predefinidos en este informe requieran aumentar explicación para dar claridad del trabajo logrado en el mes. Toda actividad ralizada fuera de la jurisdicción local no es necesario anotarla en este concepto.
+                                                Desglose de actividades realizadas por el Pastor o efectuadas dentro de la jurisdicción local y que no pudieron se reflejados en alguna sección o concepto predefinido del presente informe mensual pastoral. Tambien puede agregarse comentarios complementarios de aquellos conceptos que en los rubros predefinidos en este informe requieran aumentar explicación para dar claridad del trabajo logrado en el mes. Toda actividad ralizada fuera de la jurisdicción local no es necesario anotarla en este concepto.
                                             </UncontrolledTooltip>
                                         </Col>
                                         <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
