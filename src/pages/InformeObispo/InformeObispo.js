@@ -524,6 +524,9 @@ class InformeObispo extends Component {
                                     {this.state.sectores.length > 0 && this.state.sectores.map((obj, index) => (
                                         <Row key={obj.sec_Id_Sector} className='contenedor-seccion'>
                                             <Col xs="12" sm="12" lg="12">
+                                                <Row className='titulo'>
+                                                   {obj.sec_Tipo_Sector} {obj.sec_Numero}.- {obj.sec_Alias}
+                                                </Row>
                                                 <Row className='subtitulos'>
                                                     <Col xs="3" sm="3" lg="3">
                                                         Visitas a:
@@ -568,7 +571,7 @@ class InformeObispo extends Component {
                                                                     name='visitasPastor.porPastor'
                                                                     // value={this.state.visitasPastor.porPastor}
                                                                     onChange={(e) => this.handleChange(e)}
-                                                                    ></Input>
+                                                                ></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="visitasHogares"
@@ -606,7 +609,7 @@ class InformeObispo extends Component {
                                                                     id='visitasHogares'
                                                                     name='visitasPastor.porPastor'
 
-                                                                    ></Input>
+                                                                ></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="visitasHogares"
@@ -624,7 +627,7 @@ class InformeObispo extends Component {
                                                                     id='visitasHogares'
                                                                     name='visitasPastor.porPastor'
 
-                                                                    ></Input>
+                                                                ></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="visitasHogares"
@@ -642,7 +645,191 @@ class InformeObispo extends Component {
                                                                     id='visitasHogares'
                                                                     name='visitasPastor.porPastor'
 
-                                                                    ></Input>
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Iglesia
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasSectores'
+                                                                    name='visitasPastor.porPastor'
+                                                                    // value={this.state.visitasPastor.porPastor}
+                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasSectores"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sector Varonil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sociedad Femenil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sociedad Juvenil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Infantil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                    <Col xs="3" sm="3" lg="3">
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Iglesia
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasSectores'
+                                                                    name='visitasPastor.porPastor'
+                                                                    // value={this.state.visitasPastor.porPastor}
+                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasSectores"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sector Varonil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sociedad Femenil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sociedad Juvenil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="visitasHogares"
+                                                                >
+                                                                    Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                </UncontrolledTooltip>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='elemento'>
+                                                            <Col xs="8" sm="8" lg="8">
+                                                                Sector Infantil
+                                                            </Col>
+                                                            <Col xs="4" sm="4" lg="4">
+                                                                <Input type='number' min={0} max={9999}
+                                                                    id='visitasHogares'
+                                                                    name='visitasPastor.porPastor'
+
+                                                                ></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="visitasHogares"
