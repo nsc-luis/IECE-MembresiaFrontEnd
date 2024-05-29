@@ -1,3 +1,9 @@
+table, th, td {
+    border: 1px solid black;
+}
+table {
+    width: 100%;
+}
 .contenedor-informe{
     padding-right: 30px;
     padding-left: 30px;
@@ -58,4 +64,15 @@
     justify-content: center;
     font-size: smaller;
     margin-bottom: 15px;
+}
+.table-header{
+    text-align: center;
+}
+.sectores-header{
+    font-size: smaller;
+    text-align: center;
+    height: 100px;
+    text-wrap: wrap;
+    writing-mode: tb-rl;
+    transform: rotate(-180deg);
 }

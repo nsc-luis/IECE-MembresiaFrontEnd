@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup,
+    Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup, Table,
     Form, FormGroup, CardBody, CardFooter, ListGroup, ListGroupItem, UncontrolledTooltip
 } from 'reactstrap';
 import './style.css'
 
 import rutaLogo from '../../assets/images/IECE_LogoOficial.jpg'
 import moment from 'moment/moment';
+import { ActividadesObispo } from './models/ActividadesObispo.model';
 
 class InformeObispo extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxPaginas = 2;
+    cellNumber = new Array(22).fill()
     constructor(props) {
         super(props);
         this.state = {
@@ -29,12 +31,10 @@ class InformeObispo extends Component {
                 usu_id_usuario: 0,
                 fechaRegistro: null,
             },
-            // sector: {
-            //     sec_Id_Sector: 0,
-            //     sec_Numero: 0,
-            //     sec_Alias: ''
-            // },
+            // OBISPO
             sectores: [],
+            actividadesObispo : [new ActividadesObispo()],
+            // TERMINA OBISPO
             distrito: {
                 dis_Numero: 0,
                 dis_Alias: ''
@@ -263,7 +263,7 @@ class InformeObispo extends Component {
         await helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
             .then(res => {
                 this.setState({
-                    sectores: res.data.sectores
+                    sectores: res.data.sectores.sort((a,b) => {return b.sec_Tipo_Sector.localeCompare(a.sec_Tipo_Sector)})
                 })
                 const { id } = this.props.match.params;
                 this.obtenerInforme(id);
@@ -312,10 +312,14 @@ class InformeObispo extends Component {
                 this.state.regularizacionPatIg = res.data.regularizacionPatIg !== null ? res.data.regularizacionPatIg : this.state.regularizacionPatIg;
                 this.state.movimientoEconomico = res.data.movimientoEconomico !== null ? res.data.movimientoEconomico : this.state.movimientoEconomico;
                 this.state.otrasActividades = res.data.otrasActividades !== null ? res.data.otrasActividades : this.state.otrasActividades;
-                this.obtenerMisiones();
-                this.obtenerDatosEstadisticos();
-                this.obtenerMovimientosEstadisticos();
-                this.obtenerVisitantes();
+
+                //OBISPO
+                // this.state.actividadesObispo = res.data.actividadesObispo !== null ? res.data.actividadesObispo : this.state.actividadesObispo;
+                //Fin OBISPO
+                // this.obtenerMisiones();
+                // this.obtenerDatosEstadisticos();
+                // this.obtenerMovimientosEstadisticos();
+                // this.obtenerVisitantes();
                 console.log(res);
             })
         );
@@ -521,12 +525,12 @@ class InformeObispo extends Component {
                                     <Row className='titulo'>
                                         ACTIVIDADES DEL OBISPO
                                     </Row>
-                                    {this.state.sectores.length > 0 && this.state.sectores.map((obj, index) => (
+                                    {this.state.actividadesObispo.length > 0 && this.state.actividadesObispo.map((obj, index) => (
                                         <Row key={obj.sec_Id_Sector} className='contenedor-seccion'>
                                             <Col xs="12" sm="12" lg="12">
-                                                <Row className='titulo'>
-                                                   {obj.sec_Tipo_Sector} {obj.sec_Numero}.- {obj.sec_Alias}
-                                                </Row>
+                                                {/* <Row className='titulo'>
+                                                    {obj.sec_Tipo_Sector} {obj.sec_Numero}.- {obj.sec_Alias}
+                                                </Row> */}
                                                 <Row className='subtitulos'>
                                                     <Col xs="3" sm="3" lg="3">
                                                         Visitas a:
@@ -549,13 +553,13 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    id='visitasSectores'
-                                                                    name='visitasPastor.porPastor'
-                                                                    value={this.state.visitasPastor.porPastor}
+                                                                    id='aSectores'
+                                                                    name={`actividadesObispo.${index}.VisitasObispo.aSectores`}
+                                                                    value={this.state.actividadesObispo[index].VisitasObispo.aSectores}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
-                                                                    target="visitasSectores"
+                                                                    target="aSectores"
                                                                 >
                                                                     Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
                                                                 </UncontrolledTooltip>
@@ -567,14 +571,14 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    id='visitasHogares'
-                                                                    name='visitasPastor.porPastor'
-                                                                    // value={this.state.visitasPastor.porPastor}
+                                                                    id='aHogares'
+                                                                    name={`actividadesObispo.${index}.VisitasObispo.aHogares`}
+                                                                    value={this.state.actividadesObispo[index].VisitasObispo.aHogares}
                                                                     onChange={(e) => this.handleChange(e)}
                                                                 ></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
-                                                                    target="visitasHogares"
+                                                                    target="aHogares"
                                                                 >
                                                                     Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
                                                                 </UncontrolledTooltip>
@@ -843,6 +847,50 @@ class InformeObispo extends Component {
                                             </Col>
                                         </Row>
                                     ))}
+                                    <Row>
+                                        <table>
+                                            <tr>
+                                                <th className='table-header' rowSpan="2">Sectores</th>
+                                                <th className='table-header' colSpan="2">Visitas hogares</th>
+                                                <th className='table-header' colSpan="5">Cultos</th>
+                                                <th className='table-header' colSpan="6">Estudios y conferencias</th>
+                                                <th className='table-header' colSpan="2">Misiones</th>
+                                                <th className='table-header' colSpan="7">Trabajo de Evangelismo</th>
+                                            </tr>
+                                            <tr>
+                                                <th className='sectores-header'>POR EL PASTOR</th>
+                                                <th className='sectores-header'>POR EL PERSONAL AUXILIAR</th>
+                                                <th className='sectores-header'>ORDINARIOS</th>
+                                                <th className='sectores-header'>ESPECIALES</th>
+                                                <th className='sectores-header'>DE AVIVIAMIENTO</th>
+                                                <th className='sectores-header'>DE ANIVERSARIO</th>
+                                                <th className='sectores-header'>POR EL DISTRITO</th>
+                                                <th className='sectores-header'>IGLESIA</th>
+                                                <th className='sectores-header'>ESCUELA DOMINICAL</th>
+                                                <th className='sectores-header'>VARONIL</th>
+                                                <th className='sectores-header'>FEMENIL</th>
+                                                <th className='sectores-header'>JUVENIL</th>
+                                                <th className='sectores-header'>INFANTIL</th>
+                                                <th className='sectores-header'>NUMERO DE MISIONES</th>
+                                                <th className='sectores-header'>CULTOS</th>
+                                                <th className='sectores-header'>HOGARES VISITADOS</th>
+                                                <th className='sectores-header'>HOGARES CONQUISTADOS</th>
+                                                <th className='sectores-header'>CULTOS POR LA LOCALIDAD</th>
+                                                <th className='sectores-header'>CULTOS DE HOGAR</th>
+                                                <th className='sectores-header'>CAMPÑAS</th>
+                                                <th className='sectores-header'>APERTURA DE MISIONES</th>
+                                                <th className='sectores-header'>BAUTISMOS</th>
+                                            </tr>
+                                            {this.state.sectores.length > 0 && this.state.sectores.map((obj, index) => (
+                                                <tr>
+                                                    <td>{obj.sec_Tipo_Sector} {obj.sec_Numero} {obj.sec_Alias}</td>
+                                                    {this.cellNumber.map(() => (
+                                                        <td></td>
+                                                    ))}
+                                                </tr>
+                                            ))}
+                                        </table>
+                                    </Row>
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
