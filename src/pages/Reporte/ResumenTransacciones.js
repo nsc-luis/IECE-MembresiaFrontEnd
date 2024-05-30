@@ -654,7 +654,7 @@ class ResumenTransacciones extends Component {
             "AltasNoBautizadosReactivacion": this.state.infoOrganizada.Altas.NoBautizados.Reactivacion.contador,
             "BajasBautizadosCambioDomicilio": this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioExterno.contador + this.state.infoOrganizada.Bajas.Bautizados.CambioDomicilioInterno.contador,
             "BajasBautizadosDefuncion": this.state.infoOrganizada.Bajas.Bautizados.Defuncion.contador,
-            "BajasBautizadosExcomunion": this.state.infoOrganizada.Bajas.Bautizados.Excomunion.contador,
+            "BajasBautizadosExcomunion": this.state.infoOrganizada.Bajas.Bautizados.Excomunion.contador + this.state.infoOrganizada.Bajas.Bautizados.ExcomunionTemporal.contador,
             "BajasNoBautizadosAlejamiento": this.state.infoOrganizada.Bajas.NoBautizados.Alejamiento.contador,
             "BajasNoBautizadosCambioDomicilio": this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioExterno.contador + this.state.infoOrganizada.Bajas.NoBautizados.CambioDomicilioInterno.contador,
             "BajasNoBautizadosDefuncion": this.state.infoOrganizada.Bajas.NoBautizados.Defuncion.contador,
@@ -1030,11 +1030,11 @@ class ResumenTransacciones extends Component {
                     </Card>
                 </Container>
                 <ReactModal
-                isOpen={this.state.modal}
-                style={helpers.modalDeCarga}
-            >
-                Procesando...
-            </ReactModal>
+                    isOpen={this.state.modal}
+                    style={helpers.modalDeCarga}
+                >
+                    Procesando...
+                </ReactModal>
             </>
         )
     }

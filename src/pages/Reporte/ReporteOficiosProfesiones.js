@@ -265,7 +265,7 @@ export default function ReporteOficiosProfesiones() {
         doc.text(`${JSON.parse(localStorage.getItem("infoSesion")).pem_Nombre}`, 130, yAxis);
 
 
-        doc.save("ReporteOficiosProfesiones.pdf");
+        doc.save("Reporte de Oficios y Profesiones.pdf");
     }
     return (
 

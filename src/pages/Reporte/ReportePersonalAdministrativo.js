@@ -197,7 +197,7 @@ export default function ReportePersonalAdministrativo() {
         const table2 = document.getElementById("table2");
         const book = TableToExcel.tableToBook(table1, { sheet: { name: "Administración" } });
         TableToExcel.tableToSheet(book, table2, { sheet: { name: "Comisiones" } });
-        TableToExcel.save(book, "PersonalMinisterialyComisiones.xlsx")
+        TableToExcel.save(book, "Personal Administrativo y Comisiones.xlsx")
     };
 
     const reportePersonalBautizadoPDF = () => {
@@ -294,7 +294,7 @@ export default function ReportePersonalAdministrativo() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReportePersonalBautizado.pdf");
+        doc.save("Reporte de Personal Administrativo y Comisiones.pdf");
     }
 
 

@@ -494,7 +494,7 @@ class ResumenMembresia extends Component {
             doc.text("SECRETARIO", 51, line);
             doc.text(this.state.gradoMinistro, 145, line);
 
-            doc.save("ResumenEnPDF.pdf");
+            doc.save("Resumen de Membresía.pdf");
         }
     }
 

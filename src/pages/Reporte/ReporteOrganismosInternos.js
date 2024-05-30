@@ -244,8 +244,8 @@ export default function ReporteOrganismosInternos() {
                 yAxis += 5;
 
                 doc.setFont("", "", "bold");
-                doc.text(`PRESIDENTE: `, 25, yAxis);
-                textoNormalWidth = doc.getTextWidth(`PRESIDENTE: `);
+                doc.text(`REPRESENTANE: `, 25, yAxis);
+                textoNormalWidth = doc.getTextWidth(`REPRESENTANTE: `);
                 doc.setFont("", "", "normal");
                 doc.text(`${obj.presidente !== null ? ` ${obj.presidente.per_Nombre_Completo} ` : "--"}`, 25 + textoNormalWidth, yAxis);
                 yAxis += 5;
@@ -339,7 +339,7 @@ export default function ReporteOrganismosInternos() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReportePersonalBautizado.pdf");
+        doc.save("ReporteOrganismosInternos.pdf");
     }
 
 
@@ -428,7 +428,7 @@ export default function ReporteOrganismosInternos() {
                                                 {obj.oi.org_Tipo_Organismo === "DEPARTAMENTO" &&
                                                     <>
                                                         <tr>
-                                                            <td><strong>Presidente</strong></td>
+                                                            <td><strong>Representante</strong></td>
                                                             <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre_Completo}` : "--"}</td>
                                                         </tr>
                                                         <tr>

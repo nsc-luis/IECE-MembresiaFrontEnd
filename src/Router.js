@@ -63,6 +63,7 @@ import Misiones from './pages/Misiones';
 import RegistroVisitantes from './pages/RegistroVisitantes';
 import InformeObispo from './pages/InformeObispo/InformeObispo';
 import InformeObispoLista from './pages/InformeObispo/InformeObispoLista';
+import DirectorioObispos from './pages/Reporte/DirectorioObispos';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -156,6 +157,7 @@ class Router extends Component {
                         {/* Informe Obispo */}
                         <Route exact path="/InformeObispo/:id" component={InformeObispo} />
                         <Route exact path="/InformesObispo" component={InformeObispoLista} />
+                        <Route exact path="/DirectorioObispos" component={DirectorioObispos} />
                     </Layout>
                     <Route component={PaginaNoEncontrada} />
                 </Switch>

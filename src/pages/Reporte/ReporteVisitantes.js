@@ -301,7 +301,7 @@ export default function ReporteVisitantes() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReportePersonalBautizado.pdf");
+        doc.save("Reporte de Visitantes.pdf");
     }
 
 
