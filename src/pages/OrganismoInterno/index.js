@@ -275,7 +275,7 @@ export default class OrganismoInterno extends Component {
                                                     invalid={this.state.cargoInvalid}
                                                 >
                                                     <option value="0">Seleccione una categoria</option>
-                                                    <option value="presidente">Presidente</option>
+                                                    <option value="presidente">Presidente/Representante</option>
                                                     {this.state.mostrarCargosSuplentes &&
                                                         <option value="vicePresidente">Vice-Presidente</option>
                                                     }
@@ -365,7 +365,7 @@ export default class OrganismoInterno extends Component {
                                             {obj.oi.org_Tipo_Organismo === "DEPARTAMENTO" &&
                                                 <>
                                                     <tr>
-                                                        <td><strong>Presidente</strong></td>
+                                                        <td><strong>Representante</strong></td>
                                                         <td>{obj.presidente !== null ? `${obj.presidente.per_Nombre_Completo}` : "--"}</td>
                                                         <td className='text-center'>
                                                             {obj.presidente !== null ?

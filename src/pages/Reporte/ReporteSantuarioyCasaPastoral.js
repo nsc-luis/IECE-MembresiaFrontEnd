@@ -459,7 +459,7 @@ export default function ReporteSantuarioyCasaPastoral() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("Santuario y Casa Pastoral.pdf");
+        doc.save("Reporte de Santuario y Casa Pastoral.pdf");
     }
 
 

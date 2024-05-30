@@ -171,7 +171,7 @@ class PresentacionDeNino extends Component {
 
     handle_OtroMinistro = (e) => { //Al cambiar el Input de Otro Mnistro, se graba en la varibale el Nombre del Ministro que se escribió
         this.setState({ otroMinistro: e.target.value.toUpperCase() });
-        console.log("NuevoMinistro: ",e.target.value.toUpperCase())
+        console.log("NuevoMinistro: ", e.target.value.toUpperCase())
     }
 
     validaFormatos = (formato, campo, estado) => {
@@ -197,7 +197,7 @@ class PresentacionDeNino extends Component {
                             mensajeDelProceso: "Procesando...",
                             modalShow: true
                         });
-                        
+
                         setTimeout(() => {
                             this.setState({
                                 mensajeDelProceso: "Los datos fueron grabados satisfactoriamente."
@@ -690,7 +690,7 @@ class PresentacionDeNino extends Component {
                                         </Row>
                                     </FormGroup>
                                 </ModalBody>
-                                <ModalFooter>
+                                <ModalFooter className="text-right">
                                     <Button
                                         color="secondary"
                                         onClick={this.handle_modalFrmPresentacionClose}

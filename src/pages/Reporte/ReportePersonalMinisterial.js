@@ -309,7 +309,7 @@ export default function ReportePersonalBautizado() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReportePersonalBautizado.pdf");
+        doc.save("Reporte de Personal Ministerial.pdf");
     }
     return (
         <>
