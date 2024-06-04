@@ -4,8 +4,8 @@ import { CultosDistrito } from "./CultosDistrito.model";
 import { VisitasObispo } from "./VisitasObispo.model";
 
 export class ActividadesObispo{
-    VisitasObispo = new VisitasObispo();
-    CultosDistrito = new CultosDistrito();
-    ConferenciasDistrito = new ConferenciasDistrito();
-    ConcentracionesDistrito = new ConcentracionesDistrito();
+    visitasObispo = new VisitasObispo();
+    cultosDistrito = new CultosDistrito();
+    conferenciasDistrito = new ConferenciasDistrito();
+    concentracionesDistrito = new ConcentracionesDistrito();
 }
