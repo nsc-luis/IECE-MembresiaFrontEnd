@@ -848,7 +848,7 @@ class InformeObispo extends Component {
                                         </Row>
                                     ))}
                                     <Row>
-                                        <table>
+                                        <table className='tabla-obispo'>
                                             <tr>
                                                 <th className='table-header' rowSpan="2">Sectores</th>
                                                 <th className='table-header' colSpan="2">Visitas hogares</th>
@@ -858,34 +858,34 @@ class InformeObispo extends Component {
                                                 <th className='table-header' colSpan="7">Trabajo de Evangelismo</th>
                                             </tr>
                                             <tr>
-                                                <th className='sectores-header'>POR EL PASTOR</th>
-                                                <th className='sectores-header'>POR EL PERSONAL AUXILIAR</th>
-                                                <th className='sectores-header'>ORDINARIOS</th>
-                                                <th className='sectores-header'>ESPECIALES</th>
-                                                <th className='sectores-header'>DE AVIVIAMIENTO</th>
-                                                <th className='sectores-header'>DE ANIVERSARIO</th>
-                                                <th className='sectores-header'>POR EL DISTRITO</th>
-                                                <th className='sectores-header'>IGLESIA</th>
-                                                <th className='sectores-header'>ESCUELA DOMINICAL</th>
-                                                <th className='sectores-header'>VARONIL</th>
-                                                <th className='sectores-header'>FEMENIL</th>
-                                                <th className='sectores-header'>JUVENIL</th>
-                                                <th className='sectores-header'>INFANTIL</th>
-                                                <th className='sectores-header'>NUMERO DE MISIONES</th>
-                                                <th className='sectores-header'>CULTOS</th>
-                                                <th className='sectores-header'>HOGARES VISITADOS</th>
-                                                <th className='sectores-header'>HOGARES CONQUISTADOS</th>
-                                                <th className='sectores-header'>CULTOS POR LA LOCALIDAD</th>
-                                                <th className='sectores-header'>CULTOS DE HOGAR</th>
-                                                <th className='sectores-header'>CAMPÑAS</th>
-                                                <th className='sectores-header'>APERTURA DE MISIONES</th>
-                                                <th className='sectores-header'>BAUTISMOS</th>
+                                                <th className='table-header sectores-header'>POR EL PASTOR</th>
+                                                <th className='table-header sectores-header'>POR EL PERSONAL AUXILIAR</th>
+                                                <th className='table-header sectores-header'>ORDINARIOS</th>
+                                                <th className='table-header sectores-header'>ESPECIALES</th>
+                                                <th className='table-header sectores-header'>DE AVIVIAMIENTO</th>
+                                                <th className='table-header sectores-header'>DE ANIVERSARIO</th>
+                                                <th className='table-header sectores-header'>POR EL DISTRITO</th>
+                                                <th className='table-header sectores-header'>IGLESIA</th>
+                                                <th className='table-header sectores-header'>ESCUELA DOMINICAL</th>
+                                                <th className='table-header sectores-header'>VARONIL</th>
+                                                <th className='table-header sectores-header'>FEMENIL</th>
+                                                <th className='table-header sectores-header'>JUVENIL</th>
+                                                <th className='table-header sectores-header'>INFANTIL</th>
+                                                <th className='table-header sectores-header'>NUMERO DE MISIONES</th>
+                                                <th className='table-header sectores-header'>CULTOS</th>
+                                                <th className='table-header sectores-header'>HOGARES VISITADOS</th>
+                                                <th className='table-header sectores-header'>HOGARES CONQUISTADOS</th>
+                                                <th className='table-header sectores-header'>CULTOS POR LA LOCALIDAD</th>
+                                                <th className='table-header sectores-header'>CULTOS DE HOGAR</th>
+                                                <th className='table-header sectores-header'>CAMPÑAS</th>
+                                                <th className='table-header sectores-header'>APERTURA DE MISIONES</th>
+                                                <th className='table-header sectores-header'>BAUTISMOS</th>
                                             </tr>
                                             {this.state.sectores.length > 0 && this.state.sectores.map((obj, index) => (
                                                 <tr>
-                                                    <td>{obj.sec_Tipo_Sector} {obj.sec_Numero} {obj.sec_Alias}</td>
+                                                    <td className='table-cell'>{obj.sec_Tipo_Sector} {obj.sec_Numero} {obj.sec_Alias}</td>
                                                     {this.cellNumber.map(() => (
-                                                        <td></td>
+                                                        <td className='table-cell'></td>
                                                     ))}
                                                 </tr>
                                             ))}

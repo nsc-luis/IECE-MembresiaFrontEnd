@@ -1,7 +1,4 @@
-table, th, td {
-    border: 1px solid black;
-}
-table {
+.tabla-obispo {
     width: 100%;
 }
 .contenedor-informe{
@@ -67,6 +64,10 @@ table {
 }
 .table-header{
     text-align: center;
+    border: 1px solid black;
+}
+.table-cell{
+    border: 1px solid black;
 }
 .sectores-header{
     font-size: smaller;
