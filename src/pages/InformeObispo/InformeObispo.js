@@ -8,7 +8,6 @@ import './style.css'
 
 import rutaLogo from '../../assets/images/IECE_LogoOficial.jpg'
 import moment from 'moment/moment';
-import { ActividadesObispo } from './models/ActividadesObispo.model';
 
 class InformeObispo extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
@@ -33,7 +32,7 @@ class InformeObispo extends Component {
             },
             // OBISPO
             sectores: [],
-            actividadesObispo : [new ActividadesObispo()],
+            actividadesObispo: [],
             // TERMINA OBISPO
             distrito: {
                 dis_Numero: 0,
@@ -232,7 +231,7 @@ class InformeObispo extends Component {
     componentDidMount() {
         this.getDistrito();
         // this.getSector();
-        this.getSectores();
+        // this.getSectores();
     }
 
     getDistrito = async () => {
@@ -259,100 +258,108 @@ class InformeObispo extends Component {
     //     );
     // }
 
-    getSectores = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
-            .then(res => {
-                this.setState({
-                    sectores: res.data.sectores.sort((a,b) => {return b.sec_Tipo_Sector.localeCompare(a.sec_Tipo_Sector)})
-                })
-                const { id } = this.props.match.params;
-                this.obtenerInforme(id);
-                console.log(res.data);
-            })
-        );
-    }
+    // getSectores = async () => {
+    //     await helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
+    //         .then(res => {
+    //             this.setState({
+    //                 sectores: res.data.sectores.sort((a,b) => {return b.sec_Tipo_Sector.localeCompare(a.sec_Tipo_Sector)})
+    //             })
+    //             const { id } = this.props.match.params;
+    //             this.obtenerInforme(id);
+    //             console.log(res.data);
+    //         })
+    //     );
+    // }
 
-    obtenerDatosEstadisticos = async () => {
-        const body = {
-            sec_Id_Sector: this.state.sector.sec_Id_Sector,
-            year: this.state.informe.anio,
-            mes: this.state.informe.mes
-        }
-        await helpers.validaToken().then(helpers.authAxios.post("Registro_Transacciones/movimientosEstadisticosReporteBySector", body)
-            .then(res => {
-                console.log(res);
-                this.setState({
-                    datosEstadisticos: res.data
-                })
-            })
-        );
-    }
+    // obtenerDatosEstadisticos = async () => {
+    //     const body = {
+    //         sec_Id_Sector: this.state.sector.sec_Id_Sector,
+    //         year: this.state.informe.anio,
+    //         mes: this.state.informe.mes
+    //     }
+    //     await helpers.validaToken().then(helpers.authAxios.post("Registro_Transacciones/movimientosEstadisticosReporteBySector", body)
+    //         .then(res => {
+    //             console.log(res);
+    //             this.setState({
+    //                 datosEstadisticos: res.data
+    //             })
+    //         })
+    //     );
+    // }
 
     obtenerInforme = async (id) => {
-        await helpers.validaToken().then(helpers.authAxios.get("/Informe/" + id)
+        await helpers.validaToken().then(helpers.authAxios.get("/Informe/Obispo/" + id)
             .then(res => {
-                this.state.informe = res.data;
-                this.state.informe.fechaReunion = moment(res.data.fechaReunion).format('YYYY-MM-DD');
-                this.state.visitasPastor = res.data.visitasPastor !== null ? res.data.visitasPastor : this.state.visitasPastor;
-                this.state.cultosSector = res.data.cultosSector !== null ? res.data.cultosSector : this.state.cultosSector;
-                this.state.estudiosSector.estudios = res.data.estudiosSector !== null ? res.data.estudiosSector : this.state.estudiosSector.estudios;
-                this.state.estudiosSector.conferencias = res.data.conferenciasSector !== null ? res.data.conferenciasSector : this.state.estudiosSector.conferencias;
-                this.state.trabajoEvangelismo = res.data.trabajoEvangelismo !== null ? res.data.trabajoEvangelismo : this.state.trabajoEvangelismo;
-                this.state.misiones = res.data.cultosMisionSector !== null ? res.data.cultosMisionSector : this.state.cultosMisionSector;
-                this.state.organizaciones = res.data.organizaciones !== null ? res.data.organizaciones : this.state.organizaciones;
-                this.state.adquisicionesSector = res.data.adquisicionesSector !== null ? res.data.adquisicionesSector : this.state.adquisicionesSector;
-                this.state.sesiones = res.data.sesiones !== null ? res.data.sesiones : this.state.sesiones;
-                this.state.reuniones = res.data.reuniones !== null ? res.data.reuniones : this.state.reuniones;
-                this.state.construccionesInicio = res.data.construccionesInicio !== null ? res.data.construccionesInicio : this.state.construccionesInicio;
-                this.state.construccionesConclusion = res.data.construccionesConclusion !== null ? res.data.construccionesConclusion : this.state.construccionesConclusion;
-                this.state.ordenaciones = res.data.ordenaciones !== null ? res.data.ordenaciones : this.state.ordenaciones;
-                this.state.dedicaciones = res.data.dedicaciones !== null ? res.data.dedicaciones : this.state.dedicaciones;
-                this.state.llamamientoDePersonal = res.data.llamamientoDePersonal !== null ? res.data.llamamientoDePersonal : this.state.llamamientoDePersonal;
-                this.state.regularizacionPatNac = res.data.regularizacionPatNac !== null ? res.data.regularizacionPatNac : this.state.regularizacionPatNac;
-                this.state.regularizacionPatIg = res.data.regularizacionPatIg !== null ? res.data.regularizacionPatIg : this.state.regularizacionPatIg;
-                this.state.movimientoEconomico = res.data.movimientoEconomico !== null ? res.data.movimientoEconomico : this.state.movimientoEconomico;
-                this.state.otrasActividades = res.data.otrasActividades !== null ? res.data.otrasActividades : this.state.otrasActividades;
-                this.state.actividadesObispo = res.data.actividadesObispo !== null ? res.data.actividadesObispo : this.state.actividadesObispo;
+                console.log(res);
+                this.state.informe = res.data.informe;
+                // this.state.informe.fechaReunion = moment(res.data.fechaReunion).format('YYYY-MM-DD');
+                // this.state.visitasPastor = res.data.visitasPastor !== null ? res.data.visitasPastor : this.state.visitasPastor;
+                // this.state.cultosSector = res.data.cultosSector !== null ? res.data.cultosSector : this.state.cultosSector;
+                // this.state.estudiosSector.estudios = res.data.estudiosSector !== null ? res.data.estudiosSector : this.state.estudiosSector.estudios;
+                // this.state.estudiosSector.conferencias = res.data.conferenciasSector !== null ? res.data.conferenciasSector : this.state.estudiosSector.conferencias;
+                // this.state.trabajoEvangelismo = res.data.trabajoEvangelismo !== null ? res.data.trabajoEvangelismo : this.state.trabajoEvangelismo;
+                // this.state.misiones = res.data.cultosMisionSector !== null ? res.data.cultosMisionSector : this.state.cultosMisionSector;
+                // this.state.organizaciones = res.data.organizaciones !== null ? res.data.organizaciones : this.state.organizaciones;
+                // this.state.adquisicionesSector = res.data.adquisicionesSector !== null ? res.data.adquisicionesSector : this.state.adquisicionesSector;
+                // this.state.sesiones = res.data.sesiones !== null ? res.data.sesiones : this.state.sesiones;
+                // this.state.reuniones = res.data.reuniones !== null ? res.data.reuniones : this.state.reuniones;
+                // this.state.construccionesInicio = res.data.construccionesInicio !== null ? res.data.construccionesInicio : this.state.construccionesInicio;
+                // this.state.construccionesConclusion = res.data.construccionesConclusion !== null ? res.data.construccionesConclusion : this.state.construccionesConclusion;
+                // this.state.ordenaciones = res.data.ordenaciones !== null ? res.data.ordenaciones : this.state.ordenaciones;
+                // this.state.dedicaciones = res.data.dedicaciones !== null ? res.data.dedicaciones : this.state.dedicaciones;
+                // this.state.llamamientoDePersonal = res.data.llamamientoDePersonal !== null ? res.data.llamamientoDePersonal : this.state.llamamientoDePersonal;
+                // this.state.regularizacionPatNac = res.data.regularizacionPatNac !== null ? res.data.regularizacionPatNac : this.state.regularizacionPatNac;
+                // this.state.regularizacionPatIg = res.data.regularizacionPatIg !== null ? res.data.regularizacionPatIg : this.state.regularizacionPatIg;
+                // this.state.movimientoEconomico = res.data.movimientoEconomico !== null ? res.data.movimientoEconomico : this.state.movimientoEconomico;
+                // this.state.otrasActividades = res.data.otrasActividades !== null ? res.data.otrasActividades : this.state.otrasActividades;
+                // this.state.actividadesObispo = res.data.actividadesObispo !== null ? res.data.actividadesObispo : this.state.actividadesObispo;
+                // const actObispoMerge = res.data.actividadObispo.sectores.concat(res.data.actividadObispo.misiones);
+                // console.log(actObispoMerge);
+                this.setState({
+                    // actividadesObispo: actObispoMerge !== null ? actObispoMerge : this.state.actividadesObispo
+                    actividadesObispo: res.data.actividadObispo.sectores !== null ? res.data.actividadObispo.sectores.sort((a, b) => { return b.sector.sec_Tipo_Sector.localeCompare(a.sector.sec_Tipo_Sector) }) : this.state.actividadesObispo,
+                    datosEstadisticos: res.data.movtosEstadisticos !== null ? res.data.movtosEstadisticos : this.state.datosEstadisticos
+
+                })
                 //OBISPO
                 // this.state.actividadesObispo = res.data.actividadesObispo !== null ? res.data.actividadesObispo : this.state.actividadesObispo;
                 //Fin OBISPO
                 // this.obtenerMisiones();
                 // this.obtenerDatosEstadisticos();
-                // this.obtenerMovimientosEstadisticos();
+                this.obtenerMovimientosEstadisticos();
                 // this.obtenerVisitantes();
-                console.log(res);
             })
         );
     }
 
-    obtenerMisiones = async (id) => {
-        await helpers.validaToken().then(helpers.authAxios.get("/Mision_Sector/" + localStorage.getItem('sector'))
-            .then(res => {
-                const cultosMisionCopia = [...this.state.misiones]
-                this.state.misiones = res.data.misiones.map(m => {
-                    const cultoMision = cultosMisionCopia.find(f => f.ms_Id_MisionSector === m.ms_Id)
-                    return {
-                        ...m,
-                        ms_Id_MisionSector: m.ms_Id,
-                        idInforme: cultoMision ? cultoMision.idInforme : 0,
-                        cultos: cultoMision ? cultoMision.cultos : 0,
-                    }
-                }
-                );
-                console.log(this.state.misiones);
-            })
-        );
-    }
+    // obtenerMisiones = async (id) => {
+    //     await helpers.validaToken().then(helpers.authAxios.get("/Mision_Sector/" + localStorage.getItem('sector'))
+    //         .then(res => {
+    //             const cultosMisionCopia = [...this.state.misiones]
+    //             this.state.misiones = res.data.misiones.map(m => {
+    //                 const cultoMision = cultosMisionCopia.find(f => f.ms_Id_MisionSector === m.ms_Id)
+    //                 return {
+    //                     ...m,
+    //                     ms_Id_MisionSector: m.ms_Id,
+    //                     idInforme: cultoMision ? cultoMision.idInforme : 0,
+    //                     cultos: cultoMision ? cultoMision.cultos : 0,
+    //                 }
+    //             }
+    //             );
+    //             console.log(this.state.misiones);
+    //         })
+    //     );
+    // }
 
-    obtenerVisitantes = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get("/Visitante/VisitantesBySector/" + localStorage.getItem('sector'))
-            .then(res => {
-                const visitantes = res.data.visitantes;
-                this.state.visitantesPermantes = visitantes.filter(f => f.visitante.vp_Tipo_Visitante === 'PERMANENTE')
-                this.state.trabajoEvangelismo.visitantesPermanentes = this.state.visitantesPermantes.length
-            })
-        );
-    }
+    // obtenerVisitantes = async () => {
+    //     await helpers.validaToken().then(helpers.authAxios.get("/Visitante/VisitantesByDistrito/" + localStorage.getItem('dto'))
+    //         .then(res => {
+    //             const visitantes = res.data.visitantes;
+    //             this.state.visitantesPermantes = visitantes.filter(f => f.visitante.vp_Tipo_Visitante === 'PERMANENTE')
+    //             this.state.trabajoEvangelismo.visitantesPermanentes = this.state.visitantesPermantes.length
+    //         })
+    //     );
+    // }
 
     obtenerMovimientosEstadisticos = async () => {
 
@@ -361,11 +368,13 @@ class InformeObispo extends Component {
         const body = {
             fechaInicial: startDate,
             fechaFinal: endDate,
-            idSectorDistrito: this.state.sector.sec_Id_Sector,
+            idSectorDistrito: this.state.distrito.dis_Id_Distrito
         }
-        await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", body)
+        await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", body)
             .then(res => {
-                this.state.desgloseMoviemientoEstadistico = res.data.datos;
+                this.setState({
+                    desgloseMoviemientoEstadistico: res.data.datos.length > 0  ? res.data.datos : this.state.desgloseMoviemientoEstadistico
+                })
                 console.log("res-data-datos: ", res.data.datos);
             })
 
@@ -526,11 +535,11 @@ class InformeObispo extends Component {
                                         ACTIVIDADES DEL OBISPO
                                     </Row>
                                     {this.state.actividadesObispo.length > 0 && this.state.actividadesObispo.map((obj, index) => (
-                                        <Row key={obj.sec_Id_Sector} className='contenedor-seccion'>
+                                        <Row key={index} className='contenedor-seccion'>
                                             <Col xs="12" sm="12" lg="12">
-                                                {/* <Row className='titulo'>
-                                                    {obj.sec_Tipo_Sector} {obj.sec_Numero}.- {obj.sec_Alias}
-                                                </Row> */}
+                                                <Row className='titulo'>
+                                                    {obj.sector.sec_Tipo_Sector} {obj.sector.sec_Numero}.- {obj.sector.sec_Alias}
+                                                </Row>
                                                 <Row className='subtitulos'>
                                                     <Col xs="3" sm="3" lg="3">
                                                         Visitas a:
@@ -609,7 +618,7 @@ class InformeObispo extends Component {
                                                                 Especiales
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='cultosEspeciales'
                                                                     name={`actividadesObispo.${index}.cultosDistrito.especiales`}
                                                                     value={this.state.actividadesObispo[index].cultosDistrito.especiales}
@@ -627,7 +636,7 @@ class InformeObispo extends Component {
                                                                 De Avivamiento
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='cultosDeAvivamiento'
                                                                     name={`actividadesObispo.${index}.cultosDistrito.deAvivamiento`}
                                                                     value={this.state.actividadesObispo[index].cultosDistrito.deAvivamiento}
@@ -645,7 +654,7 @@ class InformeObispo extends Component {
                                                                 Evangelismo
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='cultosEvangelismo'
                                                                     name={`actividadesObispo.${index}.cultosDistrito.evangelismo`}
                                                                     value={this.state.actividadesObispo[index].cultosDistrito.evangelismo}
@@ -665,7 +674,7 @@ class InformeObispo extends Component {
                                                                 Iglesia
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='confIglesia'
                                                                     name={`actividadesObispo.${index}.conferenciasDistrito.iglesia`}
                                                                     value={this.state.actividadesObispo[index].conferenciasDistrito.iglesia}
@@ -683,7 +692,7 @@ class InformeObispo extends Component {
                                                                 Sector Varonil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='confSecVaronil'
                                                                     name={`actividadesObispo.${index}.conferenciasDistrito.sectorVaronil`}
                                                                     value={this.state.actividadesObispo[index].conferenciasDistrito.sectorVaronil}
@@ -701,7 +710,7 @@ class InformeObispo extends Component {
                                                                 Sociedad Femenil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='confSocFemenil'
                                                                     name={`actividadesObispo.${index}.conferenciasDistrito.sociedadFemenil`}
                                                                     value={this.state.actividadesObispo[index].conferenciasDistrito.sociedadFemenil}
@@ -719,7 +728,7 @@ class InformeObispo extends Component {
                                                                 Sociedad Juvenil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='confSocJuvenil'
                                                                     name={`actividadesObispo.${index}.conferenciasDistrito.sociedadJuvenil`}
                                                                     value={this.state.actividadesObispo[index].conferenciasDistrito.sociedadJuvenil}
@@ -737,7 +746,7 @@ class InformeObispo extends Component {
                                                                 Infantil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='confInfantil'
                                                                     name={`actividadesObispo.${index}.conferenciasDistrito.sectorInfantil`}
                                                                     value={this.state.actividadesObispo[index].conferenciasDistrito.sectorInfantil}
@@ -757,7 +766,7 @@ class InformeObispo extends Component {
                                                                 Iglesia
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='concIglesia'
                                                                     name={`actividadesObispo.${index}.concentracionesDistrito.iglesia`}
                                                                     value={this.state.actividadesObispo[index].concentracionesDistrito.iglesia}
@@ -775,7 +784,7 @@ class InformeObispo extends Component {
                                                                 Sector Varonil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='concSecVaronil'
                                                                     name={`actividadesObispo.${index}.concentracionesDistrito.sectorVaronil`}
                                                                     value={this.state.actividadesObispo[index].concentracionesDistrito.sectorVaronil}
@@ -793,7 +802,7 @@ class InformeObispo extends Component {
                                                                 Sociedad Femenil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='concSecFemenil'
                                                                     name={`actividadesObispo.${index}.concentracionesDistrito.sociedadFemenil`}
                                                                     value={this.state.actividadesObispo[index].concentracionesDistrito.sociedadFemenil}
@@ -811,7 +820,7 @@ class InformeObispo extends Component {
                                                                 Sociedad Juvenil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='concSocJuvenil'
                                                                     name={`actividadesObispo.${index}.concentracionesDistrito.sociedadJuvenil`}
                                                                     value={this.state.actividadesObispo[index].concentracionesDistrito.sociedadJuvenil}
@@ -829,7 +838,7 @@ class InformeObispo extends Component {
                                                                 Sector Infantil
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                                <Input type='number' min={0} max={9999}
                                                                     id='concInfantil'
                                                                     name={`actividadesObispo.${index}.concentracionesDistrito.sectorInfantil`}
                                                                     value={this.state.actividadesObispo[index].concentracionesDistrito.sectorInfantil}
@@ -881,9 +890,9 @@ class InformeObispo extends Component {
                                                 <th className='table-header sectores-header'>APERTURA DE MISIONES</th>
                                                 <th className='table-header sectores-header'>BAUTISMOS</th>
                                             </tr>
-                                            {this.state.sectores.length > 0 && this.state.sectores.map((obj, index) => (
+                                            {this.state.actividadesObispo.length > 0 && this.state.actividadesObispo.map((obj, index) => (
                                                 <tr>
-                                                    <td className='table-cell'>{obj.sec_Tipo_Sector} {obj.sec_Numero} {obj.sec_Alias}</td>
+                                                    <td className='table-cell'>{obj.sector.sec_Tipo_Sector} {obj.sector.sec_Numero} {obj.sector.sec_Alias}</td>
                                                     {this.cellNumber.map(() => (
                                                         <td className='table-cell'></td>
                                                     ))}
@@ -894,7 +903,7 @@ class InformeObispo extends Component {
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
-                                                DATOS DEL ESTADO ACTUAL DE LA IGLESIA
+                                                DATOS DEL ESTADO ACTUAL DEL DISTRITO
                                             </Row>
                                             <Row className='titulo'>
                                                 Número de personal en comunión al principio del mes {this.state.informe.nombreMes}
@@ -1231,7 +1240,7 @@ class InformeObispo extends Component {
                                                 <Col xs="12" sm="12" lg="12">
                                                     <ListGroup>
                                                         {this.state.desgloseMoviemientoEstadistico.length > 0 && this.state.desgloseMoviemientoEstadistico.map((obj, index) => (
-                                                            <ListGroupItem key={obj.hte_Id_Transaccion}>{index + 1}.- <b>{obj.ct_Tipo}</b> por <b>{obj.ct_Subtipo}</b> corresponde a <b>{obj.per_Nombre} {obj.per_Apellido_Paterno} {obj.per_Apellido_Materno}</b> - {moment(obj.hte_Fecha_Transaccion).format("YYYY-MM-DD")}</ListGroupItem>
+                                                            <ListGroupItem key={index}>{index + 1}.- <b>{obj.ct_Tipo}</b> por <b>{obj.ct_Subtipo}</b> corresponde a <b>{obj.per_Nombre} {obj.per_Apellido_Paterno} {obj.per_Apellido_Materno}</b> - {moment(obj.hte_Fecha_Transaccion).format("YYYY-MM-DD")}</ListGroupItem>
                                                         ))}
                                                     </ListGroup>
                                                 </Col>
