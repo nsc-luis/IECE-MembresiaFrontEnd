@@ -21,7 +21,7 @@ class PersonaEncontrada extends React.Component {
 
         const { datosPersonaEncontrada } = this.props
 
-        console.log("Persona: ", datosPersonaEncontrada.per_Bautizado, localStorage.getItem('nvaAltaBautizado'))
+        console.log("Persona: ", datosPersonaEncontrada, localStorage.getItem('nvaAltaBautizado'), localStorage.getItem("sector"))
 
         return (
             <React.Fragment>
@@ -53,13 +53,13 @@ class PersonaEncontrada extends React.Component {
                                 {datosPersonaEncontrada.map((persona) => {
                                     return (
                                         <tr key={persona.per_Id_Persona}>
-                                            <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno} </td>
+                                            <td>{persona.per_Nombre} {persona.per_Apellido_Paterno} {persona.per_Apellido_Materno}</td>
                                             <td>{persona.per_Fecha_Nacimiento != null ? helpers.reFormatoFecha(persona.per_Fecha_Nacimiento) : null} </td>
                                             <td>{persona.per_Bautizado === true ? "Si" : "No"} </td>
                                             <td>{persona.dis_Tipo_Distrito} {persona.dis_Numero}</td>
                                             <td>{persona.sec_Alias}</td>
                                             <td>
-                                                {persona.per_Bautizado === false && localStorage.getItem('nvaAltaBautizado') === "true" ? (
+                                                {persona.per_Bautizado === false && localStorage.getItem('nvaAltaBautizado') === "true" && persona.sec_id_Sector == localStorage.getItem("sector") ? (
                                                     <React.Fragment>
                                                         <Button
                                                             color="info"

@@ -199,7 +199,7 @@ export default function DirectorioObispos() {
                                             </tbody>
                                         </Table>
                                     </CardBody>
-                                    : <CardBody>No hay visitantes de esta categoría registrados</CardBody>}
+                                    : <CardBody>Parece que no tiene permisos para mostrarse el contenido</CardBody>}
                             </Card>
                             <br>
                             </br>

@@ -131,8 +131,8 @@ class RegistrarTransaccionesHistoricas extends Component {
                             <Alert color="warning">
                                 <strong>AVISO: </strong>
                                 <ul>
-                                    <li>Esta funcionalidad sirve para Registrar Transacciones antiguas, estas sólo se reflejarán en el Historial de la Persona, pero no afecta su Estatus.</li>
-                                    <li>Un ejemplo es: Registrar una Excomunión ocurrida en el pasado. Esta se reflejará en el historial eclesiástico de la Persona, pero no se afectaría su estatus de "En Comunión", permanecerá Activa y En Comunión.</li>
+                                    <li>Esta funcionalidad sirve para Registrar el antecedente histórico de alguna Movimiento Estadístico del pasado. No se afecta el Estatus de la persona, sino sólo se agrega el movimiento histórico de la persona.</li>
+                                    <li>Ejemplo: Al registrar una Excomunión ocurrida en el pasado. La persona permanece Activa y En Comunión, sólo se agrega el registro al historial de la persona.</li>
                                 </ul>
                             </Alert>
                         </Col>

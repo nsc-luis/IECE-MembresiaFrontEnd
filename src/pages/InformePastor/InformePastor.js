@@ -1174,7 +1174,7 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.altasBautizados.cambiodedomexterno'
-                                                                value={this.state.datosEstadisticos.altasBautizados.cambiodedomexterno}
+                                                                value={this.state.datosEstadisticos.altasBautizados.cambiodedomexterno + this.state.datosEstadisticos.altasBautizados.cambiodedominterno}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
@@ -1185,7 +1185,7 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.altasBautizados.cambiodedomexterno'
-                                                                value={this.state.datosEstadisticos.altasBautizados.bautismo + this.state.datosEstadisticos.altasBautizados.restitución + this.state.datosEstadisticos.altasBautizados.cambiodedomexterno}
+                                                                value={this.state.datosEstadisticos.altasBautizados.bautismo + this.state.datosEstadisticos.altasBautizados.restitución + this.state.datosEstadisticos.altasBautizados.cambiodedomexterno + this.state.datosEstadisticos.altasBautizados.cambiodedominterno}
                                                                 readOnly></Input>
                                                             <span className='font-weight-bold text-lg'>{ }</span>
                                                         </Col>
@@ -1244,7 +1244,7 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.bajasBautizados.cambiodedomexterno'
-                                                                value={this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
+                                                                value={this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno + this.state.datosEstadisticos.bajasBautizados.cambiodedominterno}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
@@ -1255,7 +1255,7 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.bajasBautizados.cambiodedomexterno'
-                                                                value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
+                                                                value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno + this.state.datosEstadisticos.bajasBautizados.cambiodedominterno}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
@@ -1278,7 +1278,7 @@ class InformePastor extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.hogares'
-                                                                value={this.state.datosEstadisticos.hogares}
+                                                                value={this.state.datosEstadisticos.hogaresAlFinalDelMes}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
