@@ -4,7 +4,7 @@ import {
     Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter,
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import moment from 'moment';
 
 class InformePastorLista extends Component {
@@ -48,8 +48,8 @@ class InformePastorLista extends Component {
                 anio: null,
                 idDistrito: 0,
                 idSector: 0,
-                lugarReunion: null,
-                fechaReunion: null,
+                lugarReunion: "",
+                fechaReunion: new Date(),
                 status: 0,
                 usu_id_usuario: 0,
                 fechaRegistro: new Date().toDateString(),
@@ -118,21 +118,24 @@ class InformePastorLista extends Component {
                     return
                 }
                 if (res.status === 200) {
-                    this.obtenerInformes();
-                    this.handleCancelar();
-                    this.setState({
-                        nuevoInforme: {
-                            idInforme: 0,
-                            idTipoUsuario: 1,
-                            mes: 0,
-                            anio: 0,
-                            lugarReunion: '',
-                            fechaReunion: new Date().toDateString(),
-                            status: 0,
-                            usu_id_usuario: 0,
-                            fechaRegistro: new Date().toDateString(),
-                        }
-                    })
+                    // this.obtenerInformes();
+                    // this.handleCancelar();
+                    // this.setState({
+                    //     nuevoInforme: {
+                    //         idInforme: 0,
+                    //         idTipoUsuario: 1,
+                    //         mes: 0,
+                    //         anio: 0,
+                    //         lugarReunion: '',
+                    //         fechaReunion: new Date().toDateString(),
+                    //         status: 0,
+                    //         usu_id_usuario: 0,
+                    //         fechaRegistro: new Date().toDateString(),
+                    //     }
+                    // })
+                    setTimeout(() => {
+                        document.location.href = '/InformePastor/' + res.data.idInforme;     
+                    }, 500);
                     console.log(res);
                 }
             })
@@ -273,30 +276,6 @@ class InformePastorLista extends Component {
                                                         )
                                                     })}
                                                 </Input>
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="3"></Col>
-                                            <Col xs="2" className='my-1 text-right'>
-                                                * FECHA DE REUNIÓN:
-                                            </Col>
-                                            <Col xs="2" className='my-1'>
-                                                <Input
-                                                    type="date"
-                                                    name="nuevoInforme.fechaReunion"
-                                                    value={this.state.nuevoInforme.fechaReunion}
-                                                    onChange={(e) => this.handleChange(e)}
-                                                    autoComplete="nope"
-                                                />
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="2" className='my-1 text-right'>
-                                                * LUGAR DE REUNIÓN:
-                                            </Col>
-                                            <Col xs="4" className='my-1'>
-                                                <Input type='text'
-                                                    name='nuevoInforme.lugarReunion'
-                                                    value={this.state.nuevoInforme.lugarReunion}
-                                                    onChange={(e) => this.handleChange(e)}></Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
                                         </Row>
