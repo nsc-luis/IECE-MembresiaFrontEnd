@@ -304,7 +304,7 @@ export default function ReportePersonalNoBautizado() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReportePersonalNoBautizado.pdf");
+        doc.save("Reporte Personal No Bautizado.pdf");
     }
     return (
         <>

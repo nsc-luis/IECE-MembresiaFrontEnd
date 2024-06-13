@@ -113,7 +113,7 @@ class InformePastorLista extends Component {
 
         await helpers.validaToken().then(helpers.authAxios.post("/Informe", this.state.nuevoInforme)
             .then(res => {
-                if(res.data.status === 'error'){
+                if (res.data.status === 'error') {
                     alert(res.data.message)
                     return
                 }
@@ -224,6 +224,17 @@ class InformePastorLista extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="12">
+                                                <Alert color="success">
+                                                    <strong>CREACIÓN DE UN NUEVO INFORME PASTORAL MENSUAL </strong>
+                                                    <ul>
+                                                        <li>Llene estos datos iniciales para iniciar un Informe nuevo, posteriormente presionar el botón  <strong>"Crear Informe"</strong>.</li>
+                                                        <li>El llenbado del resto de datos del Informe se debe hacer abriendo <strong>"los Detalles</strong> del Infome.</li>
+                                                    </ul>
+                                                </Alert>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col xs="12">
                                                 <Alert color="warning">
                                                     <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
                                                 </Alert>
@@ -321,7 +332,7 @@ class InformePastorLista extends Component {
                                                         pathname: "/InformePastor/" + obj.idInforme,
                                                         id: obj.idInforme
                                                     }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
-                                                        Detalles
+                                                        Detalle
                                                     </Link>
                                                     <Button
                                                         color="primary"
