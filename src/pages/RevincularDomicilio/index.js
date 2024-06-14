@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import helpers from '../../components/Helpers';
 import {
     Container, Row, Col, Form, FormGroup, Input, Button, ModalBody, Modal,
-    FormFeedback, /* CardTitle, */ Card, CardBody, CardHeader, CardFooter
+    FormFeedback, /* CardTitle, */ Card, CardBody, CardHeader, CardFooter, Alert
 } from 'reactstrap';
 import HogarPersonaDomicilio from '../Persona/HogarPersonaDomicilio';
 import './style.css';
 import axios from 'axios';
+
 
 class RevinculaDomicilio extends Component {
 
@@ -282,6 +283,15 @@ class RevinculaDomicilio extends Component {
             }
         }
 
+        var persona = this.state.listaPersonas.filter(obj => {
+            return obj.persona.per_Id_Persona === parseInt(this.state.personaSeleccionada)
+        });
+        console.log("persona2", persona[0])
+        if (persona[0].persona.per_Bautizado === false && this.state.hogar.hd_Id_Hogar === "0") {
+            alert("Error!. Una persona NO BAUTIZADA no puede crear un Hogar Nuevo. Sólo se puede Vincular a un Hogar Existente.")
+            return false;
+        }
+
         if (this.state.hogar.hd_Id_Hogar === "0") { //Si es un Nuevo Domicilio
             this.fnSolicitudNvoEstado(this.state.domicilio.pais_Id_Pais);
             try {
@@ -319,13 +329,9 @@ class RevinculaDomicilio extends Component {
             }
             catch {
                 alert("Error: Hubo un problema en la comunicación con el Servidor. Intente mas tarde.");
-
             }
         }
         else { //Si es un Hogar Existente
-
-
-
             try {
                 await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/RevinculaPersonaHogarExistente/${this.state.personaSeleccionada}/${this.state.hogar.hd_Id_Hogar}/${this.state.hogar.hp_Jerarquia}/${this.infoSesion.pem_Id_Ministro}`)
                     .then(res => {
@@ -367,16 +373,35 @@ class RevinculaDomicilio extends Component {
     }
 
     render() {
-        console.log("Domicilio_Revinculacion", this.state.domicilio);
+
         return (
             <>
                 <Container>
+                    <FormGroup>
+                        <Row>
+                            <Col xs="12">
+                                <Alert color="warning">
+                                    <strong>AVISO: </strong>
+                                    <ul>
+                                        <li>Se puede revincular una Persona a un hogar distinto al que actualmente pertence, ya sea a un Hogar Existente en el Sector o uno Nuevo.</li>
+                                        <li>Al Revincular una Persona a un Hogar específico, deberá también especificar <strong>su Jerarquía</strong> que tendrá en ese Hogar.</li>
+                                        <li>Para sólo cambiar la Jerarquía de una Persona, deberá Revincularlo al mismo hogar, y cambiarle <strong>su nueva Jerarquía</strong>que tendrá.</li>
+                                        <li>Las Personas No Bautizadas sólo puede ser revinculadas a un Hogar Existente en el Sector, no pueden Crear un Nuevo Hogar.</li>
+                                    </ul>
+                                </Alert>
+                            </Col>
+                        </Row>
+                    </FormGroup>
                     <Row>
-
                         <Col xs="12">
                             <Form onSubmit={this.GuardaCambioDomicilio}>
                                 <Card>
                                     <CardHeader>
+                                        <Row className="d-flex justify-content-center align-items-center bold-text">
+                                            <h5 className="bold-text">PERSONA QUE SE REVINCULARÁ O CAMBIARLE LA JERARQUÍA</h5>
+                                        </Row>
+                                    </CardHeader>
+                                    <CardBody>
                                         <FormGroup>
                                             <Row>
                                                 <Col xs="2">
@@ -403,6 +428,14 @@ class RevinculaDomicilio extends Component {
                                                 </Col>
                                             </Row>
                                         </FormGroup>
+                                    </CardBody>
+                                </Card>
+                                <hr></hr>
+                                <Card>
+                                    <CardHeader>
+                                        <Row className="d-flex justify-content-center align-items-center bold-text">
+                                            <h5 className="bold-text">HOGAR AL QUE DESEA VINCULAR LA PERSONA SELECCIONADA O CAMBIARLE LA JERARQUÍA </h5>
+                                        </Row>
                                     </CardHeader>
                                     <CardBody>
                                         <FormGroup>
@@ -450,7 +483,7 @@ class RevinculaDomicilio extends Component {
                         </Col>
 
                     </Row>
-                </Container>
+                </Container >
                 <Modal isOpen={this.state.modalShow}>
                     <ModalBody>
                         {this.state.mensajeDelProceso}

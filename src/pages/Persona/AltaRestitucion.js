@@ -34,6 +34,7 @@ class AltaRestitucion extends Component {
             mostrarJerarquias: false,
             modalShow: false,
             mensajeDelProceso: "",
+            hogarOpcional: true
         }
     }
     componentDidMount() {
@@ -242,34 +243,48 @@ class AltaRestitucion extends Component {
 
         //Si el Input es el de la Persona
         if (e.target.name === "per_Id_Persona" && e.target.value !== "0") {
-            //Si se Restituirá al Mismo Hogar trae los datos de la Persona
-            if (this.state.mismoHogar) {
-                var persona = this.state.personaParaRestitucion.filter(obj => {
-                    return obj.per_Id_Persona === parseInt(e.target.value)
-                });
-                // Trae tambien los Integrantes del Hogar, Del Titular, del Domicilio y Jerarquías Disponibles.
-                this.fnGetDatosDelHogar(persona[0].hd_Id_Hogar);
-                this.setState({ // Actualiza los datos de las Variables per_Categoria y Hogar con los mismos datos del Hogar y Jerarquía
-                    per_Categoria: persona[0].per_Categoria,
-                    hogar: {
-                        ...this.state.hogar,
-                        hd_Id_Hogar: persona[0].hd_Id_Hogar
-                    },
-                    mostrarJerarquias: true
-                });
-            }
-            else { //Si se Restituira en un Nuevo Hogar o en un Hogar Existente resetea varias Variables.
-                this.setState({
-                    mostrarJerarquias: false,
-                    hogar: {
-                        ...this.state.hogar,
-                        hd_Id_Hogar: "0",
-                        hp_Jerarquia: "1"
-                    },
-                    MiembrosDelHogar: [],
-                    DatosHogarDomicilio: [],
-                    JerarquiasDisponibles: []
-                })
+
+            //Trae los datos de la Persona que se desea Restablecer al Mismo Hogar 
+            var persona = this.state.personaParaRestitucion.filter(obj => {
+                return obj.per_Id_Persona === parseInt(e.target.value)
+            });
+
+            //Revisa si la persona seleccionada No pertenecía al mismo Sector al que está en Sesión Activa,
+            //Para evitar que el Usuario seleccione la opción -El Mismo Hogar- del Switch, pues ese hogar es de otro Sector.
+            if (persona[0].sec_Id_Sector !== parseInt(localStorage.getItem("sector"))) {
+                this.onRadioBtnClick(false);
+                this.setState({ hogarOpcional: false })
+            } else {
+                //Si es del mismo Sector, habilita el Switch para seleccionar tipo de Hogar
+                this.setState({ hogarOpcional: true })
+
+                //Si se Restituirá al Mismo Hogar trae los datos de la Persona
+                if (this.state.mismoHogar) {
+
+                    // Trae tambien los Integrantes del Hogar, Del Titular, del Domicilio y Jerarquías Disponibles.
+                    this.fnGetDatosDelHogar(persona[0].hd_Id_Hogar);
+                    this.setState({ // Actualiza los datos de las Variables per_Categoria y Hogar con los mismos datos del Hogar y Jerarquía
+                        per_Categoria: persona[0].per_Categoria,
+                        hogar: {
+                            ...this.state.hogar,
+                            hd_Id_Hogar: persona[0].hd_Id_Hogar
+                        },
+                        mostrarJerarquias: true
+                    });
+                }
+                else { //Si se Restituira en un Nuevo Hogar o en un Hogar Existente resetea varias Variables.
+                    this.setState({
+                        mostrarJerarquias: false,
+                        hogar: {
+                            ...this.state.hogar,
+                            hd_Id_Hogar: "0",
+                            hp_Jerarquia: "1"
+                        },
+                        MiembrosDelHogar: [],
+                        DatosHogarDomicilio: [],
+                        JerarquiasDisponibles: []
+                    })
+                }
             }
         }
         // Si deseleccionó a la persona que había escrito resetea varias Variables.
@@ -517,21 +532,23 @@ class AltaRestitucion extends Component {
                                             * Hogar:
                                         </Col>
                                         <Col xs="9">
-                                            <ButtonGroup>
-                                                <Button
-                                                    color="info"
-                                                    onClick={() => this.onRadioBtnClick(true)}
-                                                    active={this.state.mismoHogar === true}
-                                                >
-                                                    {this.state.mismoHogar ? <span className="fa fa-icon fa-check"></span> : ""} En el Mismo Hogar
-                                                </Button>
-                                                <Button
-                                                    color="info"
-                                                    onClick={() => this.onRadioBtnClick(false)}
-                                                    active={this.state.mismoHogar === false}>
-                                                    {this.state.mismoHogar ? "" : <span className="fa fa-icon fa-check"></span>} En un Hogar Diferente
-                                                </Button>
-                                            </ButtonGroup>
+                                            {this.state.hogarOpcional &&
+                                                <ButtonGroup>
+                                                    <Button
+                                                        color="info"
+                                                        onClick={() => this.onRadioBtnClick(true)}
+                                                        active={this.state.mismoHogar === true}
+                                                    >
+                                                        {this.state.mismoHogar ? <span className="fa fa-icon fa-check"></span> : ""} En el Mismo Hogar
+                                                    </Button>
+                                                    <Button
+                                                        color="info"
+                                                        onClick={() => this.onRadioBtnClick(false)}
+                                                        active={this.state.mismoHogar === false}>
+                                                        {this.state.mismoHogar ? "" : <span className="fa fa-icon fa-check"></span>} En un Hogar Diferente
+                                                    </Button>
+                                                </ButtonGroup>
+                                            }
                                         </Col>
                                     </Row>
                                 </FormGroup>
