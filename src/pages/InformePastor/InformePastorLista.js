@@ -100,7 +100,7 @@ class InformePastorLista extends Component {
     }
 
     obtenerInformes = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get("/Informe?idTipoUsuario=1")
+        await helpers.validaToken().then(helpers.authAxios.get(`/Informe?idTipoUsuario=1&idDistrito=${localStorage.getItem('dto')}&idSector=${localStorage.getItem('sector')}`)
             .then(res => {
                 console.log(res);
                 this.setState({ informes: res.data })
