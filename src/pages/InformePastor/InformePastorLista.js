@@ -134,7 +134,7 @@ class InformePastorLista extends Component {
                     //     }
                     // })
                     setTimeout(() => {
-                        document.location.href = '/InformePastor/' + res.data.idInforme;     
+                        document.location.href = '/InformePastor/' + res.data.idInforme;
                     }, 500);
                     console.log(res);
                 }

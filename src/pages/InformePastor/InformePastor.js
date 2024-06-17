@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
-import helpers from '../../components/Helpers';
+import '../../assets/css/index.css'
+import 'react-day-picker/lib/style.css';
+import helpers from '../../components/Helpers'
+import Modal from 'react-modal';
 import {
-    Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup, Modal, ModalBody,
-    Form, FormGroup, CardBody, CardFooter, ListGroup, ListGroupItem, UncontrolledTooltip
+    Container, Button, Card, CardBody, Row, Col,
+    FormGroup, Input, ModalBody,
+    Form, ListGroup, ListGroupItem, UncontrolledTooltip
 } from 'reactstrap';
+import moment from 'moment/min/moment-with-locales';
+import 'moment/dist/locale/es'
+import logo from '../../assets/images/IECE_LogoOficial.jpg'
 import './style.css'
 
-import rutaLogo from '../../assets/images/IECE_LogoOficial.jpg'
-import moment from 'moment/moment';
+
 
 class InformePastor extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
@@ -234,6 +240,8 @@ class InformePastor extends Component {
     }
 
     componentDidMount() {
+        const { id } = this.props.match.params;
+        this.obtenerInforme(id);
         this.getDistrito();
         this.getSector();
     }
@@ -351,7 +359,10 @@ class InformePastor extends Component {
         }
         await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaSector", body)
             .then(res => {
-                this.state.desgloseMoviemientoEstadistico = res.data.datos;
+                this.state.desgloseMoviemientoEstadistico = res.data.datos
+                    .filter(f => f.ct_Codigo_Transaccion !== 11201 && //Actualizacion de bautizado
+                        f.ct_Codigo_Transaccion !== 12201 &&// Actualizacion de no bautizado
+                        f.ct_Codigo_Transaccion !== 31203); // Actualizacion de Hogar;
                 console.log("res-data-datos: ", res.data.datos);
             })
 
@@ -411,6 +422,9 @@ class InformePastor extends Component {
         event.persist();
         const { name, value } = event.target;
 
+
+
+
         // Divide el nombre para obtener un array de claves
         const keys = name.split('.');
 
@@ -436,12 +450,25 @@ class InformePastor extends Component {
         // Actualiza el estado con la nueva copia
         this.setState(newState);
         console.log(newState);
+
+        // if (name === 'movimientoEconomico.existenciaAnterior' || name === 'movimientoEconomico.entradaMes') {
+        //     this.setState((prevState) => {
+        //         const updatedMovimientoEconomico = {
+        //             ...prevState.movimientoEconomico
+        //         };
+
+        //         // Calcula la nueva sumaTotal
+        //         updatedMovimientoEconomico.sumaTotal = parseFloat(updatedMovimientoEconomico.existenciaAnterior) + parseFloat(updatedMovimientoEconomico.entradaMes);
+        //         console.log('valor', updatedMovimientoEconomico.sumaTotal);
+        //         return { movimientoEconomico: updatedMovimientoEconomico };
+        //     });
+        // }
     }
 
     actualizarInforme = async (e) => {
         e.preventDefault()
-        this.state.movimientoEconomico.sumaTotal = this.state.movimientoEconomico.existenciaAnterior + this.state.movimientoEconomico.entradaMes;
-        this.state.movimientoEconomico.existenciaEnCaja = this.state.movimientoEconomico.sumaTotal - (this.state.movimientoEconomico.gastosAdmon + this.state.movimientoEconomico.transferenciasAentidadSuperior);
+        this.state.movimientoEconomico.sumaTotal = parseFloat(this.state.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movimientoEconomico.entradaMes);
+        this.state.movimientoEconomico.existenciaEnCaja = this.state.movimientoEconomico.sumaTotal - parseFloat(this.state.movimientoEconomico.gastosAdmon) - parseFloat(this.state.movimientoEconomico.transferenciasAentidadSuperior);
         const data = {
             idInforme: this.state.informe.idInforme,
             idTipoUsuario: 1,
@@ -518,6 +545,8 @@ class InformePastor extends Component {
 
 
     render() {
+        const { id } = this.props.match.params;
+        console.log('suma Total: ', this.state.movimientoEconomico)
         return (
             <Container>
                 <Card>
@@ -539,7 +568,7 @@ class InformePastor extends Component {
                                     }
                                     <Row className='flex justify-content-center'>
                                         <Col xs="8" sm="8" lg="8">
-                                            <img src={rutaLogo} className='logo-informe'></img>
+                                            <img src={logo} alt="Logo" className='logo-informe'></img>
                                         </Col>
                                     </Row>
                                     <Row>
@@ -1133,7 +1162,12 @@ class InformePastor extends Component {
                                                 DATOS DEL ESTADO ACTUAL DE LA IGLESIA
                                             </Row>
                                             <Row className='titulo'>
-                                                <p>Número de personal en comunión al principio del mes: <u>{this.state.datosEstadisticos.personasBautizadas}</u></p>
+                                                <Col xs="2" sm="2" lg="2"></Col>
+                                                <Col xs="5" sm="5" lg="5">Número de personal en comunión al principio del mes:</Col>
+                                                <Col xs="1" sm="1" lg="1" type='number'>
+                                                    <u>{this.state.datosEstadisticos.personasBautizadas}</u>
+                                                </Col>
+                                                <Col xs="3" sm="3" lg="3"></Col>
                                             </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="6" sm="6" lg="6">
@@ -1313,19 +1347,19 @@ class InformePastor extends Component {
                                             <Row className='lista-elementos'>
                                                 <Col xs="6" sm="6" lg="6">
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Hombres
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.hombresBautizados'
                                                                 value={this.state.datosEstadisticos.hombresBautizados}
                                                                 readOnly></Input>
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Hombres
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.jovenesHombresBautizados'
                                                                 value={this.state.datosEstadisticos.jovenesHombresBautizados}
@@ -1333,19 +1367,19 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Mujeres
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.mujeresBautizadas'
                                                                 value={this.state.datosEstadisticos.mujeresBautizadas}
                                                                 readOnly></Input>
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Mujeres
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.jovenesMujeresBautizadas'
                                                                 value={this.state.datosEstadisticos.jovenesMujeresBautizadas}
@@ -1353,18 +1387,18 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Total
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.datosEstadisticos.hombresBautizados + this.state.datosEstadisticos.mujeresBautizadas}
                                                                 readOnly></Input>
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Total
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.datosEstadisticos.jovenesHombresBautizados + this.state.datosEstadisticos.jovenesMujeresBautizadas}
                                                                 readOnly></Input>
@@ -1373,19 +1407,19 @@ class InformePastor extends Component {
                                                 </Col>
                                                 <Col xs="6" sm="6" lg="6">
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Hombres
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.jovenesHombresNoBautizados'
                                                                 value={this.state.datosEstadisticos.jovenesHombresNoBautizados}
                                                                 readOnly></Input>
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Niños
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.ninos'
                                                                 value={this.state.datosEstadisticos.ninos}
@@ -1393,19 +1427,19 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Mujeres
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.jovenesMujeresNoBautizadas'
                                                                 value={this.state.datosEstadisticos.jovenesMujeresNoBautizadas}
                                                                 readOnly></Input>
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Niñas
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.ninas'
                                                                 value={this.state.datosEstadisticos.ninas}
@@ -1413,18 +1447,18 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Total
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.datosEstadisticos.jovenesHombresNoBautizados + this.state.datosEstadisticos.jovenesMujeresNoBautizadas}
                                                                 readOnly></Input>
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Total
                                                         </Col>
-                                                        <Col xs="2" sm="2" lg="2">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.datosEstadisticos.ninos + this.state.datosEstadisticos.ninas}
                                                                 readOnly></Input>

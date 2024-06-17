@@ -737,8 +737,8 @@ class Sidebar extends Component {
                         </div>
                     </li>
 
-                     {/* Nav Item - Informes Collapse Menu */}
-                    <li className="nav-item">
+                    {/* Nav Item - Informes Collapse Menu */}
+                    {/* <li className="nav-item">
                         <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseInformes" aria-expanded="true" aria-controls="collapsePages">
                             <i className="fas fa-fw fa-chart-bar"></i>
                             <span>Informes</span>
@@ -753,7 +753,7 @@ class Sidebar extends Component {
                                 </Link>
                             </div>
                         </div>
-                    </li>
+                    </li> */}
 
                     {/* Divider */}
                     {/* <hr className="sidebar-divider" /> */}
