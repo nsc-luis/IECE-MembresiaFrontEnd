@@ -13,11 +13,11 @@ import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'
 import './style.css'
 
-
-
 class InformePastor extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxPaginas = 2;
+    idInforme = localStorage.getItem("idInformePastoral")
+
     constructor(props) {
         super(props);
         this.state = {
@@ -240,10 +240,10 @@ class InformePastor extends Component {
     }
 
     componentDidMount() {
-        const { id } = this.props.match.params;
-        this.obtenerInforme(id);
-        this.getDistrito();
-        this.getSector();
+        //const { id } = this.props.match.params;
+        this.obtenerInforme(this.idInforme)
+        this.getDistrito()
+        this.getSector()
     }
 
     getDistrito = async () => {
@@ -252,7 +252,7 @@ class InformePastor extends Component {
                 this.setState({
                     distrito: res.data
                 })
-                console.log(res.data);
+                //console.log(res.data);
             })
         );
     }
@@ -263,9 +263,10 @@ class InformePastor extends Component {
                 this.setState({
                     sector: res.data.sector[0]
                 })
-                const { id } = this.props.match.params;
-                this.obtenerInforme(id);
-                console.log(res.data);
+                /* const { id } = this.props.match.params;
+                this.obtenerInforme(id); */
+                this.obtenerInforme(this.idInforme);
+                //console.log(res.data);
             })
         );
     }
@@ -278,7 +279,7 @@ class InformePastor extends Component {
         }
         await helpers.validaToken().then(helpers.authAxios.post("Registro_Transacciones/movimientosEstadisticosReporteBySector", body)
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 this.setState({
                     datosEstadisticos: res.data
                 })
@@ -314,7 +315,7 @@ class InformePastor extends Component {
                 this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
                 this.obtenerVisitantes();
-                console.log(res);
+                //console.log(res);
             })
         );
     }
@@ -333,7 +334,7 @@ class InformePastor extends Component {
                     }
                 }
                 );
-                console.log(this.state.misiones);
+                //console.log(this.state.misiones);
             })
         );
     }
@@ -363,7 +364,7 @@ class InformePastor extends Component {
                     .filter(f => f.ct_Codigo_Transaccion !== 11201 && //Actualizacion de bautizado
                         f.ct_Codigo_Transaccion !== 12201 &&// Actualizacion de no bautizado
                         f.ct_Codigo_Transaccion !== 31203); // Actualizacion de Hogar;
-                console.log("res-data-datos: ", res.data.datos);
+                //console.log("res-data-datos: ", res.data.datos);
             })
 
         )
@@ -449,7 +450,7 @@ class InformePastor extends Component {
 
         // Actualiza el estado con la nueva copia
         this.setState(newState);
-        console.log(newState);
+        //console.log(newState);
 
         // if (name === 'movimientoEconomico.existenciaAnterior' || name === 'movimientoEconomico.entradaMes') {
         //     this.setState((prevState) => {
@@ -505,13 +506,15 @@ class InformePastor extends Component {
             .then(res => {
                 if (res.status === 200) {
                     alert('Informe guardado con éxito.');
-                    const { id } = this.props.match.params;
-                    this.obtenerInforme(id);
+                    /* const { id } = this.props.match.params;
+                    this.obtenerInforme(id); */
+                    this.obtenerInforme(this.idInforme);
                 }
                 else {
                     alert(res.data.mensaje)
-                    const { id } = this.props.match.params;
-                    this.obtenerInforme(id);
+                    /* const { id } = this.props.match.params;
+                    this.obtenerInforme(id); */
+                    this.obtenerInforme(this.idInforme);
                 }
             })
         )
@@ -524,7 +527,7 @@ class InformePastor extends Component {
         });
         await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, { responseType: 'blob' })
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 const url = window.URL.createObjectURL(res.data);
 
                 const a = document.createElement('a');
@@ -545,8 +548,9 @@ class InformePastor extends Component {
 
 
     render() {
-        const { id } = this.props.match.params;
-        console.log('suma Total: ', this.state.movimientoEconomico)
+        // const { id } = this.props.match.params;
+        // 'suma Total: ', this.state.movimientoEconomico)
+        // const { id } = localStorage.getItem("idInformePastoral");
         return (
             <Container>
                 <Card>

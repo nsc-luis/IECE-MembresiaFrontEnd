@@ -1,8 +1,9 @@
-import React, { Component, Box, Tipography } from 'react';
+import React, { Component/* , Box, Tipography */ } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Form, FormGroup, Input, Button, Row, Col, Label, ResponsiveContainer,
-    Container, FormFeedback, Card, CardBody, CardTitle, CardHeader, CardFooter,
+    Form, FormGroup, Input, Button, Row, Col, 
+    Container,  Card, CardBody, CardTitle, CardHeader, CardFooter,
+    /* Label, ResponsiveContainer, FormFeedback */
 } from 'reactstrap'
 import './style.css';
 import { jsPDF } from "jspdf";
@@ -173,7 +174,7 @@ class ResumenMembresia extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
                 .then(res => {
                     let contador = 0;
-                    console.log("hogares desde API:", res.data.domicilios)
+                    //console.log("hogares desde API:", res.data.domicilios)
                     res.data.domicilios.forEach(element => {
                         contador = contador + 1;
                     });

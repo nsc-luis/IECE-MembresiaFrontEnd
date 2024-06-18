@@ -1,9 +1,8 @@
-import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input, Modal, ModalBody
+    FormGroup, Input, /* Modal, ModalBody */
 } from 'reactstrap';
 import ReactModal from 'react-modal';
 import React, { useEffect, useState, useLayoutEffect } from 'react';
@@ -46,7 +45,7 @@ export default function ReportePersonalBautizado() {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR"))
                 })
             )
 
@@ -150,13 +149,14 @@ export default function ReportePersonalBautizado() {
     }
 
     const getTitulo = (sector) => {
-        console.log("SectorParaTitulo: ", sectores);
-        sectores.map(sec => {
+        //console.log("SectorParaTitulo: ", sectores);
+        sectores.map((sec) => {
 
-            if (sec.sec_Id_Sector == sector) {
+            if (sec.sec_Id_Sector === sector) {
                 setEntidadTitulo(sec.sec_Tipo_Sector + " " + sec.sec_Numero + ": " + sec.sec_Alias)
-                console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
+                //console.log("entidadTitulo: ", sec.sec_Tipo_Sector + " " + sec.sec_Numero + " " + sec.sec_Alias)
             }
+            return true
         })
     }
 
@@ -173,13 +173,13 @@ export default function ReportePersonalBautizado() {
 
     const countPersons = (type) => {
         let count = 0
-        personas.map(persona => {
+        personas.map((persona) => {
             if (persona.persona.per_Categoria === type) {
                 count += 1
             }
+            totalCount += count;
+            return count
         })
-        totalCount += count;
-        return count
     }
 
     const reportePersonalBautizadoPDF = () => {
@@ -220,6 +220,7 @@ export default function ReportePersonalBautizado() {
                     yAxis = 15 // Restart height position
                 }
             }
+            return true
         })
 
         index = 1;
@@ -241,6 +242,7 @@ export default function ReportePersonalBautizado() {
                     yAxis = 15 // Restart height position
                 }
             }
+            return true
         })
 
         index = 1;
@@ -262,6 +264,7 @@ export default function ReportePersonalBautizado() {
                     yAxis = 15 // Restart height position
                 }
             }
+            return true
         })
 
         index = 1;
@@ -283,6 +286,7 @@ export default function ReportePersonalBautizado() {
                     yAxis = 15 // Restart height position
                 }
             }
+            return true
         })
 
         yAxis += 2;
@@ -368,11 +372,11 @@ export default function ReportePersonalBautizado() {
                         <Col lg="6" >
                             <CardTitle className="text-center" tag="h3">
                                 LISTA DE PERSONAL BAUTIZADO
-                                <FormGroup>
+                                {/* <FormGroup>
                                     <Row>
                                         <h1></h1>
                                     </Row>
-                                </FormGroup>
+                                </FormGroup> */}
 
                                 <h5>{entidadTitulo}</h5>
                             </CardTitle>
@@ -389,6 +393,7 @@ export default function ReportePersonalBautizado() {
                                                 if (persona.persona.per_Categoria === "ADULTO_HOMBRE") {
                                                     return <li key={persona.persona.per_Id_Persona}>{persona.persona.apellidoPrincipal} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
+                                                else { return true }
                                             })}
                                         </ol>
                                     </h5>
@@ -406,6 +411,7 @@ export default function ReportePersonalBautizado() {
                                                 if (persona.persona.per_Categoria === "ADULTO_MUJER") {
                                                     return <li key={persona.persona.per_Id_Persona}>{persona.persona.apellidoPrincipal} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
+                                                else {return true }
                                             })}
                                         </ol>
                                     </h5>
@@ -423,6 +429,7 @@ export default function ReportePersonalBautizado() {
                                                 if (persona.persona.per_Categoria === "JOVEN_HOMBRE") {
                                                     return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
+                                                else { return true }
                                             })}
                                         </ol>
                                     </h5>
@@ -439,6 +446,7 @@ export default function ReportePersonalBautizado() {
                                                 if (persona.persona.per_Categoria === "JOVEN_MUJER") {
                                                     return <li key={persona.persona.per_Id_Persona}>{persona.persona.per_Apellido_Paterno} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
+                                                else { return true }
                                             })}
                                         </ol>
                                     </h5>

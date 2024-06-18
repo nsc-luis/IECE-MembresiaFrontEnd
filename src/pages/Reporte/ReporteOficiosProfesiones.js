@@ -1,14 +1,14 @@
-import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button, FormGroup, Input,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, Modal, ModalBody
+    CardTitle, Card, CardBody, Table, Row, Col, 
+    /* UncontrolledCollapse, Modal, ModalBody */
 } from 'reactstrap';
 import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
-import Moment from "react-moment";
+/* import Moment from "react-moment"; */
 import moment from 'moment/min/moment-with-locales';
 import 'moment/dist/locale/es'
 import logo from '../../assets/images/IECE_LogoOficial.jpg'

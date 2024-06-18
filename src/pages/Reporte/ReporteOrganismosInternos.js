@@ -1,12 +1,10 @@
-import Layout from "../Layout";
-
-import helpers from "../../components/Helpers";
 import {
     Container, Button,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input, CardHeader, Modal, ModalBody
+    CardTitle, Card, CardBody, Table,  Row, Col,
+    FormGroup, Input, CardHeader, /* Modal, ModalBody, UncontrolledCollapse, */
 } from 'reactstrap';
 import ReactModal from 'react-modal';
+import helpers from '../../components/Helpers'
 import React, { useEffect, useState, } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';

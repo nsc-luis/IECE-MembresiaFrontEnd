@@ -1,9 +1,8 @@
-import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button,
     CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col,
-    FormGroup, Input, Modal, ModalBody
+    FormGroup, Input, /* Modal, ModalBody */
 } from 'reactstrap';
 import ReactModal from 'react-modal';
 import React, { useEffect, useState, } from 'react';
@@ -44,7 +43,7 @@ export default function ReportePersonalAdministrativo() {
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
-                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector == "SECTOR"))
+                    setSectores(res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR"))
                 })
             )
 

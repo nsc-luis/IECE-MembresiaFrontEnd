@@ -63,7 +63,7 @@ class InformePastorLista extends Component {
         this.getSector();
         this.obtenerInformes();
         helpers.handle_LinkEncabezado("Seccion: Informes", "Listado de Informes Pastorales")
-        console.log(this.infoSesion);
+        //console.log(this.infoSesion);
         window.scrollTo(0, 0)
     }
 
@@ -79,7 +79,7 @@ class InformePastorLista extends Component {
                         usu_id_usuario: this.infoSesion.pem_Id_Ministro
                     }
                 })
-                console.log(res.data);
+                //console.log(res.data);
             })
         );
     }
@@ -94,7 +94,7 @@ class InformePastorLista extends Component {
                         idSector: res.data.sector[0].sec_Id_Sector,
                     }
                 })
-                console.log(res.data);
+                //console.log(res.data);
             })
         );
     }
@@ -102,7 +102,7 @@ class InformePastorLista extends Component {
     obtenerInformes = async () => {
         await helpers.validaToken().then(helpers.authAxios.get(`/Informe?idTipoUsuario=1&idDistrito=${localStorage.getItem('dto')}&idSector=${localStorage.getItem('sector')}`)
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 this.setState({ informes: res.data })
             })
         );
@@ -133,10 +133,11 @@ class InformePastorLista extends Component {
                     //         fechaRegistro: new Date().toDateString(),
                     //     }
                     // })
-                    setTimeout(() => {
+                    /* setTimeout(() => {
                         document.location.href = '/InformePastor/' + res.data.idInforme;
-                    }, 500);
-                    console.log(res);
+                    }, 500); */
+                    //console.log(res);
+                    this.irAinformePastoral(res.data.idInforme)
                 }
             })
         )
@@ -156,7 +157,7 @@ class InformePastorLista extends Component {
 
     handleChange(event) {
         event.persist();
-        console.log(event);
+        //console.log(event);
         const { name, value } = event.target;
 
         // Divide el nombre para obtener un array de claves
@@ -176,13 +177,13 @@ class InformePastorLista extends Component {
 
         // Actualiza el estado con la nueva copia
         this.setState(newState);
-        console.log(newState);
+        //console.log(newState);
     }
 
     descargarInforme = async (informeId) => {
         await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, { responseType: 'blob' })
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 const url = window.URL.createObjectURL(res.data);
 
                 const a = document.createElement('a');
@@ -196,6 +197,12 @@ class InformePastorLista extends Component {
                 document.body.removeChild(a);
             })
         )
+    }
+    irAinformePastoral = (idInformePastoral) => {
+        if (localStorage.getItem("idInformePastoral")) localStorage.removeItem("idInformePastoral")
+        localStorage.setItem("idInformePastoral", idInformePastoral)
+        helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")
+        window.location.assign("/InformePastor")
     }
 
     render() {
@@ -328,12 +335,18 @@ class InformePastorLista extends Component {
                                                 <td>{obj.anio}</td>
                                                 <td>{obj.mes}</td>
                                                 <td className='text-center'>
-                                                    <Link to={{
+                                                    {/* <Link to={{
                                                         pathname: "/InformePastor/" + obj.idInforme,
                                                         id: obj.idInforme
                                                     }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
                                                         Detalle
-                                                    </Link>
+                                                    </Link> */}
+                                                    <Button
+                                                        className="btn btn-info btn-sm"
+                                                        onClick={() => this.irAinformePastoral(obj.idInforme)}
+                                                    >
+                                                        Detalle
+                                                    </Button>
                                                     <Button
                                                         color="primary"
                                                         size="sm"

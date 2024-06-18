@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import helpers from '../../components/Helpers'
 import PaisEstado from '../../components/PaisEstado';
 
@@ -38,8 +38,8 @@ class Domicilio extends React.Component {
             DatosHogarDomicilio,
             direccion,
             MiembrosDelHogar,
-            handle_hp_Jerarquia,
-            JerarquiasDisponibles,
+            //handle_hp_Jerarquia,
+            //JerarquiasDisponibles,
             ListaHogares,
             nvoEstado_Disponible,
         } = this.props

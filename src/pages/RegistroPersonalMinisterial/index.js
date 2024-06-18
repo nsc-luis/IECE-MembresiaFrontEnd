@@ -1,10 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import helpers from "../../components/Helpers";
 import {
-    Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter,
-    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader, ModalHeader, ModalFooter
+    Container, Button, Input, Modal, ModalBody, Alert, CardFooter,
+    CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, ModalHeader, FormGroup
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import './style.css';
 
 let dto = (JSON.parse(localStorage.getItem("dto")))
@@ -100,9 +99,9 @@ export default class RegistroPersonalMinisterial extends Component {
             }
         })
 
-        if (e.target.name == "id_Persona" && e.target.value != "0") {
+        if (e.target.name === "id_Persona" && e.target.value !== "0") {
 
-            let persona = this.state.varonesSector.filter((person) => person.per_Id_Persona == e.target.value);
+            let persona = this.state.varonesSector.filter((person) => person.per_Id_Persona === e.target.value);
             console.log("lista", persona)
             this.setState({
                 form: {
@@ -114,9 +113,9 @@ export default class RegistroPersonalMinisterial extends Component {
             })
         }
 
-        if (e.target.name == "id_Ministro" && e.target.value != "0") {
+        if (e.target.name === "id_Ministro" && e.target.value !== "0") {
 
-            let ministro = this.state.personalMinisterial.filter((person) => person.pem_Id_Ministro == e.target.value);
+            let ministro = this.state.personalMinisterial.filter((person) => person.pem_Id_Ministro === e.target.value);
             console.log("lista", ministro)
             this.setState({
                 form: {
@@ -126,7 +125,7 @@ export default class RegistroPersonalMinisterial extends Component {
                     tipoRegistro: "ElementoExistente"
                 }
             })
-        } else if (e.target.name == "id_Ministro" && e.target.value == "0") {
+        } else if (e.target.name === "id_Ministro" && e.target.value === "0") {
             this.setState({
                 form: {
                     ...this.state.form,
@@ -145,9 +144,9 @@ export default class RegistroPersonalMinisterial extends Component {
             }
         })
 
-        if (e.target.name == "id_Ministro" && e.target.value != "0") {
+        if (e.target.name === "id_Ministro" && e.target.value !== "0") {
 
-            let ministro = this.state.personalMinisterialVinculado.filter((person) => person.pem_Id_Ministro == e.target.value);
+            let ministro = this.state.personalMinisterialVinculado.filter((person) => person.pem_Id_Ministro === e.target.value);
             console.log("lista", ministro)
             this.setState({
                 formBaja: {
@@ -305,7 +304,7 @@ export default class RegistroPersonalMinisterial extends Component {
             return false;
         }
 
-        if (this.state.formBaja.causaDeBaja == "0") {
+        if (this.state.formBaja.causaDeBaja === "0") {
             alert("Error!. Debe seleccionar la Causa de baja del Personal Ministerial ")
             return false;
         }
@@ -809,10 +808,10 @@ export default class RegistroPersonalMinisterial extends Component {
                     <ModalBody className="card-body">
                         <div >
                             <div >
-                                {this.state.tipoRegistro == "NuevoElemento" &&
+                                {this.state.tipoRegistro === "NuevoElemento" &&
                                     <p>¿Esta seguro de querer agregar a <strong> {this.state.form.nombre_Persona} </strong>como elemento del Personal Ministerial?</p>
                                 }
-                                {this.state.tipoRegistro == "ElementoExistente" &&
+                                {this.state.tipoRegistro === "ElementoExistente" &&
                                     <p>¿Estas seguro de Vincular a
                                         <strong> {this.state.form.nombre_Persona} </strong>
                                         con el Elemento del Personal Ministerial ya Existente en la Base de Datos de Secretaría General bajo el nombre de:

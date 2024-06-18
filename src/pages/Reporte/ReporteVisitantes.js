@@ -1,4 +1,3 @@
-import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button,

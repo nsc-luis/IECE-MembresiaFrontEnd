@@ -1,15 +1,15 @@
-import Layout from "../Layout";
 import helpers from "../../components/Helpers";
 import {
     Container, Button, Input,
-    CardTitle, Card, CardBody, Table, UncontrolledCollapse, Row, Col, FormGroup, Modal, ModalBody
+    CardTitle, Card, CardBody, Table, Row, Col, FormGroup, 
+    /* Modal, ModalBody, UncontrolledCollapse */
 } from 'reactstrap';
 import ReactModal from 'react-modal';
 import React, { Fragment, useEffect, useState } from 'react';
 import TableToExcel from "@linways/table-to-excel";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
-import Moment from "react-moment";
+/* import Moment from "react-moment"; */
 import moment from 'moment/min/moment-with-locales';
 import 'moment/locale/es';
 import 'moment/dist/locale/es'
