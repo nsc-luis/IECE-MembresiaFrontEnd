@@ -4,7 +4,7 @@ import {
     Container, Button, Input, Modal, ModalBody, Label, Alert, CardFooter,
     CardTitle, Card, CardBody, Table, Row, Col, FormFeedback, Form, FormGroup, CardHeader
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import moment from 'moment';
 
 class InformePastorLista extends Component {
@@ -48,8 +48,8 @@ class InformePastorLista extends Component {
                 anio: null,
                 idDistrito: 0,
                 idSector: 0,
-                lugarReunion: null,
-                fechaReunion: null,
+                lugarReunion: "",
+                fechaReunion: new Date(),
                 status: 0,
                 usu_id_usuario: 0,
                 fechaRegistro: new Date().toDateString(),
@@ -100,7 +100,7 @@ class InformePastorLista extends Component {
     }
 
     obtenerInformes = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get("/Informe?idTipoUsuario=1")
+        await helpers.validaToken().then(helpers.authAxios.get(`/Informe?idTipoUsuario=1&idDistrito=${localStorage.getItem('dto')}&idSector=${localStorage.getItem('sector')}`)
             .then(res => {
                 console.log(res);
                 this.setState({ informes: res.data })
@@ -113,26 +113,29 @@ class InformePastorLista extends Component {
 
         await helpers.validaToken().then(helpers.authAxios.post("/Informe", this.state.nuevoInforme)
             .then(res => {
-                if(res.data.status === 'error'){
+                if (res.data.status === 'error') {
                     alert(res.data.message)
                     return
                 }
                 if (res.status === 200) {
-                    this.obtenerInformes();
-                    this.handleCancelar();
-                    this.setState({
-                        nuevoInforme: {
-                            idInforme: 0,
-                            idTipoUsuario: 1,
-                            mes: 0,
-                            anio: 0,
-                            lugarReunion: '',
-                            fechaReunion: new Date().toDateString(),
-                            status: 0,
-                            usu_id_usuario: 0,
-                            fechaRegistro: new Date().toDateString(),
-                        }
-                    })
+                    // this.obtenerInformes();
+                    // this.handleCancelar();
+                    // this.setState({
+                    //     nuevoInforme: {
+                    //         idInforme: 0,
+                    //         idTipoUsuario: 1,
+                    //         mes: 0,
+                    //         anio: 0,
+                    //         lugarReunion: '',
+                    //         fechaReunion: new Date().toDateString(),
+                    //         status: 0,
+                    //         usu_id_usuario: 0,
+                    //         fechaRegistro: new Date().toDateString(),
+                    //     }
+                    // })
+                    setTimeout(() => {
+                        document.location.href = '/InformePastor/' + res.data.idInforme;
+                    }, 500);
                     console.log(res);
                 }
             })
@@ -221,6 +224,17 @@ class InformePastorLista extends Component {
                                     <FormGroup>
                                         <Row>
                                             <Col xs="12">
+                                                <Alert color="success">
+                                                    <strong>CREACIÓN DE UN NUEVO INFORME PASTORAL MENSUAL </strong>
+                                                    <ul>
+                                                        <li>Llene estos datos iniciales para iniciar un Informe nuevo, posteriormente presionar el botón  <strong>"Crear Informe"</strong>.</li>
+                                                        <li>El llenbado del resto de datos del Informe se debe hacer abriendo <strong>"los Detalles</strong> del Infome.</li>
+                                                    </ul>
+                                                </Alert>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col xs="12">
                                                 <Alert color="warning">
                                                     <strong>AVISO: </strong>LOS CAMPOS MARCADOS CON * SON REQUERIDOS.
                                                 </Alert>
@@ -262,30 +276,6 @@ class InformePastorLista extends Component {
                                                         )
                                                     })}
                                                 </Input>
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="3"></Col>
-                                            <Col xs="2" className='my-1 text-right'>
-                                                * FECHA DE REUNIÓN:
-                                            </Col>
-                                            <Col xs="2" className='my-1'>
-                                                <Input
-                                                    type="date"
-                                                    name="nuevoInforme.fechaReunion"
-                                                    value={this.state.nuevoInforme.fechaReunion}
-                                                    onChange={(e) => this.handleChange(e)}
-                                                    autoComplete="nope"
-                                                />
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="2" className='my-1 text-right'>
-                                                * LUGAR DE REUNIÓN:
-                                            </Col>
-                                            <Col xs="4" className='my-1'>
-                                                <Input type='text'
-                                                    name='nuevoInforme.lugarReunion'
-                                                    value={this.state.nuevoInforme.lugarReunion}
-                                                    onChange={(e) => this.handleChange(e)}></Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
                                         </Row>
@@ -342,7 +332,7 @@ class InformePastorLista extends Component {
                                                         pathname: "/InformePastor/" + obj.idInforme,
                                                         id: obj.idInforme
                                                     }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
-                                                        Detalles
+                                                        Detalle
                                                     </Link>
                                                     <Button
                                                         color="primary"

@@ -40,7 +40,8 @@ export default class Administracion extends Component {
             pem_Id_MinistroInvalido: false,
             puestoInvalido: false,
             submitBtnDisable: false,
-            id_Colaborador: "0"
+            id_Colaborador: "0",
+            colaboradorInvalido: false
         })
     }
 
@@ -174,6 +175,7 @@ export default class Administracion extends Component {
 
     registrarColaborador = async (e) => {
         e.preventDefault()
+
         let info = {
             id_Colaborador: this.state.id_Colaborador,
             sec_Id_Sector: this.state.sec_Id_Sector,
@@ -235,7 +237,8 @@ export default class Administracion extends Component {
                                     <li>Para establecer una Nueva Designación Administrativa, presione el Botón <strong>"Nueva Designación"</strong>.</li>
                                     <li>Para dar de Baja una Designación Administrativa, seleccione el Botón <strong>"Dar de Baja"</strong> en el cargo respectivo.</li>
                                     <li> <strong>El personal cualificado</strong> para una designación de <strong>Cargo Administrativo</strong> debe ser del Personal Ministerial.</li>
-                                    <li> Para ver a todos los Elementos del Personal Ministerial, asegúrese de haber realizado <strong>la Vinculación</strong> o <strong>la Alta</strong> del Personal Ministerial.</li>
+                                    <li> En casos especiales un hermano o hermana que no forma parte del Cuerpo MInisterial colabora en la administración, podrá darlo de Alta como <strong>Colaborador</strong> para que posteriormente aparezca como elemento elegible para algun cargo administrativo</li>
+                                    <li> Para que aparezcan elegibles todos los Elementos del Personal Ministerial, asegúrese de haber realizado <strong>la Vinculación</strong> o <strong>la Alta</strong> en la Función 'Personal Ministerial'.</li>
                                 </ul>
                             </Alert>
                         </Col>

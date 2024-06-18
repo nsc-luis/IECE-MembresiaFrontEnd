@@ -339,7 +339,7 @@ export default function ReporteOrganismosInternos() {
         doc.text(`${infoSecretario}`, 40, yAxis);
 
 
-        doc.save("ReporteOrganismosInternos.pdf");
+        doc.save("Reporte de Organismos Internos.pdf");
     }
 
 
