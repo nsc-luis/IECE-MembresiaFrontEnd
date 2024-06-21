@@ -614,10 +614,10 @@ class InformePastor extends Component {
                                             <Row className='lista-elementos'>
                                                 <Col xs="3" sm="3" lg="3">
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             Por el Pastor
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='porPastor'
                                                                 name='visitasPastor.porPastor'
@@ -632,10 +632,10 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             Por Ancianos Auxiliares
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='porAncianosAux'
                                                                 name='visitasPastor.porAncianosAux'
@@ -650,10 +650,10 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             Por Diaconos
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='porDiaconos'
                                                                 name='visitasPastor.porDiaconos'
@@ -668,10 +668,10 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             Por Auxiliares
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='porAuxiliares'
                                                                 name='visitasPastor.porAuxiliares'
@@ -688,10 +688,10 @@ class InformePastor extends Component {
                                                 </Col>
                                                 <Col xs="3" sm="3" lg="3">
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             Ordinarios
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='ordinarios'
                                                                 name='cultosSector.ordinarios'
@@ -706,10 +706,10 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             Especiales
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='especiales'
                                                                 name='cultosSector.especiales'
@@ -724,10 +724,10 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             De avivamiento
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='deAvivamiento'
                                                                 name='cultosSector.deAvivamiento'
@@ -742,10 +742,10 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             De aniversario
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='deAniversario'
                                                                 name='cultosSector.deAniversario'
@@ -760,10 +760,10 @@ class InformePastor extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             Por el Distrito
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="6" sm="6" lg="6">
                                                             <Input type='number' min={0} max={9999}
                                                                 id='porElDistrito'
                                                                 name='cultosSector.porElDistrito'

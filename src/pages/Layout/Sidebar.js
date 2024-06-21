@@ -733,15 +733,14 @@ class Sidebar extends Component {
                                     to="/ResumenTransacciones"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "Resumen de Transacciones")}
                                 >Resumen de Transacciones</Link>
-                                
-                                <Link className="collapse-item text-wrap"
+                                {/* <Link className="collapse-item text-wrap"
                                     to="/InformeAnualPastor"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "InformeAnualPastor")}
                                 >InformeAnualPastor</Link>
                                 <Link className="collapse-item text-wrap"
                                     to="/InformeAnualPastorLista"
                                     onClick={() => this.handle_LinkEncabezado("Sección: Reportes", "InformeAnualPastorLista")}
-                                >InformeAnualPastorLista</Link>
+                                >InformeAnualPastorLista</Link> */}
                             </div>
                         </div>
                     </li>

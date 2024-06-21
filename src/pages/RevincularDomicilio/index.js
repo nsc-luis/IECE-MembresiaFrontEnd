@@ -398,7 +398,7 @@ class RevinculaDomicilio extends Component {
                                 <Card>
                                     <CardHeader>
                                         <Row className="d-flex justify-content-center align-items-center bold-text">
-                                            <h5 className="bold-text">PERSONA QUE SE REVINCULARÁ O CAMBIARLE LA JERARQUÍA</h5>
+                                            <h5 className="bold-text">PERSONA QUE SE REVINCULARÁ O CAMBIARÁ SU JERARQUÍA</h5>
                                         </Row>
                                     </CardHeader>
                                     <CardBody>
@@ -434,7 +434,7 @@ class RevinculaDomicilio extends Component {
                                 <Card>
                                     <CardHeader>
                                         <Row className="d-flex justify-content-center align-items-center bold-text">
-                                            <h5 className="bold-text">HOGAR AL QUE DESEA VINCULAR LA PERSONA SELECCIONADA O CAMBIARLE LA JERARQUÍA </h5>
+                                            <h5 className="bold-text">HOGAR AL QUE DESEA VINCULAR LA PERSONA SELECCIONADA O JERARQUÍA QUE DESEA ASIGNALE</h5>
                                         </Row>
                                     </CardHeader>
                                     <CardBody>
