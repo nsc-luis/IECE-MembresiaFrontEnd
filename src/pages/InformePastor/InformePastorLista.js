@@ -348,11 +348,11 @@ class InformePastorLista extends Component {
                                                         Detalle
                                                     </Button>
                                                     <Button
-                                                        color="primary"
+                                                        color="danger"
                                                         size="sm"
                                                         className='mx-3'
                                                         onClick={() => this.descargarInforme(obj.idInforme)}>
-                                                        <span className="fas fa-file-word icon-btn-p"></span> Descargar
+                                                        <span className="fas fa-file-pdf icon-btn-p"></span> Descargar
                                                     </Button>
                                                 </td>
                                             </tr>

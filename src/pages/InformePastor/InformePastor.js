@@ -423,9 +423,6 @@ class InformePastor extends Component {
         event.persist();
         const { name, value } = event.target;
 
-
-
-
         // Divide el nombre para obtener un array de claves
         const keys = name.split('.');
 
@@ -450,26 +447,63 @@ class InformePastor extends Component {
 
         // Actualiza el estado con la nueva copia
         this.setState(newState);
-        //console.log(newState);
-
-        // if (name === 'movimientoEconomico.existenciaAnterior' || name === 'movimientoEconomico.entradaMes') {
-        //     this.setState((prevState) => {
-        //         const updatedMovimientoEconomico = {
-        //             ...prevState.movimientoEconomico
-        //         };
-
-        //         // Calcula la nueva sumaTotal
-        //         updatedMovimientoEconomico.sumaTotal = parseFloat(updatedMovimientoEconomico.existenciaAnterior) + parseFloat(updatedMovimientoEconomico.entradaMes);
-        //         console.log('valor', updatedMovimientoEconomico.sumaTotal);
-        //         return { movimientoEconomico: updatedMovimientoEconomico };
-        //     });
-        // }
     }
+
+    // Actualización del estado para Movimiento Economico
+    handleMovimientoEconomicoChange = (e) => {
+        const { name, value } = e.target;
+        const nameParts = name.split('.'); // Dividir el name por el punto
+
+        if (nameParts.length === 2 && nameParts[0] === 'movimientoEconomico') {
+            const property = nameParts[1];
+
+            this.setState((prevState) => {
+                const updatedMovimientoEconomico = {
+                    ...prevState.movimientoEconomico,
+                    [property]: value
+                };
+
+                return { movimientoEconomico: updatedMovimientoEconomico };
+            });
+        }
+    };
+
+    handleMovimientoEconomicoBlur = (e) => {
+        const { name, value } = e.target;
+        const parsedValue = parseFloat(value.replace(/,/g, ''));
+        const nameParts = name.split('.'); // Dividir el name por el punto
+
+        if (nameParts.length === 2 && nameParts[0] === 'movimientoEconomico') {
+            const property = nameParts[1];
+
+            this.setState((prevState) => {
+                const updatedMovimientoEconomico = {
+                    ...prevState.movimientoEconomico,
+                    [property]: isNaN(parsedValue) ? 0 : parsedValue
+                };
+
+                // Realizar operaciones matemáticas sin formatear
+                if (property === 'gastosAdmon' || property === 'transferenciasAentidadSuperior' || property === 'existenciaAnterior' || property === 'entradaMes') {
+                    updatedMovimientoEconomico.sumaTotal = (parseFloat(updatedMovimientoEconomico.existenciaAnterior) || 0) + (parseFloat(updatedMovimientoEconomico.entradaMes) || 0);
+                    updatedMovimientoEconomico.existenciaEnCaja = (parseFloat(updatedMovimientoEconomico.sumaTotal) || 0) - (parseFloat(updatedMovimientoEconomico.gastosAdmon) || 0) - (parseFloat(updatedMovimientoEconomico.transferenciasAentidadSuperior) || 0);
+                }
+
+                // Formatear los resultados
+                updatedMovimientoEconomico.sumaTotal = updatedMovimientoEconomico.sumaTotal.toLocaleString('mx-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                updatedMovimientoEconomico.existenciaEnCaja = updatedMovimientoEconomico.existenciaEnCaja.toLocaleString('mx-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                return { movimientoEconomico: updatedMovimientoEconomico };
+            });
+        }
+    };
+    // Formateador para moneda mexicana
+    // formatCurrency = (value) => {
+    //     return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 }).format(value);
+    // };
 
     actualizarInforme = async (e) => {
         e.preventDefault()
-        this.state.movimientoEconomico.sumaTotal = parseFloat(this.state.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movimientoEconomico.entradaMes);
-        this.state.movimientoEconomico.existenciaEnCaja = this.state.movimientoEconomico.sumaTotal - parseFloat(this.state.movimientoEconomico.gastosAdmon) - parseFloat(this.state.movimientoEconomico.transferenciasAentidadSuperior);
+
         const data = {
             idInforme: this.state.informe.idInforme,
             idTipoUsuario: 1,
@@ -562,10 +596,10 @@ class InformePastor extends Component {
                                         this.state.informe.idInforme > 0 ?
                                             <Row className='flex justify-content-end'>
                                                 <Button
-                                                    color="primary"
+                                                    color="danger"
                                                     size="sm"
                                                     onClick={() => this.descargarInforme(this.state.informe.idInforme)}>
-                                                    <span className="fas fa-file-word icon-btn-p"></span> Descargar
+                                                    <span className="fas fa-file-pdf icon-btn-p"></span> Descargar PDF
                                                 </Button>
                                             </Row>
                                             : ''
@@ -1535,10 +1569,10 @@ class InformePastor extends Component {
                                         this.state.informe.idInforme > 0 ?
                                             <Row className='flex justify-content-end'>
                                                 <Button
-                                                    color="primary"
+                                                    color="danger"
                                                     size="sm"
                                                     onClick={() => this.descargarInforme(this.state.informe.idInforme)}>
-                                                    <span className="fas fa-file-word icon-btn-p"></span> Descargar
+                                                    <span className="fas fa-file-pdf icon-btn-p"></span> Descargar PDF
                                                 </Button>
                                             </Row>
                                             : ''
@@ -2423,11 +2457,13 @@ class InformePastor extends Component {
                                                             Existencia Anterior
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                            <Input type='text' min={0} max={9999}
                                                                 id='exAnterior'
                                                                 name='movimientoEconomico.existenciaAnterior'
-                                                                value={this.state.movimientoEconomico.existenciaAnterior}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                value={this.state.movimientoEconomico.existenciaAnterior ? this.state.movimientoEconomico.existenciaAnterior.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                onChange={this.handleMovimientoEconomicoChange}
+                                                                onBlur={this.handleMovimientoEconomicoBlur}
+                                                            ></Input>
                                                             <UncontrolledTooltip
                                                                 placement="right"
                                                                 target="exAnterior"
@@ -2441,11 +2477,12 @@ class InformePastor extends Component {
                                                             Entradas en el mes
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                            <Input type='text' min={0} max={9999}
                                                                 id='entradas'
                                                                 name='movimientoEconomico.entradaMes'
-                                                                value={this.state.movimientoEconomico.entradaMes}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                value={this.state.movimientoEconomico.entradaMes ? this.state.movimientoEconomico.entradaMes.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                onChange={this.handleMovimientoEconomicoChange}
+                                                                onBlur={this.handleMovimientoEconomicoBlur}></Input>
                                                             <UncontrolledTooltip
                                                                 placement="right"
                                                                 target="entradas"
@@ -2459,12 +2496,13 @@ class InformePastor extends Component {
                                                             Suma total
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                            <Input type='text' min={0} max={9999}
                                                                 id='sumaTotal'
                                                                 name='movimientoEconomico.sumaTotal'
-                                                                value={parseFloat(this.state.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movimientoEconomico.entradaMes)}
+                                                                value={this.state.movimientoEconomico.sumaTotal ? this.state.movimientoEconomico.sumaTotal.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
                                                                 disabled
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                onChange={this.handleMovimientoEconomicoChange}
+                                                                onBlur={this.handleMovimientoEconomicoBlur}></Input>
                                                             <UncontrolledTooltip
                                                                 placement="right"
                                                                 target="sumaTotal"
@@ -2480,11 +2518,12 @@ class InformePastor extends Component {
                                                             Gastos de la Admon.
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                            <Input type='text' min={0} max={9999}
                                                                 id='gastosAdmon'
                                                                 name='movimientoEconomico.gastosAdmon'
-                                                                value={this.state.movimientoEconomico.gastosAdmon}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                value={this.state.movimientoEconomico.gastosAdmon ? this.state.movimientoEconomico.gastosAdmon.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                onChange={this.handleMovimientoEconomicoChange}
+                                                                onBlur={this.handleMovimientoEconomicoBlur}></Input>
                                                             <UncontrolledTooltip
                                                                 placement="right"
                                                                 target="gastosAdmon"
@@ -2498,11 +2537,12 @@ class InformePastor extends Component {
                                                             Transferencias al Dto.
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                            <Input type='text' min={0} max={9999}
                                                                 id='tranDto'
                                                                 name='movimientoEconomico.transferenciasAentidadSuperior'
-                                                                value={this.state.movimientoEconomico.transferenciasAentidadSuperior}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                value={this.state.movimientoEconomico.transferenciasAentidadSuperior ? this.state.movimientoEconomico.transferenciasAentidadSuperior.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                onChange={this.handleMovimientoEconomicoChange}
+                                                                onBlur={this.handleMovimientoEconomicoBlur}></Input>
                                                             <UncontrolledTooltip
                                                                 placement="right"
                                                                 target="tranDto"
@@ -2516,12 +2556,13 @@ class InformePastor extends Component {
                                                             Existencia en caja
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
+                                                            <Input type='text' min={0} max={9999}
                                                                 id='existenciaFinal'
                                                                 name='movimientoEconomico.existenciaEnCaja'
-                                                                value={(parseFloat(this.state.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movimientoEconomico.entradaMes)) - (parseFloat(this.state.movimientoEconomico.gastosAdmon) + parseFloat(this.state.movimientoEconomico.transferenciasAentidadSuperior))}
+                                                                value={this.state.movimientoEconomico.existenciaEnCaja ? this.state.movimientoEconomico.existenciaEnCaja.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
                                                                 disabled
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                                onChange={this.handleMovimientoEconomicoChange}
+                                                                onBlur={this.handleMovimientoEconomicoBlur}></Input>
                                                             <UncontrolledTooltip
                                                                 placement="right"
                                                                 target="existenciaFinal"
