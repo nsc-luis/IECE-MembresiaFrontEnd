@@ -466,7 +466,7 @@ class InformeObispo extends Component {
         this.state.movimientoEconomico.existenciaEnCaja = this.state.movimientoEconomico.sumaTotal - (this.state.movimientoEconomico.gastosAdmon + this.state.movimientoEconomico.transferenciasAentidadSuperior);
         const data = {
             idInforme: this.state.informe.idInforme,
-            idTipoUsuario: 1,
+            idTipoUsuario: 2,
             idDistrito: this.state.informe.idDistrito,
             idSector: this.state.informe.idSector,
             lugarReunion: this.state.informe.lugarReunion,
@@ -493,6 +493,7 @@ class InformeObispo extends Component {
             regularizacionPatIg: this.state.regularizacionPatIg,
             movimientoEconomico: this.state.movimientoEconomico,
             otrasActividades: this.state.otrasActividades,
+            actividadesObispo: this.state.actividadesObispo
         }
 
         await helpers.validaToken().then(helpers.authAxios.put("/Informe/" + data.idInforme, data)
@@ -900,6 +901,21 @@ class InformeObispo extends Component {
                                             ))}
                                         </table>
                                     </Row>
+                                    <Row>
+                                        <Col className='text-right my-2'>
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className=""
+                                                onClick={this.actualizarInforme}
+                                            >
+                                                Guardar cambios
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                :
+                                <FormGroup className='contenedor-informe'>
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
@@ -1247,21 +1263,6 @@ class InformeObispo extends Component {
                                             </Row>
                                         </Col>
                                     </Row>
-                                    <Row>
-                                        <Col className='text-right my-2'>
-                                            <Button
-                                                type="button"
-                                                color="success"
-                                                className=""
-                                                onClick={this.actualizarInforme}
-                                            >
-                                                Guardar cambios
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                :
-                                <FormGroup className='contenedor-informe'>
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
