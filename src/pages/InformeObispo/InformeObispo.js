@@ -373,7 +373,7 @@ class InformeObispo extends Component {
         await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", body)
             .then(res => {
                 this.setState({
-                    desgloseMoviemientoEstadistico: res.data.datos.length > 0  ? res.data.datos : this.state.desgloseMoviemientoEstadistico
+                    desgloseMoviemientoEstadistico: res.data.datos.length > 0 ? res.data.datos : this.state.desgloseMoviemientoEstadistico
                 })
                 console.log("res-data-datos: ", res.data.datos);
             })

@@ -170,16 +170,16 @@ export default function ReportePersonalBautizado() {
     }
 
     let totalCount = 0;
-
     const countPersons = (type) => {
+
         let count = 0
-        personas.map((persona) => {
+        personas.map(persona => {
             if (persona.persona.per_Categoria === type) {
                 count += 1
             }
-            totalCount += count;
-            return count
         })
+        totalCount += count;
+        return count
     }
 
     const reportePersonalBautizadoPDF = () => {
@@ -320,7 +320,7 @@ export default function ReportePersonalBautizado() {
         doc.save("ReportePersonalBautizado.pdf");
     }
     return (
-
+        console.log("Personas", personas),
         <>
             <Container lg>
                 <FormGroup>
@@ -411,7 +411,7 @@ export default function ReportePersonalBautizado() {
                                                 if (persona.persona.per_Categoria === "ADULTO_MUJER") {
                                                     return <li key={persona.persona.per_Id_Persona}>{persona.persona.apellidoPrincipal} {persona.persona.per_Apellido_Materno} {persona.persona.per_Nombre}</li>
                                                 }
-                                                else {return true }
+                                                else { return true }
                                             })}
                                         </ol>
                                     </h5>

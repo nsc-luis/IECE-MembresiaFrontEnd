@@ -30,11 +30,11 @@ export default function ReportePersonalNoBautizado() {
     useEffect(() => {
         window.scrollTo(0, 0)
         if (sector === null) {
-            setSectorSeleccionado("todos");
             getPersonasDistrito();
-            setLider("OBISPO")
-            setEntidadTitulo("TODOS LOS SECTORES")
             getInfoDistrito()
+            setLider("OBISPO")
+            setSectorSeleccionado("todos");
+            setEntidadTitulo("TODOS LOS SECTORES")
 
             helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + dto)
                 .then(res => {
@@ -161,8 +161,8 @@ export default function ReportePersonalNoBautizado() {
     }
 
     let totalCount = 0;
-
     const countPersons = (type) => {
+
         let count = 0
         personas.map(persona => {
             if (persona.persona.per_Categoria === type) {
@@ -172,6 +172,7 @@ export default function ReportePersonalNoBautizado() {
         totalCount += count;
         return count
     }
+
     const reportePersonalBautizadoPDF = () => {
         totalCount = 0
         let index = 1
@@ -307,6 +308,7 @@ export default function ReportePersonalNoBautizado() {
         doc.save("Reporte Personal No Bautizado.pdf");
     }
     return (
+        console.log("Personas", personas),
         <>
             <Container lg>
                 <FormGroup>
