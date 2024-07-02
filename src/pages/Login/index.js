@@ -5,6 +5,7 @@ import {
 } from 'reactstrap'
 import './style.css'
 import helpers from '../../components/Helpers'
+import Layout from '../Layout';
 
 class Login extends Component {
 
@@ -137,122 +138,129 @@ class Login extends Component {
     }
 
     render() {
-        return (
-            <Container>
-                <Row>
-                    <Col sm="12">
-                        <Card className="margen">
-                            <CardBody>
-                                <Form onSubmit={this.iniciarSesion}>
-                                    {/* {this.state.listaDistritosPorMinistro.length > 0 && */}
-                                    <React.Fragment>
-                                        <CardTitle className="text-center">
-                                            <h1 className="h4 text-gray-900 mb-4">Elija el Tipo de Sesión! </h1>
-                                        </CardTitle>
-                                        <Alert color="warning" className="alertLogin">
-                                            <strong>Tipos de Sesión: </strong> <br />
-                                            <ul>
-                                                <li>Para <strong>Sesión Obispo</strong>: Seleccione sólo el Distrito con el que trabajará. No seleccione Sector.
-                                                    <ul>
-                                                        <li>No puede realizar ningún Movimiento Estadístico, sólo consultar información del Distrito y Sectores que lo componen.</li>
-                                                    </ul>
-                                                </li>
-                                                <li>Para <strong>Sesión Pastor</strong>: deberá seleccionar el Distrito y el Sector con el que trabajará.
-                                                    <ul>
-                                                        <li>Puede realizar todo tipo de Movimientos Estadísticos y Consultas.</li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </Alert>
-                                        <FormGroup>
-                                            <Row>
-                                                <Col sm="2" className="h5">
-                                                    Distrito:
-                                                </Col>
-                                                <Col sm="10">
-                                                    <React.Fragment>
+        if (this.infoSesion.dg === true) {
+            return (
+                <Layout />
+            )
+        }
+        else {
+            return (
+                <Container>
+                    <Row>
+                        <Col sm="12">
+                            <Card className="margen">
+                                <CardBody>
+                                    <Form onSubmit={this.iniciarSesion}>
+                                        {/* {this.state.listaDistritosPorMinistro.length > 0 && */}
+                                        <React.Fragment>
+                                            <CardTitle className="text-center">
+                                                <h1 className="h4 text-gray-900 mb-4">Elija el Tipo de Sesión! </h1>
+                                            </CardTitle>
+                                            <Alert color="warning" className="alertLogin">
+                                                <strong>Tipos de Sesión: </strong> <br />
+                                                <ul>
+                                                    <li>Para <strong>Sesión Obispo</strong>: Seleccione sólo el Distrito con el que trabajará. No seleccione Sector.
+                                                        <ul>
+                                                            <li>No puede realizar ningún Movimiento Estadístico, sólo consultar información del Distrito y Sectores que lo componen.</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>Para <strong>Sesión Pastor</strong>: deberá seleccionar el Distrito y el Sector con el que trabajará.
+                                                        <ul>
+                                                            <li>Puede realizar todo tipo de Movimientos Estadísticos y Consultas.</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </Alert>
+                                            <FormGroup>
+                                                <Row>
+                                                    <Col sm="2" className="h5">
+                                                        Distrito:
+                                                    </Col>
+                                                    <Col sm="10">
+                                                        <React.Fragment>
+                                                            <Input
+                                                                type="select"
+                                                                name="listaDistritos"
+                                                                value={this.state.distritoSeleccionado}
+                                                                onChange={this.onChangeDistrito}
+                                                            >
+                                                                <option value="0">Selecciona un distrito</option>
+                                                                {
+                                                                    this.state.listaDistritosPorMinistro.map(distrito => {
+                                                                        return (
+                                                                            <React.Fragment key={distrito.dis_Id_Distrito}>
+                                                                                <option value={distrito.dis_Id_Distrito}>{distrito.dis_Tipo_Distrito} {distrito.dis_Numero}: {distrito.dis_Alias}</option>
+                                                                            </React.Fragment>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </Input>
+                                                        </React.Fragment>
+                                                    </Col>
+                                                </Row>
+                                            </FormGroup>
+                                        </React.Fragment>
+                                        {/* } */}
+                                        {this.state.distritoSeleccionado !== "0" &&
+                                            <FormGroup>
+                                                <Row>
+                                                    <Col sm="2" className="h5">
+                                                        Sector:
+                                                    </Col>
+                                                    <Col sm="10">
                                                         <Input
                                                             type="select"
-                                                            name="listaDistritos"
-                                                            value={this.state.distritoSeleccionado}
-                                                            onChange={this.onChangeDistrito}
+                                                            name="listaSectores"
+                                                            value={this.state.sectorSeleccionado}
+                                                            onChange={this.onChangeSector}
                                                         >
-                                                            <option value="0">Selecciona un distrito</option>
+                                                            <option value="0">Selecciona un sector</option>
                                                             {
-                                                                this.state.listaDistritosPorMinistro.map(distrito => {
+                                                                this.state.listaSectoresPorDistrito.map(sector => {
                                                                     return (
-                                                                        <React.Fragment key={distrito.dis_Id_Distrito}>
-                                                                            <option value={distrito.dis_Id_Distrito}>{distrito.dis_Tipo_Distrito} {distrito.dis_Numero}: {distrito.dis_Alias}</option>
+                                                                        <React.Fragment key={sector.sec_Id_Sector}>
+                                                                            <option value={sector.sec_Id_Sector}>{sector.sec_Alias}</option>
                                                                         </React.Fragment>
                                                                     )
                                                                 })
                                                             }
                                                         </Input>
-                                                    </React.Fragment>
-                                                </Col>
-                                            </Row>
-                                        </FormGroup>
-                                    </React.Fragment>
-                                    {/* } */}
-                                    {this.state.distritoSeleccionado !== "0" &&
+                                                    </Col>
+                                                </Row>
+                                            </FormGroup>
+                                        }
                                         <FormGroup>
-                                            <Row>
-                                                <Col sm="2" className="h5">
-                                                    Sector:
-                                                </Col>
-                                                <Col sm="10">
-                                                    <Input
-                                                        type="select"
-                                                        name="listaSectores"
-                                                        value={this.state.sectorSeleccionado}
-                                                        onChange={this.onChangeSector}
+                                            <Row >
+                                                <Col md="6"></Col>
+                                                <Col md="3" >
+                                                    <Button
+                                                        type="button"
+                                                        className="btnForm btn-block"
+                                                        onClick={this.handleLogoff}
                                                     >
-                                                        <option value="0">Selecciona un sector</option>
-                                                        {
-                                                            this.state.listaSectoresPorDistrito.map(sector => {
-                                                                return (
-                                                                    <React.Fragment key={sector.sec_Id_Sector}>
-                                                                        <option value={sector.sec_Id_Sector}>{sector.sec_Alias}</option>
-                                                                    </React.Fragment>
-                                                                )
-                                                            })
-                                                        }
-                                                    </Input>
+                                                        Cancelar
+                                                    </Button>
+                                                </Col>
+                                                <Col md="3">
+                                                    <Button
+                                                        className="btnForm btn-block"
+                                                        type="submit"
+                                                        color="primary"
+                                                    >
+                                                        <span className="fa fa-user faIconButton"></span>
+                                                        Iniciar Sesión
+                                                    </Button>
                                                 </Col>
                                             </Row>
                                         </FormGroup>
-                                    }
-                                    <FormGroup>
-                                        <Row >
-                                            <Col md="6"></Col>
-                                            <Col md="3" >
-                                                <Button
-                                                    type="button"
-                                                    className="btnForm btn-block"
-                                                    onClick={this.handleLogoff}
-                                                >
-                                                    Cancelar
-                                                </Button>
-                                            </Col>
-                                            <Col md="3">
-                                                <Button
-                                                    className="btnForm btn-block"
-                                                    type="submit"
-                                                    color="primary"
-                                                >
-                                                    <span className="fa fa-user faIconButton"></span>
-                                                    Iniciar Sesión
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </Form>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        )
+                                    </Form>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            )
+        }
     }
 }
 
