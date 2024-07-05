@@ -29,7 +29,16 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        this.getListaDistritosPorMinistro();
+        if (this.infoSesion.dg) {
+            localStorage.setItem('LoginValido', true)
+            localStorage.removeItem('dto')
+            localStorage.removeItem('secotr')
+            helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Resumen de Membresía Actual")
+            document.location.href = '/ResumenMembresia';
+        }
+        else {
+            this.getListaDistritosPorMinistro();
+        }
     }
 
     onChangeMinistro = (e) => {
@@ -109,6 +118,7 @@ class Login extends Component {
 
     iniciarSesion = (e) => {
         e.preventDefault()
+        
         if (this.state.distritoSeleccionado === "0") {
             alert("Error: Debe seleccionar un Distrito para continuar.");
             return false;
@@ -138,12 +148,12 @@ class Login extends Component {
     }
 
     render() {
-        if (this.infoSesion.dg === true) {
+        /* if (this.infoSesion.dg === true) {
             return (
                 <Layout />
             )
         }
-        else {
+        else { */
             return (
                 <Container>
                     <Row>
@@ -261,7 +271,7 @@ class Login extends Component {
                 </Container>
             )
         }
-    }
+    /* } */
 }
 
 export default Login;

@@ -7,7 +7,13 @@ import {
 import helpers from '../../components/Helpers';
 import './style.css'
 
-export default class Sidebar extends Component {
+export default class SidebarDirectivo extends Component {
+
+    handle_LinkEncabezado = (seccion, componente) => {
+        localStorage.setItem('seccion', seccion);
+        localStorage.setItem('componente', componente);
+    }
+    
     render() {
         return (
             <React.Fragment>
@@ -17,6 +23,8 @@ export default class Sidebar extends Component {
                     {/* Sidebar - Brand */}
                     <Link
                         className="sidebar-brand d-flex align-items-center justify-content-center"
+                        to="/ResumenMembresia"
+                        onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Resumen de Membresía Actual")}
                     >
                         <div className="sidebar-brand-icon">
                             <i className="fas fa-building"></i>
@@ -37,8 +45,10 @@ export default class Sidebar extends Component {
 
                     {/* Nav Item - Personal General */}
                     <li className="nav-item">
-                        <Link
+                    <Link
                             className="nav-link collapsed"
+                            to="/ResumenMembresia"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Resumen de Membresía Actual")}
                         >
                             <i className="fas fa-fw fa-address-book"></i>
                             <span>Resumen de Membresía Actual</span>

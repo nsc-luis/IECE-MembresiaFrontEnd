@@ -17,10 +17,16 @@ class SidebarObispo extends Component {
                 <ul className="navbar-nav bg-SideBar sidebar sidebar-dark accordion" id="accordionSidebar">
 
                     {/* Sidebar - Brand */}
-                    <div className="sidebar-brand-icon">
+                    <Link
+                        className="sidebar-brand d-flex align-items-center justify-content-center"
+                        to="/Main"
+                        onClick={() => this.handle_LinkEncabezado("", "")}
+                    >
+                        <div className="sidebar-brand-icon">
                             <i className="fas fa-building"></i>
                         </div>
                         <div className="sidebar-brand-text mx-3">IECE</div>
+                    </Link>
                     <div className="text-center" style={{ fontSize: '0.8rem', color: '#fff' }}>
                         Versión {helpers.version}
                     </div>
@@ -37,6 +43,7 @@ class SidebarObispo extends Component {
                     <li className="nav-item">
                         <Link
                             className="nav-link collapsed"
+                            to="/ResumenMembresia"
                             onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Resumen de membresía actual")}
                         >
                             <i className="fas fa-fw fa-address-book"></i>

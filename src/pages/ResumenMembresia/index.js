@@ -1,8 +1,8 @@
 import React, { Component/* , Box, Tipography */ } from 'react';
 import helpers from '../../components/Helpers';
 import {
-    Form, FormGroup, Input, Button, Row, Col, 
-    Container,  Card, CardBody, CardTitle, CardHeader, CardFooter,
+    Form, FormGroup, Input, Button, Row, Col,
+    Container, Card, CardBody, CardTitle, CardHeader, CardFooter,
     /* Label, ResponsiveContainer, FormFeedback */
 } from 'reactstrap'
 import './style.css';
@@ -36,24 +36,32 @@ class ResumenMembresia extends Component {
             sector: JSON.parse(localStorage.getItem("sector")),
             sectores: [],
             sectorSeleccionado: "0",
+            distritoSeleccionado: "0",
             resumenDeMembresia: {},
             infoSector: {},
             infoMinistro: {},
             infoSecretario: {},
             distrito: {},
+            distritos: [],
             gradoMinistro: "",
             resumenBautizados: [],
             resumenNoBautizados: [],
             hogares: 0,
-            entidadTitulo: ""
-            //sec_Id_Sector:""
+            entidadTitulo: "",
+            //sec_Id_Sector:"",
+            dg: this.infoSesion.dg
         }
     }
 
     componentDidMount() {
-        this.getSectoresPorDistrito();
-        this.getDistrito();
-        this.seleccionaSectorActivo();
+        if (this.infoSesion.dg) {
+            this.getDistritos()
+        }
+        else {
+            this.getSectoresPorDistrito(localStorage.getItem('dto'));
+            this.getDistrito(localStorage.getItem('dto'));
+            this.seleccionaSectorActivo(localStorage.getItem('dto'));
+        }
         window.scrollTo(0, 0);
 
     }
@@ -67,8 +75,18 @@ class ResumenMembresia extends Component {
         /* console.log("Data2: ", data02); */
     }
 
-    getDistrito = async () => {
-        await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Distrito/' + localStorage.getItem('dto'))
+    getDistritos = async () => {
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Distrito')
+            .then(res => {
+                this.setState({
+                    distritos: res.data.distritos
+                })
+            })
+        );
+    }
+
+    getDistrito = async (idDistrito) => {
+        await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Distrito/' + idDistrito)
             .then(res => {
                 this.setState({
                     distrito: res.data
@@ -77,9 +95,9 @@ class ResumenMembresia extends Component {
         );
     }
 
-    getSectoresPorDistrito = async () => {
+    getSectoresPorDistrito = async (idDistrito) => {
         if (localStorage.getItem('sector') === null) {
-            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Sector/GetSectoresByDistrito/' + idDistrito)
                 .then(res => {
                     this.setState({
                         sectores: res.data.sectores.filter(sec => sec.sec_Tipo_Sector === "SECTOR")
@@ -162,7 +180,7 @@ class ResumenMembresia extends Component {
             this.setState({ sectorSeleccionado: "todos" });
 
             //Consulta el Resumen de Membresía Distrital
-            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + this.state.dto/* localStorage.getItem('dto') */)
                 .then(res => {
                     //console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen })
@@ -171,7 +189,8 @@ class ResumenMembresia extends Component {
             );
 
             //Consulta el Resumen de Hogares Distritales
-            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+            //await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${this.state.dto}`)
                 .then(res => {
                     let contador = 0;
                     //console.log("hogares desde API:", res.data.domicilios)
@@ -183,7 +202,7 @@ class ResumenMembresia extends Component {
             )
 
             //Consulta el Nombre del Obispo del Distrito y el Titulo del Lider que aparecerá en el PDF
-            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + this.state.dto/* localStorage.getItem("dto") */)
                 .then(res => {
                     this.setState({
                         infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
@@ -193,7 +212,7 @@ class ResumenMembresia extends Component {
             )
 
             //Consulta el Secretario del Distrito
-            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + this.state.dto/* localStorage.getItem("dto") */)
                 .then(res => {
                     this.setState({
                         infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
@@ -208,8 +227,6 @@ class ResumenMembresia extends Component {
                     sec_Alias: "TODOS LOS SECTORES DEL DISTRITO"
                 }
             });
-
-
 
         } else { //Sesión de Pastor
 
@@ -226,7 +243,7 @@ class ResumenMembresia extends Component {
             await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetBySector/${localStorage.getItem("sector")}`)
                 .then(res => {
                     let contador = 0;
-                    console.log("hogares desde API:", res.data.domicilios)
+                    //console.log("hogares desde API:", res.data.domicilios)
                     res.data.domicilios.forEach(element => {
                         contador = contador + 1;
                     });
@@ -262,16 +279,13 @@ class ResumenMembresia extends Component {
                     });
                 })
             )
-
-
         }
     }
 
     handle_sectorSeleccionado = async (e) => {
-        console.log(e.target.value)
         if (e.target.value === "todos") { //Si es Sesión Obispo
             this.setState({ sectorSeleccionado: e.target.value });
-            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + localStorage.getItem('dto'))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + this.state.dto/* localStorage.getItem('dto') */)
                 .then(res => {
                     //console.log(res.data.value);
                     this.setState({ resumenDeMembresia: res.data.resumen })
@@ -279,7 +293,8 @@ class ResumenMembresia extends Component {
                 })
             );
 
-            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+            //await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${localStorage.getItem("dto")}`)
+            await helpers.validaToken().then(helpers.authAxios.get(`/HogarDomicilio/GetByDistrito/${this.state.dto}`)
                 .then(res => {
                     let contador = 0;
                     res.data.domicilios.forEach(element => {
@@ -292,7 +307,7 @@ class ResumenMembresia extends Component {
 
 
             //Consulta el Nombre del Obispo del Distrito y el Titulo del Lider que aparecerá en el PDF
-            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + localStorage.getItem("dto"))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetObispoByDistrito/" + this.state.dto/* localStorage.getItem("dto") */)
                 .then(res => {
                     this.setState({
                         infoMinistro: res.data.ministros.length > 0 ? res.data.ministros[0].pem_Nombre : "",
@@ -302,7 +317,7 @@ class ResumenMembresia extends Component {
             )
 
             //Consulta el Secretario del Distrito
-            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + localStorage.getItem("dto"))
+            await helpers.validaToken().then(helpers.authAxios.get(this.url + "/PersonalMinisterial/GetSecretarioByDistrito/" + this.state.dto/* localStorage.getItem("dto") */)
                 .then(res => {
                     this.setState({
                         infoSecretario: res.data.infoSecretario.length > 0 ? res.data.infoSecretario[0].pem_Nombre : ""
@@ -515,23 +530,57 @@ class ResumenMembresia extends Component {
         );
     };
 
+    handle_distritoSeleccionado = (e) => {
+        this.setState({
+            distritoSeleccionado: e.target.value,
+            dto: e.target.value
+        })
+        this.getDistrito(e.target.value)
+        this.getSectoresPorDistrito(e.target.value)
+    }
+
     render() {
         return (
             <>
                 <Container lg>
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
-                    <FormGroup>
-                        <Row>
-                            <Col xs="10">
-                                <Input
-                                    type="select"
-                                    name="idDistrito"
-                                >
-                                    <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
-                                </Input>
-                            </Col>
-                        </Row>
-                    </FormGroup>
+                    {this.infoSesion.dg &&
+                        <FormGroup>
+                            <Row>
+                                <Col xs="10">
+                                    <Input
+                                        type="select"
+                                        name="distritoSeleccionado"
+                                        onChange={this.handle_distritoSeleccionado}
+                                        value={this.state.distritoSeleccionado}
+                                    >
+                                        <option value="0">Selecciona un distrito/mision/region</option>
+                                        {this.state.distritos.map((dis) => {
+                                            return (
+                                                <React.Fragment key={dis.dis_Id_Distrito}>
+                                                    <option value={dis.dis_Id_Distrito}>{`${dis.dis_Tipo_Distrito} ${dis.dis_Numero}: ${dis.dis_Alias}`}</option>
+                                                </React.Fragment>
+                                            )
+                                        })}
+                                    </Input>
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                    }
+                    {!this.state.dg &&
+                        <FormGroup>
+                            <Row>
+                                <Col xs="10">
+                                    <Input
+                                        type="select"
+                                        name="idDistrito"
+                                    >
+                                        <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
+                                    </Input>
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                    }
                     <FormGroup>
                         <Row>
                             <Col xs="10">
