@@ -12,7 +12,7 @@ import moment from 'moment/moment';
 class InformeObispo extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxPaginas = 2;
-    cellNumber = new Array(22).fill()
+    // cellNumber = new Array(22).fill()
     constructor(props) {
         super(props);
         this.state = {
@@ -33,6 +33,7 @@ class InformeObispo extends Component {
             // OBISPO
             sectores: [],
             actividadesObispo: [],
+            informesSectores: [],
             // TERMINA OBISPO
             distrito: {
                 dis_Numero: 0,
@@ -292,74 +293,18 @@ class InformeObispo extends Component {
             .then(res => {
                 console.log(res);
                 this.state.informe = res.data.informe;
-                // this.state.informe.fechaReunion = moment(res.data.fechaReunion).format('YYYY-MM-DD');
-                // this.state.visitasPastor = res.data.visitasPastor !== null ? res.data.visitasPastor : this.state.visitasPastor;
-                // this.state.cultosSector = res.data.cultosSector !== null ? res.data.cultosSector : this.state.cultosSector;
-                // this.state.estudiosSector.estudios = res.data.estudiosSector !== null ? res.data.estudiosSector : this.state.estudiosSector.estudios;
-                // this.state.estudiosSector.conferencias = res.data.conferenciasSector !== null ? res.data.conferenciasSector : this.state.estudiosSector.conferencias;
-                // this.state.trabajoEvangelismo = res.data.trabajoEvangelismo !== null ? res.data.trabajoEvangelismo : this.state.trabajoEvangelismo;
-                // this.state.misiones = res.data.cultosMisionSector !== null ? res.data.cultosMisionSector : this.state.cultosMisionSector;
-                // this.state.organizaciones = res.data.organizaciones !== null ? res.data.organizaciones : this.state.organizaciones;
-                // this.state.adquisicionesSector = res.data.adquisicionesSector !== null ? res.data.adquisicionesSector : this.state.adquisicionesSector;
-                // this.state.sesiones = res.data.sesiones !== null ? res.data.sesiones : this.state.sesiones;
-                // this.state.reuniones = res.data.reuniones !== null ? res.data.reuniones : this.state.reuniones;
-                // this.state.construccionesInicio = res.data.construccionesInicio !== null ? res.data.construccionesInicio : this.state.construccionesInicio;
-                // this.state.construccionesConclusion = res.data.construccionesConclusion !== null ? res.data.construccionesConclusion : this.state.construccionesConclusion;
-                // this.state.ordenaciones = res.data.ordenaciones !== null ? res.data.ordenaciones : this.state.ordenaciones;
-                // this.state.dedicaciones = res.data.dedicaciones !== null ? res.data.dedicaciones : this.state.dedicaciones;
-                // this.state.llamamientoDePersonal = res.data.llamamientoDePersonal !== null ? res.data.llamamientoDePersonal : this.state.llamamientoDePersonal;
-                // this.state.regularizacionPatNac = res.data.regularizacionPatNac !== null ? res.data.regularizacionPatNac : this.state.regularizacionPatNac;
-                // this.state.regularizacionPatIg = res.data.regularizacionPatIg !== null ? res.data.regularizacionPatIg : this.state.regularizacionPatIg;
-                // this.state.movimientoEconomico = res.data.movimientoEconomico !== null ? res.data.movimientoEconomico : this.state.movimientoEconomico;
-                // this.state.otrasActividades = res.data.otrasActividades !== null ? res.data.otrasActividades : this.state.otrasActividades;
-                // this.state.actividadesObispo = res.data.actividadesObispo !== null ? res.data.actividadesObispo : this.state.actividadesObispo;
-                // const actObispoMerge = res.data.actividadObispo.sectores.concat(res.data.actividadObispo.misiones);
-                // console.log(actObispoMerge);
+                this.state.informe.nombreMes = res.data.nombreMes;
                 this.setState({
                     // actividadesObispo: actObispoMerge !== null ? actObispoMerge : this.state.actividadesObispo
                     actividadesObispo: res.data.actividadObispo.sectores !== null ? res.data.actividadObispo.sectores.sort((a, b) => { return b.sector.sec_Tipo_Sector.localeCompare(a.sector.sec_Tipo_Sector) }) : this.state.actividadesObispo,
-                    datosEstadisticos: res.data.movtosEstadisticos !== null ? res.data.movtosEstadisticos : this.state.datosEstadisticos
+                    datosEstadisticos: res.data.movtosEstadisticos !== null ? res.data.movtosEstadisticos : this.state.datosEstadisticos,
+                    informesSectores: res.data.informesSectores !== null ? res.data.informesSectores : this.state.informesSectores
 
                 })
-                //OBISPO
-                // this.state.actividadesObispo = res.data.actividadesObispo !== null ? res.data.actividadesObispo : this.state.actividadesObispo;
-                //Fin OBISPO
-                // this.obtenerMisiones();
-                // this.obtenerDatosEstadisticos();
                 this.obtenerMovimientosEstadisticos();
-                // this.obtenerVisitantes();
             })
         );
     }
-
-    // obtenerMisiones = async (id) => {
-    //     await helpers.validaToken().then(helpers.authAxios.get("/Mision_Sector/" + localStorage.getItem('sector'))
-    //         .then(res => {
-    //             const cultosMisionCopia = [...this.state.misiones]
-    //             this.state.misiones = res.data.misiones.map(m => {
-    //                 const cultoMision = cultosMisionCopia.find(f => f.ms_Id_MisionSector === m.ms_Id)
-    //                 return {
-    //                     ...m,
-    //                     ms_Id_MisionSector: m.ms_Id,
-    //                     idInforme: cultoMision ? cultoMision.idInforme : 0,
-    //                     cultos: cultoMision ? cultoMision.cultos : 0,
-    //                 }
-    //             }
-    //             );
-    //             console.log(this.state.misiones);
-    //         })
-    //     );
-    // }
-
-    // obtenerVisitantes = async () => {
-    //     await helpers.validaToken().then(helpers.authAxios.get("/Visitante/VisitantesByDistrito/" + localStorage.getItem('dto'))
-    //         .then(res => {
-    //             const visitantes = res.data.visitantes;
-    //             this.state.visitantesPermantes = visitantes.filter(f => f.visitante.vp_Tipo_Visitante === 'PERMANENTE')
-    //             this.state.trabajoEvangelismo.visitantesPermanentes = this.state.visitantesPermantes.length
-    //         })
-    //     );
-    // }
 
     obtenerMovimientosEstadisticos = async () => {
 
@@ -373,7 +318,7 @@ class InformeObispo extends Component {
         await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", body)
             .then(res => {
                 this.setState({
-                    desgloseMoviemientoEstadistico: res.data.datos.length > 0  ? res.data.datos : this.state.desgloseMoviemientoEstadistico
+                    desgloseMoviemientoEstadistico: res.data.datos.length > 0 ? res.data.datos : this.state.desgloseMoviemientoEstadistico
                 })
                 console.log("res-data-datos: ", res.data.datos);
             })
@@ -466,7 +411,7 @@ class InformeObispo extends Component {
         this.state.movimientoEconomico.existenciaEnCaja = this.state.movimientoEconomico.sumaTotal - (this.state.movimientoEconomico.gastosAdmon + this.state.movimientoEconomico.transferenciasAentidadSuperior);
         const data = {
             idInforme: this.state.informe.idInforme,
-            idTipoUsuario: 1,
+            idTipoUsuario: 2,
             idDistrito: this.state.informe.idDistrito,
             idSector: this.state.informe.idSector,
             lugarReunion: this.state.informe.lugarReunion,
@@ -493,6 +438,7 @@ class InformeObispo extends Component {
             regularizacionPatIg: this.state.regularizacionPatIg,
             movimientoEconomico: this.state.movimientoEconomico,
             otrasActividades: this.state.otrasActividades,
+            actividadesObispo: this.state.actividadesObispo
         }
 
         await helpers.validaToken().then(helpers.authAxios.put("/Informe/" + data.idInforme, data)
@@ -864,7 +810,7 @@ class InformeObispo extends Component {
                                                 <th className='table-header' colSpan="5">Cultos</th>
                                                 <th className='table-header' colSpan="6">Estudios y conferencias</th>
                                                 <th className='table-header' colSpan="2">Misiones</th>
-                                                <th className='table-header' colSpan="7">Trabajo de Evangelismo</th>
+                                                <th className='table-header' colSpan="8">Trabajo de Evangelismo</th>
                                             </tr>
                                             <tr>
                                                 <th className='table-header sectores-header'>POR EL PASTOR</th>
@@ -884,22 +830,61 @@ class InformeObispo extends Component {
                                                 <th className='table-header sectores-header'>CULTOS</th>
                                                 <th className='table-header sectores-header'>HOGARES VISITADOS</th>
                                                 <th className='table-header sectores-header'>HOGARES CONQUISTADOS</th>
+                                                <th className='table-header sectores-header'>VISITANTES PERMANENTES</th>
                                                 <th className='table-header sectores-header'>CULTOS POR LA LOCALIDAD</th>
                                                 <th className='table-header sectores-header'>CULTOS DE HOGAR</th>
                                                 <th className='table-header sectores-header'>CAMPÑAS</th>
                                                 <th className='table-header sectores-header'>APERTURA DE MISIONES</th>
                                                 <th className='table-header sectores-header'>BAUTISMOS</th>
                                             </tr>
-                                            {this.state.actividadesObispo.length > 0 && this.state.actividadesObispo.map((obj, index) => (
+                                            {this.state.informesSectores.length > 0 && this.state.informesSectores.map((obj, index) => (
                                                 <tr>
                                                     <td className='table-cell'>{obj.sector.sec_Tipo_Sector} {obj.sector.sec_Numero} {obj.sector.sec_Alias}</td>
-                                                    {this.cellNumber.map(() => (
-                                                        <td className='table-cell'></td>
-                                                    ))}
+                                                    <td className='table-cell'>{obj.visitasPastor.porPastor}</td>
+                                                    <td className='table-cell'>{obj.visitasPastor.porAncianosAux + obj.visitasPastor.porAuxiliares + obj.visitasPastor.porDiaconos}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.ordinarios}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.especiales}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.deAvivamiento}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.deAniversario}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.porElDistrito}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.iglesia + obj.conferenciasSector.iglesia}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.escuelaDominical + obj.conferenciasSector.escuelaDominical}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.varonil + obj.conferenciasSector.varonil}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.femenil + obj.conferenciasSector.femenil}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.juvenil + obj.conferenciasSector.juvenil}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.infantil + obj.conferenciasSector.infantil}</td>
+                                                    <td className='table-cell'>{obj.misionesSector.length}</td>
+                                                    <td className='table-cell'>{obj.cultosMisionSector.map(c => { let total = 0; total+= c.cultos; return total})}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.hogaresVisitados}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.hogaresConquistados}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.visitantesPermanentes}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.cultosPorLaLocalidad}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.cultosDeHogar}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.campanias}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.aperturaDeMisiones}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.bautismos}</td>
+                                                    {/* {this.state.informesSectores.length > 0 && this.state.informesSectores.map((sec, index) => (
+                                                        <td className='table-cell'>{sec.visitasPastor.porPastor}</td>
+                                                    ))} */}
                                                 </tr>
                                             ))}
                                         </table>
                                     </Row>
+                                    <Row>
+                                        <Col className='text-right my-2'>
+                                            <Button
+                                                type="button"
+                                                color="success"
+                                                className=""
+                                                onClick={this.actualizarInforme}
+                                            >
+                                                Guardar cambios
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                :
+                                <FormGroup className='contenedor-informe'>
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
@@ -1247,21 +1232,6 @@ class InformeObispo extends Component {
                                             </Row>
                                         </Col>
                                     </Row>
-                                    <Row>
-                                        <Col className='text-right my-2'>
-                                            <Button
-                                                type="button"
-                                                color="success"
-                                                className=""
-                                                onClick={this.actualizarInforme}
-                                            >
-                                                Guardar cambios
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                                :
-                                <FormGroup className='contenedor-informe'>
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>

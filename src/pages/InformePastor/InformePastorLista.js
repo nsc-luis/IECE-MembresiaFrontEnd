@@ -264,10 +264,6 @@ class InformePastorLista extends Component {
                                                 * MES:
                                             </Col>
                                             <Col xs="3" className='my-1'>
-                                                {/* <Input type='number' min={1} max={12}
-                                                    name='nuevoInforme.mes'
-                                                    value={this.state.nuevoInforme.mes}
-                                                    onChange={(e) => this.handleChange(e)}></Input> */}
                                                 <Input
                                                     type="select"
                                                     name="nuevoInforme.mes"

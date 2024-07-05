@@ -12,6 +12,20 @@ import moment from 'moment/moment';
 class InformeObispoLista extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxAnio = new Date().getFullYear() + 1;
+    meses = [
+        { id: 1, mes: "Enero" },
+        { id: 2, mes: "Febrero" },
+        { id: 3, mes: "Marzo" },
+        { id: 4, mes: "Abril" },
+        { id: 5, mes: "Mayo" },
+        { id: 6, mes: "Junio" },
+        { id: 7, mes: "Julio" },
+        { id: 8, mes: "Agosto" },
+        { id: 9, mes: "Septiembre" },
+        { id: 10, mes: "Octubre" },
+        { id: 11, mes: "Noviembre" },
+        { id: 12, mes: "Diciembre" },
+    ];
     constructor(props) {
         super(props);
         this.state = {
@@ -36,8 +50,8 @@ class InformeObispoLista extends Component {
                 anio: null,
                 idDistrito: 0,
                 idSector: 0,
-                lugarReunion: null,
-                fechaReunion: null,
+                lugarReunion: "",
+                fechaReunion: new Date(),
                 status: 0,
                 usu_id_usuario: 0,
                 fechaRegistro: new Date().toDateString(),
@@ -209,35 +223,22 @@ class InformeObispoLista extends Component {
                                             <Col xs="2" className='my-1 text-right'>
                                                 * MES:
                                             </Col>
-                                            <Col xs="2" className='my-1'>
-                                                <Input type='number' min={1} max={12}
-                                                    name='nuevoInforme.mes'
-                                                    value={this.state.nuevoInforme.mes}
-                                                    onChange={(e) => this.handleChange(e)}></Input>
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="4"></Col>
-                                            <Col xs="2" className='my-1 text-right'>
-                                                * FECHA DE REUNIÓN:
-                                            </Col>
-                                            <Col xs="2" className='my-1'>
+                                            <Col xs="3" className='my-1'>
                                                 <Input
-                                                    type="date"
-                                                    name="nuevoInforme.fechaReunion"
-                                                    value={this.state.nuevoInforme.fechaReunion}
+                                                    type="select"
+                                                    name="nuevoInforme.mes"
+                                                    value={this.state.nuevoInforme.mes}
                                                     onChange={(e) => this.handleChange(e)}
-                                                    autoComplete="nope"
-                                                />
-                                                <FormFeedback>Este campo es requerido</FormFeedback>
-                                            </Col>
-                                            <Col xs="2" className='my-1 text-right'>
-                                                * LUGAR DE REUNIÓN:
-                                            </Col>
-                                            <Col xs="4" className='my-1'>
-                                                <Input type='text'
-                                                    name='nuevoInforme.lugarReunion'
-                                                    value={this.state.nuevoInforme.lugarReunion}
-                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                >
+                                                    <option value="0">Seleccione un mes</option>
+                                                    {this.meses.map(mes => {
+                                                        return (
+                                                            <React.Fragment key={mes.id}>
+                                                                <option value={mes.id}>{mes.id} - {mes.mes}</option>
+                                                            </React.Fragment>
+                                                        )
+                                                    })}
+                                                </Input>                                                
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
                                         </Row>
