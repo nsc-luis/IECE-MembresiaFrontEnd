@@ -104,7 +104,9 @@ class Topbar extends Component {
                             <button className="nav-link dropdown-toggle border-0 bg-transparent text-left" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span className="mr-2 d-none d-lg-inline text-TopBar ">
                                     {this.infoSesion.pem_Nombre} <br />
-                                    {localStorage.getItem('sector') === null ? 'OBISPO' : 'PASTOR'}
+                                    {localStorage.getItem('sector') === null && localStorage.getItem('dto') !== null && 'OBISPO'}
+                                    {localStorage.getItem('sector') !== null && 'PASTOR'}
+                                    {this.infoSesion.dg === true && 'DIRECTIVO'}
                                 </span>
                                 <img className="img-profile rounded-circle" alt="foto usuario" src={this.state.fotoMinistro} />
                             </button>

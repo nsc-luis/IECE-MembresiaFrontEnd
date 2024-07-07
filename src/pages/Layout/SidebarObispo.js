@@ -38,13 +38,6 @@ class SidebarObispo extends Component {
                     <div className="sidebar-heading">
                         Monitoreo
                     </div>
-                    {/* Nav Item - Sector
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/Sector">
-                            <i className="fas fa-fw fa-place-of-worship"></i>
-                            <span>Datos generales</span>
-                        </Link>
-                    </li> */}
 
                     {/* Nav Item - Personal General */}
                     <li className="nav-item">
