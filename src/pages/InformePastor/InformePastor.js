@@ -283,6 +283,7 @@ class InformePastor extends Component {
                 this.setState({
                     datosEstadisticos: res.data
                 })
+                this.state.trabajoEvangelismo.bautismos = this.state.datosEstadisticos.altasBautizados.bautismo;
             })
         );
     }
@@ -509,8 +510,8 @@ class InformePastor extends Component {
                 }
 
                 // Formatear los resultados
-                updatedMovimientoEconomico.sumaTotal = updatedMovimientoEconomico.sumaTotal.toLocaleString('mx-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                updatedMovimientoEconomico.existenciaEnCaja = updatedMovimientoEconomico.existenciaEnCaja.toLocaleString('mx-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                updatedMovimientoEconomico.sumaTotal = parseFloat(updatedMovimientoEconomico.sumaTotal).toFixed(2);
+                updatedMovimientoEconomico.existenciaEnCaja = parseFloat(updatedMovimientoEconomico.existenciaEnCaja).toFixed(2);
 
                 return { movimientoEconomico: updatedMovimientoEconomico };
             });
@@ -556,22 +557,32 @@ class InformePastor extends Component {
             actividadesEliminadas: this.state.actividadesEliminadas,
         }
 
-        await helpers.validaToken().then(helpers.authAxios.put("/Informe/" + data.idInforme, data)
-            .then(res => {
-                if (res.status === 200) {
-                    alert('Informe guardado con éxito.');
-                    /* const { id } = this.props.match.params;
-                    this.obtenerInforme(id); */
-                    this.obtenerInforme(this.idInforme);
-                }
-                else {
-                    alert(res.data.mensaje)
-                    /* const { id } = this.props.match.params;
-                    this.obtenerInforme(id); */
-                    this.obtenerInforme(this.idInforme);
-                }
-            })
-        )
+        try {
+            // Realizar la solicitud PUT utilizando axios con el token válido
+            await helpers.validaToken().then(() => {
+                helpers.authAxios.put("/Informe/" + data.idInforme, data)
+                    .then(res => {
+                        if (res.status === 200) {
+                            alert('Informe guardado con éxito.');
+                            this.obtenerInforme(data.idInforme);  // Obtener el informe actualizado
+                        } else {
+                            // Si la respuesta no es 200, mostrar el mensaje de error
+                            console.log("Falla", res.data.mensaje);  // Ver el mensaje de error en consola
+                            alert(res.data.mensaje);  // Mostrar mensaje de error al usuario
+                            this.obtenerInforme(data.idInforme);  // Obtener el informe actualizado
+                        }
+                    })
+                    .catch(error => {
+                        // Capturar errores de red o cualquier otro error
+                        console.error("Error en la solicitud:", error);
+                        alert("Error en la solicitud: " + error.message);  // Mostrar mensaje de error al usuario
+                    });
+            });
+        } catch (error) {
+            // Capturar errores generales
+            console.error("Error:", error);
+            alert("Error: " + error.message);  // Mostrar mensaje de error al usuario
+        }
     }
 
     descargarInforme = async (informeId) => {
@@ -1040,13 +1051,13 @@ class InformePastor extends Component {
                                                                 <Col xs="2" sm="2" lg="2" className='text-center'>
                                                                     Misión {obj.ms_Numero}
                                                                 </Col>
-                                                                <Col xs="6" sm="6" lg="6" className='text-center'>
+                                                                <Col xs="5" sm="5" lg="5" className='text-center'>
                                                                     {obj.ms_Alias}
                                                                 </Col>
                                                                 <Col xs="2" sm="2" lg="2" className='text-center'>
                                                                     Cultos
                                                                 </Col>
-                                                                <Col xs="2" sm="2" lg="2">
+                                                                <Col xs="3" sm="3" lg="3">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='cultoMision'
                                                                         name={`misiones.${index}.cultos`}
@@ -1600,7 +1611,7 @@ class InformePastor extends Component {
                                         <Row className='contenedor-seccion'>
                                             <Col xs="12" sm="12" lg="12">
                                                 <Row className='titulo'>
-                                                    MOVIMIENTO ADMINISTRATIVO Y MATERIAL
+                                                    MOVIMIENTO ADMINISTRATIVO, ECLESIÁSTICO Y MATERIAL
                                                 </Row>
                                             </Col>
                                         </Row>
@@ -2588,7 +2599,7 @@ class InformePastor extends Component {
                                                                 <Input type='text' min={0} max={9999}
                                                                     id='existenciaFinal'
                                                                     name='movimientoEconomico.existenciaEnCaja'
-                                                                    value={this.state.movimientoEconomico.existenciaEnCaja ? this.state.movimientoEconomico.existenciaEnCaja.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                    value={this.state.movimientoEconomico.existenciaEnCaja ? this.state.movimientoEconomico.existenciaEnCaja.toLocaleString('mx-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
                                                                     disabled
                                                                     onChange={this.handleMovimientoEconomicoChange}
                                                                     onBlur={this.handleMovimientoEconomicoBlur}

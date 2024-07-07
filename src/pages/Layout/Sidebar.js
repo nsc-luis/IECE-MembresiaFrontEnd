@@ -360,7 +360,7 @@ class Sidebar extends Component {
                                 <div id="collapseAltaNoBautizado" className="collapse" aria-labelledby="headingnoBautizado" data-parent="#collapseMPAltas">
                                     <div className="bg-white py-2 collapse-inner rounded">
                                         <Link className="collapse-item" onClick={this.handle_AltaPersonaNoBautizada} to="/RegistroDePersona">Nuevo Ingreso</Link>
-                                        <Link className="collapse-item" to="/AltaReactivacion" onClick={this.handle_Reactivacion}>Reativación</Link>
+                                        <Link className="collapse-item" to="/AltaReactivacion" onClick={this.handle_Reactivacion}>Reactivación</Link>
                                         <Link className="collapse-item" to="/AltaCambioDomicilioNB" onClick={this.handle_AltaCambioDomicilioNB}>Cambio de Domicilio</Link>
                                     </div>
                                 </div>
@@ -658,6 +658,24 @@ class Sidebar extends Component {
                         </Link>
                     </li>
 
+                    {/* Divider */}
+                    <hr className="sidebar-divider" />
+
+                    {/* Heading */}
+                    <div className="sidebar-heading">
+                        Informes
+                    </div>
+
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            to="/InformesPastorales"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Informes", "Lista de Informes Pastorales")}>
+                            <i className="fas fa-file-alt"></i>
+                            <span>Informes Pastorales</span>
+                        </Link>
+                    </li>
+
 
                     {/* Divider */}
                     <hr className="sidebar-divider" />
@@ -745,23 +763,9 @@ class Sidebar extends Component {
                         </div>
                     </li>
 
-                    {/* Nav Item - Informes Collapse Menu */}
-                    {/* <li className="nav-item">
-                        <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseInformes" aria-expanded="true" aria-controls="collapsePages">
-                            <i className="fas fa-fw fa-chart-bar"></i>
-                            <span>Informes</span>
-                        </Link>
-                        <div id="collapseInformes" className="collapse" aria-labelledby="headingInformes" data-parent="#accordionSidebar">
-                            <div className="bg-white py-2 collapse-inner rounded">
-                                <h6 className="collapse-header">Seleccione un informe:</h6>
-                                <Link className="collapse-item text-wrap"
-                                    to="/InformesPastorales"
-                                    onClick={() => this.handle_LinkEncabezado("Sección: Informes", "Listado de Informes Pastorales")}
-                                >Informes Pastorales
-                                </Link>
-                            </div>
-                        </div>
-                    </li> */}
+
+
+
 
                     {/* Divider */}
                     {/* <hr className="sidebar-divider" /> */}
