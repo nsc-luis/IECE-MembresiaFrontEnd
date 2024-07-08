@@ -34,6 +34,7 @@ class InformeObispo extends Component {
             sectores: [],
             actividadesObispo: [],
             informesSectores: [],
+            movtosAdministrativoEconomico: {},
             // TERMINA OBISPO
             distrito: {
                 dis_Numero: 0,
@@ -106,7 +107,7 @@ class InformeObispo extends Component {
                 coros: 0,
                 gruposDeCanto: 0,
             },
-            adquisicionesSector: {
+            adquisicionesDistrito: {
                 predios: 0,
                 casas: 0,
                 edificios: 0,
@@ -249,44 +250,6 @@ class InformeObispo extends Component {
         );
     }
 
-    // getSector = async () => {
-    //     await helpers.validaToken().then(helpers.authAxios.get('/Sector/' + localStorage.getItem('sector'))
-    //         .then(res => {
-    //             this.setState({
-    //                 sector: res.data.sector[0]
-    //             })
-    //         })
-    //     );
-    // }
-
-    // getSectores = async () => {
-    //     await helpers.validaToken().then(helpers.authAxios.get('/Sector/GetSectoresByDistrito/' + localStorage.getItem('dto'))
-    //         .then(res => {
-    //             this.setState({
-    //                 sectores: res.data.sectores.sort((a,b) => {return b.sec_Tipo_Sector.localeCompare(a.sec_Tipo_Sector)})
-    //             })
-    //             const { id } = this.props.match.params;
-    //             this.obtenerInforme(id);
-    //             console.log(res.data);
-    //         })
-    //     );
-    // }
-
-    // obtenerDatosEstadisticos = async () => {
-    //     const body = {
-    //         sec_Id_Sector: this.state.sector.sec_Id_Sector,
-    //         year: this.state.informe.anio,
-    //         mes: this.state.informe.mes
-    //     }
-    //     await helpers.validaToken().then(helpers.authAxios.post("Registro_Transacciones/movimientosEstadisticosReporteBySector", body)
-    //         .then(res => {
-    //             console.log(res);
-    //             this.setState({
-    //                 datosEstadisticos: res.data
-    //             })
-    //         })
-    //     );
-    // }
 
     obtenerInforme = async (id) => {
         await helpers.validaToken().then(helpers.authAxios.get("/Informe/Obispo/" + id)
@@ -298,7 +261,8 @@ class InformeObispo extends Component {
                     // actividadesObispo: actObispoMerge !== null ? actObispoMerge : this.state.actividadesObispo
                     actividadesObispo: res.data.actividadObispo.sectores !== null ? res.data.actividadObispo.sectores.sort((a, b) => { return b.sector.sec_Tipo_Sector.localeCompare(a.sector.sec_Tipo_Sector) }) : this.state.actividadesObispo,
                     datosEstadisticos: res.data.movtosEstadisticos !== null ? res.data.movtosEstadisticos : this.state.datosEstadisticos,
-                    informesSectores: res.data.informesSectores !== null ? res.data.informesSectores : this.state.informesSectores
+                    informesSectores: res.data.informesSectores !== null ? res.data.informesSectores : this.state.informesSectores,
+                    movtosAdministrativoEconomico: res.data.movtosAdministrativoEconomico !== null ? res.data.movtosAdministrativoEconomico : this.state.movtosAdministrativoEconomico,
 
                 })
                 this.obtenerMovimientosEstadisticos();
@@ -426,7 +390,7 @@ class InformeObispo extends Component {
             trabajoEvangelismo: this.state.trabajoEvangelismo,
             CultosMisionSector: this.state.misiones,
             organizaciones: this.state.organizaciones,
-            adquisicionesSector: this.state.adquisicionesSector,
+            adquisicionesDistrito: this.state.adquisicionesDistrito,
             reuniones: this.state.reuniones,
             sesiones: this.state.sesiones,
             construccionesInicio: this.state.construccionesInicio,
@@ -854,7 +818,7 @@ class InformeObispo extends Component {
                                                     <td className='table-cell'>{obj.estudiosSector.juvenil + obj.conferenciasSector.juvenil}</td>
                                                     <td className='table-cell'>{obj.estudiosSector.infantil + obj.conferenciasSector.infantil}</td>
                                                     <td className='table-cell'>{obj.misionesSector.length}</td>
-                                                    <td className='table-cell'>{obj.cultosMisionSector.map(c => { let total = 0; total+= c.cultos; return total})}</td>
+                                                    <td className='table-cell'>{obj.cultosMisionSector.map(c => { let total = 0; total += c.cultos; return total })}</td>
                                                     <td className='table-cell'>{obj.trabajoEvangelismo.hogaresVisitados}</td>
                                                     <td className='table-cell'>{obj.trabajoEvangelismo.hogaresConquistados}</td>
                                                     <td className='table-cell'>{obj.trabajoEvangelismo.visitantesPermanentes}</td>
@@ -1235,7 +1199,7 @@ class InformeObispo extends Component {
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
-                                                MOVIMIENTO ADMINISTRATIVO Y MATERIAL
+                                                MOVIMIENTO ADMINISTRATIVO, ECLESIÁSTICO Y MATERIAL
                                             </Row>
                                         </Col>
                                     </Row>
@@ -1257,8 +1221,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='organizaciones.sociedadFemenil'
-                                                                value={this.state.organizaciones.sociedadFemenil}
+                                                                name='movtosAdministrativoEconomico.sociedadFemenil'
+                                                                value={this.state.movtosAdministrativoEconomico.sociedadFemenil}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1268,8 +1233,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='organizaciones.sociedadJuvenil'
-                                                                value={this.state.organizaciones.sociedadJuvenil}
+                                                                name='movtosAdministrativoEconomico.sociedadJuvenil'
+                                                                value={this.state.movtosAdministrativoEconomico.sociedadJuvenil}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1279,8 +1245,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='organizaciones.departamentoFemenil'
-                                                                value={this.state.organizaciones.departamentoFemenil}
+                                                                name='movtosAdministrativoEconomico.departamentoFemenil'
+                                                                value={this.state.movtosAdministrativoEconomico.departamentoFemenil}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1290,8 +1257,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='organizaciones.departamentoJuvenil'
-                                                                value={this.state.organizaciones.departamentoJuvenil}
+                                                                name='movtosAdministrativoEconomico.departamentoJuvenil'
+                                                                value={this.state.movtosAdministrativoEconomico.departamentoJuvenil}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1301,8 +1269,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='organizaciones.departamentoInfantil'
-                                                                value={this.state.organizaciones.departamentoInfantil}
+                                                                name='movtosAdministrativoEconomico.departamentoInfantil'
+                                                                value={this.state.movtosAdministrativoEconomico.departamentoInfantil}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1312,8 +1281,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='organizaciones.coros'
-                                                                value={this.state.organizaciones.coros}
+                                                                name='movtosAdministrativoEconomico.coros'
+                                                                value={this.state.movtosAdministrativoEconomico.coros}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1323,66 +1293,141 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='organizaciones.gruposDeCanto'
-                                                                value={this.state.organizaciones.gruposDeCanto}
+                                                                name='movtosAdministrativoEconomico.gruposDeCanto'
+                                                                value={this.state.movtosAdministrativoEconomico.gruposDeCanto}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
                                                 </Col>
                                                 <Col xs="6" sm="6" lg="6">
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
+
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Por Sectores
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Por Admon Distrital
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Total
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Predios
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='adquisicionesSector.predios'
-                                                                value={this.state.adquisicionesSector.predios}
+                                                                name='movtosAdministrativoEconomico.adquisicionesSector.predios'
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.predios}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesDistrito.predios'
+                                                                value={this.state.adquisicionesDistrito.predios}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.predios + this.state.adquisicionesDistrito.predios}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Casas
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='adquisicionesSector.casas'
-                                                                value={this.state.adquisicionesSector.casas}
+                                                                name='movtosAdministrativoEconomico.adquisicionesSector.casas'
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.casas}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesDistrito.casas'
+                                                                value={this.state.adquisicionesDistrito.casas}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.casas + this.state.adquisicionesDistrito.casas}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Edificios
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='adquisicionesSector.edificios'
-                                                                value={this.state.adquisicionesSector.edificios}
+                                                                name='movtosAdministrativoEconomico.adquisicionesSector.edificios'
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesDistrito.edificios'
+                                                                value={this.state.adquisicionesDistrito.edificios}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios + this.state.adquisicionesDistrito.edificios}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Templos
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='adquisicionesSector.templos'
-                                                                value={this.state.adquisicionesSector.templos}
+                                                                name='movtosAdministrativoEconomico.adquisicionesSector.templos'
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.templos}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesDistrito.templos'
+                                                                value={this.state.adquisicionesDistrito.templos}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.templos + this.state.adquisicionesDistrito.templos}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Vehículos
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='adquisicionesSector.vehiculos'
-                                                                value={this.state.adquisicionesSector.vehiculos}
+                                                                name='movtosAdministrativoEconomico.adquisicionesSector.vehiculos'
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='adquisicionesDistrito.vehiculos'
+                                                                value={this.state.adquisicionesDistrito.vehiculos}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos + this.state.adquisicionesDistrito.vehiculos}
+                                                                readOnly></Input>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -1412,14 +1457,14 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='sesiones.enElDistrito'
-                                                                value={this.state.sesiones.enElDistrito}
+                                                                name='movtosAdministrativoEconomico.sesiones.enElDistrito'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.enElDistrito}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='reuniones.enElDistrito'
-                                                                value={this.state.reuniones.enElDistrito}
+                                                                name='movtosAdministrativoEconomico.reuniones.enElDistrito'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.enElDistrito}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1429,14 +1474,14 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='sesiones.conElPersonalDocente'
-                                                                value={this.state.sesiones.conElPersonalDocente}
+                                                                name='movtosAdministrativoEconomico.sesiones.conElPersonalDocente'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conElPersonalDocente}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='reuniones.conElPersonalDocente'
-                                                                value={this.state.reuniones.conElPersonalDocente}
+                                                                name='movtosAdministrativoEconomico.reuniones.conElPersonalDocente'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conElPersonalDocente}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1446,14 +1491,14 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='sesiones.conSociedadesFemeniles'
-                                                                value={this.state.sesiones.conSociedadesFemeniles}
+                                                                name='movtosAdministrativoEconomico.sesiones.conSociedadesFemeniles'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conSociedadesFemeniles}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='reuniones.conSociedadesFemeniles'
-                                                                value={this.state.reuniones.conSociedadesFemeniles}
+                                                                name='movtosAdministrativoEconomico.reuniones.conSociedadesFemeniles'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conSociedadesFemeniles}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1463,14 +1508,14 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='sesiones.conSociedadesJuveniles'
-                                                                value={this.state.sesiones.conSociedadesJuveniles}
+                                                                name='movtosAdministrativoEconomico.sesiones.conSociedadesJuveniles'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conSociedadesJuveniles}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='reuniones.conSociedadesJuveniles'
-                                                                value={this.state.reuniones.conSociedadesJuveniles}
+                                                                name='movtosAdministrativoEconomico.reuniones.conSociedadesJuveniles'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conSociedadesJuveniles}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1480,14 +1525,14 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='sesiones.conDepartamentosInfantiles'
-                                                                value={this.state.sesiones.conDepartamentosInfantiles}
+                                                                name='movtosAdministrativoEconomico.sesiones.conDepartamentosInfantiles'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conDepartamentosInfantiles}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='reuniones.conDepartamentosInfantiles'
-                                                                value={this.state.reuniones.conDepartamentosInfantiles}
+                                                                name='movtosAdministrativoEconomico.reuniones.conDepartamentosInfantiles'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conDepartamentosInfantiles}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1497,14 +1542,14 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='sesiones.conCorosYGruposDeCanto'
-                                                                value={this.state.sesiones.conCorosYGruposDeCanto}
+                                                                name='movtosAdministrativoEconomico.sesiones.conCorosYGruposDeCanto'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conCorosYGruposDeCanto}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='reuniones.conCorosYGruposDeCanto'
-                                                                value={this.state.reuniones.conCorosYGruposDeCanto}
+                                                                name='movtosAdministrativoEconomico.reuniones.conCorosYGruposDeCanto'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conCorosYGruposDeCanto}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1639,8 +1684,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='ordenaciones.ancianos'
-                                                                value={this.state.ordenaciones.ancianos}
+                                                                name='movtosAdministrativoEconomico.ordenaciones.ancianos'
+                                                                value={this.state.movtosAdministrativoEconomico.ordenaciones.ancianos}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1650,8 +1696,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='ordenaciones.diaconos'
-                                                                value={this.state.ordenaciones.diaconos}
+                                                                name='movtosAdministrativoEconomico.ordenaciones.diaconos'
+                                                                value={this.state.movtosAdministrativoEconomico.ordenaciones.diaconos}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1697,8 +1744,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='llamamientoDePersonal.diaconosAprueba'
-                                                                value={this.state.llamamientoDePersonal.diaconosAprueba}
+                                                                name='movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba'
+                                                                value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
@@ -1708,8 +1756,9 @@ class InformeObispo extends Component {
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
-                                                                name='llamamientoDePersonal.auxiliares'
-                                                                value={this.state.llamamientoDePersonal.auxiliares}
+                                                                name='movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares'
+                                                                value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares}
+                                                                readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
                                                     </Row>
