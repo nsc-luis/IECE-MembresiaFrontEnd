@@ -322,11 +322,11 @@ class AltaRestitucion extends Component {
         }
         else { // Si todos los campos requeridos están llenos
             var info = { // Pobla el Objeto INFO
-                idPersona: this.state.per_Id_Persona,
+                idPersona: parseInt(this.state.per_Id_Persona),
                 comentario: this.state.comentario,
                 fecha: this.state.fechaTransaccion,
-                idMinistro: this.infoSesion.pem_Id_Ministro,
-                jerarquia: this.state.hogar.hp_Jerarquia
+                idMinistro: parseInt(this.infoSesion.pem_Id_Ministro),
+                jerarquia: parseInt(this.state.hogar.hp_Jerarquia)
             }
 
             //Si se va a quedar en el MISMO HOGAR
