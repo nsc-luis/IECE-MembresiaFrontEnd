@@ -64,6 +64,7 @@ import RegistroVisitantes from './pages/RegistroVisitantes';
 import InformeObispo from './pages/InformeObispo/InformeObispo';
 import InformeObispoLista from './pages/InformeObispo/InformeObispoLista';
 import DirectorioObispos from './pages/Reporte/DirectorioObispos';
+import BuscarPersona from './pages/BuscarPersona';
 
 // import App from './App';
 /* import helpers from './components/Helpers'; */
@@ -98,6 +99,7 @@ class Router extends Component {
                         <Route exact path="/ListaDePersonal" component={ListaDePersonal} />
                         <Route exact path="/Hogar" component={Hogar} />
                         <Route exact path="/AnalisisPersonal" component={AnalisisPersonal} />
+                        <Route exact path="/BuscarPersona" component={BuscarPersona} />
                         {/* MOVIMIENTOS ESTADISTICOS */}
                         <Route exact path="/RegistroDePersona" component={RegistroDePersona} />
                         <Route exact path="/RegistroVisitantes" component={RegistroVisitantes} />
