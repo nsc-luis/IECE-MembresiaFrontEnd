@@ -55,6 +55,17 @@ export default class SidebarDirectivo extends Component {
                         </Link>
                     </li>
 
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link"
+                            to="/BuscarPersona"
+                            onClick={() => this.handle_LinkEncabezado("Sección: Monitoreo", "Buscar una persona")}
+                        >
+                            <i className="fas fa-fw fa-search"></i>
+                            <span>Buscar una persona</span>
+                        </Link>
+                    </li>
+
                 </ul>
                 {/* End of Sidebar */}
             </React.Fragment>

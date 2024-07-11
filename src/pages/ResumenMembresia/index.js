@@ -283,6 +283,10 @@ class ResumenMembresia extends Component {
     }
 
     handle_sectorSeleccionado = async (e) => {
+        if (e.target.value === "0") {
+            this.reiniciaVariables()
+            return false
+        }
         if (e.target.value === "todos") { //Si es Sesión Obispo
             this.setState({ sectorSeleccionado: e.target.value });
             await helpers.validaToken().then(helpers.authAxios.get(this.url + '/Persona/GetResumenMembresiaByDistrito/' + this.state.dto/* localStorage.getItem('dto') */)
@@ -390,7 +394,7 @@ class ResumenMembresia extends Component {
 
     resumenMembresiaPDF = async () => {
 
-        if (this.state.sectorSeleccionado === '0') {
+        if (this.state.sectorSeleccionado === '0' && this.state.distritoSeleccionado === "0") {
             alert('Error: Debes seleccionar un sector.');
         }
         else { //Si es Sesión Pastor
@@ -407,11 +411,17 @@ class ResumenMembresia extends Component {
             doc.setFontSize(10);
 
             //Si en LocalStorage tiene Numero de Sector, significa que es Sesión Sector
-            if (this.state.sectorSeleccionado !== "todos") {
+            if (this.infoSesion.dg) 
+            {
+                doc.text(`TODO EL REINO CRISTIANO`, 136, 18, { align: 'center' });
+            }
+            else if (this.state.sectorSeleccionado !== "todos") 
+            {
                 doc.text(`${this.state.infoSector.sec_Tipo_Sector} ${this.state.infoSector.sec_Numero} ${this.state.infoSector.sec_Alias}`, 136, 18, { align: 'center' });
                 /* doc.text(fechaTexto, 85, 25); */
             }
-            else {
+            else 
+            {
                 doc.text(`${this.state.distrito.dis_Tipo_Distrito}  ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`, 136, 18, { align: 'center' });
                 doc.text(`${this.state.infoSector.sec_Alias}`, 136, 24, { align: 'center' });
                 /* doc.text(fechaTexto, 85, 20); */
@@ -530,13 +540,56 @@ class ResumenMembresia extends Component {
         );
     };
 
-    handle_distritoSeleccionado = (e) => {
+    handle_distritoSeleccionado = async (e) => {
+        if (e.target.value === "0") {
+            this.reiniciaVariables()
+            this.setState({
+                distritoSeleccionado: e.target.value,
+                sectores: []
+            })
+            return false
+        }
+        if (e.target.value === "todos") {
+            this.setState({
+                distritoSeleccionado: e.target.value
+            })
+            await helpers.validaToken().then(helpers.authAxios.post(this.url + '/Persona/ResumenMembresiaReinoCristiano/')
+                .then(res => {
+                    this.setState({ 
+                        resumenDeMembresia: res.data.resumen,
+                        infoMinistro: res.data.presidente,
+                        infoSecretario: res.data.secretario,
+                        hogares: res.data.hogares,
+                        gradoMinistro: "PRESIDENTE"
+                    })
+                    this.conviertePersonasParaGraph(res.data.resumen);//Ejecuta fn que convierte la data para uso en Gráfica.
+                })
+            );
+            return false
+        }
         this.setState({
             distritoSeleccionado: e.target.value,
             dto: e.target.value
         })
         this.getDistrito(e.target.value)
         this.getSectoresPorDistrito(e.target.value)
+        this.reiniciaVariables()
+    }
+
+    reiniciaVariables = () => {
+        this.setState({
+            sectores: this.state.distritoSeleccionado === "0" ? [] : this.state.sectores,
+            sectorSeleccionado: "0",
+            resumenDeMembresia: {},
+            infoSector: {},
+            infoMinistro: {},
+            infoSecretario: {},
+            gradoMinistro: "",
+            resumenBautizados: [],
+            resumenNoBautizados: [],
+            hogares: 0,
+            entidadTitulo: "",
+        })
     }
 
     render() {
@@ -545,69 +598,104 @@ class ResumenMembresia extends Component {
                 <Container lg>
                     {/* <h1 className="text-info">Resumen de Membresía</h1> */}
                     {this.infoSesion.dg &&
-                        <FormGroup>
-                            <Row>
-                                <Col xs="10">
-                                    <Input
-                                        type="select"
-                                        name="distritoSeleccionado"
-                                        onChange={this.handle_distritoSeleccionado}
-                                        value={this.state.distritoSeleccionado}
-                                    >
-                                        <option value="0">Selecciona un distrito/mision/region</option>
-                                        {this.state.distritos.map((dis) => {
-                                            return (
-                                                <React.Fragment key={dis.dis_Id_Distrito}>
-                                                    <option value={dis.dis_Id_Distrito}>{`${dis.dis_Tipo_Distrito} ${dis.dis_Numero}: ${dis.dis_Alias}`}</option>
-                                                </React.Fragment>
-                                            )
-                                        })}
-                                    </Input>
-                                </Col>
-                            </Row>
-                        </FormGroup>
+                        <React.Fragment>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="10">
+                                        <Input
+                                            type="select"
+                                            name="distritoSeleccionado"
+                                            onChange={this.handle_distritoSeleccionado}
+                                            value={this.state.distritoSeleccionado}
+                                        >
+                                            <option value="0">Selecciona un distrito/mision/region</option>
+                                            <option value="todos">TODO EL REINO CRISTIANO</option>
+                                            {this.state.distritos.map((dis) => {
+                                                return (
+                                                    <React.Fragment key={dis.dis_Id_Distrito}>
+                                                        <option value={dis.dis_Id_Distrito}>{`${dis.dis_Tipo_Distrito} ${dis.dis_Numero}: ${dis.dis_Alias}`}</option>
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                        </Input>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            {this.state.distritoSeleccionado !== "0" && this.state.distritoSeleccionado !== "todos" &&
+                                <FormGroup>
+                                    <Row>
+                                        <Col xs="10">
+                                            <Input
+                                                type="select"
+                                                name="sectorSeleccionado"
+                                                value={this.state.sectorSeleccionado}
+                                                onChange={this.handle_sectorSeleccionado}
+                                            >
+                                                <option value="0">Selecciona un sector</option>
+                                                {this.state.sectores.map(sector => {
+                                                    return (
+                                                        <React.Fragment key={sector.sec_Id_Sector}>
+                                                            <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                                {this.state.distritoSeleccionado !== "0" &&
+                                                    <React.Fragment>
+                                                        <option value="todos">TODOS LOS SECTORES</option>
+                                                    </React.Fragment>
+                                                }
+                                            </Input>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                            }
+                        </React.Fragment>
                     }
                     {!this.state.dg &&
-                        <FormGroup>
-                            <Row>
-                                <Col xs="10">
-                                    <Input
-                                        type="select"
-                                        name="idDistrito"
-                                    >
-                                        <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
-                                    </Input>
-                                </Col>
-                            </Row>
-                        </FormGroup>
-                    }
-                    <FormGroup>
-                        <Row>
-                            <Col xs="10">
-                                <Input
-                                    type="select"
-                                    name="sectorSeleccionado"
-                                    value={this.state.sectorSeleccionado}
-                                    onChange={this.handle_sectorSeleccionado}
-                                >
-                                    {/* <option value="0">Selecciona un sector</option> */}
+                        <React.Fragment>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="10">
+                                        <Input
+                                            type="select"
+                                            name="idDistrito"
+                                        >
+                                            <option value="1">{`${this.state.distrito.dis_Tipo_Distrito} ${this.state.distrito.dis_Numero}: ${this.state.distrito.dis_Alias}`}</option>
+                                        </Input>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <FormGroup>
+                                <Row>
+                                    <Col xs="10">
+                                        <Input
+                                            type="select"
+                                            name="sectorSeleccionado"
+                                            value={this.state.sectorSeleccionado}
+                                            onChange={this.handle_sectorSeleccionado}
+                                        >
+                                            {/* <option value="0">Selecciona un sector</option> */}
 
-                                    {this.state.sectores.map(sector => {
-                                        return (
-                                            <React.Fragment key={sector.sec_Id_Sector}>
-                                                <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
-                                            </React.Fragment>
-                                        )
-                                    })}
-                                    {localStorage.getItem('sector') === null &&
-                                        <React.Fragment>
-                                            <option value="todos">TODOS LOS SECTORES</option>
-                                        </React.Fragment>
-                                    }
-                                </Input>
-                            </Col>
-                        </Row>
-                    </FormGroup>
+                                            {this.state.sectores.map(sector => {
+                                                return (
+                                                    <React.Fragment key={sector.sec_Id_Sector}>
+                                                        <option value={sector.sec_Id_Sector}> {sector.sec_Tipo_Sector} {sector.sec_Numero}: {sector.sec_Alias}</option>
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                            {localStorage.getItem('sector') === null &&
+                                                <React.Fragment>
+                                                    <option value="todos">TODOS LOS SECTORES</option>
+                                                </React.Fragment>
+                                            }
+                                        </Input>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                        </React.Fragment>
+                    }
+
+
                     <FormGroup>
                         <Row>
                             <Col xs="3">

@@ -101,8 +101,8 @@ export default class RegistroPersonalMinisterial extends Component {
 
         if (e.target.name === "id_Persona" && e.target.value !== "0") {
 
-            let persona = this.state.varonesSector.filter((person) => person.per_Id_Persona === e.target.value);
-            console.log("lista", persona)
+            let persona = this.state.varonesSector.filter((person) => person.per_Id_Persona == e.target.value);
+            console.log("ElementoSeleccionado", persona)
             this.setState({
                 form: {
                     ...this.state.form,
