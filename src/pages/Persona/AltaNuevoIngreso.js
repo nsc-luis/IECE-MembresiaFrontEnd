@@ -18,6 +18,7 @@ function AltaNuevoIngreso() {
     const [miembrosHogar, setMiembrosHogar] = useState([])
     const [mostrarHogar, setMostrarHogar] = useState(false)
     const [paises, setPaises] = useState([])
+    const [submitting, setSubmitting] = useState(false)
 
 
     //const dto = JSON.parse(localStorage.getItem("dto"))
@@ -50,34 +51,34 @@ function AltaNuevoIngreso() {
 
     //Manejo de eventos de datos generales
     const handleNombre = (value) => {
-        setData( prevState => ({
+        setData(prevState => ({
             ...prevState,
             per_nombre: value,
         }))
     };
     const handleAPaterno = (value) => {
-        setData( prevState => ({
+        setData(prevState => ({
             ...prevState,
             per_Apellido_Paterno: value,
         }))
     };
     const handleAMaterno = (value) => {
-        setData( prevState => ({
+        setData(prevState => ({
             ...prevState,
             per_Apellido_Materno: value,
         }))
     };
     const handleCategoria = (value) => {
-        setData( prevState => ({
+        setData(prevState => ({
             ...prevState,
             per_Categoria: value
         }))
     };
 
     const handleFechaNacimiento = (value) => {
-        if(value == "") setMostrarHogar(false)
-    
-        setTransaccion( prevState => ({
+        if (value == "") setMostrarHogar(false)
+
+        setTransaccion(prevState => ({
             ...prevState,
             per_Fecha_Nacimiento: value
         }))
@@ -85,7 +86,7 @@ function AltaNuevoIngreso() {
 
     //Manejo de eventos de hogar
     const handleHogar = (value) => {
-        if(value == 0){
+        if (value == 0) {
             setHogar(null)
         }
         helpers.authAxios.get(`/Hogar_Persona/GetDatosHogarDomicilio/${value}`)
@@ -96,30 +97,30 @@ function AltaNuevoIngreso() {
             .then(res => {
                 setMiembrosHogar(res.data)
             });
-            console.log(hogar)
-            console.log(miembrosHogar)
+        console.log(hogar)
+        console.log(miembrosHogar)
 
     };
     const handleJerarquia = (value) => {
         setJerarquia(value)
     };
 
-    
+
     //Validaciones
     const validarDatosPersona = () => {
-        if(data.per_nombre == "" || data.per_nombre == null ){
+        if (data.per_nombre == "" || data.per_nombre == null) {
             alert('Ingrese el nombre de la persona')
             return
         };
-        if(data.per_Apellido_Paterno == "" || data.per_Apellido_Paterno == null ){
+        if (data.per_Apellido_Paterno == "" || data.per_Apellido_Paterno == null) {
             alert('Ingrese el apellido paterno de la persona')
             return
         };
-        if(data.per_Apellido_Materno == "" || data.per_Apellido_Materno == null ){
+        if (data.per_Apellido_Materno == "" || data.per_Apellido_Materno == null) {
             alert('Ingrese el apellido materno de la persona')
             return
         };
-        if(transaccion.per_Fecha_Nacimiento == null || !transaccion.per_Fecha_Nacimiento ){
+        if (transaccion.per_Fecha_Nacimiento == null || !transaccion.per_Fecha_Nacimiento) {
             alert('Seleccione una fecha de nacimiento')
             return
         }
@@ -127,10 +128,19 @@ function AltaNuevoIngreso() {
     };
     //Pruebas
     const postData = () => {
-        if(!jerarquia){
-            alert("Seleccione un hogar y jerarquia")
+
+        if (submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
+        if (!jerarquia) {
+            alert("Seleccione un hogar y jerarquía")
             return
         }
+
+        setSubmitting(true)//Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
+
         helpers.authAxios.post(`/Persona/Post/0`, data)
             .then(res => {
                 helpers.authAxios.post(`/Persona/AddPersonaHogar/${jerarquia}/${hogar.hd_Id_Hogar}`, data)
@@ -140,7 +150,7 @@ function AltaNuevoIngreso() {
                     });
             });
     };
-    return(
+    return (
         <>
             <Container>
                 <Card body className="mb-5">
@@ -154,10 +164,10 @@ function AltaNuevoIngreso() {
                             </Label>
                             <Col sm={9}>
                                 <Input
-                                id='NombrePersona'
-                                name='nombre'
-                                type='text'
-                                onChange={e => {handleNombre(e.target.value)}}>
+                                    id='NombrePersona'
+                                    name='nombre'
+                                    type='text'
+                                    onChange={e => { handleNombre(e.target.value) }}>
                                 </Input>
                             </Col>
                         </FormGroup>
@@ -167,10 +177,10 @@ function AltaNuevoIngreso() {
                             </Label>
                             <Col sm={9}>
                                 <Input
-                                id='APaterno'
-                                name='apaterno'
-                                type='text'
-                                onChange={e => {handleAPaterno(e.target.value)}}>
+                                    id='APaterno'
+                                    name='apaterno'
+                                    type='text'
+                                    onChange={e => { handleAPaterno(e.target.value) }}>
                                 </Input>
                             </Col>
                         </FormGroup>
@@ -180,10 +190,10 @@ function AltaNuevoIngreso() {
                             </Label>
                             <Col sm={9}>
                                 <Input
-                                id='AMaterno'
-                                name='amaterno'
-                                type='text'
-                                onChange={e => {handleAMaterno(e.target.value)}}>
+                                    id='AMaterno'
+                                    name='amaterno'
+                                    type='text'
+                                    onChange={e => { handleAMaterno(e.target.value) }}>
                                 </Input>
                             </Col>
                         </FormGroup>
@@ -193,17 +203,17 @@ function AltaNuevoIngreso() {
                             </Label>
                             <Col sm={9}>
                                 <Input
-                                id='Categoria'
-                                name='categoria'
-                                type='select'
-                                value={data.per_Categoria}
-                                onChange={(e) => handleCategoria( e.target.value )}
-                               >
-                                <option value="0" selected disabled >Selecionar categoria</option>
-                                <option value="JOVEN_HOMBRE">Joven hombre</option>
-                                <option value="JOVEN_MUJER">Joven mujer</option>
-                                <option value="NIÑO">Niño</option>
-                                <option value="NIÑA">Niña</option>
+                                    id='Categoria'
+                                    name='categoria'
+                                    type='select'
+                                    value={data.per_Categoria}
+                                    onChange={(e) => handleCategoria(e.target.value)}
+                                >
+                                    <option value="0" selected disabled >Selecionar categoria</option>
+                                    <option value="JOVEN_HOMBRE">Joven hombre</option>
+                                    <option value="JOVEN_MUJER">Joven mujer</option>
+                                    <option value="NIÑO">Niño</option>
+                                    <option value="NIÑA">Niña</option>
 
                                 </Input>
                             </Col>
@@ -214,10 +224,10 @@ function AltaNuevoIngreso() {
                             </Label>
                             <Col sm={9}>
                                 <Input
-                                id='Fecha'
-                                name='fecha'
-                                type='date'
-                                onChange={(e) => handleFechaNacimiento( e.target.value )}>
+                                    id='Fecha'
+                                    name='fecha'
+                                    type='date'
+                                    onChange={(e) => handleFechaNacimiento(e.target.value)}>
                                 </Input>
                             </Col>
                         </FormGroup>
@@ -236,100 +246,100 @@ function AltaNuevoIngreso() {
                     </Form>
                 </Card>
                 {/* Hogar */}
-                { mostrarHogar &&
-                <Card body className="mb-5">
-                    <CardTitle className="text-center" tag="h4">
-                        Hogar / Domicilio
-                    </CardTitle>
-                    <Alert color="info">
-                        <h5><strong>AVISO:</strong> Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
-                    </Alert>
-                    <FormGroup row>
-                        <Label for='Hogar' sm={3}>
-                            <h5>Asignar a hogar: </h5>
-                        </Label>
-                        <Col sm={9}>
-                            <Input
-                            id='Hogar'
-                            name='hogar'
-                            type='select'
-                            onChange={e => {handleHogar(e.target.value)}}>
-                            <option value="0" selected>Nuevo hogar / domicilio</option>
-                            {opcionesHogares.map(hogar => (
-                                <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
-                            ))}
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    {hogar ? 
-                    <Form>
-                        <Alert color="warning">
-                            <h5><strong>ATENCION:</strong></h5>
-                            <ul>
-                                <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
-                                <li>Solo puede seleccionar una jerarquia entre 1 y la jerarquia mas baja registrada.</li>
-                                <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
-                            </ul>
+                {mostrarHogar &&
+                    <Card body className="mb-5">
+                        <CardTitle className="text-center" tag="h4">
+                            Hogar / Domicilio
+                        </CardTitle>
+                        <Alert color="info">
+                            <h5><strong>AVISO:</strong> Al seleccionar la opcion "Nuevo hogar / domicilio" debera completar los campos necesarios.</h5>
                         </Alert>
-
-                        <h5><strong>Dirección:</strong></h5>
-                        <p>{hogar.hd_Calle} #{hogar.hd_Numero_Exterior}, {hogar.hd_Localidad}, {hogar.hd_Municipio_Ciudad}, {hogar.est_Nombre}, {hogar.pais_Nombre_Corto}</p>
-                        <Table hover responsive>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Miembros del hogar
-                                    </th>
-                                    <th>
-                                        Jerarquia
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {miembrosHogar.map(miembro => (
-                                    <tr>
-                                        <td>{miembro.per_Nombre + ' ' + miembro.per_Apellido_Paterno + ' ' + miembro.per_Apellido_Materno}</td>
-                                        <td>{miembro.hp_Jerarquia}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                        <hr></hr>
                         <FormGroup row>
-                            <Label for='Jerarquia' sm={3}>
-                                <h5>Jerarquia por asignar: </h5>
+                            <Label for='Hogar' sm={3}>
+                                <h5>Asignar a hogar: </h5>
                             </Label>
                             <Col sm={9}>
                                 <Input
-                                id='Jerarquia'
-                                name='jerarquia'
-                                type='select'
-                                onChange={(e) => handleJerarquia( e.target.value )}
-                               >
-                                <option value="0" selected disabled >Selecionar jerarquia</option>
-                                {miembrosHogar.map((miembro, index) => (
-                                    <option key={miembro.hd_Id_Hogar} value={index + 1}>{index + 1}</option>
-                                ))}
-                                <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option>
+                                    id='Hogar'
+                                    name='hogar'
+                                    type='select'
+                                    onChange={e => { handleHogar(e.target.value) }}>
+                                    <option value="0" selected>Nuevo hogar / domicilio</option>
+                                    {opcionesHogares.map(hogar => (
+                                        <option key={hogar.hd_Id_Hogar} value={hogar.hd_Id_Hogar}>{hogar.per_Nombre + ' ' + hogar.per_Apellido_Paterno + ' ' + hogar.per_Apellido_Materno}</option>
+                                    ))}
                                 </Input>
                             </Col>
                         </FormGroup>
-                    </Form>
-                    : ""
-                    }
-                    <Row className="text-center">
-                        <Col>
-                            <Button color="danger" size='lg'>
-                                Cancelar
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button color="primary" size='lg' onClick={e => postData()}>
-                                <span className='fas fa-save'></span> Guardar
-                            </Button>
-                        </Col>
-                    </Row>
-                </Card>}
+                        {hogar ?
+                            <Form>
+                                <Alert color="warning">
+                                    <h5><strong>ATENCION:</strong></h5>
+                                    <ul>
+                                        <li>Debe establecer una jerarquia para la persona que esta registrando, siendo la jerarquia 1 el representante del hogar.</li>
+                                        <li>Solo puede seleccionar una jerarquia entre 1 y la jerarquia mas baja registrada.</li>
+                                        <li>Al establecer una jerarquia intermedia entre los miembros del hogar, se sumara 1 a los miembros con jerarquia mas baja a la establecida.</li>
+                                    </ul>
+                                </Alert>
+
+                                <h5><strong>Dirección:</strong></h5>
+                                <p>{hogar.hd_Calle} #{hogar.hd_Numero_Exterior}, {hogar.hd_Localidad}, {hogar.hd_Municipio_Ciudad}, {hogar.est_Nombre}, {hogar.pais_Nombre_Corto}</p>
+                                <Table hover responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Miembros del hogar
+                                            </th>
+                                            <th>
+                                                Jerarquia
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {miembrosHogar.map(miembro => (
+                                            <tr>
+                                                <td>{miembro.per_Nombre + ' ' + miembro.per_Apellido_Paterno + ' ' + miembro.per_Apellido_Materno}</td>
+                                                <td>{miembro.hp_Jerarquia}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                                <hr></hr>
+                                <FormGroup row>
+                                    <Label for='Jerarquia' sm={3}>
+                                        <h5>Jerarquia por asignar: </h5>
+                                    </Label>
+                                    <Col sm={9}>
+                                        <Input
+                                            id='Jerarquia'
+                                            name='jerarquia'
+                                            type='select'
+                                            onChange={(e) => handleJerarquia(e.target.value)}
+                                        >
+                                            <option value="0" selected disabled >Selecionar jerarquia</option>
+                                            {miembrosHogar.map((miembro, index) => (
+                                                <option key={miembro.hd_Id_Hogar} value={index + 1}>{index + 1}</option>
+                                            ))}
+                                            <option value={miembrosHogar.length + 1} >{miembrosHogar.length + 1}</option>
+                                        </Input>
+                                    </Col>
+                                </FormGroup>
+                            </Form>
+                            : ""
+                        }
+                        <Row className="text-center">
+                            <Col>
+                                <Button color="danger" size='lg'>
+                                    Cancelar
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button color="primary" size='lg' onClick={e => postData()} disabled={submitting}>
+                                    <span className='fas fa-save'></span> Guardar
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Card>}
             </Container>
         </>
 
@@ -613,7 +623,7 @@ export default AltaNuevoIngreso
 //                                         name="per_category"
 //                                         className="form-control"
 //                                         value={this.state.per_category}
-//                                     >   
+//                                     >
 //                                         <option value="AA" disabled >Selecionar categoria</option>
 //                                         <option value="ADULTO_HOMBRE">Adulto Hombre</option>
 //                                         <option value="ADULTO_MUJER">Adulto Mujer</option>

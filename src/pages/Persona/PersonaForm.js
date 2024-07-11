@@ -282,6 +282,9 @@ class PersonaForm extends Component {
         const {
             onChange,
             onBlur,
+            onBlurNuevoIngreso,
+            onBlurFechaBautismo,
+            onBlurFechaNacimiento,
             form,
             domicilio,
             FrmValidaPersona,
@@ -314,6 +317,7 @@ class PersonaForm extends Component {
             habilitaPerBautizado,
             onChangeFechaBautismo,
             fechaBautismoInvalida,
+            fechaNuevoIngresoInvalida,
             ChangeFechaBautismoInvalida,
             FechaTransaccionHistorica,
             handleFechaDeTransaccion,
@@ -555,6 +559,7 @@ class PersonaForm extends Component {
             }
         }
 
+
         const enviarInfo = async (e) => {
             e.preventDefault();
 
@@ -562,6 +567,15 @@ class PersonaForm extends Component {
             var objPersona = this.props.form
             var objDomicilio = this.props.domicilio
 
+            if (this.props.fechaBautismoInvalida) {
+                console.log("FECHA INCORRECTA1")
+                return;
+            }
+
+            if (this.props.fechaNuevoIngresoInvalida) {
+                console.log("FECHA INCORRECTA2")
+                return;
+            }
 
             //Si se trata de un Registro de Bautizados, verifica que tenga Fecha de bautismo.
             if (objPersona.per_Bautizado === true
@@ -650,7 +664,8 @@ class PersonaForm extends Component {
                                                         <strong>AVISO: </strong>
                                                         <ul>
                                                             <li>Esta primer etapa en el Registro de membresía, forma una Homoclave que ayuda a prevenir duplicación de Personas. Se requiere que escriban con la ortografía correcta el Nombre y Apellido Principal y la fecha de Nacimiento con presición.</li>
-                                                            <li>Si aparce una Alerta de que alguien más tiene una coincidencia en la Homoclave, asegúrese de no Duplicar a una Persona. Es posible que otro Sector ya había la había registrado.</li>
+                                                            <li>Si aparce una Alerta de que alguien más tiene una coincidencia en la Homoclave, asegúrese de no Duplicar a una Persona. Es posible que otro Sector ya la había registrado.</li>
+                                                            <li>En el caso de Bautismo de jóvenes que ya estaban registrados en la Membresía como personal No Bautizado, en la alerta de coincidencia de la Homoclave debe elegirse el botón <strong>Cambiar estatus a BAUTIZADO</strong>.</li>
                                                             <li>Los campos marcados con <strong>*</strong> son requeridos.</li>
                                                         </ul>
                                                     </Alert>
@@ -660,7 +675,7 @@ class PersonaForm extends Component {
 
                                         <Card className="border-info acceso-directo">
                                             <CardHeader>
-                                                <h5><strong>Datos Personales</strong> - (Etapa de Conformación de Homoclave y Prevensión de Duplicaciones) </h5>
+                                                <h5><strong>Datos Personales</strong> - Etapa de Conformación de Homoclave y Prevensión de Duplicaciones </h5>
                                             </CardHeader>
                                             <CardBody>
                                                 <FormGroup>
@@ -816,13 +831,14 @@ class PersonaForm extends Component {
                                                                 value={form.per_Fecha_Nacimiento}
                                                                 className="form-control"
                                                                 placeholder="DD/MM/AAAA"
+                                                                onBlur={onBlurFechaNacimiento}
                                                                 title="Para ingresar fechas asegúrese el Formato en que se muestra esta caja de fechas,
                                                                 A fin de que no se confundan los días por meses y viceversa."
                                                             />
                                                         </div>
                                                         {per_Fecha_Nacimiento_NoValido &&
                                                             <span className="text-danger">
-                                                                Campo requerido, el formato de fecha es invalido.
+                                                                Ingresar una Fecha Válida.
                                                             </span>
                                                         }
                                                     </div>
@@ -1683,9 +1699,10 @@ class PersonaForm extends Component {
                                                                                                 invalid={fechaBautismoInvalida}
                                                                                                 autoComplete="nope"
                                                                                                 maxlength="200"
+                                                                                                onBlur={onBlurFechaBautismo}
                                                                                             />
                                                                                             <label>*Fecha de Bautismo</label>
-                                                                                            <FormFeedback>{this.state.mensajes.fechaBautismoInvalida}</FormFeedback>
+                                                                                            <FormFeedback>Elegir una Fecha válida</FormFeedback>
                                                                                         </FormGroup>
                                                                                     </div>
                                                                                 </div>
@@ -1833,10 +1850,13 @@ class PersonaForm extends Component {
                                                                                     value={FechaTransaccionHistorica}
                                                                                     placeholder="DD/MM/AAAA"
                                                                                     className="form-control"
+                                                                                    invalid={fechaNuevoIngresoInvalida}
+                                                                                    onBlur={onBlurNuevoIngreso}
                                                                                     title="Si se tiene conocimiento de una fecha aproximada en que la persona No Bautizada se integró a la Iglesia,
                                                                                     indique la fecha. En caso contrario, deje en blanco este campo y tomará por default, la fecha de Nacimiento."
                                                                                 />
                                                                                 <label>Si no se especifica una fecha, por defecto se registrará con la Fecha de Nacimiento.</label>
+                                                                                <FormFeedback>Elegir una Fecha válida</FormFeedback>
                                                                             </div>
                                                                         </div>
                                                                     </div>

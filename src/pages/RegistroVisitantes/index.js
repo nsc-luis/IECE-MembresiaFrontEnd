@@ -46,7 +46,8 @@ export default class RegistroVisitantes extends Component {
                 n_Nota: ""
             },
             bajaVisitante_n_Fecha_NotaInvalid: false,
-            bajaVisitante_n_NotaInvalid: false
+            bajaVisitante_n_NotaInvalid: false,
+            submitting: false //Sirve para cntrolar botón de Enviar Solicitud a API
         }
     }
     componentDidMount() {
@@ -209,6 +210,11 @@ export default class RegistroVisitantes extends Component {
     enviarInfo = async (e) => {
         e.preventDefault()
 
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         if (!this.state.editarRegistro) {
             this.setState({
                 //vp_Numero_ListaInvalid: this.state.currentVisitante.vp_Numero_Lista === "0", true: false,
@@ -228,6 +234,8 @@ export default class RegistroVisitantes extends Component {
                 n_Nota: this.state.n_Nota,
                 n_Fecha_Nota: this.state.Fecha_Registro
             }
+
+            this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
 
             try {
                 await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Visitante/NuevoVisitante`, VisitanteNota)
@@ -462,6 +470,7 @@ export default class RegistroVisitantes extends Component {
                                             <Button
                                                 type="submit"
                                                 color="success"
+                                                disabled={this.state.submitting}
                                             >
                                                 <span className="fa fa-save"></span>Guardar
                                             </Button>

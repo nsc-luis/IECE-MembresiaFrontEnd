@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
-    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container
+    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container, FormFeedback
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
@@ -18,7 +18,9 @@ class BajaBautizadoDefuncion extends Component {
             personas: [],
             formBajaBautizadoDefuncion: {},
             mensajeDelProceso: "",
-            modalShow: false
+            modalShow: false,
+            submitting: false, //Sirve para cntrolar botón de Enviar Solicitud a API
+            fechaTransaccionInvalida: false
         }
     }
 
@@ -67,8 +69,45 @@ class BajaBautizadoDefuncion extends Component {
         })
     }
 
+
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaBautizadoDefuncion.fechaTransaccion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaTransaccionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
     bajaBautizadoDefuncion = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaBautizadoDefuncion.fechaTransaccion);
+
+        // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+        if (fechaTransaccionInvalida) {
+            this.setState({
+                fechaTransaccionInvalida: true,
+            });
+            return;
+        }
+
         var datos = this.state.formBajaBautizadoDefuncion;
 
         if (datos.personaSeleccionada === '0'
@@ -76,6 +115,9 @@ class BajaBautizadoDefuncion extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
+
+        this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
         try {
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaBautizadoDefuncion`, datos)
                 .then(res => {
@@ -110,7 +152,7 @@ class BajaBautizadoDefuncion extends Component {
                 })
             );
         } catch (error) {
-            alert("Error: Hubo un problema en la comunicacion con el servidor. Intente mas tarde.");
+            alert("Error: Hubo un problema en la comunicación con el servidor. Intente mas tarde.");
         }
     }
 
@@ -182,7 +224,10 @@ class BajaBautizadoDefuncion extends Component {
                                             placeholder='DD/MM/AAAA'
                                             value={this.state.formBajaBautizadoDefuncion.fechaTransaccion}
                                             onChange={this.onChangeBajaBautizadoDefuncion}
+                                            invalid={this.state.fechaTransaccionInvalida}
+                                            onBlur={this.handleBlur}
                                         />
+                                        <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una correcta</FormFeedback>
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -200,6 +245,7 @@ class BajaBautizadoDefuncion extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-pencil"></span>Proceder
                             </Button>

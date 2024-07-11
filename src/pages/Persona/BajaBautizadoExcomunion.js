@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
-    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container
+    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container, FormFeedback
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
@@ -17,6 +17,8 @@ class BajaBautizadoExcomunion extends Component {
         this.state = {
             personas: [],
             formBajaBautizadoExcomunion: {},
+            submitting: false, //Sirve para cntrolar botón de Enviar Solicitud a API
+            fechaTransaccionInvalida: false
         }
     }
 
@@ -64,8 +66,45 @@ class BajaBautizadoExcomunion extends Component {
         })
     }
 
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaBautizadoExcomunion.fechaExcomunion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaTransaccionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
     bajaBautizadoExcomunion = async (e) => { //Gestiona Excomunión Enviando los datos a API
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
+        let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaBautizadoExcomunion.fechaExcomunion);
+
+        // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+        if (fechaTransaccionInvalida) {
+            this.setState({
+                fechaTransaccionInvalida: true,
+            });
+            return;
+        }
+
         var datos = this.state.formBajaBautizadoExcomunion;
 
         //Verifica que los datos Obligatorios nos estén vacíos.
@@ -76,6 +115,8 @@ class BajaBautizadoExcomunion extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
+
+        this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
 
         //Envío los datos del Formulario a la API
         try {
@@ -186,7 +227,10 @@ class BajaBautizadoExcomunion extends Component {
                                             placeholder='DD/MM/AAAA'
                                             value={this.state.formBajaBautizadoExcomunion.fechaExcomunion}
                                             onChange={this.onChangeBajaBautizadoExcomunion}
+                                            invalid={this.state.fechaTransaccionInvalida}
+                                            onBlur={this.handleBlur}
                                         />
+                                        <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una correcta</FormFeedback>
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -204,6 +248,7 @@ class BajaBautizadoExcomunion extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-pencil"></span>Proceder
                             </Button>

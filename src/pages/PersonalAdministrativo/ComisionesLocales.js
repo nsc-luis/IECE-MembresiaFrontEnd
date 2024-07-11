@@ -32,7 +32,7 @@ class ComisionesLocales extends Component {
             numbers: [],
             comisionSeleccionada: [],
             modalShow: false,
-            mensajeDelProceso: "",
+            mensajeDelProceso: ""
         };
     }
 
@@ -160,6 +160,11 @@ class ComisionesLocales extends Component {
 
     guardarComision = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitBtnDisable) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         const newErrors = {};
 
         if (this.state.integranteComision.comision_Id == null || this.state.integranteComision.comision_Id == "") {

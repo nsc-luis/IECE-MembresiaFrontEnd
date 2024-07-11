@@ -476,6 +476,26 @@ class Matrimonio extends Component {
         })
     }
 
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.matLegal.mat_Fecha_Boda_Eclesiastica);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            matFechaBodaEclesiasticaInvalid: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
 
     handle_Submit = async (e) => { //Al presionar el Botón grabar
         e.preventDefault();
@@ -529,6 +549,17 @@ class Matrimonio extends Component {
                     alert("Error:\nHas seleccionado agregar \"Otro Estado\", por lo tanto, el campo no puede quedar vacío.");
                     return false;
                 }
+            }
+
+            // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+            let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.matLegal.mat_Fecha_Boda_Eclesiastica);
+
+            // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+            if (fechaTransaccionInvalida) {
+                this.setState({
+                    matFechaBodaEclesiasticaInvalid: true,
+                });
+                return;
             }
 
             // PREPARA OBJETO PARA REGISTRO DE BASE DE DATOS
@@ -883,10 +914,11 @@ class Matrimonio extends Component {
                                                     type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Eclesiastica}
                                                     invalid={this.state.matFechaBodaEclesiasticaInvalid}
+                                                    onBlur={this.handleBlur}
                                                     autoComplete="nope"
                                                 />
                                                 <Label><strong>Fecha Boda Eclesiastica: </strong></Label>
-                                                <FormFeedback>Debe seleccionar una fecha para continuar.</FormFeedback>
+                                                <FormFeedback>Debe seleccionar una fecha válida</FormFeedback>
                                             </FormGroup>
                                         </Col>
                                     </Row>

@@ -53,7 +53,8 @@ class InformePastorLista extends Component {
                 status: 0,
                 usu_id_usuario: 0,
                 fechaRegistro: new Date().toDateString(),
-            }
+            },
+            submitting: false //Sirve para cntrolar botón de Enviar Solicitud a API
         }
     }
 
@@ -108,8 +109,35 @@ class InformePastorLista extends Component {
         );
     }
 
+
+    handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+        this.setState({ submitting: true });
+
+        try {
+            // Manda crear el informe
+            await this.insertarInforme();
+
+            // Restaurar el estado después de completar la acción
+            //this.setState({ submitting: false });
+
+        } catch (error) {
+            // Manejar errores
+            console.error('Error al crear el informe:', error);
+
+            // Restaurar el estado en caso de error
+            this.setState({ submitting: false });
+        }
+    }
+
+
+
     insertarInforme = async (e) => {
-        e.preventDefault()
+        //e.preventDefault()
 
         await helpers.validaToken().then(helpers.authAxios.post("/Informe", this.state.nuevoInforme)
             .then(res => {
@@ -118,25 +146,6 @@ class InformePastorLista extends Component {
                     return
                 }
                 if (res.status === 200) {
-                    // this.obtenerInformes();
-                    // this.handleCancelar();
-                    // this.setState({
-                    //     nuevoInforme: {
-                    //         idInforme: 0,
-                    //         idTipoUsuario: 1,
-                    //         mes: 0,
-                    //         anio: 0,
-                    //         lugarReunion: '',
-                    //         fechaReunion: new Date().toDateString(),
-                    //         status: 0,
-                    //         usu_id_usuario: 0,
-                    //         fechaRegistro: new Date().toDateString(),
-                    //     }
-                    // })
-                    /* setTimeout(() => {
-                        document.location.href = '/InformePastor/' + res.data.idInforme;
-                    }, 500); */
-                    //console.log(res);
                     this.irAinformePastoral(res.data.idInforme)
                 }
             })
@@ -157,28 +166,31 @@ class InformePastorLista extends Component {
 
     handleChange(event) {
         event.persist();
-        //console.log(event);
         const { name, value } = event.target;
 
-        // Divide el nombre para obtener un array de claves
-        const keys = name.split('.');
+        // Convertir el valor a número si es posible
+        const parsedValue = parseFloat(value); // O usar parseInt(value, 10) si esperas enteros
 
-        // Crea una copia profunda del estado actual
-        const newState = { ...this.state };
+        if (!isNaN(parsedValue)) {
+            // Si es un número válido, procede a actualizar el estado
+            const keys = name.split('.');
+            const newState = { ...this.state };
 
-        // Utiliza las claves para acceder al objeto específico que deseas actualizar
-        let currentObject = newState;
-        for (let i = 0; i < keys.length - 1; i++) {
-            currentObject = currentObject[keys[i]];
+            let currentObject = newState;
+            for (let i = 0; i < keys.length - 1; i++) {
+                currentObject = currentObject[keys[i]];
+            }
+
+            currentObject[keys[keys.length - 1]] = parsedValue;
+
+            this.setState(newState);
+        } else {
+            // Manejar el caso en el que el valor no es un número
+            console.warn(`El valor "${value}" no es un número válido para la propiedad ${name}`);
+            // Puedes optar por no actualizar el estado o manejarlo de otra manera según tu lógica de aplicación
         }
-
-        // Actualiza la propiedad específica
-        currentObject[keys[keys.length - 1]] = value;
-
-        // Actualiza el estado con la nueva copia
-        this.setState(newState);
-        //console.log(newState);
     }
+
 
     descargarInforme = async (informeId) => {
         await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformePastorPorSector/" + informeId, null, { responseType: 'blob' })
@@ -226,7 +238,7 @@ class InformePastorLista extends Component {
                 {this.state.showForm &&
                     <FormGroup>
                         <Card>
-                            <Form onSubmit={this.insertarInforme}>
+                            <Form onSubmit={this.handleSubmit}>
                                 <CardBody>
                                     <FormGroup>
                                         <Row>
@@ -234,8 +246,8 @@ class InformePastorLista extends Component {
                                                 <Alert color="success">
                                                     <strong>CREACIÓN DE UN NUEVO INFORME PASTORAL MENSUAL </strong>
                                                     <ul>
-                                                        <li>Llene estos datos iniciales para iniciar un Informe nuevo, posteriormente presionar el botón  <strong>"Crear Informe"</strong>.</li>
-                                                        <li>El llenbado del resto de datos del Informe se debe hacer abriendo <strong>"los Detalles</strong> del Infome.</li>
+                                                        <li>Llene estos datos iniciales para crear un Informe nuevo, posteriormente presione el botón  <strong>"Crear Informe"</strong>.</li>
+                                                        <li>El llenado del resto de datos del Informe se debe hacer presionando el botón <strong>"Detalle</strong> del Infome.</li>
                                                     </ul>
                                                 </Alert>
                                             </Col>
@@ -299,6 +311,7 @@ class InformePastorLista extends Component {
                                             <Button
                                                 type="submit"
                                                 color="success"
+                                                disabled={this.state.aubmitting}
                                             >
                                                 <span className="fa fa-plus faIconMarginRight"></span>Crear Informe
                                             </Button>

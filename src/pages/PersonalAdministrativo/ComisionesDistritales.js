@@ -32,6 +32,7 @@ class ComisionesDistritales extends Component {
             comisionSeleccionada: [],
             modalShow: false,
             mensajeDelProceso: "",
+            submitting: false
         };
     }
 
@@ -163,6 +164,11 @@ class ComisionesDistritales extends Component {
 
     guardarComision = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         const newErrors = {};
 
         if (this.state.integranteComision.comision_Id == null || this.state.integranteComision.comision_Id == "") {
@@ -194,6 +200,8 @@ class ComisionesDistritales extends Component {
                 Descripcion_Adicional: this.state.integranteComision.descripcion_Adicional,
                 Fecha_Registro: new Date().toISOString(),
             }
+
+            this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
 
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Integrante_Comision_Distrital/PostIntegrante_Comision_Distrital`, comisionEntity)
                 .then(res => {

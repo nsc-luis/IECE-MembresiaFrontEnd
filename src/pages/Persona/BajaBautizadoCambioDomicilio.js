@@ -17,7 +17,9 @@ class BajaBautizadoCambioDomicilio extends Component {
         this.state = {
             personas: [],
             formBajaBautizadoCambioDomicilio: {},
-            rSelected: false
+            rSelected: false,
+            submitting: false, //Sirve para cntrolar botón de Enviar Solicitud a API
+            fechaTransaccionInvalida: false
         }
     }
 
@@ -110,8 +112,32 @@ class BajaBautizadoCambioDomicilio extends Component {
         }
     }
 
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaTransaccionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
     bajaBautizadoCambioDomicilio = async (e) => {
         e.preventDefault();
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         //Si está vacío algun campo REQUERIDO
         if (this.state.formBajaBautizadoCambioDomicilio.idPersona === "0"
             || this.state.formBajaBautizadoCambioDomicilio.tipoDestino === "0"
@@ -119,6 +145,21 @@ class BajaBautizadoCambioDomicilio extends Component {
             alert("Error:\nDebe ingresar todos los datos requeridos.")
             return false;
         }
+
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion);
+
+        // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+        if (fechaTransaccionInvalida) {
+            this.setState({
+                fechaTransaccionInvalida: true,
+            });
+            return;
+        }
+
+        this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
+
         try { //Procede a realizar la Transacción de Baja Por Cambio de Domicilio enviando el Objeto 'formBajaBautizadoCambioDomicilio'
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaPersonaCambioDomicilio`, this.state.formBajaBautizadoCambioDomicilio)
                 .then(res => {
@@ -222,7 +263,10 @@ class BajaBautizadoCambioDomicilio extends Component {
                                             placeholder='DD/MM/AAAA'
                                             value={this.state.formBajaBautizadoCambioDomicilio.fechaTransaccion}
                                             onChange={this.onChangeBajaBautizadoCambioDomicilio}
+                                            invalid={this.state.fechaTransaccionInvalida}
+                                            onBlur={this.handleBlur}
                                         />
+                                        <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una correcta</FormFeedback>
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -277,6 +321,7 @@ class BajaBautizadoCambioDomicilio extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-pencil"></span>Proceder
                             </Button>

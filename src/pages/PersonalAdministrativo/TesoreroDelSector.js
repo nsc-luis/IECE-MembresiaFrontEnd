@@ -23,7 +23,8 @@ export default class TesoreroDelSector extends Component {
             personas: [],
             tesorero: [],
             pemIdMinistroInvalido: false,
-            modal: false
+            modal: false,
+            submitting: false
         }
     }
     componentDidMount() {
@@ -67,11 +68,19 @@ export default class TesoreroDelSector extends Component {
     }
     setTesoreroDelSector = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         if (this.state.infoNvoTesorero.pem_Id_Ministro === "0") {
             this.setState({ pemIdMinistroInvalido: true })
             return false
         }
         this.handleModal();
+
+        this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/SetTesoreroDelSector`, this.state.infoNvoTesorero)
             .then(res => {
                 if (res.data.status === "success") {
@@ -191,6 +200,7 @@ export default class TesoreroDelSector extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-hand-handing-usd faIconMarginRight"></span>Establecer como Tesorero
                             </Button>

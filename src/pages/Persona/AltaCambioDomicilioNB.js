@@ -28,7 +28,8 @@ class AltaCambioDomicilioNB extends Component {
             perCategoriaInvalida: false,
             personas: [],
             procedencia: "",
-            per_Id_Persona: 0
+            per_Id_Persona: 0,
+            submitting: false
         }
     }
     componentDidMount() {
@@ -129,7 +130,7 @@ class AltaCambioDomicilioNB extends Component {
                     this.setState({
                         hogar: {
                             ...this.state.hogar,
-                            hp_Jerarquia: res.data.length
+                            hp_Jerarquia: res.data.length + 1
                         }
                     })
                 })
@@ -221,8 +222,38 @@ class AltaCambioDomicilioNB extends Component {
             }
         }
     }
+
+
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.fechaTransaccion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaTransaccionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
+
     guardarCambios = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
+
+
         //Verifica que los inputs Obligatorios tenga contenido, si no, activa estados de CAMPOS INVALIDOS
         this.setState({
             perIdPersonaInvalida: this.state.per_Id_Persona === "0" ? true : false,
@@ -231,6 +262,18 @@ class AltaCambioDomicilioNB extends Component {
         //Pone en variables a nivel Bloque los valores de los CamposInvalidos y si alguno está en True, no procede con la Transacción
         let perIdPersonaInvalida = this.state.per_Id_Persona === "0" ? true : false;
         let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
+
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.fechaTransaccion);
+
+        // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+        if (fechaTransaccionInvalida) {
+            this.setState({
+                fechaTransaccionInvalida: true,
+            });
+            return;
+        }
+
         if (fechaTransaccionInvalida || perIdPersonaInvalida) {
             return false;
         }
@@ -254,6 +297,9 @@ class AltaCambioDomicilioNB extends Component {
                     hte_Comentario: this.state.procedencia,
                     HD: this.state.domicilio
                 }
+
+                this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
                 await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_NuevoDomicilio`, info)
                     .then(res => {
                         if (res.data.status === 'error') {
@@ -278,6 +324,9 @@ class AltaCambioDomicilioNB extends Component {
                 idDomicilio: this.state.hogar.hd_Id_Hogar,
                 jerarquia: this.state.hogar.hp_Jerarquia
             }
+
+            this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
             await helpers.validaToken().then(helpers.authAxios.post(`/Historial_Transacciones_Estadisticas/AltaCambioDomicilioReactivacionRestitucion_HogarExistente`, info)
                 .then(res => {
                     if (res.data.status === 'error') {
@@ -360,8 +409,9 @@ class AltaCambioDomicilioNB extends Component {
                                             onChange={this.onChange}
                                             value={this.state.fechaTransaccion}
                                             invalid={this.state.fechaTransaccionInvalida}
+                                            onBlur={this.handleBlur}
                                         />
-                                        <FormFeedback>Este campo es requerido</FormFeedback>
+                                        <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una adecuada</FormFeedback>
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -393,6 +443,7 @@ class AltaCambioDomicilioNB extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-pencil"></span>Proceder
                             </Button>

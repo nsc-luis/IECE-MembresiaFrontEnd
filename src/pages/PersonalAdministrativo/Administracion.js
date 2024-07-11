@@ -26,7 +26,7 @@ export default class Administracion extends Component {
             submitBtnDisable: false,
             formularioColaborador: false,
             elegibles: [],
-            colaboradorInvalido: false
+            colaboradorInvalido: false,
         }
     }
 
@@ -176,6 +176,10 @@ export default class Administracion extends Component {
     registrarColaborador = async (e) => {
         e.preventDefault()
 
+        if (this.state.submitBtnDisable) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         let info = {
             id_Colaborador: this.state.id_Colaborador,
             sec_Id_Sector: this.state.sec_Id_Sector,
@@ -190,8 +194,9 @@ export default class Administracion extends Component {
             return false
         }
 
-        // Envía el formulario si no hay errores
         this.setState({ submitBtnDisable: true });
+
+        // Envía el formulario si no hay errores     
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/RegistrarColaborador`, info)
             .then(res => {
                 if (res.data.status === "success") {

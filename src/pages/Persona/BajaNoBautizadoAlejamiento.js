@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
-    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container
+    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container, FormFeedback
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
@@ -17,26 +17,30 @@ class BajaBautizadoExcomunion extends Component {
             personas: [],
             formBajaNoBautizadoAlejamiento: {},
             mensajeDelProceso: "",
-            modalShow: false
+            modalShow: false,
+            submitting: false, //Sirve para cntrolar botón de Enviar Solicitud a API
+            fechaTransaccionInvalida: false
         }
     }
 
     getBajaNoBautizadoAlejamiento = async () => {
         await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/persona/GetNoBautizadosAlejamientoBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) });
+                        // names must be equal
+                        return 0;
+                    })
+                });
             })
         );
         this.setState({ modalBajaNoBautizadoAlejamiento: !this.state.modalBajaNoBautizadoAlejamiento })
@@ -64,8 +68,33 @@ class BajaBautizadoExcomunion extends Component {
         })
     }
 
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaNoBautizadoAlejamiento.fechaTransaccion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaTransaccionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
     bajaNoBautizadoAlejamiento = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         var datos = this.state.formBajaNoBautizadoAlejamiento;
 
         if (datos.personaSeleccionada === '0'
@@ -74,6 +103,20 @@ class BajaBautizadoExcomunion extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
+
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaNoBautizadoAlejamiento.fechaTransaccion);
+
+        // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+        if (fechaTransaccionInvalida) {
+            this.setState({
+                fechaTransaccionInvalida: true,
+            });
+            return;
+        }
+
+        this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
         try {
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoAlejamiento`, datos)
                 .then(res => {
@@ -180,7 +223,10 @@ class BajaBautizadoExcomunion extends Component {
                                             placeholder='DD/MM/AAAA'
                                             value={this.state.formBajaNoBautizadoAlejamiento.fechaTransaccion}
                                             onChange={this.onChangeBajaNoBautizadoAlejamiento}
+                                            invalid={this.state.fechaTransaccionInvalida}
+                                            onBlur={this.handleBlur}
                                         />
+                                        <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una correcta</FormFeedback>
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -198,6 +244,7 @@ class BajaBautizadoExcomunion extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-pencil"></span>Proceder
                             </Button>

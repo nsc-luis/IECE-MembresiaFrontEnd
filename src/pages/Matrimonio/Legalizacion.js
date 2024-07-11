@@ -215,6 +215,26 @@ class Legalizacion extends Component {
         this.setState({ enableFrmRegistroMatLegal: false })
     }
 
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.matLegal.mat_Fecha_Boda_Eclesiastica);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            matFechaBodaEclesiasticaInvalid: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
     handle_Submit = async (e) => { //Al presionar el Botón grabar
         e.preventDefault();
 
@@ -276,6 +296,17 @@ class Legalizacion extends Component {
                 nvoEstado: this.state.domicilio.nvoEstado, //Si se creará un Nuevo Estado
                 sectorAlias: this.state.sector.sec_Alias, //El Alias del Sector.
                 viviranEnLocalidad: this.state.viviranEnLocalidad
+            }
+
+            // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+            let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.matLegal.mat_Fecha_Boda_Eclesiastica);
+
+            // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+            if (fechaTransaccionInvalida) {
+                this.setState({
+                    matFechaBodaEclesiasticaInvalid: true,
+                });
+                return;
             }
 
             //Para deshabilitar el botón y evitar multiples registros de Matrimonio y Ediciones de Persona
@@ -544,10 +575,11 @@ class Legalizacion extends Component {
                                                     type="date"
                                                     value={this.state.matLegal.mat_Fecha_Boda_Eclesiastica}
                                                     invalid={this.state.matFechaBodaEclesiasticaInvalid}
+                                                    onBlur={this.handleBlur}
                                                     autoComplete="nope"
                                                 />
-                                                <Label><strong>Fecha Boda Eclesiastica: </strong></Label>
-                                                <FormFeedback>Debe seleccionar una fecha para continuar.</FormFeedback>
+                                                <Label><strong>Fecha Boda Eclesiástica: </strong></Label>
+                                                <FormFeedback>Debe seleccionar una fecha válida</FormFeedback>
                                             </FormGroup>
                                         </Col>
                                     </Row>

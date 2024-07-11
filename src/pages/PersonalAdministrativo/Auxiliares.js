@@ -20,7 +20,8 @@ export default class Auxiliares extends Component {
             },
             personas: [],
             auxiliares: [],
-            perIdPersonaInvalida: false
+            perIdPersonaInvalida: false,
+            submitting: false //Sirve para cntrolar botón de Enviar Solicitud a API
         }
     }
     componentDidMount() {
@@ -61,17 +62,24 @@ export default class Auxiliares extends Component {
     }
     AltaAuxiliar = async (e) => {
         e.preventDefault();
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         if (this.state.infoNvoAuxiliar.per_Id_Persona === "0") {
             this.setState({ perIdPersonaInvalida: true })
             return false
         }
+
+        this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
         await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/PersonalMinisterial/AltaAuxiliarEnSector`, this.state.infoNvoAuxiliar)
             .then(res => {
                 if (res.data.status === "success") {
                     window.location.reload()
                 }
                 else {
-                    alert("Error:\nNo se pudo guardar el registro del nuevo auxiliar, favor de reportar o intentar mas tarde.")
+                    alert("Error:\nNo se pudo guardar el registro del Nuevo Auxiliar, favor de intentar mas tarde o reportar a Soporte Técnico.")
                 }
             })
         )
@@ -178,6 +186,7 @@ export default class Auxiliares extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-user-tie faIconMarginRight"></span>Alta como auxiliar
                             </Button>

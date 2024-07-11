@@ -92,6 +92,11 @@ export default class AdministracionDistrital extends Component {
 
     enviarInfo = async (e) => {
         e.preventDefault()
+
+        if (this.state.submitBtnDisable) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         let info = {
             pem_Id_Ministro: this.state.pem_Id_Ministro,
 

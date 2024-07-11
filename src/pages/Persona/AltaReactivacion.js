@@ -34,7 +34,8 @@ class AltaReactivacion extends Component {
             mostrarJerarquias: false,
             modalShow: false,
             mensajeDelProceso: "",
-            hogarOpcional: true
+            hogarOpcional: true,
+            submitting: false //Sirve para cntrolar botón de Enviar Solicitud a API
         }
     }
     componentDidMount() {
@@ -309,8 +310,34 @@ class AltaReactivacion extends Component {
             })
         }
     }
+
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.fechaTransaccion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaTransaccionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
+
     guardarRestitucion = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         this.setState({//Si algun Input veiene vacío, se Activa las Variables de 'Invaliciones'
             perIdPersonaInvalida: this.state.per_Id_Persona === "0" ? true : false,
             perCategoriaInvalida: this.state.per_Categoria === "0" ? true : false,
@@ -321,10 +348,19 @@ class AltaReactivacion extends Component {
         let perCategoriaInvalida = this.state.per_Categoria === "0" ? true : false;
         let fechaTransaccionInvalida = this.state.fechaTransaccion === "" ? true : false;
 
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.fechaTransaccion);
+
+        // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+        if (fechaTransaccionInvalida) {
+            this.setState({
+                fechaTransaccionInvalida: true,
+            });
+            return;
+        }
+
         //Si algunos de los 3 inputs obligatorios está vacío se cancela Transacción
-        if (perIdPersonaInvalida ||
-            perCategoriaInvalida ||
-            fechaTransaccionInvalida) {
+        if (perIdPersonaInvalida || perCategoriaInvalida || fechaTransaccionInvalida) {
             return false;
         }
         else {// Si todos los campos requeridos están llenos
@@ -335,6 +371,8 @@ class AltaReactivacion extends Component {
                 idMinistro: this.infoSesion.pem_Id_Ministro,
                 jerarquia: this.state.hogar.hp_Jerarquia
             }
+
+            this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
 
             //Si se va a quedar en el MISMO HOGAR
             if (this.state.mismoHogar) {
@@ -492,8 +530,9 @@ class AltaReactivacion extends Component {
                                                 onChange={this.onChange}
                                                 value={this.state.fechaTransaccion}
                                                 invalid={this.state.fechaTransaccionInvalida}
+                                                onBlur={this.handleBlur}
                                             />
-                                            <FormFeedback>Este campo es requerido</FormFeedback>
+                                            <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una adecuada</FormFeedback>
                                         </Col>
                                     </Row>
                                 </FormGroup>
@@ -566,6 +605,7 @@ class AltaReactivacion extends Component {
                                 <Button
                                     type="submit"
                                     color="success"
+                                    disabled={this.state.submitting}
                                 >
                                     <span className="fa fa-pencil"></span>Proceder
                                 </Button>

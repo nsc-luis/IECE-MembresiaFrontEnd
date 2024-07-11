@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Card, CardBody, CardFooter, CardHeader, CardTitle, Alert,
-    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container
+    Button, Modal, FormGroup, Input, Col, Row, Form, ModalBody, Container, FormFeedback
 } from 'reactstrap';
 import helpers from '../../components/Helpers';
 import './style.css'
@@ -17,26 +17,30 @@ class BajaBautizadoDefuncion extends Component {
             personas: [],
             formBajaNoBautizadoDefuncion: {},
             mensajeDelProceso: "",
-            modalShow: false
+            modalShow: false,
+            submitting: false, //Sirve para cntrolar botón de Enviar Solicitud a API
+            fechaTransaccionInvalida: false
         }
     }
 
     getBajaNoBautizadoDefuncion = async () => {
         await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/Persona/GetNoBautizadosDefuncionBySector/" + localStorage.getItem('sector'))
             .then(res => {
-                this.setState({ personas: res.data.personas.sort((a,b)=>{
-                    const nameA = a.per_Nombre; // ignore upper and lowercase
-                    const nameB = b.per_Nombre; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
+                this.setState({
+                    personas: res.data.personas.sort((a, b) => {
+                        const nameA = a.per_Nombre; // ignore upper and lowercase
+                        const nameB = b.per_Nombre; // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
 
-                    // names must be equal
-                    return 0;
-                }) });
+                        // names must be equal
+                        return 0;
+                    })
+                });
             })
         );
     }
@@ -63,8 +67,32 @@ class BajaBautizadoDefuncion extends Component {
         })
     }
 
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaNoBautizadoDefuncion.fechaTransaccion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaTransaccionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
     bajaNoBautizadoDefuncion = async (e) => {
         e.preventDefault();
+
+        if (this.state.submitting) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
+
         var datos = this.state.formBajaNoBautizadoDefuncion;
 
         if (datos.personaSeleccionada === '0'
@@ -72,6 +100,20 @@ class BajaBautizadoDefuncion extends Component {
             alert('Error!\nDebe ingresar todos los datos requeridos.');
             return false;
         }
+
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.formBajaNoBautizadoDefuncion.fechaTransaccion);
+
+        // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+        if (fechaTransaccionInvalida) {
+            this.setState({
+                fechaTransaccionInvalida: true,
+            });
+            return;
+        }
+
+        this.setState({ submitting: true }); //Controla la propiedad disabled del Botón de Submit para evitar multiples clicks
+
         try {
             await helpers.validaToken().then(helpers.authAxios.post(`${helpers.url_api}/Persona/BajaNoBautizadoDefuncion`, datos)
                 .then(res => {
@@ -179,14 +221,17 @@ class BajaBautizadoDefuncion extends Component {
                                             placeholder='DD/MM/AAAA'
                                             value={this.state.formBajaNoBautizadoDefuncion.fechaTransaccion}
                                             onChange={this.onChangeBajaNoBautizadoDefuncion}
+                                            invalid={this.state.fechaTransaccionInvalida}
+                                            onBlur={this.handleBlur}
                                         />
+                                        <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una correcta</FormFeedback>
                                     </Col>
                                 </Row>
                             </FormGroup>
 
                         </CardBody>
                         <CardFooter>
-                        <Link
+                            <Link
                                 to="/ListaDePersonal"
                                 onClick={() => helpers.handle_LinkEncabezado("Seccion: Monitoreo", "Información de membresía")}
                             >
@@ -197,6 +242,7 @@ class BajaBautizadoDefuncion extends Component {
                             <Button
                                 type="submit"
                                 color="success"
+                                disabled={this.state.submitting}
                             >
                                 <span className="fa fa-pencil"></span>Proceder
                             </Button>

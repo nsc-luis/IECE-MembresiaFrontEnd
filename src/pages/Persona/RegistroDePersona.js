@@ -47,6 +47,7 @@ class RegistroDePersonal extends Component {
             nuevaFoto: false,
             boolNvoEstado: false,
             fechaBautismoInvalida: false,
+            fechaNuevoIngresoInvalida: false,
             FechaTransaccionHistorica: "",
             buscarLugarDeBautismo: true,
             listaResultadoBusquedaLugarBautismo: [],
@@ -326,15 +327,6 @@ class RegistroDePersonal extends Component {
         this.setState({ fechaBautismoInvalida: bol });
     }
 
-    handleBlur = (e) => {
-        this.setState({
-            form: {
-                ...this.state.form,
-                [e.target.name]: e.target.value.trim()
-            }
-        })
-    }
-
     handleChange = (e) => {
 
         this.setState({
@@ -593,6 +585,55 @@ class RegistroDePersonal extends Component {
         }
     }
 
+    handleBlur = (e) => {
+
+        this.setState({
+            form: {
+                ...this.state.form,
+                [e.target.name]: e.target.value.trim()
+            }
+        })
+    }
+
+    handleBlurFechaNacimiento = (e) => {
+
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.form.per_Fecha_Nacimiento);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            per_Fecha_Nacimiento_NoValido: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    handleBlurFechaBautismo = (e) => {
+
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.form.per_Fecha_Bautismo);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaBautismoInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    handleBlurNuevoIngreso = (e) => {
+
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaNuevoIngresoInvalida = !this.validateFechaTransaccion(this.state.FechaTransaccionHistorica);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaNuevoIngresoInvalida: fechaNuevoIngresoInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
     buscaProfesionOficio1 = (palabraclave) => {
         if (palabraclave.length > 1) {
             axios.get(`${helpers.url_api}/Profesion_Oficio/BuscarPorTexto/${palabraclave}`)
@@ -694,6 +735,7 @@ class RegistroDePersonal extends Component {
 
     fnGuardaPersona = async (datos) => { //Graba persona en un Hogar Nuevo
         //console.log("Entra en funcion GuardaPersona", this.state.idOficio1, this.state.idOficio2, datos)
+
         var info = {
             PersonaEntity: datos.PersonaEntity,
             HogarDomicilioEntity: datos.HogarDomicilioEntity,
@@ -1050,6 +1092,9 @@ class RegistroDePersonal extends Component {
                 <PersonaForm
                     onChange={this.handleChange}
                     onBlur={this.handleBlur}
+                    onBlurNuevoIngreso={this.handleBlurNuevoIngreso}
+                    onBlurFechaBautismo={this.handleBlurFechaBautismo}
+                    onBlurFechaNacimiento={this.handleBlurFechaNacimiento}
                     FrmValidaPersona={this.state.FrmValidaPersona}
                     bolPersonaEncontrada={this.state.bolPersonaEncontrada}
                     setFrmValidaPersona={this.setFrmValidaPersona}
@@ -1085,6 +1130,7 @@ class RegistroDePersonal extends Component {
                     handleCampoInvalido={this.handleCampoInvalido}
                     onChangeFechaBautismo={this.onChangeFechaBautismo}
                     fechaBautismoInvalida={this.state.fechaBautismoInvalida}
+                    fechaNuevoIngresoInvalida={this.state.fechaNuevoIngresoInvalida}
                     ChangeFechaBautismoInvalida={this.ChangeFechaBautismoInvalida}
                     handleFechaDeTransaccion={this.handleFechaDeTransaccion}
                     FechaTransaccionHistorica={this.state.FechaTransaccionHistorica}

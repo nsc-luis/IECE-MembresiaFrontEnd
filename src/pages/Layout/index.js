@@ -26,9 +26,9 @@ class Layout extends Component {
 
     render() {
         const { children, seccion, componente } = this.props
-        
+
         return (
-            
+
             <React.Fragment>
                 {/* CONFIGURAR RUTAS Y PAGINAS */}
                 {/* Page Wrapper */}
@@ -36,7 +36,7 @@ class Layout extends Component {
 
                     {this.state.sector !== null && <Sidebar />}
                     {this.state.sector === null && this.state.distrito !== null && <SidebarObispo />}
-                    {this.state.sector === null && this.state.distrito === null  && JSON.parse(localStorage.getItem('infoSesion')).dg && <SidebarDirectivo />}
+                    {this.state.sector === null && this.state.distrito === null && JSON.parse(localStorage.getItem('infoSesion')).dg && <SidebarDirectivo />}
                     {() => this.defineSidebar}
 
                     {/* Content Wrapper */}

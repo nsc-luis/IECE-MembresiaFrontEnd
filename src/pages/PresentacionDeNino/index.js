@@ -130,8 +130,31 @@ class PresentacionDeNino extends Component {
         }
     }
 
+    handleBlur = () => {
+        //Resetea el estado de Fecha Invalida para quitar la Alerta de error en controles input        
+        let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.currentPresentacion.pdn_Fecha_Presentacion);// Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        // Si la fecha es inválida, actualiza el estado correspondiente
+        this.setState({
+            fechaPresentacionInvalida: fechaTransaccionInvalida ? true : false
+        });
+    }
+
+    validateFechaTransaccion = (fecha) => {
+        // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+        const fechaSeleccionada = new Date(fecha);
+        const fechaLimiteInferior = new Date('1924-01-01');
+        const fechaActual = new Date();
+
+        console.log(fechaSeleccionada, ("fechas", fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual))
+        return fechaSeleccionada >= fechaLimiteInferior && fechaSeleccionada <= fechaActual;
+    };
+
     guardarPresentacion = async (e) => { //Gestiona la Transacción del Registro de la Presentación de Niños.
         e.preventDefault();
+
+        if (this.state.submitBtnDisable) {
+            return; // Evitar múltiples envíos si ya se está procesando
+        }
 
         if (this.state.bolAgregarPresentacion) {
 
@@ -147,6 +170,17 @@ class PresentacionDeNino extends Component {
             if (this.state.currentPresentacion.pdn_Ministro_Oficiante === "") return false;
             if (this.state.otroMinistro === "" && this.state.currentPresentacion.pdn_Ministro_Oficiante === "") return false;
             if (this.state.optionFamiliaVisitanteSelected === true && this.state.nombreNinoVisitante === "") return false;
+
+            // Validación de la fecha: no anterior a 1924 ni posterior a la fecha actual
+            let fechaTransaccionInvalida = !this.validateFechaTransaccion(this.state.currentPresentacion.pdn_Fecha_Presentacion);
+
+            // Si la fecha es inválida, actualiza el estado correspondiente y detén el envío del formulario
+            if (fechaTransaccionInvalida) {
+                this.setState({
+                    fechaPresentacionInvalida: true,
+                });
+                return;
+            }
 
             //Para deshabilitar el botón y evitar multiples registros de Matrimonio y Ediciones de Persona
             this.ChangeSubmitBtnDisable(true)
@@ -396,8 +430,9 @@ class PresentacionDeNino extends Component {
                                                     value={this.state.currentPresentacion.pdn_Fecha_Presentacion}
                                                     onChange={this.handle_onChange}
                                                     invalid={this.state.fechaPresentacionInvalida}
+                                                    onBlur={this.handleBlur}
                                                 />
-                                                <FormFeedback>{helpers.msjRegexInvalido.formatoFecha}</FormFeedback>
+                                                <FormFeedback>¡Parece una Fecha Incorrecta! Favor de elegir una correcta</FormFeedback>
                                             </Col>
                                         </Row>
                                     </FormGroup>
