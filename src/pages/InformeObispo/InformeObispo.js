@@ -1176,7 +1176,7 @@ class InformeObispo extends Component {
                                             </Row>
                                             <Row className='elemento'>
                                                 <Col xs="4" sm="4" lg="4">
-                                                    Número completo de personal que integra la iglesia
+                                                    Número completo de personal que integra el Distrito
                                                 </Col>
                                                 <Col xs="2" sm="2" lg="2">
                                                     <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas + this.state.datosEstadisticos.personasNoBautizadas}</span></u>
@@ -1206,20 +1206,17 @@ class InformeObispo extends Component {
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='subtitulos'>
-                                                <Col xs="6" sm="6" lg="6">
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
                                                     1.- ORGANIZACIONES
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    5.- ADQUISICIONES
                                                 </Col>
                                             </Row>
                                             <Row className='lista-elementos'>
-                                                <Col xs="6" sm="6" lg="6">
+                                                <Col xs="12" sm="12" lg="12">
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Sociedad femenil
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.sociedadFemenil'
                                                                 value={this.state.movtosAdministrativoEconomico.sociedadFemenil}
@@ -1228,10 +1225,10 @@ class InformeObispo extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Sociedad juvenil
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.sociedadJuvenil'
                                                                 value={this.state.movtosAdministrativoEconomico.sociedadJuvenil}
@@ -1240,10 +1237,10 @@ class InformeObispo extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Departamento femenil
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.departamentoFemenil'
                                                                 value={this.state.movtosAdministrativoEconomico.departamentoFemenil}
@@ -1252,10 +1249,10 @@ class InformeObispo extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Departamento juvenil
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.departamentoJuvenil'
                                                                 value={this.state.movtosAdministrativoEconomico.departamentoJuvenil}
@@ -1264,10 +1261,10 @@ class InformeObispo extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Departamento infantil
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.departamentoInfantil'
                                                                 value={this.state.movtosAdministrativoEconomico.departamentoInfantil}
@@ -1276,10 +1273,10 @@ class InformeObispo extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Coros
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.coros'
                                                                 value={this.state.movtosAdministrativoEconomico.coros}
@@ -1288,10 +1285,10 @@ class InformeObispo extends Component {
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Grupos de canto
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.gruposDeCanto'
                                                                 value={this.state.movtosAdministrativoEconomico.gruposDeCanto}
@@ -1300,18 +1297,211 @@ class InformeObispo extends Component {
                                                         </Col>
                                                     </Row>
                                                 </Col>
-                                                <Col xs="6" sm="6" lg="6">
+                                            </Row>
+                                            <Row className='subtitulos'>
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
+                                                    2.- SESIONES
+                                                </Col>
+                                            </Row>
+                                            <Row className='lista-elementos'>
+                                                <Col xs="12" sm="12" lg="12">
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3"></Col>
+                                                        <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                            SESIONES
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                            REUNIONES
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            En el Distrito
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.sesiones.enElDistrito'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.enElDistrito}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.reuniones.enElDistrito'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.enElDistrito}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Con el personal docente
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.sesiones.conElPersonalDocente'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conElPersonalDocente}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.reuniones.conElPersonalDocente'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conElPersonalDocente}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Con Sociedades o Dept. femenil
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.sesiones.conSociedadesFemeniles'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conSociedadesFemeniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.reuniones.conSociedadesFemeniles'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conSociedadesFemeniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Con Sociedades o Depto. Juvenil
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.sesiones.conSociedadesJuveniles'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conSociedadesJuveniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.reuniones.conSociedadesJuveniles'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conSociedadesJuveniles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Con Depto. infantil
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.sesiones.conDepartamentosInfantiles'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conDepartamentosInfantiles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.reuniones.conDepartamentosInfantiles'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conDepartamentosInfantiles}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Con Coros y Grupos de canto
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.sesiones.conCorosYGruposDeCanto'
+                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conCorosYGruposDeCanto}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.reuniones.conCorosYGruposDeCanto'
+                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conCorosYGruposDeCanto}
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                            <Row className='subtitulos'>
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
+                                                    3.- ORDENACIONES
+                                                </Col>
+                                            </Row>
+                                            <Row className='lista-elementos'>
+                                                <Col xs="12" sm="12" lg="12">
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Ancianos
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.ordenaciones.ancianos'
+                                                                value={this.state.movtosAdministrativoEconomico.ordenaciones.ancianos}
+                                                                readOnly
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Diáconos
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.ordenaciones.diaconos'
+                                                                value={this.state.movtosAdministrativoEconomico.ordenaciones.diaconos}
+                                                                readOnly
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                            <Row className='subtitulos'>
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
+                                                    4.- LLAMAMIENTO DE PERSONAL
+                                                </Col>
+                                            </Row>
+                                            <Row className='lista-elementos'>
+                                                <Col xs="12" sm="12" lg="12">
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Diáconos a pruebas
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba'
+                                                                value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba}
+                                                                readOnly
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3">
+                                                            Auxiliares
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares'
+                                                                value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares}
+                                                                readOnly
+                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                            <Row className='subtitulos'>
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
+                                                    5.- ADQUISICIONES
+                                                </Col>
+                                            </Row>
+                                            <Row className='lista-elementos'>
+                                                <Col xs="12" sm="12" lg="12">
                                                     <Row className='elemento'>
                                                         <Col xs="3" sm="3" lg="3">
 
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             Por Sectores
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             Por Admon Distrital
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             Total
                                                         </Col>
                                                     </Row>
@@ -1319,20 +1509,20 @@ class InformeObispo extends Component {
                                                         <Col xs="3" sm="3" lg="3">
                                                             Predios
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.adquisicionesSector.predios'
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.predios}
                                                                 readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='adquisicionesDistrito.predios'
                                                                 value={this.state.adquisicionesDistrito.predios}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.predios + this.state.adquisicionesDistrito.predios}
                                                                 readOnly></Input>
@@ -1342,20 +1532,20 @@ class InformeObispo extends Component {
                                                         <Col xs="3" sm="3" lg="3">
                                                             Casas
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.adquisicionesSector.casas'
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.casas}
                                                                 readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='adquisicionesDistrito.casas'
                                                                 value={this.state.adquisicionesDistrito.casas}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.casas + this.state.adquisicionesDistrito.casas}
                                                                 readOnly></Input>
@@ -1365,20 +1555,20 @@ class InformeObispo extends Component {
                                                         <Col xs="3" sm="3" lg="3">
                                                             Edificios
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.adquisicionesSector.edificios'
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios}
                                                                 readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='adquisicionesDistrito.edificios'
                                                                 value={this.state.adquisicionesDistrito.edificios}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios + this.state.adquisicionesDistrito.edificios}
                                                                 readOnly></Input>
@@ -1388,20 +1578,20 @@ class InformeObispo extends Component {
                                                         <Col xs="3" sm="3" lg="3">
                                                             Templos
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.adquisicionesSector.templos'
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.templos}
                                                                 readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='adquisicionesDistrito.templos'
                                                                 value={this.state.adquisicionesDistrito.templos}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.templos + this.state.adquisicionesDistrito.templos}
                                                                 readOnly></Input>
@@ -1411,20 +1601,20 @@ class InformeObispo extends Component {
                                                         <Col xs="3" sm="3" lg="3">
                                                             Vehículos
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='movtosAdministrativoEconomico.adquisicionesSector.vehiculos'
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos}
                                                                 readOnly
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='adquisicionesDistrito.vehiculos'
                                                                 value={this.state.adquisicionesDistrito.vehiculos}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
-                                                        <Col xs="3" sm="3" lg="3">
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 value={this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos + this.state.adquisicionesDistrito.vehiculos}
                                                                 readOnly></Input>
@@ -1433,378 +1623,510 @@ class InformeObispo extends Component {
                                                 </Col>
                                             </Row>
                                             <Row className='subtitulos'>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    2.- SESIONES
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
                                                     6.- CONSTRUCCIONES
                                                 </Col>
                                             </Row>
                                             <Row className='lista-elementos'>
-                                                <Col xs="6" sm="6" lg="6">
+                                                <Col xs="12" sm="12" lg="12">
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4"></Col>
-                                                        <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            SESIONES
+                                                        <Col xs="3" sm="3" lg="3"></Col>
+                                                        <Col xs="3" sm="3" lg="3" className='subtitulos'>
+                                                            EN SECTORES
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            REUNIONES
+                                                        <Col xs="3" sm="3" lg="3" className='subtitulos'>
+                                                            EN DISTRITO
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3" className='subtitulos'>
+                                                            TOTAL
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            En el Distrito
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.sesiones.enElDistrito'
-                                                                value={this.state.movtosAdministrativoEconomico.sesiones.enElDistrito}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.reuniones.enElDistrito'
-                                                                value={this.state.movtosAdministrativoEconomico.reuniones.enElDistrito}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Con el personal docente
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.sesiones.conElPersonalDocente'
-                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conElPersonalDocente}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.reuniones.conElPersonalDocente'
-                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conElPersonalDocente}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="3" sm="3" lg="3"></Col>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Inicio
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Conclusión
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Inicio
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Conclusión
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Inicio
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Conclusión
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Con Sociedades o Dept. femenil
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.sesiones.conSociedadesFemeniles'
-                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conSociedadesFemeniles}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.reuniones.conSociedadesFemeniles'
-                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conSociedadesFemeniles}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Con Sociedades o Depto. Juvenil
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.sesiones.conSociedadesJuveniles'
-                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conSociedadesJuveniles}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.reuniones.conSociedadesJuveniles'
-                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conSociedadesJuveniles}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Con Depto. infantil
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.sesiones.conDepartamentosInfantiles'
-                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conDepartamentosInfantiles}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.reuniones.conDepartamentosInfantiles'
-                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conDepartamentosInfantiles}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            Con Coros y Grupos de canto
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.sesiones.conCorosYGruposDeCanto'
-                                                                value={this.state.movtosAdministrativoEconomico.sesiones.conCorosYGruposDeCanto}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.reuniones.conCorosYGruposDeCanto'
-                                                                value={this.state.movtosAdministrativoEconomico.reuniones.conCorosYGruposDeCanto}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4"></Col>
-                                                        <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            Inicio
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            Conclusión
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Colocación de 1a. Piedra
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesInicio.colocacionPrimeraPiedra'
-                                                                value={this.state.construccionesInicio.colocacionPrimeraPiedra}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesConclusion.colocacionPrimeraPiedra'
-                                                                value={this.state.construccionesConclusion.colocacionPrimeraPiedra}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesInicio.colocacionPrimeraPiedra'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesInicio.colocacionPrimeraPiedra}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesInicio.colocacionPrimeraPiedra'
+                                                                        value={this.state.construccionesInicio.colocacionPrimeraPiedra}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesConclusion.colocacionPrimeraPiedra'
+                                                                        value={this.state.construccionesConclusion.colocacionPrimeraPiedra}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra + this.state.construccionesConclusion.colocacionPrimeraPiedra}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra + this.state.construccionesConclusion.colocacionPrimeraPiedra}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Templo
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesInicio.templo'
-                                                                value={this.state.construccionesInicio.templo}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesConclusion.templo'
-                                                                value={this.state.construccionesConclusion.templo}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesInicio.templo'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesInicio.templo}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesConclusion.templo'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.templo}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesInicio.templo'
+                                                                        value={this.state.construccionesInicio.templo}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesConclusion.templo'
+                                                                        value={this.state.construccionesConclusion.templo}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.templo + this.state.construccionesConclusion.templo}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.templo + this.state.construccionesConclusion.templo}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Casa de Oración
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesInicio.casaDeOracion'
-                                                                value={this.state.construccionesInicio.casaDeOracion}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesConclusion.casaDeOracion'
-                                                                value={this.state.construccionesConclusion.casaDeOracion}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesInicio.casaDeOracion'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaDeOracion}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesInicio.casaDeOracion'
+                                                                        value={this.state.construccionesInicio.casaDeOracion}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesConclusion.casaDeOracion'
+                                                                        value={this.state.construccionesConclusion.casaDeOracion}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion + this.state.construccionesConclusion.casaDeOracion}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion + this.state.construccionesConclusion.casaDeOracion}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Casa pastoral
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesInicio.casaPastoral'
-                                                                value={this.state.construccionesInicio.casaPastoral}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesConclusion.casaPastoral'
-                                                                value={this.state.construccionesConclusion.casaPastoral}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesInicio.casaPastoral'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaPastoral}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesConclusion.casaPastoral'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaPastoral}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesInicio.casaPastoral'
+                                                                        value={this.state.construccionesInicio.casaPastoral}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesConclusion.casaPastoral'
+                                                                        value={this.state.construccionesConclusion.casaPastoral}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaPastoral + this.state.construccionesConclusion.casaPastoral}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaPastoral + this.state.construccionesConclusion.casaPastoral}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Anexos
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesInicio.anexos'
-                                                                value={this.state.construccionesInicio.anexos}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesConclusion.anexos'
-                                                                value={this.state.construccionesConclusion.anexos}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesInicio.anexos'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesInicio.anexos}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesConclusion.anexos'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.anexos}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesInicio.anexos'
+                                                                        value={this.state.construccionesInicio.anexos}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesConclusion.anexos'
+                                                                        value={this.state.construccionesConclusion.anexos}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.anexos + this.state.construccionesConclusion.anexos}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.anexos + this.state.construccionesConclusion.anexos}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Remodelación
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesInicio.remodelacion'
-                                                                value={this.state.construccionesInicio.remodelacion}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='construccionesConclusion.remodelacion'
-                                                                value={this.state.construccionesConclusion.remodelacion}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesInicio.remodelacion'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesInicio.remodelacion}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.construccionesConclusion.remodelacion'
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.remodelacion}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesInicio.remodelacion'
+                                                                        value={this.state.construccionesInicio.remodelacion}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='construccionesConclusion.remodelacion'
+                                                                        value={this.state.construccionesConclusion.remodelacion}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.remodelacion + this.state.construccionesConclusion.remodelacion}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.construccionesConclusion.remodelacion + this.state.construccionesConclusion.remodelacion}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                 </Col>
                                             </Row>
                                             <Row className='subtitulos'>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    3.- ORDENACIONES
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    7. DEDICACIONES
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
+                                                    7.- DEDICACIONES
                                                 </Col>
                                             </Row>
                                             <Row className='lista-elementos'>
-                                                <Col xs="6" sm="6" lg="6">
+                                                <Col xs="12" sm="12" lg="12">
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Ancianos
+                                                        <Col xs="3" sm="3" lg="3"></Col>
+                                                        <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                            EN SECTORES
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.ordenaciones.ancianos'
-                                                                value={this.state.movtosAdministrativoEconomico.ordenaciones.ancianos}
-                                                                readOnly
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                            POR ADMON. DISTRITAL
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                            TOTAL
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Diáconos
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.ordenaciones.diaconos'
-                                                                value={this.state.movtosAdministrativoEconomico.ordenaciones.diaconos}
-                                                                readOnly
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Templos
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.dedicaciones.templos'
+                                                                value={this.state.movtosAdministrativoEconomico.dedicaciones.templos}
+                                                                readOnly></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='dedicaciones.templos'
                                                                 value={this.state.dedicaciones.templos}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.movtosAdministrativoEconomico.dedicaciones.templos + this.state.dedicaciones.templos}
+                                                                readOnly></Input>
+                                                        </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Casas de Oración
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                name='movtosAdministrativoEconomico.dedicaciones.casasDeOracion'
+                                                                value={this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion}
+                                                                readOnly></Input>
+                                                        </Col>
+                                                        <Col xs="2" sm="2" lg="2">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='dedicaciones.casasDeOracion'
                                                                 value={this.state.dedicaciones.casasDeOracion}
                                                                 onChange={(e) => this.handleChange(e)}></Input>
                                                         </Col>
+                                                        <Col xs="2" sm="2" lg="2">
+                                                            <Input type='number' min={0} max={9999}
+                                                                value={this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion + this.state.dedicaciones.casasDeOracion}
+                                                                readOnly></Input>
+                                                        </Col>
                                                     </Row>
                                                 </Col>
                                             </Row>
                                             <Row className='subtitulos'>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    4.- LLAMAMIENTO DE PERSONAL
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    8. REGULARIZACION DE PREDIOS Y TEMPLOS
+                                                <Col xs="12" sm="12" lg="12" className='text-left'>
+                                                    8.- REGULARIZACION DE PREDIOS Y TEMPLOS
                                                 </Col>
                                             </Row>
                                             <Row className='lista-elementos'>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Diáconos a pruebas
+                                                <Col xs="12" sm="12" lg="12">
+                                                <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3"></Col>
+                                                        <Col xs="3" sm="3" lg="3" className='subtitulos'>
+                                                            EN SECTORES
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba'
-                                                                value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba}
-                                                                readOnly
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="3" sm="3" lg="3" className='subtitulos'>
+                                                            POR ADMON. DISTRITAL
+                                                        </Col>
+                                                        <Col xs="3" sm="3" lg="3" className='subtitulos'>
+                                                            TOTAL
+                                                        </Col>
+                                                    </Row>
+                                                <Row className='elemento'>
+                                                        <Col xs="3" sm="3" lg="3"></Col>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Inicio
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Conclusión
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Inicio
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Conclusión
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Inicio
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2" className='subtitulos'>
+                                                                    Conclusión
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="8" sm="8" lg="8">
-                                                            Auxiliares
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares'
-                                                                value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares}
-                                                                readOnly
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col xs="6" sm="6" lg="6">
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4"></Col>
-                                                        <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            Patrimonio Nacional
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4" className='subtitulos'>
-                                                            Patrimonio de la iglesia
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Templos
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='regularizacionPatNac.templos'
-                                                                value={this.state.regularizacionPatNac.templos}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='regularizacionPatIg.templos'
-                                                                value={this.state.regularizacionPatIg.templos}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.regularizacionPatNac.templos'
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.templos}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.regularizacionPatIg.templos'
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.templos}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='regularizacionPatNac.templos'
+                                                                        value={this.state.regularizacionPatNac.templos}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='regularizacionPatIg.templos'
+                                                                        value={this.state.regularizacionPatIg.templos}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.templos + this.state.regularizacionPatNac.templos}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.templos + this.state.regularizacionPatIg.templos}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                     <Row className='elemento'>
-                                                        <Col xs="4" sm="4" lg="4">
+                                                        <Col xs="3" sm="3" lg="3">
                                                             Casas pastorales
                                                         </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='regularizacionPatNac.casasPastorales'
-                                                                value={this.state.regularizacionPatNac.casasPastorales}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
-                                                        </Col>
-                                                        <Col xs="4" sm="4" lg="4">
-                                                            <Input type='number' min={0} max={9999}
-                                                                name='regularizacionPatIg.casasPastorales'
-                                                                value={this.state.regularizacionPatIg.casasPastorales}
-                                                                onChange={(e) => this.handleChange(e)}></Input>
+                                                        <Col xs="9" sm="9" lg="9">
+                                                            <Row>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales'
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales'
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales}
+                                                                        readOnly
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='regularizacionPatNac.casasPastorales'
+                                                                        value={this.state.regularizacionPatNac.casasPastorales}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        name='regularizacionPatIg.casasPastorales'
+                                                                        value={this.state.regularizacionPatIg.casasPastorales}
+                                                                        onChange={(e) => this.handleChange(e)}></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales + this.state.regularizacionPatNac.casasPastorales}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                                <Col xs="2" sm="2" lg="2">
+                                                                    <Input type='number' min={0} max={9999}
+                                                                        value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales + this.state.regularizacionPatIg.casasPastorales}
+                                                                        readOnly></Input>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -1814,7 +2136,7 @@ class InformeObispo extends Component {
                                     <Row className='contenedor-seccion'>
                                         <Col xs="12" sm="12" lg="12">
                                             <Row className='titulo'>
-                                                MOVIMIENTO ECONOMICO
+                                                MOVIMIENTO ECONOMICO DE LA ADMINISTRACION DE DISTRITO
                                             </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="6" sm="6" lg="6">
@@ -1864,7 +2186,7 @@ class InformeObispo extends Component {
                                                 <Col xs="6" sm="6" lg="6">
                                                     <Row className='elemento'>
                                                         <Col xs="8" sm="8" lg="8">
-                                                            Gastos de la admon.
+                                                            Gastos de la Admon.
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
@@ -1875,7 +2197,7 @@ class InformeObispo extends Component {
                                                     </Row>
                                                     <Row className='elemento'>
                                                         <Col xs="8" sm="8" lg="8">
-                                                            Transferencias al Dto.
+                                                            Transf. a Tes. Gral.
                                                         </Col>
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
