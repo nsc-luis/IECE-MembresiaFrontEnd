@@ -778,55 +778,65 @@ class InformeObispo extends Component {
                                             </tr>
                                             <tr>
                                                 <th className='table-header sectores-header'>POR EL PASTOR</th>
-                                                <th className='table-header sectores-header'>POR EL PERSONAL AUXILIAR</th>
+                                                <th className='table-header sectores-header'>POR PERS. AUX.</th>
                                                 <th className='table-header sectores-header'>ORDINARIOS</th>
                                                 <th className='table-header sectores-header'>ESPECIALES</th>
                                                 <th className='table-header sectores-header'>DE AVIVIAMIENTO</th>
                                                 <th className='table-header sectores-header'>DE ANIVERSARIO</th>
-                                                <th className='table-header sectores-header'>POR EL DISTRITO</th>
+                                                <th className='table-header sectores-header'>POR EL DIST.</th>
                                                 <th className='table-header sectores-header'>IGLESIA</th>
-                                                <th className='table-header sectores-header'>ESCUELA DOMINICAL</th>
+                                                <th className='table-header sectores-header'>ESC. DOM.</th>
                                                 <th className='table-header sectores-header'>VARONIL</th>
                                                 <th className='table-header sectores-header'>FEMENIL</th>
                                                 <th className='table-header sectores-header'>JUVENIL</th>
                                                 <th className='table-header sectores-header'>INFANTIL</th>
-                                                <th className='table-header sectores-header'>NUMERO DE MISIONES</th>
+                                                <th className='table-header sectores-header'>NUM. DE MIS.</th>
                                                 <th className='table-header sectores-header'>CULTOS</th>
-                                                <th className='table-header sectores-header'>HOGARES VISITADOS</th>
-                                                <th className='table-header sectores-header'>HOGARES CONQUISTADOS</th>
-                                                <th className='table-header sectores-header'>VISITANTES PERMANENTES</th>
-                                                <th className='table-header sectores-header'>CULTOS POR LA LOCALIDAD</th>
+                                                <th className='table-header sectores-header'>HOGARES VIS.</th>
+                                                <th className='table-header sectores-header'>HOGARES CONQ.</th>
+                                                <th className='table-header sectores-header'>VIS. PERM.</th>
+                                                <th className='table-header sectores-header'>CULTOS POR LOC.</th>
                                                 <th className='table-header sectores-header'>CULTOS DE HOGAR</th>
                                                 <th className='table-header sectores-header'>CAMPÑAS</th>
-                                                <th className='table-header sectores-header'>APERTURA DE MISIONES</th>
+                                                <th className='table-header sectores-header'>APERT. DE MIS.</th>
                                                 <th className='table-header sectores-header'>BAUTISMOS</th>
                                             </tr>
                                             {this.state.informesSectores.length > 0 && this.state.informesSectores.map((obj, index) => (
                                                 <tr>
-                                                    <td className='table-cell'>{obj.sector.sec_Tipo_Sector} {obj.sector.sec_Numero} {obj.sector.sec_Alias}</td>
-                                                    <td className='table-cell'>{obj.visitasPastor.porPastor}</td>
-                                                    <td className='table-cell'>{obj.visitasPastor.porAncianosAux + obj.visitasPastor.porAuxiliares + obj.visitasPastor.porDiaconos}</td>
-                                                    <td className='table-cell'>{obj.cultosSector.ordinarios}</td>
-                                                    <td className='table-cell'>{obj.cultosSector.especiales}</td>
-                                                    <td className='table-cell'>{obj.cultosSector.deAvivamiento}</td>
-                                                    <td className='table-cell'>{obj.cultosSector.deAniversario}</td>
-                                                    <td className='table-cell'>{obj.cultosSector.porElDistrito}</td>
-                                                    <td className='table-cell'>{obj.estudiosSector.iglesia + obj.conferenciasSector.iglesia}</td>
-                                                    <td className='table-cell'>{obj.estudiosSector.escuelaDominical + obj.conferenciasSector.escuelaDominical}</td>
-                                                    <td className='table-cell'>{obj.estudiosSector.varonil + obj.conferenciasSector.varonil}</td>
-                                                    <td className='table-cell'>{obj.estudiosSector.femenil + obj.conferenciasSector.femenil}</td>
-                                                    <td className='table-cell'>{obj.estudiosSector.juvenil + obj.conferenciasSector.juvenil}</td>
-                                                    <td className='table-cell'>{obj.estudiosSector.infantil + obj.conferenciasSector.infantil}</td>
-                                                    <td className='table-cell'>{obj.misionesSector.length}</td>
-                                                    <td className='table-cell'>{obj.cultosMisionSector.map(c => { let total = 0; total += c.cultos; return total })}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.hogaresVisitados}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.hogaresConquistados}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.visitantesPermanentes}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.cultosPorLaLocalidad}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.cultosDeHogar}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.campanias}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.aperturaDeMisiones}</td>
-                                                    <td className='table-cell'>{obj.trabajoEvangelismo.bautismos}</td>
+                                                    <td className='table-cell' style={{ textAlign: 'left' }}>{obj.sector.sec_Tipo_Sector} {obj.sector.sec_Numero} {obj.sector.sec_Alias}</td>
+                                                    <td className='table-cell'>{obj.visitasPastor.porPastor ? obj.visitasPastor.porPastor : ""}</td>
+                                                    <td className='table-cell'>{obj.visitasPastor.porAncianosAux || obj.visitasPastor.porAuxiliares || obj.visitasPastor.porDiaconos ? obj.visitasPastor.porAncianosAux + obj.visitasPastor.porAuxiliares + obj.visitasPastor.porDiaconos : ""}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.ordinarios ? obj.cultosSector.ordinarios : ""}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.especiales ? obj.cultosSector.especiale : ""}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.deAvivamiento ? obj.cultosSector.deAvivamiento : ""}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.deAniversario ? obj.cultosSector.deAniversario : ""}</td>
+                                                    <td className='table-cell'>{obj.cultosSector.porElDistrito ? obj.cultosSector.porElDistrito : ""}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.iglesia || obj.conferenciasSector.iglesia ? obj.estudiosSector.iglesia + obj.conferenciasSector.iglesia : ""}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.escuelaDominical || obj.conferenciasSector.escuelaDominical ? obj.estudiosSector.escuelaDominical + obj.conferenciasSector.escuelaDominical : ""}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.varonil || obj.conferenciasSector.varonil ? obj.estudiosSector.varonil + obj.conferenciasSector.varonil : ""}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.femenil || obj.conferenciasSector.femenil ? obj.estudiosSector.femenil + obj.conferenciasSector.femenil : ""}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.juvenil || obj.conferenciasSector.juvenil ? obj.estudiosSector.juvenil + obj.conferenciasSector.juvenil : ""}</td>
+                                                    <td className='table-cell'>{obj.estudiosSector.infantil || obj.conferenciasSector.infantil ? obj.estudiosSector.infantil + obj.conferenciasSector.infantil : ""}</td>
+                                                    <td className='table-cell'>{obj.misionesSector.length ? obj.misionesSector.length : ""}</td>
+                                                    <td className='table-cell'>
+                                                        {obj.cultosMisionSector && obj.cultosMisionSector.length > 0 ? (
+                                                            obj.cultosMisionSector.map(c => {
+                                                                let total = 0;
+                                                                total += c.cultos;
+                                                                return total;
+                                                            })
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                    </td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.hogaresVisitados ? obj.trabajoEvangelismo.hogaresVisitados : ""}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.hogaresConquistados ? obj.trabajoEvangelismo.hogaresConquistados : ""}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.visitantesPermanentes ? obj.trabajoEvangelismo.visitantesPermanentes : ""}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.cultosPorLaLocalidad ? obj.trabajoEvangelismo.cultosPorLaLocalidad : ""}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.cultosDeHogar ? obj.trabajoEvangelismo.cultosDeHogar : ""}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.campanias ? obj.trabajoEvangelismo.campanias : ""}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.aperturaDeMisiones ? obj.trabajoEvangelismo.aperturaDeMisiones : ""}</td>
+                                                    <td className='table-cell'>{obj.trabajoEvangelismo.bautismos ? obj.trabajoEvangelismo.bautismos : ""}</td>
                                                     {/* {this.state.informesSectores.length > 0 && this.state.informesSectores.map((sec, index) => (
                                                         <td className='table-cell'>{sec.visitasPastor.porPastor}</td>
                                                     ))} */}
@@ -855,7 +865,7 @@ class InformeObispo extends Component {
                                                 DATOS DEL ESTADO ACTUAL DEL DISTRITO
                                             </Row>
                                             <Row className='titulo'>
-                                                Número de personal en comunión al principio del mes {this.state.informe.nombreMes}
+                                                Número de personal en comunión al principio del mes {this.state.datosEstadisticos.personasBautizadas}
                                             </Row>
                                             <Row className='subtitulos'>
                                                 <Col xs="6" sm="6" lg="6">
@@ -954,7 +964,7 @@ class InformeObispo extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.bajasBautizados.excomunion'
-                                                                value={this.state.datosEstadisticos.bajasBautizados.excomunion}
+                                                                value={this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
@@ -976,7 +986,7 @@ class InformeObispo extends Component {
                                                         <Col xs="4" sm="4" lg="4">
                                                             <Input type='number' min={0} max={9999}
                                                                 name='datosEstadisticos.bajasBautizados.cambiodedomexterno'
-                                                                value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
+                                                                value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
                                                                 readOnly></Input>
                                                         </Col>
                                                     </Row>
@@ -2004,7 +2014,7 @@ class InformeObispo extends Component {
                                             </Row>
                                             <Row className='lista-elementos'>
                                                 <Col xs="12" sm="12" lg="12">
-                                                <Row className='elemento'>
+                                                    <Row className='elemento'>
                                                         <Col xs="3" sm="3" lg="3"></Col>
                                                         <Col xs="3" sm="3" lg="3" className='subtitulos'>
                                                             EN SECTORES
@@ -2016,7 +2026,7 @@ class InformeObispo extends Component {
                                                             TOTAL
                                                         </Col>
                                                     </Row>
-                                                <Row className='elemento'>
+                                                    <Row className='elemento'>
                                                         <Col xs="3" sm="3" lg="3"></Col>
                                                         <Col xs="9" sm="9" lg="9">
                                                             <Row>

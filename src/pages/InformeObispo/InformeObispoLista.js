@@ -238,7 +238,7 @@ class InformeObispoLista extends Component {
                                                             </React.Fragment>
                                                         )
                                                     })}
-                                                </Input>                                                
+                                                </Input>
                                                 <FormFeedback>Este campo es requerido</FormFeedback>
                                             </Col>
                                         </Row>
@@ -309,7 +309,7 @@ class InformeObispoLista extends Component {
 
                 {this.state.informes.length < 1 &&
                     <h4>
-                        No hay informes registrados en este Sector.
+                        No hay informes registrados en este Distrito.
                     </h4>
                 }
 
