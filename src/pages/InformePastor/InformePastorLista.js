@@ -344,12 +344,6 @@ class InformePastorLista extends Component {
                                                 <td>{obj.anio}</td>
                                                 <td>{obj.mes}</td>
                                                 <td className='text-center'>
-                                                    {/* <Link to={{
-                                                        pathname: "/InformePastor/" + obj.idInforme,
-                                                        id: obj.idInforme
-                                                    }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Pastoral")}>
-                                                        Detalle
-                                                    </Link> */}
                                                     <Button
                                                         className="btn btn-info btn-sm"
                                                         onClick={() => this.irAinformePastoral(obj.idInforme)}

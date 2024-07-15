@@ -158,7 +158,7 @@ class Router extends Component {
                         {/* <Route exact path="/InformePastor/:id" component={InformePastor} /> */}
                         <Route exact path="/InformePastor" component={InformePastor} />
                         {/* Informe Obispo */}
-                        <Route exact path="/InformeObispo/:id" component={InformeObispo} />
+                        <Route exact path="/InformeObispo" component={InformeObispo} />
                         <Route exact path="/InformesObispo" component={InformeObispoLista} />
                         <Route exact path="/DirectorioObispos" component={DirectorioObispos} />
                     </Layout>

@@ -114,26 +114,12 @@ class InformeObispoLista extends Component {
 
         await helpers.validaToken().then(helpers.authAxios.post("/Informe", this.state.nuevoInforme)
             .then(res => {
-                if (res.status === 200) {
-                    this.obtenerInformes();
-                    this.handleCancelar();
-                    this.setState({
-                        nuevoInforme: {
-                            idInforme: 0,
-                            idTipoUsuario: 2,
-                            mes: 0,
-                            anio: 0,
-                            lugarReunion: '',
-                            fechaReunion: new Date().toDateString(),
-                            status: 0,
-                            usu_id_usuario: 0,
-                            fechaRegistro: new Date().toDateString(),
-                        }
-                    })
-                    console.log(res);
+                if (res.data.status === 'error') {
+                    alert(res.data.message)
+                    return
                 }
-                else {
-                    alert(res.data.mensaje)
+                if (res.status === 200) {
+                    this.irAInformeObispo(res.data.idInforme)
                 }
             })
         )
@@ -174,6 +160,31 @@ class InformeObispoLista extends Component {
         // Actualiza el estado con la nueva copia
         this.setState(newState);
         console.log(newState);
+    }
+
+    descargarInforme = async (informeId) => {
+        await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformeObispoPorId/" + informeId, null, { responseType: 'blob' })
+            .then(res => {
+                //console.log(res);
+                const url = window.URL.createObjectURL(res.data);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `InformeObispo_${moment().format("yyyy-MM-DDThh-mm-ss")}.pdf`;
+                a.target = '_blank';  // This does not really affect the download
+                document.body.appendChild(a);
+                a.click();
+
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+        )
+    }
+    irAInformeObispo = (idInformeObispo) => {
+        if (localStorage.getItem("idInformeObispo")) localStorage.removeItem("idInformeObispo")
+        localStorage.setItem("idInformeObispo", idInformeObispo)
+        helpers.handle_LinkEncabezado("Seccion: Informes", "Informe de Obispo")
+        window.location.assign("/InformeObispo")
     }
 
     render() {
@@ -291,12 +302,19 @@ class InformeObispoLista extends Component {
                                                 <td>{obj.anio}</td>
                                                 <td>{obj.mes}</td>
                                                 <td className='text-center'>
-                                                    <Link to={{
-                                                        pathname: "/InformeObispo/" + obj.idInforme,
-                                                        id: obj.idInforme
-                                                    }} className="btn btn-info btn-sm" onClick={() => helpers.handle_LinkEncabezado("Seccion: Informes", "Informe Obispo")}>
-                                                        Detalles
-                                                    </Link>
+                                                    <Button
+                                                        className="btn btn-info btn-sm"
+                                                        onClick={() => this.irAInformeObispo(obj.idInforme)}
+                                                    >
+                                                        Detalle
+                                                    </Button>
+                                                    <Button
+                                                        color="danger"
+                                                        size="sm"
+                                                        className='mx-3'
+                                                        onClick={() => this.descargarInforme(obj.idInforme)}>
+                                                        <span className="fas fa-file-pdf icon-btn-p"></span> Descargar
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         ))
