@@ -54,7 +54,7 @@ class EdicionDeDireccion extends Component {
     getListaHogares = async () => {
         await helpers.validaToken().then(helpers.authAxios.get(helpers.url_api + "/HogarDomicilio/GetBySector/" + localStorage.getItem("sector"))
             .then(res => {
-                console.log("ListaHogares: ", res.data.domicilios);
+                // console.log("ListaHogares: ", res.data.domicilios);
                 this.setState({
                     listaDomicilios: res.data.domicilios.sort((a, b) => {
                         const nameA = a.per_Nombre; // ignore upper and lowercase
@@ -87,7 +87,7 @@ class EdicionDeDireccion extends Component {
             seleccion[0].nvoEstado = ""
 
             this.setState({ domicilio: seleccion[0] }) //Coloca en la Variable de Estado 'domicilio' el Hogar Seleccionado.
-            console.log("CargaDirección: ", seleccion[0])
+            // console.log("CargaDirección: ", seleccion[0])
 
 
 
@@ -300,7 +300,7 @@ class EdicionDeDireccion extends Component {
             }
         }
         else { //Si seleccionó un País que tenía Estados ya existentes, manda editar con el verbo PUT los nuevos datos del Domicilio.
-            console.log("domicilio: ", this.state.domicilio)
+            // console.log("domicilio: ", this.state.domicilio)
             try {
                 //console.log("Datos a API con EstadoId: ", `${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)
                 await helpers.validaToken().then(helpers.authAxios.put(`${helpers.url_api}/HogarDomicilio/${this.state.domicilio.hd_Id_Hogar}/${this.state.domicilio.nvoEstado}`, this.state.domicilio)

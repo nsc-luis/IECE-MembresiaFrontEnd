@@ -71,7 +71,7 @@ class BajaPersonalMinisterial extends Component {
         if (e.target.name == "id_Ministro" && e.target.value != "0") {
 
             let ministro = this.state.personalMinisterial.filter((person) => person.pem_Id_Ministro == e.target.value);
-            console.log("lista", ministro)
+            // console.log("lista", ministro)
             this.setState({
                 form: {
                     ...this.state.form,
@@ -93,7 +93,7 @@ class BajaPersonalMinisterial extends Component {
     }
 
     enviar1 = () => {
-        console.log("Causa: ", this.state.form.causaDeBaja)
+        // console.log("Causa: ", this.state.form.causaDeBaja)
         if (this.state.form.id_Ministro === "0") {
             alert("Error!. Debe seleccionar primero al Elemento que desea dar de baja del Personal Ministerial ")
             return false;
@@ -168,7 +168,7 @@ class BajaPersonalMinisterial extends Component {
     }
 
     render() {
-        console.log("form:", this.state.form)
+        // console.log("form:", this.state.form)
         return (
             <>
                 <Container fluid>
