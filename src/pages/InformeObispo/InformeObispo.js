@@ -428,7 +428,6 @@ class InformeObispo extends Component {
 
         // Actualiza el estado con la nueva copia
         this.setState(newState);
-        console.log(newState);
     }
 
     actualizarInforme = async (e) => {
@@ -927,7 +926,7 @@ class InformeObispo extends Component {
                                                     DATOS DEL ESTADO ACTUAL DEL DISTRITO
                                                 </Row>
                                                 <Row className='titulo'>
-                                                    Número de personal en comunión al principio del mes {this.state.datosEstadisticos.personasBautizadas}
+                                                    <p>Número de personal en comunión al principio del mes <u> {this.state.datosEstadisticos.personasBautizadas}</u></p>
                                                 </Row>
                                                 <Row className='subtitulos'>
                                                     <Col xs="6" sm="6" lg="6">
@@ -3075,7 +3074,7 @@ class InformeObispo extends Component {
                                                 <Row className='hint-pastor'>
                                                     Obispo del Distrito
                                                 </Row>
-                                                <Row className='elemento'>
+                                                {/* <Row className='elemento'>
                                                     <Col xs="2" sm="2" lg="2">
                                                         Lugar de reunión:
                                                     </Col>
@@ -3094,7 +3093,7 @@ class InformeObispo extends Component {
                                                             value={this.state.informe.fechaReunion}
                                                             onChange={(e) => this.handleChange(e)}></Input>
                                                     </Col>
-                                                </Row>
+                                                </Row> */}
                                             </Col>
                                         </Row>
                                         <Row>
