@@ -260,7 +260,6 @@ class InformeObispo extends Component {
         );
     }
 
-
     obtenerInforme = async (id) => {
         await helpers.validaToken().then(helpers.authAxios.get("/Informe/Obispo/" + id)
             .then(res => {
@@ -276,7 +275,6 @@ class InformeObispo extends Component {
                     movtosAdministrativoEconomico: res.data.movtosAdministrativoEconomico !== null ? res.data.movtosAdministrativoEconomico : this.state.movtosAdministrativoEconomico,
                     acuerdosDeDistrito: res.data.actividadObispo.acuerdosDeDistrito !== null ? res.data.actividadObispo.acuerdosDeDistrito : this.state.acuerdosDeDistrito,
                     otrasActividadesObispo: res.data.actividadObispo.otrasActividadesObispo !== null ? res.data.actividadObispo.otrasActividadesObispo : this.state.otrasActividadesObispo,
-
                 })
                 this.obtenerMovimientosEstadisticos();
             })
@@ -531,10 +529,10 @@ class InformeObispo extends Component {
                                                     <Row className='lista-elementos'>
                                                         <Col xs="3" sm="3" lg="3">
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sectores
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='aSectores'
                                                                         name={`actividadesObispo.${index}.visitasObispo.aSectores`}
@@ -544,15 +542,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="aSectores"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Visitas realizadas exclusivamente por el Obispo al Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Hogares
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='aHogares'
                                                                         name={`actividadesObispo.${index}.visitasObispo.aHogares`}
@@ -563,17 +561,17 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="aHogares"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Visitas realizadas exclusivamente por el Obispo a hogares del Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                         </Col>
                                                         <Col xs="3" sm="3" lg="3">
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Ordinarios
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='cultosOrdinarios'
                                                                         name={`actividadesObispo.${index}.cultosDistrito.ordinarios`}
@@ -583,15 +581,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="cultosOrdinarios"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cultos Ordinarios realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Especiales
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='cultosEspeciales'
                                                                         name={`actividadesObispo.${index}.cultosDistrito.especiales`}
@@ -601,15 +599,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="cultosEspeciales"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cultos especiales (con programa de culto) realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     De Avivamiento
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='cultosDeAvivamiento'
                                                                         name={`actividadesObispo.${index}.cultosDistrito.deAvivamiento`}
@@ -619,15 +617,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="cultosDeAvivamiento"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cultos intencionados al cultivo del ánimo espiritual, fervor y devoción de la iglesia, tales como cultos de gozo espiritual y de derramamiento del Espíritu Santo, realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Evangelismo
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='cultosEvangelismo'
                                                                         name={`actividadesObispo.${index}.cultosDistrito.evangelismo`}
@@ -637,17 +635,17 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="cultosEvangelismo"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cultos de Evangelismo realizados por programa de Distrito en el Sector o Misión de Distrito en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                         </Col>
                                                         <Col xs="3" sm="3" lg="3">
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Iglesia
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='confIglesia'
                                                                         name={`actividadesObispo.${index}.conferenciasDistrito.iglesia`}
@@ -657,15 +655,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="confIglesia"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de Conferencias a la Congregación, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sector Varonil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='confSecVaronil'
                                                                         name={`actividadesObispo.${index}.conferenciasDistrito.sectorVaronil`}
@@ -675,15 +673,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="confSecVaronil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de Conferencias al sector Varonil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sociedad Femenil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='confSocFemenil'
                                                                         name={`actividadesObispo.${index}.conferenciasDistrito.sociedadFemenil`}
@@ -693,15 +691,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="confSocFemenil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de Conferencias al sector Femenil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sociedad Juvenil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='confSocJuvenil'
                                                                         name={`actividadesObispo.${index}.conferenciasDistrito.sociedadJuvenil`}
@@ -711,15 +709,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="confSocJuvenil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de Conferencias al sector Juvenil impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Infantil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='confInfantil'
                                                                         name={`actividadesObispo.${index}.conferenciasDistrito.sectorInfantil`}
@@ -729,17 +727,17 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="confInfantil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de Conferencias al sector Infantil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                         </Col>
                                                         <Col xs="3" sm="3" lg="3">
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Iglesia
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='concIglesia'
                                                                         name={`actividadesObispo.${index}.concentracionesDistrito.iglesia`}
@@ -749,15 +747,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="concIglesia"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de concentraciones de Iglesias, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sector Varonil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='concSecVaronil'
                                                                         name={`actividadesObispo.${index}.concentracionesDistrito.sectorVaronil`}
@@ -767,15 +765,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="concSecVaronil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de concentraciones para el sector Varonil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sociedad Femenil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='concSecFemenil'
                                                                         name={`actividadesObispo.${index}.concentracionesDistrito.sociedadFemenil`}
@@ -785,15 +783,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="concSecFemenil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de concentraciones para el sector Femenil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sociedad Juvenil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='concSocJuvenil'
                                                                         name={`actividadesObispo.${index}.concentracionesDistrito.sociedadJuvenil`}
@@ -803,15 +801,15 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="concSocJuvenil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de concentraciones para el sector Juvenil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
                                                             <Row className='elemento'>
-                                                                <Col xs="8" sm="8" lg="8">
+                                                                <Col xs="7" sm="7" lg="7">
                                                                     Sector Infantil
                                                                 </Col>
-                                                                <Col xs="4" sm="4" lg="4">
+                                                                <Col xs="5" sm="5" lg="5">
                                                                     <Input type='number' min={0} max={9999}
                                                                         id='concInfantil'
                                                                         name={`actividadesObispo.${index}.concentracionesDistrito.sectorInfantil`}
@@ -821,7 +819,7 @@ class InformeObispo extends Component {
                                                                         placement="right"
                                                                         target="concInfantil"
                                                                     >
-                                                                        Aqui se ingresan la cantidad de visitas realizadas por el pastor en este mes.
+                                                                        Cantidad de concentraciones para el sector Infantil realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
                                                                     </UncontrolledTooltip>
                                                                 </Col>
                                                             </Row>
@@ -833,7 +831,7 @@ class InformeObispo extends Component {
                                         <Row>
                                             <table className='tabla-obispo'>
                                                 <tr>
-                                                    <th className='table-header' rowSpan="2">Sectores</th>
+                                                    <th className='table-header' rowSpan="2">SECTORES</th>
                                                     <th className='table-header' colSpan="2">Visitas hogares</th>
                                                     <th className='table-header' colSpan="5">Cultos</th>
                                                     <th className='table-header' colSpan="6">Estudios y conferencias</th>
@@ -856,12 +854,12 @@ class InformeObispo extends Component {
                                                     <th className='table-header sectores-header'>INFANTIL</th>
                                                     <th className='table-header sectores-header'>NUM. DE MIS.</th>
                                                     <th className='table-header sectores-header'>CULTOS</th>
-                                                    <th className='table-header sectores-header'>HOGARES VIS.</th>
+                                                    <th className='table-header sectores-header'>HOGARES VISIT.</th>
                                                     <th className='table-header sectores-header'>HOGARES CONQ.</th>
                                                     <th className='table-header sectores-header'>VIS. PERM.</th>
                                                     <th className='table-header sectores-header'>CULTOS POR LOC.</th>
                                                     <th className='table-header sectores-header'>CULTOS DE HOGAR</th>
-                                                    <th className='table-header sectores-header'>CAMPÑAS</th>
+                                                    <th className='table-header sectores-header'>CAMPAÑAS</th>
                                                     <th className='table-header sectores-header'>APERT. DE MIS.</th>
                                                     <th className='table-header sectores-header'>BAUTISMOS</th>
                                                 </tr>
@@ -871,7 +869,7 @@ class InformeObispo extends Component {
                                                         <td className='table-cell'>{obj.visitasPastor.porPastor ? obj.visitasPastor.porPastor : ""}</td>
                                                         <td className='table-cell'>{obj.visitasPastor.porAncianosAux || obj.visitasPastor.porAuxiliares || obj.visitasPastor.porDiaconos ? obj.visitasPastor.porAncianosAux + obj.visitasPastor.porAuxiliares + obj.visitasPastor.porDiaconos : ""}</td>
                                                         <td className='table-cell'>{obj.cultosSector.ordinarios ? obj.cultosSector.ordinarios : ""}</td>
-                                                        <td className='table-cell'>{obj.cultosSector.especiales ? obj.cultosSector.especiale : ""}</td>
+                                                        <td className='table-cell'>{obj.cultosSector.especiales ? obj.cultosSector.especiales : ""}</td>
                                                         <td className='table-cell'>{obj.cultosSector.deAvivamiento ? obj.cultosSector.deAvivamiento : ""}</td>
                                                         <td className='table-cell'>{obj.cultosSector.deAniversario ? obj.cultosSector.deAniversario : ""}</td>
                                                         <td className='table-cell'>{obj.cultosSector.porElDistrito ? obj.cultosSector.porElDistrito : ""}</td>
@@ -1294,8 +1292,15 @@ class InformeObispo extends Component {
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.sociedadFemenil'
                                                                     value={this.state.movtosAdministrativoEconomico.sociedadFemenil}
+                                                                    id='OrgSocFem'
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrgSocFem"
+                                                                >
+                                                                    Las organizaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1305,9 +1310,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.sociedadJuvenil'
+                                                                    id="OrgSocJuv"
                                                                     value={this.state.movtosAdministrativoEconomico.sociedadJuvenil}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrgSocJuv"
+                                                                >
+                                                                    Las organizaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1317,9 +1329,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.departamentoFemenil'
+                                                                    id='OrgDepFem'
                                                                     value={this.state.movtosAdministrativoEconomico.departamentoFemenil}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrgDepFem"
+                                                                >
+                                                                    Las organizaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1329,9 +1348,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.departamentoJuvenil'
+                                                                    id='OrgDepJuv'
                                                                     value={this.state.movtosAdministrativoEconomico.departamentoJuvenil}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrgDepJuv"
+                                                                >
+                                                                    Las organizaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1342,8 +1368,15 @@ class InformeObispo extends Component {
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.departamentoInfantil'
                                                                     value={this.state.movtosAdministrativoEconomico.departamentoInfantil}
+                                                                    id='OrgDepInf'
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrgDepInf"
+                                                                >
+                                                                    Las organizaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1353,9 +1386,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.coros'
+                                                                    id='OrgCoros'
                                                                     value={this.state.movtosAdministrativoEconomico.coros}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrgCoros"
+                                                                >
+                                                                    Las organizaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1365,9 +1405,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.gruposDeCanto'
+                                                                    id='OrgGpos'
                                                                     value={this.state.movtosAdministrativoEconomico.gruposDeCanto}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrgGpos"
+                                                                >
+                                                                    Las organizaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -1395,14 +1442,29 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.sesionesObispo.enElDistrito'
+                                                                    id='SesDto'
                                                                     value={this.state.actividadObispo.sesionesObispo.enElDistrito}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target='SesDto'
+                                                                >
+                                                                    Cantidad de Sesiones (Que requieren levantarse Acta respectiva) presididas por el Obispo o designado del Obispo llevadas a cabo en actividad del Distrito.
+
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.reunionesObispo.enElDistrito'
+                                                                    id='ReunDto'
                                                                     value={this.state.actividadObispo.reunionesObispo.enElDistrito}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target='ReunDto'
+                                                                >
+                                                                    Cantidad de Reuniones (Que no requieren Acta, sino sólo minuta) presididas por el Obispo o designado del Obispo, llevadas a cabo en actividad del Distrito.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1412,14 +1474,29 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.sesionesObispo.conElPersonalDocente'
+                                                                    id='SesPerMin'
                                                                     value={this.state.actividadObispo.sesionesObispo.conElPersonalDocente}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target='SesPerMin'
+                                                                >
+                                                                    N/A
+
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.reunionesObispo.conElPersonalDocente'
+                                                                    id='ReunPerMin'
                                                                     value={this.state.actividadObispo.reunionesObispo.conElPersonalDocente}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="ReunPerMin"
+                                                                >
+                                                                    Cantidad de Reuniones (Que no requieren Acta, sino sólo minuta) presididas por el Obispo o designado del Obispo con la Soc. o Dpto. Femenil.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1429,14 +1506,29 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.sesionesObispo.conSociedadesFemeniles'
+                                                                    id='SesFem'
                                                                     value={this.state.actividadObispo.sesionesObispo.conSociedadesFemeniles}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="SesFem"
+                                                                >
+                                                                    N/A
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.reunionesObispo.conSociedadesFemeniles'
+                                                                    id='ReunFem'
                                                                     value={this.state.actividadObispo.reunionesObispo.conSociedadesFemeniles}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="ReunFem"
+                                                                >
+                                                                    Cantidad de Reuniones (Que no requieren Acta, sino sólo minuta) presididas por el Obispo o designado del Obispo con la Soc. o Dpto. Femenil.
+
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1446,14 +1538,28 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.sesionesObispo.conSociedadesJuveniles'
+                                                                    id='SesJuv'
                                                                     value={this.state.actividadObispo.sesionesObispo.conSociedadesJuveniles}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="SesJuv"
+                                                                >
+                                                                    N/A
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.reunionesObispo.conSociedadesJuveniles'
+                                                                    id="ReunJuv"
                                                                     value={this.state.actividadObispo.reunionesObispo.conSociedadesJuveniles}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="ReunJuv"
+                                                                >
+                                                                    Cantidad de Reuniones (Que no requieren Acta, sino sólo minuta) presididas por el Obispo o designado del Obispo con la Soc. o Dpto. Juvenil.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1463,14 +1569,28 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.sesionesObispo.conDepartamentosInfantiles'
+                                                                    id='SesInf'
                                                                     value={this.state.actividadObispo.sesionesObispo.conDepartamentosInfantiles}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="SesInf"
+                                                                >
+                                                                    N/A
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.reunionesObispo.conDepartamentosInfantiles'
+                                                                    id='ReunInf'
                                                                     value={this.state.actividadObispo.reunionesObispo.conDepartamentosInfantiles}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="ReunInf"
+                                                                >
+                                                                    Cantidad de Reuniones (Que no requieren Acta, sino sólo minuta) presididas por el Obispo o designado del Obispo con el  Dpto. Infantil.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1480,14 +1600,28 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.sesionesObispo.conCorosYGruposDeCanto'
+                                                                    id='SesCoros'
                                                                     value={this.state.actividadObispo.sesionesObispo.conCorosYGruposDeCanto}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="SesCoros"
+                                                                >
+                                                                    N/A
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.reunionesObispo.conCorosYGruposDeCanto'
+                                                                    id='ReunCoros'
                                                                     value={this.state.actividadObispo.reunionesObispo.conCorosYGruposDeCanto}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="ReunCoros"
+                                                                >
+                                                                    Cantidad de Reuniones (Que no requieren Acta, sino sólo minuta) presididas por el Obispo o designado del Obispo con el  Dpto. Infantil.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -1506,9 +1640,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.ordenaciones.ancianos'
+                                                                    id='OrdAnc'
                                                                     value={this.state.movtosAdministrativoEconomico.ordenaciones.ancianos}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrdAnc"
+                                                                >
+                                                                    Las ordenaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1518,9 +1659,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.ordenaciones.diaconos'
+                                                                    id='OrdDia'
                                                                     value={this.state.movtosAdministrativoEconomico.ordenaciones.diaconos}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="OrdDia"
+                                                                >
+                                                                    Las ordenaciones provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -1539,9 +1687,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba'
+                                                                    id='LlamDiac'
                                                                     value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.diaconosAprueba}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="LlamDiac"
+                                                                >
+                                                                    Los llamamientos ministeriales provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1551,9 +1706,16 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares'
+                                                                    id='LlamAux'
                                                                     value={this.state.movtosAdministrativoEconomico.llamamientoDePersonal.auxiliares}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="LlamAux"
+                                                                >
+                                                                    Los llamamientos ministeriales provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -1573,7 +1735,7 @@ class InformeObispo extends Component {
                                                                 Por Sectores
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
-                                                                Por Admon Distrital
+                                                                Por Admon. Distrital
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 Total
@@ -1586,20 +1748,41 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.adquisicionesSector.predios'
+                                                                    id='AdqPreSec'
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.predios}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqPreSec"
+                                                                >
+                                                                    Adquisiciones de Predios hechas por los Sectores. Éstas provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.adquisicionesDistrito.predios'
+                                                                    id='AdqPreDis'
                                                                     value={this.state.actividadObispo.adquisicionesDistrito.predios}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqPreDis"
+                                                                >
+                                                                    Adquisiciones de Predios hechas exclusivamente por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.predios + this.state.actividadObispo.adquisicionesDistrito.predios}
+                                                                    id='AdqPreSuma'
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqPreSuma"
+                                                                >
+                                                                    Suma de Adquisiciones de Predios hechas por los Sectores y por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1609,20 +1792,41 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.adquisicionesSector.casas'
+                                                                    id='AdqCasSec'
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.casas}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqCasSec"
+                                                                >
+                                                                    Adquisiciones de Casas hechas por los Sectores. Éstas provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.adquisicionesDistrito.casas'
+                                                                    id='AdqCasDis'
                                                                     value={this.state.actividadObispo.adquisicionesDistrito.casas}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqCasDis"
+                                                                >
+                                                                    Adquisiciones de Casas hechas exclusivamente por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.casas + this.state.actividadObispo.adquisicionesDistrito.casas}
+                                                                    id='AdqCasSuma'
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqCasSuma"
+                                                                >
+                                                                    Suma de Adquisiciones de Casas, hechas por los Sectores y por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1632,20 +1836,42 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.adquisicionesSector.edificios'
+                                                                    id='AdqEdiSec'
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqEdiSec"
+                                                                >
+                                                                    Adquisiciones de Edificios, realizadas por los Sectores. Éstas provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.adquisicionesDistrito.edificios'
+                                                                    id='AdqEdiDis'
                                                                     value={this.state.actividadObispo.adquisicionesDistrito.edificios}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqEdiDis"
+                                                                >
+                                                                    Adquisiciones de Edificios hechas exclusivamente por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios + this.state.actividadObispo.adquisicionesDistrito.edificios}
+                                                                    id='AdqEdiSuma'
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqEdiSuma"
+                                                                >
+                                                                    Suma de Adquisiciones de Edificios, hechas por los Sectores y por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
+
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1655,20 +1881,41 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.adquisicionesSector.templos'
+                                                                    id='AdqTemSec'
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.templos}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqTemSec"
+                                                                >
+                                                                    Adquisiciones de Templos, realizadas por los Sectores. Éstas provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.adquisicionesDistrito.templos'
+                                                                    id='AdqTemDis'
                                                                     value={this.state.actividadObispo.adquisicionesDistrito.templos}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqTemDis"
+                                                                >
+                                                                    Adquisiciones de Templos, hechas exclusivamente por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.templos + this.state.actividadObispo.adquisicionesDistrito.templos}
+                                                                    id='AdqTemSuma'
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqTemSuma"
+                                                                >
+                                                                    Suma de Adquisiciones de Templos, hechas por los Sectores y por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -1678,20 +1925,41 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.adquisicionesSector.vehiculos'
+                                                                    id='AdqVehSec'
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqVehSec"
+                                                                >
+                                                                    Adquisiciones de Vehículos, realizadas por los Sectores. Éstas provienen de los Inf. Pastorales.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.adquisicionesDistrito.vehiculos'
+                                                                    id='AdqVehDis'
                                                                     value={this.state.actividadObispo.adquisicionesDistrito.vehiculos}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqVehDis"
+                                                                >
+                                                                    Adquisiciones de Vehículos, hechas exclusivamente por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos + this.state.actividadObispo.adquisicionesDistrito.vehiculos}
+                                                                    id='AdqVehSuma'
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="AdqVehSuma"
+                                                                >
+                                                                    Suma de Adquisiciones de Vehículos, hechas por los Sectores y por la Admon. Distrital.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -1749,37 +2017,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesInicio.colocacionPrimeraPiedra'
+                                                                            id='ColPriPieSec'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.colocacionPrimeraPiedra}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ColPriPieSec"
+                                                                        >
+                                                                            Colocaciones de 1a. piedra, reportadas por los Sectores. Éstas provienen de los Inf. Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra'
+                                                                            id='ColPriPieDis'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ColPriPieDis"
+                                                                        >
+                                                                            N/A
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoInicio.colocacionPrimeraPiedra'
+                                                                            id='ColPriPieDisIni'
                                                                             value={this.state.actividadObispo.construccionesDistritoInicio.colocacionPrimeraPiedra}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ColPriPieDisIni"
+                                                                        >
+                                                                            Colocaciones de 1a. piedra, realizadas exclusivamente por la Admon. Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoFinal.colocacionPrimeraPiedra'
+                                                                            id='ColPriPieDisConc'
                                                                             value={this.state.actividadObispo.construccionesDistritoFinal.colocacionPrimeraPiedra}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ColPriPieDisConc"
+                                                                        >
+                                                                            N/A
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.colocacionPrimeraPiedra + this.state.actividadObispo.construccionesDistritoInicio.colocacionPrimeraPiedra}
+                                                                            id='ColPriPieSumaIni'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ColPriPieSumaIni"
+                                                                        >
+                                                                            Suma de Colocaciones de 1a. piedra, realizadas por Sectores y la Admon. Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra + this.state.actividadObispo.construccionesDistritoFinal.colocacionPrimeraPiedra}
+                                                                            id='ColPriPieSumaConc'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ColPriPieSumaConc"
+                                                                        >
+                                                                            N/A
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -1793,37 +2103,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesInicio.templo'
+                                                                            id='ConstTemSecIni'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.templo}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstTemSecIni"
+                                                                        >
+                                                                            Cantidad de templos cuya construcción se inicia en el mes en curso, reportado por los Pastores
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesConclusion.templo'
+                                                                            id='ConstTemSecConc'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.templo}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstTemSecConc"
+                                                                        >
+                                                                            Cantidad de templos cuya construcción concluyó en el mes en curso reportada por los Pastores.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoInicio.templo'
+                                                                            id='ConstTemDisIni'
                                                                             value={this.state.actividadObispo.construccionesDistritoInicio.templo}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstTemDisIni"
+                                                                        >
+                                                                            Cantidad de templos cuya construcción se inicia en el mes en curso que hayan sido gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoFinal.templo'
+                                                                            id='ConstTemDisConc'
                                                                             value={this.state.actividadObispo.construccionesDistritoFinal.templo}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstTemDisConc"
+                                                                        >
+                                                                            Cantidad de  templos cuya construcción concluyó, que hayan sido gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.templo + this.state.actividadObispo.construccionesDistritoInicio.templo}
+                                                                            id='ConstTemSumaIni'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstTemSumaIni"
+                                                                        >
+                                                                            Suma de Templos en etapa inicial de construcción en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.templo + this.state.actividadObispo.construccionesDistritoFinal.templo}
+                                                                            id='ConstTemSumaConc'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstTemSumaConc"
+                                                                        >
+                                                                            Suma de Templos cuya construcción concluye en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -1837,37 +2189,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesInicio.casaDeOracion'
+                                                                            id='ConstCasOraSecIni'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaDeOracion}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasOraSecIni"
+                                                                        >
+                                                                            Cantidad de Casas de Oración cuya construcción se inicia en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion'
+                                                                            id='ConstCasOraSecConc'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasOraSecConc"
+                                                                        >
+                                                                            Cantidad de Casas de Oración cuya construcción concluyó en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoInicio.casaDeOracion'
+                                                                            id='ConstCasOraDisIni'
                                                                             value={this.state.actividadObispo.construccionesDistritoInicio.casaDeOracion}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasOraDisIni"
+                                                                        >
+                                                                            Cantidad de Casas de Oración cuya construcción se inicia en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoFinal.casaDeOracion'
+                                                                            id='ConstCasOraDisConc'
                                                                             value={this.state.actividadObispo.construccionesDistritoFinal.casaDeOracion}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasOraDisConc"
+                                                                        >
+                                                                            Cantidad de Casas de Oración cuya construcción concluyó en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaDeOracion + this.state.actividadObispo.construccionesDistritoInicio.casaDeOracion}
+                                                                            id='ConstCasOraSumaIni'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasOraSumaIni"
+                                                                        >
+                                                                            Suma de Casas de Oración en etapa inicial de construcción en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion + this.state.actividadObispo.construccionesDistritoFinal.casaDeOracion}
+                                                                            id='ConstCasOraSumaConc'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasOraSumaConc"
+                                                                        >
+                                                                            Suma de Casas de Oración cuya construcción concluye en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -1881,37 +2275,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesInicio.casaPastoral'
+                                                                            id='ConstCasPastSecIni'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaPastoral}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasPastSecIni"
+                                                                        >
+                                                                            Cantidad de Casas Pastorales cuya construcción se inicia en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesConclusion.casaPastoral'
+                                                                            id='ConstCasPastSecConc'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaPastoral}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasPastSecConc"
+                                                                        >
+                                                                            Cantidad de Casas Pastorales cuya construcción concluyó en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoInicio.casaPastoral'
+                                                                            id='ConstCasPastDisIni'
                                                                             value={this.state.actividadObispo.construccionesDistritoInicio.casaPastoral}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasPastDisIni"
+                                                                        >
+                                                                            Cantidad de Casas Pastorales cuya construcción se inicia en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoFinal.casaPastoral'
+                                                                            id='ConstCasPastDisConc'
                                                                             value={this.state.actividadObispo.construccionesDistritoFinal.casaPastoral}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasPastDisConc"
+                                                                        >
+                                                                            Cantidad de Casas Pastorales cuya construcción concluyó en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaPastoral + this.state.actividadObispo.construccionesDistritoInicio.casaPastoral}
+                                                                            id='ConstCasPastSumaIni'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasPastSumaIni"
+                                                                        >
+                                                                            Suma de Casas Pastorales en etapa inicial de construcción en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaPastoral + this.state.actividadObispo.construccionesDistritoFinal.casaPastoral}
+                                                                            id='ConstCasPastSumaConc'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstCasPastSumaConc"
+                                                                        >
+                                                                            Suma de Casas Pastorales cuya construcción concluye en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -1925,37 +2361,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesInicio.anexos'
+                                                                            id='ConstAnexSecIni'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.anexos}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstAnexSecIni"
+                                                                        >
+                                                                            Cantidad de Anexos cuya construcción se inicia en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesConclusion.anexos'
+                                                                            id='ConstAnexSecConc'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.anexos}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstAnexSecConc"
+                                                                        >
+                                                                            Cantidad de Anexos cuya construcción concluyó en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoInicio.anexos'
+                                                                            id='ConstAnexDisIni'
                                                                             value={this.state.actividadObispo.construccionesDistritoInicio.anexos}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstAnexDisIni"
+                                                                        >
+                                                                            Cantidad de Anexos cuya construcción se inicia en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoFinal.anexos'
+                                                                            id='ConstAnexDisConc'
                                                                             value={this.state.actividadObispo.construccionesDistritoFinal.anexos}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstAnexDisConc"
+                                                                        >
+                                                                            Cantidad de Anexos cuya construcción concluyó en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.anexos + this.state.actividadObispo.construccionesDistritoInicio.anexos}
+                                                                            id='ConstAnextSumaIni'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstAnextSumaIni"
+                                                                        >
+                                                                            Suma de Anexos en etapa inicial de construcción en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.anexos + this.state.actividadObispo.construccionesDistritoFinal.anexos}
+                                                                            id='ConstAnexSumaConc'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstAnexSumaConc"
+                                                                        >
+                                                                            Suma de Anexos cuya construcción concluye en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -1969,37 +2447,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesInicio.remodelacion'
+                                                                            id='ConstRemSecIni'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.remodelacion}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstRemSecIni"
+                                                                        >
+                                                                            Cantidad de Remodelaciones cuya construcción se inicia en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.construccionesConclusion.remodelacion'
+                                                                            id='ConstRemSecConc'
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.remodelacion}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstRemSecConc"
+                                                                        >
+                                                                            Cantidad de Remodelaciones cuya construcción concluyó en el mes en curso, reportada en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoInicio.remodelacion'
+                                                                            id='ConstRemDisIni'
                                                                             value={this.state.actividadObispo.construccionesDistritoInicio.remodelacion}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstRemDisIni"
+                                                                        >
+                                                                            Cantidad de Remodelaciones cuya construcción se inicia en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.construccionesDistritoFinal.remodelacion'
+                                                                            id='ConstRemDisConc'
                                                                             value={this.state.actividadObispo.construccionesDistritoFinal.remodelacion}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstRemDisConc"
+                                                                        >
+                                                                            Cantidad de Remodelaciones cuya construcción concluyó en el mes en curso, gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesInicio.remodelacion + this.state.actividadObispo.construccionesDistritoInicio.remodelacion}
+                                                                            id='ConstRemSumaIni'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstRemSumaIni"
+                                                                        >
+                                                                            Suma de Remodelaciones en etapa inicial de construcción en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.construccionesConclusion.remodelacion + this.state.actividadObispo.construccionesDistritoFinal.remodelacion}
+                                                                            id='ConstRemSumaConc'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="ConstRemSumaConc"
+                                                                        >
+                                                                            Suma de Remodelaciones cuya construcción concluye en el mes en curso, reportadas por Pastores y Admon. Distrital
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -2032,19 +2552,40 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.dedicaciones.templos'
+                                                                    id='DedTemSec'
                                                                     value={this.state.movtosAdministrativoEconomico.dedicaciones.templos}
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="DedTemSec"
+                                                                >
+                                                                    Cantidad de dedicaciones de Templos en el mes en curso, reportada en los Informes Pastorales
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.dedicacionesDistrito.templos'
+                                                                    id='DedTemDis'
                                                                     value={this.state.actividadObispo.dedicacionesDistrito.templos}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="DedTemDis"
+                                                                >
+                                                                    Cantidad de  Dedicaciones de Templos en el mes en curso, que hayan sido gestionadas por el Distrito y no por algún Sector
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.movtosAdministrativoEconomico.dedicaciones.templos + this.state.dedicaciones.templos}
+                                                                    id='DedTemSuma'
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="DedTemSuma"
+                                                                >
+                                                                    Suma de Dedicaciones de Templos en el mes en curso, las reportadas por los Sectores y las gestionadas por el Distrito.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -2054,19 +2595,40 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.dedicaciones.casasDeOracion'
+                                                                    id='DedCasOraSec'
                                                                     value={this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion}
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="DedCasOraSec"
+                                                                >
+                                                                    Cantidad de Dedicaciones de Casas de Oración en el mes en curso, reportada en los Informes Pastorales
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='actividadObispo.dedicacionesDistrito.casasDeOracion'
+                                                                    id='DedCasoraDis'
                                                                     value={this.state.actividadObispo.dedicacionesDistrito.casasDeOracion}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="DedCasoraDis"
+                                                                >
+                                                                    Cantidad de Dedicaciones de Casas de Oración en el mes en curso, que hayan sido gestionadas por el Distrito y no por algún Sector
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion + this.state.dedicaciones.casasDeOracion}
+                                                                    id='DedCasoraSuma'
                                                                     readOnly></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="DedCasoraSuma"
+                                                                >
+                                                                    Suma de Dedicaciones de Casas de Oración en el mes en curso, las reportadas por los Sectores y las gestionadas por el Distrito.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -2095,22 +2657,22 @@ class InformeObispo extends Component {
                                                             <Col xs="9" sm="9" lg="9">
                                                                 <Row>
                                                                     <Col xs="2" sm="2" lg="2" className='subtitulos'>
-                                                                        Inicio
+                                                                        Patrimonio Nacional
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2" className='subtitulos'>
-                                                                        Conclusión
+                                                                        Patrimonio de la Iglesia
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2" className='subtitulos'>
-                                                                        Inicio
+                                                                        Patrimonio Nacional
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2" className='subtitulos'>
-                                                                        Conclusión
+                                                                        Patrimonio de la Iglesia
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2" className='subtitulos'>
-                                                                        Inicio
+                                                                        Patrimonio Nacional
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2" className='subtitulos'>
-                                                                        Conclusión
+                                                                        Patrimonio de la Iglesia
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -2124,37 +2686,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.regularizacionPatNac.templos'
+                                                                            id='RegTemNacSec'
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.templos}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegTemNacSec"
+                                                                        >
+                                                                            Cantidad de regularizaciones de Predios de Templos considerados Propiedad de la Nación que hayan concluido en el mes en curso  informadas en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.regularizacionPatIg.templos'
+                                                                            id='RegTemIglSec'
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.templos}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegTemIglSec"
+                                                                        >
+                                                                            Cantidad de regularizaciones de Predios de Templos considerados Propiedad de la Iglesia que hayan concluido en el mes en curso  informadas en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.regularizacionesPrediosTemplosNacionDistrito.templos'
+                                                                            id='RegTemNacDis'
                                                                             value={this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.templos}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegTemNacDis"
+                                                                        >
+                                                                            Cantidad de  regularizaciones de Predios de Templos Propiedad de la Nación que hayan sido gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.templos'
+                                                                            id='RegTemIglDis'
                                                                             value={this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.templos}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegTemIglDis"
+                                                                        >
+                                                                            Cantidad de regularizaciones de Predios de Templos Propiedad de la Iglesia que hayan sido gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
+                                                                            id='RegTemNacSuma'
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.templos + this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.templos}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegTemNacSuma"
+                                                                        >
+                                                                            Suma de Regularizaciones de predios de Templos Propiedad de la Nación que hayan sido gestionadas tanto por los Sectores como por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.templos + this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.templos}
+                                                                            id='RegTemIglSuma'
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegTemIglSuma"
+                                                                        >
+                                                                            Suma de regularizaciones de Predios de Templos Propiedad de la Iglesia que hayan sido gestionadas tanto por los Sectores como por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -2168,37 +2772,79 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales'
+                                                                            id='RegCasPastNacSec'
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegCasPastNacSec"
+                                                                        >
+                                                                            Cantidad de regularizaciones de Predios de Casas Pastorales considerados Propiedad de la Nación que hayan concluido en el mes en curso  informadas en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales'
+                                                                            id='RegCasPastIglSec'
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales}
                                                                             readOnly
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegCasPastIglSec"
+                                                                        >
+                                                                            Cantidad de regularizaciones de Predios de Casas Pastorales considerados Propiedad de la Iglesia que hayan concluido en el mes en curso  informadas en los Informes Pastorales.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.regularizacionesPrediosTemplosNacionDistrito.casasPastorales'
+                                                                            id='RegCasPastNacDis'
                                                                             value={this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.casasPastorales}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegCasPastNacDis"
+                                                                        >
+                                                                            Cantidad de  regularizaciones de Predios de Casas Pastorales Propiedad de la Nación que hayan sido gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             name='actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.casasPastorales'
+                                                                            id='RegCasPastIglDis'
                                                                             value={this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.casasPastorales}
                                                                             onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegCasPastIglDis"
+                                                                        >
+                                                                            Cantidad de regularizaciones de Predios de Casas Pastorales Propiedad de la Iglesia que hayan sido gestionadas exclusivamente por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
+                                                                            id='RegCasPastNacSuma'
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales + this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.casasPastorales}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegCasPastNacSuma"
+                                                                        >
+                                                                            Suma de Regularizaciones de predios de Casas Pastorales Propiedad de la Nación que hayan sido gestionadas tanto por los Sectores como por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
+                                                                            id='RegCasPastIglSuma'
                                                                             value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales + this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.casasPastorales}
                                                                             readOnly></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="RegCasPastIglSuma"
+                                                                        >
+                                                                            Suma de regularizaciones de Predios de Casas Pastorales Propiedad de la Iglesia que hayan sido gestionadas tanto por los Sectores como por la Administración Distrital.
+                                                                        </UncontrolledTooltip>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>
@@ -2229,8 +2875,15 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior'
+                                                                    id='exAnterior'
                                                                     value={this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="exAnterior"
+                                                                >
+                                                                    Cantidad con la que cerró la tesorería Distrital en el mes anterior.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -2240,8 +2893,15 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.entradaMes'
+                                                                    id='entradas'
                                                                     value={this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="entradas"
+                                                                >
+                                                                    Cantidad del Total de entradas a la tesorería Distrital en el mes en curso.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -2251,9 +2911,16 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.sumaTotal'
+                                                                    id='sumaTotal'
                                                                     value={parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes)}
                                                                     disabled
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="sumaTotal"
+                                                                >
+                                                                    Suma de la Existencia anterior y la Entrada del mes en curso.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -2265,8 +2932,15 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon'
+                                                                    id='gastosAdmon'
                                                                     value={this.state.movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="gastosAdmon"
+                                                                >
+                                                                    Total de Gastos de la Administración del Distrito del mes en curso.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -2276,8 +2950,15 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior'
+                                                                    id='transf'
                                                                     value={this.state.movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior}
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="transf"
+                                                                >
+                                                                    Total de Transferencias de la Tesorería del Distrito a la Tesorería General.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
@@ -2287,9 +2968,16 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.existenciaEnCaja'
+                                                                    id='existenciaFinal'
                                                                     value={(parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes)) - (parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon) + parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior))}
                                                                     disabled
                                                                     onChange={(e) => this.handleChange(e)}></Input>
+                                                                <UncontrolledTooltip
+                                                                    placement="right"
+                                                                    target="existenciaFinal"
+                                                                >
+                                                                    Existencia al final del Mes en curso.
+                                                                </UncontrolledTooltip>
                                                             </Col>
                                                         </Row>
                                                     </Col>
@@ -2305,8 +2993,15 @@ class InformeObispo extends Component {
                                             <Col xs="11" sm="11" lg="11">
                                                 <Input style={{ maxHeight: '20em', minHeight: '2em' }} className='m-2' type='textarea'
                                                     name='acuerdoDeDistritoTextArea'
+                                                    id='acuerdos'
                                                     value={this.state.acuerdoDeDistritoTextArea}
                                                     onChange={(e) => this.handleAcuerdoDeDistrito(e)}></Input>
+                                                <UncontrolledTooltip
+                                                    placement="bottom"
+                                                    target="acuerdos"
+                                                >
+                                                    Desglose de los Acuerdos tomados por el Distrito en las Sesiones Ordinarias de información o Sesiones extraordinarias del mes en Curso.
+                                                </UncontrolledTooltip>
                                             </Col>
                                             <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
                                                 <Button color='success' onClick={() => this.agregarAcuerdoDeDistrito()}><span className='fa fa-icon fa-check'></span></Button>
@@ -2338,8 +3033,15 @@ class InformeObispo extends Component {
                                             <Col xs="11" sm="11" lg="11">
                                                 <Input style={{ maxHeight: '20em', minHeight: '2em' }} className='m-2' type='textarea'
                                                     name='otraActividadTextArea'
+                                                    id='otrasActividades'
                                                     value={this.state.otraActividadTextArea}
                                                     onChange={(e) => this.handleOtraActividad(e)}></Input>
+                                                <UncontrolledTooltip
+                                                    placement="bottom"
+                                                    target="otrasActividades"
+                                                >
+                                                    Actividades realizadas por el Obispo efectuadas dentro de la jurisdiccion distrital y que no pudieron se reflejados en algún concepto de las Secciones del presente informe mensual distrital. Tambien puede agregarse comentarios complementarios de aquellos conceptos que en los rubros predefinidos en este informe requieran ampliar explicación para dar claridad del trabajo realizado en el mes.
+                                                </UncontrolledTooltip>
                                             </Col>
                                             <Col xs="1" sm="1" lg="1" className='text-center align-self-center'>
                                                 <Button color='success' onClick={() => this.agregarActividad()}><span className='fa fa-icon fa-check'></span></Button>
@@ -2411,13 +3113,13 @@ class InformeObispo extends Component {
                                 }
                             </CardBody>
                         </Form>
-                    </Card>
+                    </Card >
                     <Row className='botones-inferiores'>
                         <Button color='primary' onClick={() => this.togglePage(this.state.pagina - 1)}><span className='fa fa-icon fa-arrow-left'></span></Button>
                         <span className='paginador'>Pagina {this.state.pagina} / {this.maxPaginas}</span>
                         <Button color='primary' onClick={() => this.togglePage(this.state.pagina + 1)}><span className='fa fa-icon fa-arrow-right'></span></Button>
                     </Row>
-                </Container>
+                </Container >
                 <Modal isOpen={this.state.modalShow}>
                     <ModalBody>
                         {this.state.mensajeDelProceso}
