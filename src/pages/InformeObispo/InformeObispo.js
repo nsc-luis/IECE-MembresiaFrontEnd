@@ -504,6 +504,24 @@ class InformeObispo extends Component {
         }
     };
 
+    descargarInforme = async (informeId) => {
+        await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformeObispoPorId/" + informeId, null, { responseType: 'blob' })
+            .then(res => {
+                //console.log(res);
+                const url = window.URL.createObjectURL(res.data);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `InformeObispo_${moment().format("yyyy-MM-DDThh-mm-ss")}.pdf`;
+                a.target = '_blank';  // This does not really affect the download
+                document.body.appendChild(a);
+                a.click();
+
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+        )
+    }
 
     actualizarInforme = async (e) => {
         e.preventDefault()
@@ -561,8 +579,20 @@ class InformeObispo extends Component {
                     <Card>
                         <Form onSubmit={this.guardar}>
                             <CardBody>
-                                {this.state.pagina === 1 ?
+                                {this.state.pagina === 1 &&
                                     <FormGroup className='contenedor-informe'>
+                                        {
+                                            this.state.informe.idInforme > 0 ?
+                                                <Row className='flex justify-content-end'>
+                                                    <Button
+                                                        color="danger"
+                                                        size="sm"
+                                                        onClick={() => this.descargarInforme(this.state.informe.idInforme)}>
+                                                        <span className="fas fa-file-pdf icon-btn-p"></span> Descargar PDF
+                                                    </Button>
+                                                </Row>
+                                                : ''
+                                        }
                                         <Row className='flex justify-content-center'>
                                             <Col xs="8" sm="8" lg="8">
                                                 <img src={rutaLogo} className='logo-informe'></img>
@@ -961,9 +991,10 @@ class InformeObispo extends Component {
                                                                     total += c.cultos;
                                                                     return total;
                                                                 })
-                                                            ) : (
-                                                                ""
-                                                            )}
+                                                            )
+                                                                : (
+                                                                    ""
+                                                                )}
                                                         </td>
                                                         <td className='table-cell'>{obj.trabajoEvangelismo.hogaresVisitados ? obj.trabajoEvangelismo.hogaresVisitados : ""}</td>
                                                         <td className='table-cell'>{obj.trabajoEvangelismo.hogaresConquistados ? obj.trabajoEvangelismo.hogaresConquistados : ""}</td>
@@ -993,8 +1024,21 @@ class InformeObispo extends Component {
                                             </Col>
                                         </Row>
                                     </FormGroup>
-                                    :
+                                }
+                                {this.state.pagina === 2 &&
                                     <FormGroup className='contenedor-informe'>
+                                        {
+                                            this.state.informe.idInforme > 0 ?
+                                                <Row className='flex justify-content-end'>
+                                                    <Button
+                                                        color="danger"
+                                                        size="sm"
+                                                        onClick={() => this.descargarInforme(this.state.informe.idInforme)}>
+                                                        <span className="fas fa-file-pdf icon-btn-p"></span> Descargar PDF
+                                                    </Button>
+                                                </Row>
+                                                : ''
+                                        }
                                         <Row className='contenedor-seccion'>
                                             <Col xs="12" sm="12" lg="12">
                                                 <Row className='titulo'>
@@ -1371,7 +1415,7 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.sociedadFemenil'
-                                                                    value={this.state.movtosAdministrativoEconomico.sociedadFemenil}
+                                                                    value={this.state.movtosAdministrativoEconomico.organizaciones.sociedadFemenil}
                                                                     id='OrgSocFem'
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
@@ -1391,7 +1435,7 @@ class InformeObispo extends Component {
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.sociedadJuvenil'
                                                                     id="OrgSocJuv"
-                                                                    value={this.state.movtosAdministrativoEconomico.sociedadJuvenil}
+                                                                    value={this.state.movtosAdministrativoEconomico.organizaciones.sociedadJuvenil}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
                                                                 <UncontrolledTooltip
@@ -1410,7 +1454,7 @@ class InformeObispo extends Component {
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.departamentoFemenil'
                                                                     id='OrgDepFem'
-                                                                    value={this.state.movtosAdministrativoEconomico.departamentoFemenil}
+                                                                    value={this.state.movtosAdministrativoEconomico.organizaciones.departamentoFemenil}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
                                                                 <UncontrolledTooltip
@@ -1429,7 +1473,7 @@ class InformeObispo extends Component {
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.departamentoJuvenil'
                                                                     id='OrgDepJuv'
-                                                                    value={this.state.movtosAdministrativoEconomico.departamentoJuvenil}
+                                                                    value={this.state.movtosAdministrativoEconomico.organizaciones.departamentoJuvenil}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
                                                                 <UncontrolledTooltip
@@ -1447,7 +1491,7 @@ class InformeObispo extends Component {
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.departamentoInfantil'
-                                                                    value={this.state.movtosAdministrativoEconomico.departamentoInfantil}
+                                                                    value={this.state.movtosAdministrativoEconomico.organizaciones.departamentoInfantil}
                                                                     id='OrgDepInf'
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
@@ -1467,7 +1511,7 @@ class InformeObispo extends Component {
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.coros'
                                                                     id='OrgCoros'
-                                                                    value={this.state.movtosAdministrativoEconomico.coros}
+                                                                    value={this.state.movtosAdministrativoEconomico.organizaciones.coros}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
                                                                 <UncontrolledTooltip
@@ -1486,7 +1530,7 @@ class InformeObispo extends Component {
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.gruposDeCanto'
                                                                     id='OrgGpos'
-                                                                    value={this.state.movtosAdministrativoEconomico.gruposDeCanto}
+                                                                    value={this.state.movtosAdministrativoEconomico.organizaciones.gruposDeCanto}
                                                                     readOnly
                                                                     onChange={(e) => this.handleChange(e)}></Input>
                                                                 <UncontrolledTooltip
