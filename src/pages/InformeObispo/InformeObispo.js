@@ -15,7 +15,7 @@ class InformeObispo extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
     maxPaginas = 2;
     idInforme = localStorage.getItem("idInformeObispo")
-    // cellNumber = new Array(22).fill()
+    sector = localStorage.getItem("sector")
     constructor(props) {
         super(props);
         this.state = {
@@ -230,6 +230,10 @@ class InformeObispo extends Component {
                 presentaciones: 0,
             },
             pagina: 1
+        }
+
+        if(this.sector != null){
+            window.location.assign("/Main")
         }
     }
 
@@ -1851,7 +1855,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.adquisicionesSector.predios + this.state.actividadObispo.adquisicionesDistrito.predios}
+                                                                    value={parseInt(this.state.movtosAdministrativoEconomico.adquisicionesSector.predios) + parseInt(this.state.actividadObispo.adquisicionesDistrito.predios)}
                                                                     id='AdqPreSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -1895,7 +1899,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.adquisicionesSector.casas + this.state.actividadObispo.adquisicionesDistrito.casas}
+                                                                    value={parseInt(this.state.movtosAdministrativoEconomico.adquisicionesSector.casas) + parseInt(this.state.actividadObispo.adquisicionesDistrito.casas)}
                                                                     id='AdqCasSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -1939,7 +1943,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios + this.state.actividadObispo.adquisicionesDistrito.edificios}
+                                                                    value={parseInt(this.state.movtosAdministrativoEconomico.adquisicionesSector.edificios) + parseInt(this.state.actividadObispo.adquisicionesDistrito.edificios)}
                                                                     id='AdqEdiSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -1984,7 +1988,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.adquisicionesSector.templos + this.state.actividadObispo.adquisicionesDistrito.templos}
+                                                                    value={parseInt(this.state.movtosAdministrativoEconomico.adquisicionesSector.templos) + parseInt(this.state.actividadObispo.adquisicionesDistrito.templos)}
                                                                     id='AdqTemSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -2028,7 +2032,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos + this.state.actividadObispo.adquisicionesDistrito.vehiculos}
+                                                                    value={parseInt(this.state.movtosAdministrativoEconomico.adquisicionesSector.vehiculos) + parseInt(this.state.actividadObispo.adquisicionesDistrito.vehiculos)}
                                                                     id='AdqVehSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -2146,7 +2150,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesInicio.colocacionPrimeraPiedra + this.state.actividadObispo.construccionesDistritoInicio.colocacionPrimeraPiedra}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesInicio.colocacionPrimeraPiedra) + parseInt(this.state.actividadObispo.construccionesDistritoInicio.colocacionPrimeraPiedra)}
                                                                             id='ColPriPieSumaIni'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2158,7 +2162,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra + this.state.actividadObispo.construccionesDistritoFinal.colocacionPrimeraPiedra}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesConclusion.colocacionPrimeraPiedra) + parseInt(this.state.actividadObispo.construccionesDistritoFinal.colocacionPrimeraPiedra)}
                                                                             id='ColPriPieSumaConc'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2232,7 +2236,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesInicio.templo + this.state.actividadObispo.construccionesDistritoInicio.templo}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesInicio.templo) + parseInt(this.state.actividadObispo.construccionesDistritoInicio.templo)}
                                                                             id='ConstTemSumaIni'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2244,7 +2248,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesConclusion.templo + this.state.actividadObispo.construccionesDistritoFinal.templo}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesConclusion.templo) + parseInt(this.state.actividadObispo.construccionesDistritoFinal.templo)}
                                                                             id='ConstTemSumaConc'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2318,7 +2322,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaDeOracion + this.state.actividadObispo.construccionesDistritoInicio.casaDeOracion}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesInicio.casaDeOracion) + parseInt(this.state.actividadObispo.construccionesDistritoInicio.casaDeOracion)}
                                                                             id='ConstCasOraSumaIni'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2330,7 +2334,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion + this.state.actividadObispo.construccionesDistritoFinal.casaDeOracion}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesConclusion.casaDeOracion) + parseInt(this.state.actividadObispo.construccionesDistritoFinal.casaDeOracion)}
                                                                             id='ConstCasOraSumaConc'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2404,7 +2408,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesInicio.casaPastoral + this.state.actividadObispo.construccionesDistritoInicio.casaPastoral}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesInicio.casaPastoral) + parseInt(this.state.actividadObispo.construccionesDistritoInicio.casaPastoral)}
                                                                             id='ConstCasPastSumaIni'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2416,7 +2420,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesConclusion.casaPastoral + this.state.actividadObispo.construccionesDistritoFinal.casaPastoral}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesConclusion.casaPastoral) + parseInt(this.state.actividadObispo.construccionesDistritoFinal.casaPastoral)}
                                                                             id='ConstCasPastSumaConc'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2490,7 +2494,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesInicio.anexos + this.state.actividadObispo.construccionesDistritoInicio.anexos}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesInicio.anexos) + parseInt(this.state.actividadObispo.construccionesDistritoInicio.anexos)}
                                                                             id='ConstAnextSumaIni'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2502,7 +2506,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesConclusion.anexos + this.state.actividadObispo.construccionesDistritoFinal.anexos}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesConclusion.anexos) + parseInt(this.state.actividadObispo.construccionesDistritoFinal.anexos)}
                                                                             id='ConstAnexSumaConc'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2576,7 +2580,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesInicio.remodelacion + this.state.actividadObispo.construccionesDistritoInicio.remodelacion}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesInicio.remodelacion) + parseInt(this.state.actividadObispo.construccionesDistritoInicio.remodelacion)}
                                                                             id='ConstRemSumaIni'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2588,7 +2592,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.construccionesConclusion.remodelacion + this.state.actividadObispo.construccionesDistritoFinal.remodelacion}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.construccionesConclusion.remodelacion) + parseInt(this.state.actividadObispo.construccionesDistritoFinal.remodelacion)}
                                                                             id='ConstRemSumaConc'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2654,7 +2658,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.dedicaciones.templos + this.state.actividadObispo.dedicacionesDistrito.templos}
+                                                                    value={parseInt(this.state.movtosAdministrativoEconomico.dedicaciones.templos) + parseInt(this.state.actividadObispo.dedicacionesDistrito.templos)}
                                                                     id='DedTemSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -2697,7 +2701,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion + this.state.actividadObispo.dedicacionesDistrito.casasDeOracion}
+                                                                    value={parseInt(this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion) + parseInt(this.state.actividadObispo.dedicacionesDistrito.casasDeOracion)}
                                                                     id='DedCasoraSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -2816,7 +2820,7 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             id='RegTemNacSuma'
-                                                                            value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.templos + this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.templos}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.regularizacionPatNac.templos) + parseInt(this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.templos)}
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
                                                                             placement="right"
@@ -2827,7 +2831,7 @@ class InformeObispo extends Component {
                                                                     </Col>
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
-                                                                            value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.templos + this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.templos}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.regularizacionPatIg.templos) + parseInt(this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.templos)}
                                                                             id='RegTemIglSuma'
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
@@ -2902,7 +2906,7 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             id='RegCasPastNacSuma'
-                                                                            value={this.state.movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales + this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.casasPastorales}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.regularizacionPatNac.casasPastorales) + parseInt(this.state.actividadObispo.regularizacionesPrediosTemplosNacionDistrito.casasPastorales)}
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
                                                                             placement="right"
@@ -2914,7 +2918,7 @@ class InformeObispo extends Component {
                                                                     <Col xs="2" sm="2" lg="2">
                                                                         <Input type='number' min={0} max={9999}
                                                                             id='RegCasPastIglSuma'
-                                                                            value={this.state.movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales + this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.casasPastorales}
+                                                                            value={parseInt(this.state.movtosAdministrativoEconomico.regularizacionPatIg.casasPastorales) + parseInt(this.state.actividadObispo.regularizacionesPrediosTemplosIglesiaDistrito.casasPastorales)}
                                                                             readOnly></Input>
                                                                         <UncontrolledTooltip
                                                                             placement="right"

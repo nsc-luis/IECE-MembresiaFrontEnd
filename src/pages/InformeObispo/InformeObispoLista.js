@@ -11,6 +11,7 @@ import moment from 'moment/moment';
 
 class InformeObispoLista extends Component {
     infoSesion = JSON.parse(localStorage.getItem('infoSesion'));
+    sector = localStorage.getItem("sector")
     maxAnio = new Date().getFullYear() + 1;
     meses = [
         { id: 1, mes: "Enero" },
@@ -56,6 +57,9 @@ class InformeObispoLista extends Component {
                 usu_id_usuario: 0,
                 fechaRegistro: new Date().toDateString(),
             }
+        }
+        if(this.sector != null){
+            window.location.assign("/Main")
         }
     }
 
