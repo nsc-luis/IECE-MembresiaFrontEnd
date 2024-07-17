@@ -292,16 +292,27 @@ class InformeObispo extends Component {
         }
         await helpers.validaToken().then(helpers.authAxios.post("/Historial_Transacciones_Estadisticas/HistorialPorFechaDistrito", body)
             .then(res => {
-                this.setState({
-                    desgloseMoviemientoEstadistico: res.data.datos.length > 0 ? res.data.datos : this.state.desgloseMoviemientoEstadistico
-                })
-                this.setState({
-                    modalShow: false
-                });
+                // this.setState({
+                //     desgloseMoviemientoEstadistico: res.data.datos.length > 0 ? res.data.datos : this.state.desgloseMoviemientoEstadistico
+                // })
+                // this.setState({
+                //     modalShow: false
+                // });
+                this.state.desgloseMoviemientoEstadistico = res.data.datos
+                    .filter(f => f.ct_Codigo_Transaccion !== 11201 && //Actualizacion de bautizado
+                        f.ct_Codigo_Transaccion !== 12201 &&// Actualizacion de no bautizado
+                        f.ct_Codigo_Transaccion !== 31203 &&// Actualizacion de no bautizado
+                        f.ct_Codigo_Transaccion !== 11003 &&// Alta por Cambio de Dom. Interno de Bautizados
+                        f.ct_Codigo_Transaccion !== 11104 && // Baja por Cambio de Dom. Interno de Bautizados
+                        f.ct_Codigo_Transaccion !== 12002 &&// Alta por Cambio de Dom. Interno de Bautizados
+                        f.ct_Codigo_Transaccion !== 12103); // Baja por Cambio de Dom. Interno de Bautizados
+            }),
+            this.setState({
+                modalShow: false
             })
-
         )
     }
+
 
     agregarActividad() {
         if (this.state.indiceActividad === null) {
@@ -429,6 +440,67 @@ class InformeObispo extends Component {
         // Actualiza el estado con la nueva copia
         this.setState(newState);
     }
+
+    handleFocus = (event) => {
+        if (event.target.value === '0') {
+            event.target.value = '';
+        }
+    };
+
+    // Actualización del estado para Movimiento Economico
+    handleMovimientoEconomicoChange = (e) => {
+        const { name, value } = e.target;
+        const nameParts = name.split('.'); // Dividir el name por el punto
+
+        if (nameParts.length === 3 && nameParts[0] === 'movtosAdministrativoEconomico' && nameParts[1] === 'movimientoEconomico') {
+            const property = nameParts[2];
+
+            this.setState((prevState) => {
+                const updatedMovtosAdministrativoEconomico = {
+                    ...prevState.movtosAdministrativoEconomico,
+                    movimientoEconomico: {
+                        ...prevState.movtosAdministrativoEconomico.movimientoEconomico,
+                        [property]: value
+                    }
+                };
+
+                return { movtosAdministrativoEconomico: updatedMovtosAdministrativoEconomico };
+            });
+        }
+    };
+
+    handleMovimientoEconomicoBlur = (e) => {
+        const { name, value } = e.target;
+        const parsedValue = parseFloat(value.replace(/,/g, ''));
+        const nameParts = name.split('.'); // Dividir el name por el punto
+
+        if (nameParts.length === 3 && nameParts[0] === 'movtosAdministrativoEconomico' && nameParts[1] === 'movimientoEconomico') {
+            const property = nameParts[2];
+
+            this.setState((prevState) => {
+                const updatedMovtosAdministrativoEconomico = {
+                    ...prevState.movtosAdministrativoEconomico,
+                    movimientoEconomico: {
+                        ...prevState.movtosAdministrativoEconomico.movimientoEconomico,
+                        [property]: isNaN(parsedValue) ? 0 : parsedValue
+                    }
+                };
+
+                // Realizar operaciones matemáticas sin formatear
+                if (property === 'gastosAdmon' || property === 'transferenciasAentidadSuperior' || property === 'existenciaAnterior' || property === 'entradaMes') {
+                    updatedMovtosAdministrativoEconomico.movimientoEconomico.sumaTotal = (parseFloat(updatedMovtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior) || 0) + (parseFloat(updatedMovtosAdministrativoEconomico.movimientoEconomico.entradaMes) || 0);
+                    updatedMovtosAdministrativoEconomico.movimientoEconomico.existenciaEnCaja = (parseFloat(updatedMovtosAdministrativoEconomico.movimientoEconomico.sumaTotal) || 0) - (parseFloat(updatedMovtosAdministrativoEconomico.movimientoEconomico.gastosAdmon) || 0) - (parseFloat(updatedMovtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior) || 0);
+                }
+
+                // Formatear los resultados
+                updatedMovtosAdministrativoEconomico.movimientoEconomico.sumaTotal = parseFloat(updatedMovtosAdministrativoEconomico.movimientoEconomico.sumaTotal).toFixed(2);
+                updatedMovtosAdministrativoEconomico.movimientoEconomico.existenciaEnCaja = parseFloat(updatedMovtosAdministrativoEconomico.movimientoEconomico.existenciaEnCaja).toFixed(2);
+
+                return { movtosAdministrativoEconomico: updatedMovtosAdministrativoEconomico };
+            });
+        }
+    };
+
 
     actualizarInforme = async (e) => {
         e.preventDefault()
@@ -926,7 +998,12 @@ class InformeObispo extends Component {
                                                     DATOS DEL ESTADO ACTUAL DEL DISTRITO
                                                 </Row>
                                                 <Row className='titulo'>
-                                                    <p>Número de personal en comunión al principio del mes <u> {this.state.datosEstadisticos.personasBautizadas}</u></p>
+                                                    <Col xs="2" sm="2" lg="2"></Col>
+                                                    <Col xs="5" sm="5" lg="5">Número de personal en comunión al principio del mes:</Col>
+                                                    <Col xs="1" sm="1" lg="1" type='number'>
+                                                        <u>{this.state.datosEstadisticos.personasBautizadas}</u>
+                                                    </Col>
+                                                    <Col xs="3" sm="3" lg="3"></Col>
                                                 </Row>
                                                 <Row className='subtitulos'>
                                                     <Col xs="6" sm="6" lg="6">
@@ -1104,19 +1181,19 @@ class InformeObispo extends Component {
                                                 <Row className='lista-elementos'>
                                                     <Col xs="6" sm="6" lg="6">
                                                         <Row className='elemento'>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Hombres
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.hombresBautizados'
                                                                     value={this.state.datosEstadisticos.hombresBautizados}
                                                                     readOnly></Input>
                                                             </Col>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Hombres
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.jovenesHombresBautizados'
                                                                     value={this.state.datosEstadisticos.jovenesHombresBautizados}
@@ -1124,19 +1201,19 @@ class InformeObispo extends Component {
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Mujeres
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.mujeresBautizadas'
                                                                     value={this.state.datosEstadisticos.mujeresBautizadas}
                                                                     readOnly></Input>
                                                             </Col>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Mujeres
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.jovenesMujeresBautizadas'
                                                                     value={this.state.datosEstadisticos.jovenesMujeresBautizadas}
@@ -1144,18 +1221,18 @@ class InformeObispo extends Component {
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Total
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.datosEstadisticos.hombresBautizados + this.state.datosEstadisticos.mujeresBautizadas}
                                                                     readOnly></Input>
                                                             </Col>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Total
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.datosEstadisticos.jovenesHombresBautizados + this.state.datosEstadisticos.jovenesMujeresBautizadas}
                                                                     readOnly></Input>
@@ -1164,19 +1241,19 @@ class InformeObispo extends Component {
                                                     </Col>
                                                     <Col xs="6" sm="6" lg="6">
                                                         <Row className='elemento'>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Hombres
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.jovenesHombresNoBautizados'
                                                                     value={this.state.datosEstadisticos.jovenesHombresNoBautizados}
                                                                     readOnly></Input>
                                                             </Col>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Niños
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.ninos'
                                                                     value={this.state.datosEstadisticos.ninos}
@@ -1184,19 +1261,19 @@ class InformeObispo extends Component {
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Mujeres
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.jovenesMujeresNoBautizadas'
                                                                     value={this.state.datosEstadisticos.jovenesMujeresNoBautizadas}
                                                                     readOnly></Input>
                                                             </Col>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Niñas
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.ninas'
                                                                     value={this.state.datosEstadisticos.ninas}
@@ -1204,18 +1281,18 @@ class InformeObispo extends Component {
                                                             </Col>
                                                         </Row>
                                                         <Row className='elemento'>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Total
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.datosEstadisticos.jovenesHombresNoBautizados + this.state.datosEstadisticos.jovenesMujeresNoBautizadas}
                                                                     readOnly></Input>
                                                             </Col>
-                                                            <Col xs="4" sm="4" lg="4">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 Total
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="3" sm="3" lg="3">
                                                                 <Input type='number' min={0} max={9999}
                                                                     value={this.state.datosEstadisticos.ninos + this.state.datosEstadisticos.ninas}
                                                                     readOnly></Input>
@@ -1253,6 +1330,7 @@ class InformeObispo extends Component {
                                                         <u><span className='font-weight-bold text-lg'>{this.state.datosEstadisticos.personasBautizadas + this.state.datosEstadisticos.personasNoBautizadas}</span></u>
                                                     </Col>
                                                 </Row>
+                                                <br />
                                                 <Row className='elemento'>
                                                     <Col xs="12" sm="12" lg="12">
                                                         <b>Desglose de movimiento estadístico</b>
@@ -1260,7 +1338,7 @@ class InformeObispo extends Component {
                                                     <Col xs="12" sm="12" lg="12">
                                                         <ListGroup>
                                                             {this.state.desgloseMoviemientoEstadistico.length > 0 && this.state.desgloseMoviemientoEstadistico.map((obj, index) => (
-                                                                <ListGroupItem key={index}>{index + 1}.- <b>{obj.ct_Tipo}</b> por <b>{obj.ct_Subtipo}</b> corresponde a <b>{obj.per_Nombre} {obj.per_Apellido_Paterno} {obj.per_Apellido_Materno}</b> - {moment(obj.hte_Fecha_Transaccion).format("YYYY-MM-DD")}</ListGroupItem>
+                                                                <ListGroupItem key={obj.hte_Id_Transaccion}>{index + 1}.- <b>{obj.ct_Tipo}</b> por <b>{obj.ct_Subtipo}</b> corresponde a <b>{obj.per_Nombre} {obj.per_Apellido_Paterno} {obj.per_Apellido_Materno}</b></ListGroupItem>
                                                             ))}
                                                         </ListGroup>
                                                     </Col>
@@ -2576,7 +2654,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.dedicaciones.templos + this.state.dedicaciones.templos}
+                                                                    value={this.state.movtosAdministrativoEconomico.dedicaciones.templos + this.state.actividadObispo.dedicacionesDistrito.templos}
                                                                     id='DedTemSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -2619,7 +2697,7 @@ class InformeObispo extends Component {
                                                             </Col>
                                                             <Col xs="2" sm="2" lg="2">
                                                                 <Input type='number' min={0} max={9999}
-                                                                    value={this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion + this.state.dedicaciones.casasDeOracion}
+                                                                    value={this.state.movtosAdministrativoEconomico.dedicaciones.casasDeOracion + this.state.actividadObispo.dedicacionesDistrito.casasDeOracion}
                                                                     id='DedCasoraSuma'
                                                                     readOnly></Input>
                                                                 <UncontrolledTooltip
@@ -2872,11 +2950,14 @@ class InformeObispo extends Component {
                                                                 Existencia Anterior
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                                <Input type='number' min={0} max={9999}
+                                                                <Input type='text' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior'
                                                                     id='exAnterior'
-                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior}
-                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior ? this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                    onChange={this.handleMovimientoEconomicoChange}
+                                                                    onFocus={this.handleFocus}
+                                                                    onBlur={this.handleMovimientoEconomicoBlur}
+                                                                    className='text-right'></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="exAnterior"
@@ -2890,11 +2971,14 @@ class InformeObispo extends Component {
                                                                 Entradas en el mes
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                                <Input type='number' min={0} max={9999}
+                                                                <Input type='text' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.entradaMes'
                                                                     id='entradas'
-                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes}
-                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes ? this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                    onChange={this.handleMovimientoEconomicoChange}
+                                                                    onFocus={this.handleFocus}
+                                                                    onBlur={this.handleMovimientoEconomicoBlur}
+                                                                    className='text-right'></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="entradas"
@@ -2908,12 +2992,15 @@ class InformeObispo extends Component {
                                                                 Suma total
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                                <Input type='number' min={0} max={9999}
+                                                                <Input type='text' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.sumaTotal'
                                                                     id='sumaTotal'
-                                                                    value={parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes)}
+                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.sumaTotal ? this.state.movtosAdministrativoEconomico.movimientoEconomico.sumaTotal.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
                                                                     disabled
-                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                    onChange={this.handleMovimientoEconomicoChange}
+                                                                    onFocus={this.handleFocus}
+                                                                    onBlur={this.handleMovimientoEconomicoBlur}
+                                                                    className='text-right'></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="sumaTotal"
@@ -2929,11 +3016,14 @@ class InformeObispo extends Component {
                                                                 Gastos de la Admon.
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                                <Input type='number' min={0} max={9999}
+                                                                <Input type='text' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon'
                                                                     id='gastosAdmon'
-                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon}
-                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon ? this.state.movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                    onChange={this.handleMovimientoEconomicoChange}
+                                                                    onFocus={this.handleFocus}
+                                                                    onBlur={this.handleMovimientoEconomicoBlur}
+                                                                    className='text-right'></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="gastosAdmon"
@@ -2947,11 +3037,14 @@ class InformeObispo extends Component {
                                                                 Transf. a Tes. Gral.
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                                <Input type='number' min={0} max={9999}
+                                                                <Input type='text' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior'
                                                                     id='transf'
-                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior}
-                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior ? this.state.movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior.toLocaleString('mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
+                                                                    onChange={this.handleMovimientoEconomicoChange}
+                                                                    onFocus={this.handleFocus}
+                                                                    onBlur={this.handleMovimientoEconomicoBlur}
+                                                                    className='text-right'></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="transf"
@@ -2965,12 +3058,15 @@ class InformeObispo extends Component {
                                                                 Existencia en caja
                                                             </Col>
                                                             <Col xs="4" sm="4" lg="4">
-                                                                <Input type='number' min={0} max={9999}
+                                                                <Input type='text' min={0} max={9999}
                                                                     name='movtosAdministrativoEconomico.movimientoEconomico.existenciaEnCaja'
                                                                     id='existenciaFinal'
-                                                                    value={(parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaAnterior) + parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.entradaMes)) - (parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.gastosAdmon) + parseFloat(this.state.movtosAdministrativoEconomico.movimientoEconomico.transferenciasAentidadSuperior))}
+                                                                    value={this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaEnCaja ? this.state.movtosAdministrativoEconomico.movimientoEconomico.existenciaEnCaja.toLocaleString('Mx-mx', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
                                                                     disabled
-                                                                    onChange={(e) => this.handleChange(e)}></Input>
+                                                                    onChange={this.handleMovimientoEconomicoChange}
+                                                                    onFocus={this.handleFocus}
+                                                                    onBlur={this.handleMovimientoEconomicoBlur}
+                                                                    className='text-right'></Input>
                                                                 <UncontrolledTooltip
                                                                     placement="right"
                                                                     target="existenciaFinal"
