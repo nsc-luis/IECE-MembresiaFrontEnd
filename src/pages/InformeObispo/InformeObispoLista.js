@@ -167,9 +167,16 @@ class InformeObispoLista extends Component {
     }
 
     descargarInforme = async (informeId) => {
+        this.setState({
+            mensajeDelProceso: "Preparando descarga...",
+            modalShow: true
+        });
         await helpers.validaToken().then(helpers.authAxios.post("/DocumentosPDF/InformeObispoPorId/" + informeId, null, { responseType: 'blob' })
             .then(res => {
                 //console.log(res);
+                this.setState({
+                    modalShow: false
+                });
                 const url = window.URL.createObjectURL(res.data);
 
                 const a = document.createElement('a');

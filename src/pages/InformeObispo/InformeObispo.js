@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import helpers from '../../components/Helpers';
 import '../../assets/css/index.css'
-import Modal from 'react-modal';
 import {
-    Button, Input, Alert, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup, Table,
+    Button, Input, Modal, Container, Row, Col, Card, FormFeedback, ButtonGroup, InputGroup, Table,
     Form, FormGroup, CardBody, ModalBody, ListGroup, ListGroupItem, UncontrolledTooltip
 } from 'reactstrap';
 import './style.css'
@@ -232,7 +231,7 @@ class InformeObispo extends Component {
             pagina: 1
         }
 
-        if(this.sector != null){
+        if (this.sector != null) {
             window.location.assign("/Main")
         }
     }
@@ -3213,17 +3212,18 @@ class InformeObispo extends Component {
                             </CardBody>
                         </Form>
                     </Card >
+                    <Modal isOpen={this.state.modalShow}>
+                    <ModalBody>
+                        {this.state.mensajeDelProceso}
+                    </ModalBody>
+                </Modal>
                     <Row className='botones-inferiores'>
                         <Button color='primary' onClick={() => this.togglePage(this.state.pagina - 1)}><span className='fa fa-icon fa-arrow-left'></span></Button>
                         <span className='paginador'>Pagina {this.state.pagina} / {this.maxPaginas}</span>
                         <Button color='primary' onClick={() => this.togglePage(this.state.pagina + 1)}><span className='fa fa-icon fa-arrow-right'></span></Button>
                     </Row>
+                    
                 </Container >
-                <Modal isOpen={this.state.modalShow}>
-                    <ModalBody>
-                        {this.state.mensajeDelProceso}
-                    </ModalBody>
-                </Modal>
             </>
         );
     }
