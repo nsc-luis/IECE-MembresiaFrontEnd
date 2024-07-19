@@ -44,8 +44,8 @@ const helpers = {
     },
 
     // URLs PARA PRUEBA
-    url_api: "http://" + window.location.hostname + ":59239/api",
-    //url_api: "http://" + window.location.hostname + ":81/webapi/api",
+    //url_api: "http://" + window.location.hostname + ":59239/api",
+    url_api: "http://" + window.location.hostname + ":81/webapi/api",
 
     // METODO PARA VALIDAR CAMPOS
     validaFormatos: function (formato, campo) {
@@ -57,8 +57,8 @@ const helpers = {
     },
 
     authAxios: axios.create({
-        baseURL: "http://" + window.location.hostname + ":59239/api",
-        //baseURL: "http://" + window.location.hostname + ":81/webapi/api",
+        //baseURL: "http://" + window.location.hostname + ":59239/api",
+        baseURL: "http://" + window.location.hostname + ":81/webapi/api",
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             contentType: 'application/json'
@@ -66,7 +66,7 @@ const helpers = {
     }),
 
     //Versión de la Aplicación Publicada
-    version: '2.1',
+    version: '2.2',
 
     validaToken: () => {
         let timestampNow = moment(new Date()).unix();

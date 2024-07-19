@@ -304,11 +304,11 @@ class InformeObispo extends Component {
                 this.state.desgloseMoviemientoEstadistico = res.data.datos
                     .filter(f => f.ct_Codigo_Transaccion !== 11201 && //Actualizacion de bautizado
                         f.ct_Codigo_Transaccion !== 12201 &&// Actualizacion de no bautizado
-                        f.ct_Codigo_Transaccion !== 31203 &&// Actualizacion de no bautizado
-                        f.ct_Codigo_Transaccion !== 11003 &&// Alta por Cambio de Dom. Interno de Bautizados
-                        f.ct_Codigo_Transaccion !== 11104 && // Baja por Cambio de Dom. Interno de Bautizados
-                        f.ct_Codigo_Transaccion !== 12002 &&// Alta por Cambio de Dom. Interno de Bautizados
-                        f.ct_Codigo_Transaccion !== 12103); // Baja por Cambio de Dom. Interno de Bautizados
+                        f.ct_Codigo_Transaccion !== 31203); //&&// Actualizacion de hogar
+                //f.ct_Codigo_Transaccion !== 11003 &&// Alta por Cambio de Dom. Interno de Bautizados
+                //f.ct_Codigo_Transaccion !== 11104 && // Baja por Cambio de Dom. Interno de Bautizados
+                //f.ct_Codigo_Transaccion !== 12002 &&// Alta por Cambio de Dom. Interno de Bautizados
+                //f.ct_Codigo_Transaccion !== 12103); // Baja por Cambio de Dom. Interno de Bautizados
             }),
             this.setState({
                 modalShow: false
@@ -613,331 +613,335 @@ class InformeObispo extends Component {
                                                 </p>
                                             </Col>
                                         </Row>
-                                        <Row className='titulo'>
-                                            ACTIVIDADES DEL OBISPO
+                                        <Row className='contenedor-seccion'>
+                                            <Col xs="12" sm="12" lg="12">
+                                                <Row className='titulo'>
+                                                    ACTIVIDADES DEL OBISPO
+                                                </Row>
+                                            </Col>
+                                            {this.state.actividadesObispo.length > 0 && this.state.actividadesObispo.map((obj, index) => (
+                                                <Row key={index} className='sector'>
+                                                    <Col xs="12" sm="12" lg="12" className='sector-contenido'>
+                                                        <Row className='titulo'>
+                                                            {obj.sector.sec_Tipo_Sector} {obj.sector.sec_Numero}.- {obj.sector.sec_Alias}
+                                                        </Row>
+                                                        <Row className='subtitulos'>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                Visitas a:
+                                                            </Col>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                Cultos
+                                                            </Col>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                Conferencias
+                                                            </Col>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                Concentraciones
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className='lista-elementos'>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sectores
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='aSectores'
+                                                                            name={`actividadesObispo.${index}.visitasObispo.aSectores`}
+                                                                            value={this.state.actividadesObispo[index].visitasObispo.aSectores}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="aSectores"
+                                                                        >
+                                                                            Visitas realizadas exclusivamente por el Obispo al Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Hogares
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='aHogares'
+                                                                            name={`actividadesObispo.${index}.visitasObispo.aHogares`}
+                                                                            value={this.state.actividadesObispo[index].visitasObispo.aHogares}
+                                                                            onChange={(e) => this.handleChange(e)}
+                                                                        ></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="aHogares"
+                                                                        >
+                                                                            Visitas realizadas exclusivamente por el Obispo a hogares del Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Col>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Ordinarios
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='cultosOrdinarios'
+                                                                            name={`actividadesObispo.${index}.cultosDistrito.ordinarios`}
+                                                                            value={this.state.actividadesObispo[index].cultosDistrito.ordinarios}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="cultosOrdinarios"
+                                                                        >
+                                                                            Cultos Ordinarios realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Especiales
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='cultosEspeciales'
+                                                                            name={`actividadesObispo.${index}.cultosDistrito.especiales`}
+                                                                            value={this.state.actividadesObispo[index].cultosDistrito.especiales}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="cultosEspeciales"
+                                                                        >
+                                                                            Cultos especiales (con programa de culto) realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        De Avivamiento
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='cultosDeAvivamiento'
+                                                                            name={`actividadesObispo.${index}.cultosDistrito.deAvivamiento`}
+                                                                            value={this.state.actividadesObispo[index].cultosDistrito.deAvivamiento}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="cultosDeAvivamiento"
+                                                                        >
+                                                                            Cultos intencionados al cultivo del ánimo espiritual, fervor y devoción de la iglesia, tales como cultos de gozo espiritual y de derramamiento del Espíritu Santo, realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Evangelismo
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='cultosEvangelismo'
+                                                                            name={`actividadesObispo.${index}.cultosDistrito.evangelismo`}
+                                                                            value={this.state.actividadesObispo[index].cultosDistrito.evangelismo}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="cultosEvangelismo"
+                                                                        >
+                                                                            Cultos de Evangelismo realizados por programa de Distrito en el Sector o Misión de Distrito en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Col>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Iglesia
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='confIglesia'
+                                                                            name={`actividadesObispo.${index}.conferenciasDistrito.iglesia`}
+                                                                            value={this.state.actividadesObispo[index].conferenciasDistrito.iglesia}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="confIglesia"
+                                                                        >
+                                                                            Cantidad de Conferencias a la Congregación, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sector Varonil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='confSecVaronil'
+                                                                            name={`actividadesObispo.${index}.conferenciasDistrito.sectorVaronil`}
+                                                                            value={this.state.actividadesObispo[index].conferenciasDistrito.sectorVaronil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="confSecVaronil"
+                                                                        >
+                                                                            Cantidad de Conferencias al sector Varonil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sociedad Femenil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='confSocFemenil'
+                                                                            name={`actividadesObispo.${index}.conferenciasDistrito.sociedadFemenil`}
+                                                                            value={this.state.actividadesObispo[index].conferenciasDistrito.sociedadFemenil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="confSocFemenil"
+                                                                        >
+                                                                            Cantidad de Conferencias al sector Femenil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sociedad Juvenil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='confSocJuvenil'
+                                                                            name={`actividadesObispo.${index}.conferenciasDistrito.sociedadJuvenil`}
+                                                                            value={this.state.actividadesObispo[index].conferenciasDistrito.sociedadJuvenil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="confSocJuvenil"
+                                                                        >
+                                                                            Cantidad de Conferencias al sector Juvenil impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Infantil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='confInfantil'
+                                                                            name={`actividadesObispo.${index}.conferenciasDistrito.sectorInfantil`}
+                                                                            value={this.state.actividadesObispo[index].conferenciasDistrito.sectorInfantil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="confInfantil"
+                                                                        >
+                                                                            Cantidad de Conferencias al sector Infantil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Col>
+                                                            <Col xs="3" sm="3" lg="3">
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Iglesia
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='concIglesia'
+                                                                            name={`actividadesObispo.${index}.concentracionesDistrito.iglesia`}
+                                                                            value={this.state.actividadesObispo[index].concentracionesDistrito.iglesia}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="concIglesia"
+                                                                        >
+                                                                            Cantidad de concentraciones de Iglesias, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sector Varonil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='concSecVaronil'
+                                                                            name={`actividadesObispo.${index}.concentracionesDistrito.sectorVaronil`}
+                                                                            value={this.state.actividadesObispo[index].concentracionesDistrito.sectorVaronil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="concSecVaronil"
+                                                                        >
+                                                                            Cantidad de concentraciones para el sector Varonil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sociedad Femenil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='concSecFemenil'
+                                                                            name={`actividadesObispo.${index}.concentracionesDistrito.sociedadFemenil`}
+                                                                            value={this.state.actividadesObispo[index].concentracionesDistrito.sociedadFemenil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="concSecFemenil"
+                                                                        >
+                                                                            Cantidad de concentraciones para el sector Femenil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sociedad Juvenil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='concSocJuvenil'
+                                                                            name={`actividadesObispo.${index}.concentracionesDistrito.sociedadJuvenil`}
+                                                                            value={this.state.actividadesObispo[index].concentracionesDistrito.sociedadJuvenil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="concSocJuvenil"
+                                                                        >
+                                                                            Cantidad de concentraciones para el sector Juvenil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className='elemento'>
+                                                                    <Col xs="7" sm="7" lg="7">
+                                                                        Sector Infantil
+                                                                    </Col>
+                                                                    <Col xs="5" sm="5" lg="5">
+                                                                        <Input type='number' min={0} max={9999}
+                                                                            id='concInfantil'
+                                                                            name={`actividadesObispo.${index}.concentracionesDistrito.sectorInfantil`}
+                                                                            value={this.state.actividadesObispo[index].concentracionesDistrito.sectorInfantil}
+                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                        <UncontrolledTooltip
+                                                                            placement="right"
+                                                                            target="concInfantil"
+                                                                        >
+                                                                            Cantidad de concentraciones para el sector Infantil realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
+                                                                        </UncontrolledTooltip>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            ))}
                                         </Row>
-                                        {this.state.actividadesObispo.length > 0 && this.state.actividadesObispo.map((obj, index) => (
-                                            <Row key={index} className='contenedor-seccion'>
-                                                <Col xs="12" sm="12" lg="12">
-                                                    <Row className='titulo'>
-                                                        {obj.sector.sec_Tipo_Sector} {obj.sector.sec_Numero}.- {obj.sector.sec_Alias}
-                                                    </Row>
-                                                    <Row className='subtitulos'>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            Visitas a:
-                                                        </Col>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            Cultos
-                                                        </Col>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            Conferencias
-                                                        </Col>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            Concentraciones
-                                                        </Col>
-                                                    </Row>
-                                                    <Row className='lista-elementos'>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sectores
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='aSectores'
-                                                                        name={`actividadesObispo.${index}.visitasObispo.aSectores`}
-                                                                        value={this.state.actividadesObispo[index].visitasObispo.aSectores}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="aSectores"
-                                                                    >
-                                                                        Visitas realizadas exclusivamente por el Obispo al Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Hogares
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='aHogares'
-                                                                        name={`actividadesObispo.${index}.visitasObispo.aHogares`}
-                                                                        value={this.state.actividadesObispo[index].visitasObispo.aHogares}
-                                                                        onChange={(e) => this.handleChange(e)}
-                                                                    ></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="aHogares"
-                                                                    >
-                                                                        Visitas realizadas exclusivamente por el Obispo a hogares del Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                        </Col>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Ordinarios
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='cultosOrdinarios'
-                                                                        name={`actividadesObispo.${index}.cultosDistrito.ordinarios`}
-                                                                        value={this.state.actividadesObispo[index].cultosDistrito.ordinarios}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="cultosOrdinarios"
-                                                                    >
-                                                                        Cultos Ordinarios realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Especiales
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='cultosEspeciales'
-                                                                        name={`actividadesObispo.${index}.cultosDistrito.especiales`}
-                                                                        value={this.state.actividadesObispo[index].cultosDistrito.especiales}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="cultosEspeciales"
-                                                                    >
-                                                                        Cultos especiales (con programa de culto) realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    De Avivamiento
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='cultosDeAvivamiento'
-                                                                        name={`actividadesObispo.${index}.cultosDistrito.deAvivamiento`}
-                                                                        value={this.state.actividadesObispo[index].cultosDistrito.deAvivamiento}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="cultosDeAvivamiento"
-                                                                    >
-                                                                        Cultos intencionados al cultivo del ánimo espiritual, fervor y devoción de la iglesia, tales como cultos de gozo espiritual y de derramamiento del Espíritu Santo, realizados por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Evangelismo
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='cultosEvangelismo'
-                                                                        name={`actividadesObispo.${index}.cultosDistrito.evangelismo`}
-                                                                        value={this.state.actividadesObispo[index].cultosDistrito.evangelismo}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="cultosEvangelismo"
-                                                                    >
-                                                                        Cultos de Evangelismo realizados por programa de Distrito en el Sector o Misión de Distrito en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                        </Col>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Iglesia
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='confIglesia'
-                                                                        name={`actividadesObispo.${index}.conferenciasDistrito.iglesia`}
-                                                                        value={this.state.actividadesObispo[index].conferenciasDistrito.iglesia}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="confIglesia"
-                                                                    >
-                                                                        Cantidad de Conferencias a la Congregación, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sector Varonil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='confSecVaronil'
-                                                                        name={`actividadesObispo.${index}.conferenciasDistrito.sectorVaronil`}
-                                                                        value={this.state.actividadesObispo[index].conferenciasDistrito.sectorVaronil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="confSecVaronil"
-                                                                    >
-                                                                        Cantidad de Conferencias al sector Varonil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sociedad Femenil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='confSocFemenil'
-                                                                        name={`actividadesObispo.${index}.conferenciasDistrito.sociedadFemenil`}
-                                                                        value={this.state.actividadesObispo[index].conferenciasDistrito.sociedadFemenil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="confSocFemenil"
-                                                                    >
-                                                                        Cantidad de Conferencias al sector Femenil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sociedad Juvenil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='confSocJuvenil'
-                                                                        name={`actividadesObispo.${index}.conferenciasDistrito.sociedadJuvenil`}
-                                                                        value={this.state.actividadesObispo[index].conferenciasDistrito.sociedadJuvenil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="confSocJuvenil"
-                                                                    >
-                                                                        Cantidad de Conferencias al sector Juvenil impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Infantil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='confInfantil'
-                                                                        name={`actividadesObispo.${index}.conferenciasDistrito.sectorInfantil`}
-                                                                        value={this.state.actividadesObispo[index].conferenciasDistrito.sectorInfantil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="confInfantil"
-                                                                    >
-                                                                        Cantidad de Conferencias al sector Infantil, impartidas por programa de Distrito en el Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                        </Col>
-                                                        <Col xs="3" sm="3" lg="3">
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Iglesia
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='concIglesia'
-                                                                        name={`actividadesObispo.${index}.concentracionesDistrito.iglesia`}
-                                                                        value={this.state.actividadesObispo[index].concentracionesDistrito.iglesia}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="concIglesia"
-                                                                    >
-                                                                        Cantidad de concentraciones de Iglesias, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sector Varonil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='concSecVaronil'
-                                                                        name={`actividadesObispo.${index}.concentracionesDistrito.sectorVaronil`}
-                                                                        value={this.state.actividadesObispo[index].concentracionesDistrito.sectorVaronil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="concSecVaronil"
-                                                                    >
-                                                                        Cantidad de concentraciones para el sector Varonil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sociedad Femenil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='concSecFemenil'
-                                                                        name={`actividadesObispo.${index}.concentracionesDistrito.sociedadFemenil`}
-                                                                        value={this.state.actividadesObispo[index].concentracionesDistrito.sociedadFemenil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="concSecFemenil"
-                                                                    >
-                                                                        Cantidad de concentraciones para el sector Femenil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sociedad Juvenil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='concSocJuvenil'
-                                                                        name={`actividadesObispo.${index}.concentracionesDistrito.sociedadJuvenil`}
-                                                                        value={this.state.actividadesObispo[index].concentracionesDistrito.sociedadJuvenil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="concSocJuvenil"
-                                                                    >
-                                                                        Cantidad de concentraciones para el sector Juvenil, realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row className='elemento'>
-                                                                <Col xs="7" sm="7" lg="7">
-                                                                    Sector Infantil
-                                                                </Col>
-                                                                <Col xs="5" sm="5" lg="5">
-                                                                    <Input type='number' min={0} max={9999}
-                                                                        id='concInfantil'
-                                                                        name={`actividadesObispo.${index}.concentracionesDistrito.sectorInfantil`}
-                                                                        value={this.state.actividadesObispo[index].concentracionesDistrito.sectorInfantil}
-                                                                        onChange={(e) => this.handleChange(e)}></Input>
-                                                                    <UncontrolledTooltip
-                                                                        placement="right"
-                                                                        target="concInfantil"
-                                                                    >
-                                                                        Cantidad de concentraciones para el sector Infantil realizadas por programa de Distrito, teniendo como enfitrión al Sector o Misión de Dto. en consideración.
-                                                                    </UncontrolledTooltip>
-                                                                </Col>
-                                                            </Row>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                        ))}
                                         <Row>
                                             <table className='tabla-obispo'>
                                                 <tr>
@@ -968,7 +972,7 @@ class InformeObispo extends Component {
                                                     <th className='table-header sectores-header'>HOGARES CONQ.</th>
                                                     <th className='table-header sectores-header'>VIS. PERM.</th>
                                                     <th className='table-header sectores-header'>CULTOS POR LOC.</th>
-                                                    <th className='table-header sectores-header'>CULTOS DE HOGAR</th>
+                                                    <th className='table-header sectores-header'>CULT. DE HOGAR</th>
                                                     <th className='table-header sectores-header'>CAMPAÑAS</th>
                                                     <th className='table-header sectores-header'>APERT. DE MIS.</th>
                                                     <th className='table-header sectores-header'>BAUTISMOS</th>
@@ -1097,7 +1101,7 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.altasBautizados.cambiodedomexterno'
-                                                                    value={this.state.datosEstadisticos.altasBautizados.cambiodedomexterno}
+                                                                    value={this.state.datosEstadisticos.altasBautizados.cambiodedomexterno + this.state.datosEstadisticos.altasBautizados.cambiodedominterno}
                                                                     readOnly></Input>
                                                             </Col>
                                                         </Row>
@@ -1108,7 +1112,7 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.altasBautizados.cambiodedomexterno'
-                                                                    value={this.state.datosEstadisticos.altasBautizados.bautismo + this.state.datosEstadisticos.altasBautizados.restitución + this.state.datosEstadisticos.altasBautizados.cambiodedomexterno}
+                                                                    value={this.state.datosEstadisticos.altasBautizados.bautismo + this.state.datosEstadisticos.altasBautizados.restitución + this.state.datosEstadisticos.altasBautizados.cambiodedomexterno + this.state.datosEstadisticos.altasBautizados.cambiodedominterno}
                                                                     readOnly></Input>
                                                                 <span className='font-weight-bold text-lg'>{ }</span>
                                                             </Col>
@@ -1166,7 +1170,7 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.bajasBautizados.cambiodedomexterno'
-                                                                    value={this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
+                                                                    value={this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno + this.state.datosEstadisticos.bajasBautizados.cambiodedominterno}
                                                                     readOnly></Input>
                                                             </Col>
                                                         </Row>
@@ -1177,7 +1181,7 @@ class InformeObispo extends Component {
                                                             <Col xs="4" sm="4" lg="4">
                                                                 <Input type='number' min={0} max={9999}
                                                                     name='datosEstadisticos.bajasBautizados.cambiodedomexterno'
-                                                                    value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno}
+                                                                    value={this.state.datosEstadisticos.bajasBautizados.defuncion + this.state.datosEstadisticos.bajasBautizados.excomunion + this.state.datosEstadisticos.bajasBautizados.excomuniontemporal + this.state.datosEstadisticos.bajasBautizados.cambiodedomexterno + this.state.datosEstadisticos.bajasBautizados.cambiodedominterno}
                                                                     readOnly></Input>
                                                             </Col>
                                                         </Row>
@@ -1398,15 +1402,17 @@ class InformeObispo extends Component {
                                                 </Row>
                                             </Col>
                                         </Row>
+
+
+
                                         <Row className='contenedor-seccion'>
                                             <Col xs="12" sm="12" lg="12">
                                                 <Row className='titulo'>
                                                     MOVIMIENTO ADMINISTRATIVO, ECLESIÁSTICO Y MATERIAL
                                                 </Row>
                                             </Col>
-                                        </Row>
-                                        <Row className='contenedor-seccion'>
-                                            <Col xs="12" sm="12" lg="12">
+
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         1.- ORGANIZACIONES
@@ -1549,6 +1555,8 @@ class InformeObispo extends Component {
                                                         </Row>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         2.- SESIONES
@@ -1756,6 +1764,8 @@ class InformeObispo extends Component {
                                                         </Row>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         3.- ORDENACIONES
@@ -1803,6 +1813,8 @@ class InformeObispo extends Component {
                                                         </Row>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         4.- LLAMAMIENTO DE PERSONAL
@@ -1850,6 +1862,8 @@ class InformeObispo extends Component {
                                                         </Row>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         5.- ADQUISICIONES
@@ -1859,15 +1873,14 @@ class InformeObispo extends Component {
                                                     <Col xs="12" sm="12" lg="12">
                                                         <Row className='elemento'>
                                                             <Col xs="3" sm="3" lg="3">
-
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="2" sm="2" lg="2" className='subtitulos'>
                                                                 Por Sectores
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="2" sm="2" lg="2" className='subtitulos'>
                                                                 Por Admon. Distrital
                                                             </Col>
-                                                            <Col xs="2" sm="2" lg="2">
+                                                            <Col xs="2" sm="2" lg="2" className='subtitulos'>
                                                                 Total
                                                             </Col>
                                                         </Row>
@@ -2094,6 +2107,8 @@ class InformeObispo extends Component {
                                                         </Row>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         6.- CONSTRUCCIONES
@@ -2189,7 +2204,9 @@ class InformeObispo extends Component {
                                                                             name='actividadObispo.construccionesDistritoFinal.colocacionPrimeraPiedra'
                                                                             id='ColPriPieDisConc'
                                                                             value={this.state.actividadObispo.construccionesDistritoFinal.colocacionPrimeraPiedra}
-                                                                            onChange={(e) => this.handleChange(e)}></Input>
+                                                                            onChange={(e) => this.handleChange(e)}
+                                                                            disabled='true' ></Input>
+
                                                                         <UncontrolledTooltip
                                                                             placement="right"
                                                                             target="ColPriPieDisConc"
@@ -2656,6 +2673,8 @@ class InformeObispo extends Component {
                                                         </Row>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         7.- DEDICACIONES
@@ -2763,6 +2782,8 @@ class InformeObispo extends Component {
                                                         </Row>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col xs="12" sm="12" lg="12" className='seccion'>
                                                 <Row className='subtitulos'>
                                                     <Col xs="12" sm="12" lg="12" className='text-left'>
                                                         8.- REGULARIZACION DE PREDIOS Y TEMPLOS
@@ -3263,16 +3284,16 @@ class InformeObispo extends Component {
                         </Form>
                     </Card >
                     <Modal isOpen={this.state.modalShow}>
-                    <ModalBody>
-                        {this.state.mensajeDelProceso}
-                    </ModalBody>
-                </Modal>
+                        <ModalBody>
+                            {this.state.mensajeDelProceso}
+                        </ModalBody>
+                    </Modal>
                     <Row className='botones-inferiores'>
                         <Button color='primary' onClick={() => this.togglePage(this.state.pagina - 1)}><span className='fa fa-icon fa-arrow-left'></span></Button>
                         <span className='paginador'>Pagina {this.state.pagina} / {this.maxPaginas}</span>
                         <Button color='primary' onClick={() => this.togglePage(this.state.pagina + 1)}><span className='fa fa-icon fa-arrow-right'></span></Button>
                     </Row>
-                    
+
                 </Container >
             </>
         );

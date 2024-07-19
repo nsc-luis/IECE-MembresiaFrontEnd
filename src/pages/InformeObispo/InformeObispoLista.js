@@ -58,7 +58,7 @@ class InformeObispoLista extends Component {
                 fechaRegistro: new Date().toDateString(),
             }
         }
-        if(this.sector != null){
+        if (this.sector != null) {
             window.location.assign("/Main")
         }
     }
